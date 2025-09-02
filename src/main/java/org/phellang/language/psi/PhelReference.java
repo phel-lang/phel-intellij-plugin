@@ -162,6 +162,16 @@ public class PhelReference extends PsiReferenceBase<PhelSymbol> implements PsiPo
     private Collection<PsiElement> findAllUsages() {
         List<PsiElement> usages = new ArrayList<>();
         
+        // For function parameters, let bindings, etc., only search within the local scope
+        if (PhelPsiUtil.isDefinition(myElement) && isLocalBinding()) {
+            // For local bindings, search only within the containing form (function/let block)
+            Collection<PsiElement> localUsages = findUsagesInLocalScope();
+            if (!localUsages.isEmpty()) {
+                usages.addAll(localUsages);
+                return usages; // Return immediately for local bindings - no project-wide search needed
+            }
+        }
+        
         // 1. Search current file for usages and other definitions
         PsiFile containingFile = myElement.getContainingFile();
         if (containingFile instanceof PhelFile) {
@@ -176,31 +186,114 @@ public class PhelReference extends PsiReferenceBase<PhelSymbol> implements PsiPo
             }
         }
         
-        // 2. Search project-wide for usages and other definitions (other files)  
-        Project project = myElement.getProject();
-        GlobalSearchScope projectScope = GlobalSearchScope.projectScope(project);
-        
-        Collection<VirtualFile> phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", projectScope);
-        for (VirtualFile virtualFile : phelFiles) {
-            if (virtualFile.equals(containingFile.getVirtualFile())) {
-                continue; // Skip current file (already searched above)
-            }
+        // 2. Search project-wide ONLY for top-level definitions (def, defn, etc.)
+        // Skip expensive project-wide search for local bindings
+        if (!isLocalBinding()) {
+            Project project = myElement.getProject();
+            GlobalSearchScope projectScope = GlobalSearchScope.projectScope(project);
             
-            PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
-            if (!(psiFile instanceof PhelFile)) continue;
-            
-            Collection<PhelSymbol> allSymbols = PsiTreeUtil.findChildrenOfType(psiFile, PhelSymbol.class);
-            
-            for (PhelSymbol symbol : allSymbols) {
-                String name = PhelPsiUtil.getName(symbol);
-                if (symbolName.equals(name)) {
-                    // Include both usages AND definitions from other files
-                    usages.add(symbol);
+            Collection<VirtualFile> phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", projectScope);
+            for (VirtualFile virtualFile : phelFiles) {
+                if (virtualFile.equals(containingFile.getVirtualFile())) {
+                    continue; // Skip current file (already searched above)
+                }
+                
+                PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+                if (!(psiFile instanceof PhelFile)) continue;
+                
+                Collection<PhelSymbol> allSymbols = PsiTreeUtil.findChildrenOfType(psiFile, PhelSymbol.class);
+                
+                for (PhelSymbol symbol : allSymbols) {
+                    String name = PhelPsiUtil.getName(symbol);
+                    if (symbolName.equals(name)) {
+                        // Include both usages AND definitions from other files
+                        usages.add(symbol);
+                    }
                 }
             }
         }
         
         return usages;
+    }
+    
+    /**
+     * Check if this symbol is a local binding (parameter, let binding, etc.)
+     * This checks if it's NOT a top-level definition (def, defn, etc.)
+     */
+    private boolean isLocalBinding() {
+        if (!PhelPsiUtil.isDefinition(myElement)) {
+            return false; // Not a definition at all
+        }
+        
+        // Check if it's inside a parameter vector or binding vector
+        PhelVec parentVec = PsiTreeUtil.getParentOfType(myElement, PhelVec.class);
+        if (parentVec == null) {
+            return false; // Not in a vector, so likely a top-level definition
+        }
+        
+        // If it's in a vector, it's likely a parameter or binding (local binding)
+        return true;
+    }
+    
+    /**
+     * Find usages within local scope only (for performance optimization)
+     */
+    @NotNull
+    private Collection<PsiElement> findUsagesInLocalScope() {
+        List<PsiElement> usages = new ArrayList<>();
+        
+        // Find the containing function or let form
+        PhelList containingForm = findContainingForm();
+        if (containingForm == null) {
+            return usages;
+        }
+        
+        // Search only within this form
+        Collection<PhelSymbol> localSymbols = PsiTreeUtil.findChildrenOfType(containingForm, PhelSymbol.class);
+        
+        for (PhelSymbol symbol : localSymbols) {
+            String name = PhelPsiUtil.getName(symbol);
+            if (symbolName.equals(name) && symbol != myElement && !PhelPsiUtil.isDefinition(symbol)) {
+                // Include only usages (not other definitions) within local scope
+                usages.add(symbol);
+            }
+        }
+        
+        return usages;
+    }
+    
+    /**
+     * Find the containing form (defn, fn, let, etc.) for scoped search
+     */
+    @Nullable
+    private PhelList findContainingForm() {
+        PsiElement current = myElement.getParent();
+        
+        while (current != null) {
+            if (current instanceof PhelList) {
+                PhelList list = (PhelList) current;
+                
+                // Check if this is a defining form
+                PhelForm firstForm = PsiTreeUtil.findChildOfType(list, PhelForm.class);
+                if (firstForm != null) {
+                    PhelSymbol firstSymbol = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol.class);
+                    if (firstSymbol != null) {
+                        String keyword = firstSymbol.getText();
+                        if (keyword.equals("defn") || keyword.equals("defn-") || 
+                            keyword.equals("defmacro") || keyword.equals("defmacro-") ||
+                            keyword.equals("fn") || keyword.equals("let") || keyword.equals("if-let") ||
+                            keyword.equals("for") || keyword.equals("binding") ||
+                            keyword.equals("loop") || keyword.equals("foreach") || keyword.equals("dofor") ||
+                            keyword.equals("try") || keyword.equals("catch")) {
+                            return list;
+                        }
+                    }
+                }
+            }
+            current = current.getParent();
+        }
+        
+        return null;
     }
     
     /**
@@ -366,8 +459,9 @@ public class PhelReference extends PsiReferenceBase<PhelSymbol> implements PsiPo
             return null;
         }
         String formType = firstSymbol.getText();
-        if (!"let".equals(formType) && !"for".equals(formType) && !"binding".equals(formType) && 
-            !"loop".equals(formType) && !"foreach".equals(formType) && !"dofor".equals(formType)) {
+        if (!"let".equals(formType) && !"if-let".equals(formType) && !"for".equals(formType) && !"binding".equals(formType) && 
+            !"loop".equals(formType) && !"foreach".equals(formType) && !"dofor".equals(formType) &&
+            !"catch".equals(formType)) {
             return null;
         }
         

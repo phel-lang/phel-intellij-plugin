@@ -654,6 +654,8 @@ public class PhelDocumentationProvider extends AbstractDocumentationProvider {
                     return "Function Parameter";
                 } else if (isInLetBinding(symbol)) {
                     return "Let Binding";
+                } else if (isInIfLetBinding(symbol)) {
+                    return "If-Let Binding";
                 } else if (isInForBinding(symbol)) {
                     return "For Binding";
                 } else if (isInBindingForm(symbol)) {
@@ -664,6 +666,8 @@ public class PhelDocumentationProvider extends AbstractDocumentationProvider {
                     return "Foreach Binding";
                 } else if (isInDoforForm(symbol)) {
                     return "Dofor Binding";
+                } else if (isInCatchBinding(symbol)) {
+                    return "Exception Binding";
                 }
                 
                 // Otherwise, check the defining keyword for top-level definitions
@@ -691,7 +695,16 @@ public class PhelDocumentationProvider extends AbstractDocumentationProvider {
         }
 
         // Fall back to pattern-based classification for usages and unknown symbols
-        // Check core functions FIRST (before namespace/macro checks that might interfere)
+        // For symbol usages, first check if it might be referencing a local binding
+        if (element instanceof PhelSymbol) {
+            PhelSymbol symbol = (PhelSymbol) element;
+            String localBindingType = getLocalBindingType(symbol, symbolName);
+            if (localBindingType != null) {
+                return localBindingType;
+            }
+        }
+        
+        // Check core functions (but only after checking for local bindings)
         if (isCoreFunction(symbolName)) {
             return "Core Function";
         } else if (symbolName.endsWith("?")) {
@@ -937,6 +950,20 @@ public class PhelDocumentationProvider extends AbstractDocumentationProvider {
     }
     
     /**
+     * Check if symbol is in an if-let binding
+     */
+    private boolean isInIfLetBinding(@NotNull PhelSymbol symbol) {
+        return isInBindingFormOfType(symbol, "if-let");
+    }
+    
+    /**
+     * Check if symbol is in a catch exception binding
+     */
+    private boolean isInCatchBinding(@NotNull PhelSymbol symbol) {
+        return isInBindingFormOfType(symbol, "catch");
+    }
+    
+    /**
      * Generic helper to check if symbol is in a binding form of a specific type
      */
     private boolean isInBindingFormOfType(@NotNull PhelSymbol symbol, @NotNull String formType) {
@@ -954,4 +981,148 @@ public class PhelDocumentationProvider extends AbstractDocumentationProvider {
         
         return formType.equals(firstSymbol.getText());
     }
+    
+    /**
+     * Check if a symbol usage is referencing a local binding (parameter, let binding, etc.)
+     * Returns the type of local binding, or null if not a local reference
+     */
+    @Nullable
+    private String getLocalBindingType(@NotNull PhelSymbol symbol, @NotNull String symbolName) {
+        // Simple approach: check if we're inside a function that has a parameter with this name
+        
+        // Look for containing defn/fn forms
+        PsiElement current = symbol;
+        while (current != null) {
+            if (current instanceof PhelList) {
+                PhelList list = (PhelList) current;
+                PhelForm[] forms = PsiTreeUtil.getChildrenOfType(list, PhelForm.class);
+                
+                if (forms != null && forms.length >= 2) {
+                    PhelSymbol firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol.class);
+                    if (firstSymbol != null) {
+                        String keyword = firstSymbol.getText();
+                        
+                        // Check defn/defmacro parameters
+                        if ((keyword.equals("defn") || keyword.equals("defmacro") || 
+                             keyword.equals("defn-") || keyword.equals("defmacro-")) && forms.length >= 3) {
+                            PhelVec paramVec = null;
+                            
+                            // Parameter vector is in forms[2]
+                            if (forms[2] instanceof PhelVec) {
+                                paramVec = (PhelVec) forms[2];
+                            } else {
+                                paramVec = PsiTreeUtil.findChildOfType(forms[2], PhelVec.class);
+                            }
+                            
+                            if (paramVec != null && hasParameterWithName(paramVec, symbolName)) {
+                                return "Function Parameter";
+                            }
+                        }
+                        // Check fn parameters  
+                        else if (keyword.equals("fn") && forms.length >= 2) {
+                            PhelVec paramVec = null;
+                            
+                            // Parameter vector is in forms[1]
+                            if (forms[1] instanceof PhelVec) {
+                                paramVec = (PhelVec) forms[1];
+                            } else {
+                                paramVec = PsiTreeUtil.findChildOfType(forms[1], PhelVec.class);
+                            }
+                            
+                            if (paramVec != null && hasParameterWithName(paramVec, symbolName)) {
+                                return "Function Parameter";
+                            }
+                        }
+                        // Check let bindings
+                        else if (keyword.equals("let") && forms.length >= 2) {
+                            PhelVec bindingVec = null;
+                            
+                            if (forms[1] instanceof PhelVec) {
+                                bindingVec = (PhelVec) forms[1];
+                            } else {
+                                bindingVec = PsiTreeUtil.findChildOfType(forms[1], PhelVec.class);
+                            }
+                            
+                            if (bindingVec != null && hasBindingWithName(bindingVec, symbolName)) {
+                                return "Let Binding";
+                            }
+                        }
+                        // Check for bindings
+                        else if (keyword.equals("for") && forms.length >= 2) {
+                            PhelVec bindingVec = null;
+                            
+                            if (forms[1] instanceof PhelVec) {
+                                bindingVec = (PhelVec) forms[1];
+                            } else {
+                                bindingVec = PsiTreeUtil.findChildOfType(forms[1], PhelVec.class);
+                            }
+                            
+                            if (bindingVec != null && hasBindingWithName(bindingVec, symbolName)) {
+                                return "For Binding";
+                            }
+                        }
+                        // Check if-let bindings
+                        else if (keyword.equals("if-let") && forms.length >= 2) {
+                            PhelVec bindingVec = null;
+                            
+                            if (forms[1] instanceof PhelVec) {
+                                bindingVec = (PhelVec) forms[1];
+                            } else {
+                                bindingVec = PsiTreeUtil.findChildOfType(forms[1], PhelVec.class);
+                            }
+                            
+                            if (bindingVec != null && hasBindingWithName(bindingVec, symbolName)) {
+                                return "If-Let Binding";
+                            }
+                        }
+                        // Check catch exception bindings
+                        else if (keyword.equals("catch") && forms.length >= 3) {
+                            // For catch, the binding is typically forms[2]: (catch ExceptionType binding body)
+                            PhelSymbol catchBinding = PsiTreeUtil.findChildOfType(forms[2], PhelSymbol.class);
+                            if (catchBinding != null && symbolName.equals(catchBinding.getText())) {
+                                return "Exception Binding";
+                            }
+                        }
+                    }
+                }
+            }
+            current = current.getParent();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Check if parameter vector has a parameter with the given name
+     */
+    private boolean hasParameterWithName(@NotNull PhelVec paramVec, @NotNull String symbolName) {
+        PhelForm[] forms = PsiTreeUtil.getChildrenOfType(paramVec, PhelForm.class);
+        if (forms == null) return false;
+        
+        for (PhelForm form : forms) {
+            PhelSymbol symbol = PsiTreeUtil.findChildOfType(form, PhelSymbol.class);
+            if (symbol != null && symbolName.equals(symbol.getText())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if binding vector has a binding with the given name (binding pairs: [name value name value...])
+     */
+    private boolean hasBindingWithName(@NotNull PhelVec bindingVec, @NotNull String symbolName) {
+        PhelForm[] forms = PsiTreeUtil.getChildrenOfType(bindingVec, PhelForm.class);
+        if (forms == null) return false;
+        
+        // Check even indices for binding names
+        for (int i = 0; i < forms.length; i += 2) {
+            PhelSymbol symbol = PsiTreeUtil.findChildOfType(forms[i], PhelSymbol.class);
+            if (symbol != null && symbolName.equals(symbol.getText())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
