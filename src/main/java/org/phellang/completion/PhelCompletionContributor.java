@@ -106,6 +106,7 @@ public class PhelCompletionContributor extends CompletionContributor {
 
             PsiElement element = parameters.getPosition();
             String prefix = getCompletionPrefix(element);
+            
 
             // PRIORITY 0: New form completion - suggest ONLY "(" when starting a new expression
             // This is the ONLY valid syntax at top level, so return early
@@ -147,7 +148,26 @@ public class PhelCompletionContributor extends CompletionContributor {
             // PRIORITY 0.5: Add "(" for expression contexts (function bodies, let bodies, etc.)
             // but NOT when we're right after "(" where function names should be suggested
             if (!isInFunctionNameContext) {
-                // Check if we're in a function/macro body where only ( should be suggested
+                // CRITICAL: Add local symbols FIRST in expression contexts (parameters, let bindings, etc.)
+                PhelLocalSymbolCompletions.addLocalSymbols(result, element);
+                
+                // Then add basic values that are valid in expression contexts
+                addBasicValues(result);
+                
+                // Only add API functions if we're in an argument context (like filter predicates)
+                // NOT in definition bodies where bare function names are invalid syntax
+                boolean inArgContext = isInArgumentContext(element);
+                if (inArgContext) {
+                    // Add context-aware API functions in argument positions
+                    // This fixes filter context where predicates should be suggested
+                    PhelApiCompletions.addCoreFunctions(result, prefix, element);
+                    PhelApiCompletions.addPredicateFunctions(result, prefix, element);
+                    PhelApiCompletions.addCollectionFunctions(result, prefix, element);
+                    PhelApiCompletions.addArithmeticFunctions(result, prefix, element);
+                } else {
+                }
+                
+                // Finally add structural completions
                 if (isInDefinitionBodyContext(element)) {
                     addDefinitionBodyCompletion(result);
                 } else {
@@ -155,6 +175,7 @@ public class PhelCompletionContributor extends CompletionContributor {
                 }
                 return; // Early return for expression contexts
             }
+            
             
             // PRIORITY 1: Parameter hints and function signatures - when inside function calls
             PhelParameterHintProvider.addParameterHints(result, element);
@@ -169,20 +190,20 @@ public class PhelCompletionContributor extends CompletionContributor {
             // PRIORITY 4: Only add API functions if we're in a context where function names are valid
             if (isInFunctionNameContext) {
                 // Special forms and core macros - important language constructs
-            PhelLanguageCompletions.addSpecialForms(result, prefix);
-            PhelLanguageCompletions.addCoreMacros(result, prefix);
+                PhelLanguageCompletions.addSpecialForms(result, prefix);
+                PhelLanguageCompletions.addCoreMacros(result, prefix);
 
-                // Core API functions
-            PhelApiCompletions.addCoreFunctions(result, prefix);
-            PhelApiCompletions.addPredicateFunctions(result, prefix);
-            PhelApiCompletions.addCollectionFunctions(result, prefix);
-            PhelApiCompletions.addArithmeticFunctions(result, prefix);
+                // Core API functions with context-aware ranking
+                PhelApiCompletions.addCoreFunctions(result, prefix, element);
+                PhelApiCompletions.addPredicateFunctions(result, prefix, element);
+                PhelApiCompletions.addCollectionFunctions(result, prefix, element);
+                PhelApiCompletions.addArithmeticFunctions(result, prefix, element);
 
                 // Namespace functions
-            PhelNamespaceCompletions.addNamespaceFunctions(result, prefix, element);
+                PhelNamespaceCompletions.addNamespaceFunctions(result, prefix, element);
 
                 // PHP interop - lower priority
-            PhelPhpInteropCompletions.addPhpInterop(result, prefix);
+                PhelPhpInteropCompletions.addPhpInterop(result, prefix);
             }
         }
 
@@ -477,26 +498,65 @@ public class PhelCompletionContributor extends CompletionContributor {
          * Add basic values that are always valid in expression contexts
          */
         private void addBasicValues(CompletionResultSet result) {
+            // Basic literals with smart ranking
+            PhelCompletionRanking.addRankedCompletion(result, "nil", 
+                PhelCompletionRanking.Priority.COMMON_BUILTINS, "nil value", null, AllIcons.Nodes.Constant);
             
-            // Basic literals
-            result.addElement(
-                LookupElementBuilder.create("nil")
-                    .withTypeText("nil value")
-                    .withIcon(AllIcons.Nodes.Constant)
-            );
+            PhelCompletionRanking.addRankedCompletion(result, "true", 
+                PhelCompletionRanking.Priority.COMMON_BUILTINS, "boolean", null, AllIcons.Nodes.Constant);
             
-            result.addElement(
-                LookupElementBuilder.create("true")
-                    .withTypeText("boolean")
-                    .withIcon(AllIcons.Nodes.Constant)
-            );
+            PhelCompletionRanking.addRankedCompletion(result, "false", 
+                PhelCompletionRanking.Priority.COMMON_BUILTINS, "boolean", null, AllIcons.Nodes.Constant);
+        }
+        
+        /**
+         * Check if we're in an argument context where API functions are valid
+         * (like filter predicates, map functions) vs definition bodies where they're not
+         */
+        private boolean isInArgumentContext(PsiElement element) {
+            // Walk up to find the containing list
+            PsiElement current = element;
+            while (current != null && !(current instanceof PhelList)) {
+                current = current.getParent();
+            }
             
-            result.addElement(
-                LookupElementBuilder.create("false")
-                    .withTypeText("boolean")
-                    .withIcon(AllIcons.Nodes.Constant)
-            );
+            if (current instanceof PhelList) {
+                PhelList list = (PhelList) current;
+                PsiElement[] children = list.getChildren();
+                
+                for (int i = 0; i < children.length; i++) {
+                }
+                
+                // Look for function name - skip opening parenthesis
+                for (PsiElement child : children) {
+                    if (child instanceof PhelAccessImpl) {
+                        String functionName = child.getText();
+                        
+                        // If we're inside a regular function call (not a definition form),
+                        // then we're in an argument context where API functions are valid
+                        boolean isDefForm = isDefinitionForm(functionName);
+                        return !isDefForm;
+                    }
+                }
+            }
             
+            return false;
+        }
+        
+        /**
+         * Check if a function name is a definition form (defn, let, etc.)
+         */
+        private boolean isDefinitionForm(String functionName) {
+            return functionName.equals("defn") || 
+                   functionName.equals("defn-") ||
+                   functionName.equals("defmacro") ||
+                   functionName.equals("defmacro-") ||
+                   functionName.equals("let") ||
+                   functionName.equals("loop") ||
+                   functionName.equals("binding") ||
+                   functionName.equals("fn") ||
+                   functionName.equals("if-let") ||
+                   functionName.equals("when-let");
         }
         
         /**
@@ -655,12 +715,23 @@ public class PhelCompletionContributor extends CompletionContributor {
          */
         private void addArgumentCompletions(CompletionResultSet result, PsiElement element, FunctionCallContext context) {
             
+            
             // ONLY show things that can be VALUES in arguments:
             
-            // 1. Local variables and parameters
+            // 1. Local variables and parameters (highest priority)
             PhelLocalSymbolCompletions.addLocalSymbols(result, element);
             
-            // 2. Context-aware nested expressions - only for functions that accept complex values
+            // 2. Basic values
+            addBasicValues(result);
+            
+            // 3. Context-aware API functions (this is what was missing!)
+            // Functions like predicates are valid as argument values
+            PhelApiCompletions.addCoreFunctions(result, "", element);
+            PhelApiCompletions.addPredicateFunctions(result, "", element);
+            PhelApiCompletions.addCollectionFunctions(result, "", element);
+            PhelApiCompletions.addArithmeticFunctions(result, "", element);
+            
+            // 4. Context-aware nested expressions - only for functions that accept complex values
             if (acceptsNestedExpressions(context.getFunctionName())) {
                 // Add opening parenthesis for nested expressions
             LookupElementBuilder parenElement = LookupElementBuilder
@@ -671,7 +742,7 @@ public class PhelCompletionContributor extends CompletionContributor {
             result.addElement(parenElement);
             }
             
-            // 3. Always allow closing the current expression with )
+            // 5. Always allow closing the current expression with )
             LookupElementBuilder closeParenElement = LookupElementBuilder
                 .create(")")
                 .withPresentableText(")")
@@ -871,7 +942,8 @@ public class PhelCompletionContributor extends CompletionContributor {
 
             Icon keywordIcon = AllIcons.Nodes.PropertyReadWrite;
             for (String keyword : commonKeywords) {
-                result.addElement(LookupElementBuilder.create(keyword).withIcon(keywordIcon).withTypeText("keyword"));
+                PhelCompletionRanking.addRankedCompletion(result, keyword, 
+                    PhelCompletionRanking.Priority.API_FUNCTIONS, "keyword", null, keywordIcon);
             }
         }
     }

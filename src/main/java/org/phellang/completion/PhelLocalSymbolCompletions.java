@@ -1,6 +1,7 @@
 package org.phellang.completion;
 
 import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
@@ -39,11 +40,8 @@ public class PhelLocalSymbolCompletions {
      * Enhanced with performance optimizations
      */
     public static void addLocalSymbols(@NotNull CompletionResultSet result, @NotNull PsiElement position) {
-        System.out.println("DEBUG: addLocalSymbols called for position: " + position.getText());
-        
         // Performance check - skip expensive operations if needed
         if (PhelCompletionPerformanceOptimizer.shouldSkipExpensiveOperations(position)) {
-            System.out.println("DEBUG: Skipping expensive operations");
             return;
         }
         
@@ -53,8 +51,6 @@ public class PhelLocalSymbolCompletions {
         Map<String, String> bindings = new HashMap<>();
         PhelCompletionPerformanceOptimizer.collectBindingsEfficiently(position, bindings);
         
-        System.out.println("DEBUG: Found " + bindings.size() + " bindings from optimizer");
-        
         // Add optimized bindings to completion results
         for (Map.Entry<String, String> entry : bindings.entrySet()) {
             String symbolName = entry.getKey();
@@ -63,15 +59,12 @@ public class PhelLocalSymbolCompletions {
             addSymbolCompletion(result, symbolName, bindingType, icon, addedSymbols);
         }
         
-        System.out.println("DEBUG: About to call addLocalDefinitionSymbolsOptimized");
         // Add local definitions with performance limits
         addLocalDefinitionSymbolsOptimized(result, position, addedSymbols);
         
-        System.out.println("DEBUG: About to call SIMPLE version");
         // ALSO try a completely simple version without optimizations
         addLocalDefinitionSymbolsSimple(result, position, addedSymbols);
         
-        System.out.println("DEBUG: About to call addProjectGlobalDefinitions");
         // Add global definitions from other files in project (with limits for performance)
         addProjectGlobalDefinitions(result, position, addedSymbols);
     }
@@ -291,12 +284,66 @@ public class PhelLocalSymbolCompletions {
                                           String typeText, Icon icon, @NotNull Set<String> addedSymbols) {
         if (!addedSymbols.contains(symbolName) && !symbolName.trim().isEmpty()) {
             addedSymbols.add(symbolName);
-            result.addElement(
-                LookupElementBuilder.create(symbolName)
-                    .withIcon(icon)
-                    .withTypeText(typeText)
-                    .withBoldness(true) // Local symbols are bold for visibility
-            );
+            
+            // Use smart ranking based on symbol type
+            PhelCompletionRanking.Priority priority = getSymbolPriority(typeText);
+            
+            // Create ranked element with local symbol styling
+            com.intellij.codeInsight.lookup.LookupElement element = 
+                PhelCompletionRanking.createRankedElement(symbolName, priority, typeText, null, icon)
+                    .withBoldness(true); // Local symbols are bold for visibility
+                    
+            // Apply priority using IntelliJ's PrioritizedLookupElement
+            result.addElement(PrioritizedLookupElement.withPriority(element, priority.value));
+        }
+    }
+    
+    /**
+     * Enhanced version with contextual ranking
+     */
+    private static void addSymbolCompletionWithContext(@NotNull CompletionResultSet result, String symbolName, 
+                                                     String typeText, Icon icon, @NotNull Set<String> addedSymbols,
+                                                     @NotNull PsiElement context) {
+        if (!addedSymbols.contains(symbolName) && !symbolName.trim().isEmpty()) {
+            addedSymbols.add(symbolName);
+            
+            // Get contextual priority
+            PhelCompletionRanking.Priority priority = PhelCompletionRanking.getContextualPriority(symbolName, context, typeText);
+            
+            // Create ranked element with local symbol styling  
+            com.intellij.codeInsight.lookup.LookupElement element = 
+                PhelCompletionRanking.createRankedElement(symbolName, priority, typeText, null, icon)
+                    .withBoldness(true); // Local symbols are bold for visibility
+                    
+            // Apply priority using IntelliJ's PrioritizedLookupElement
+            result.addElement(PrioritizedLookupElement.withPriority(element, priority.value));
+        }
+    }
+    
+    /**
+     * Get priority based on symbol type
+     */
+    private static PhelCompletionRanking.Priority getSymbolPriority(String typeText) {
+        switch (typeText) {
+            case "Parameter":
+            case "Function Parameter":
+                return PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS;
+            case "Let Binding":
+            case "Local Variable": 
+            case "Loop Binding":
+                return PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS;
+            case "Catch Binding":
+            case "If-Let Binding":
+                return PhelCompletionRanking.Priority.NESTED_SCOPE_LOCALS;
+            case "Function":
+            case "Function (recursive)":
+                return PhelCompletionRanking.Priority.CURRENT_FUNCTION_RECURSIVE;
+            case "Local Definition":
+                return PhelCompletionRanking.Priority.RECENT_DEFINITIONS;
+            case "Simple Global Variable":
+                return PhelCompletionRanking.Priority.PROJECT_SYMBOLS;
+            default:
+                return PhelCompletionRanking.Priority.PROJECT_SYMBOLS;
         }
     }
 
@@ -398,28 +445,22 @@ public class PhelLocalSymbolCompletions {
     private static void addLocalDefinitionSymbolsSimple(@NotNull CompletionResultSet result, 
                                                       @NotNull PsiElement position, 
                                                       @NotNull Set<String> addedSymbols) {
-        System.out.println("DEBUG SIMPLE: Starting simple version");
         
         PhelFile file = (PhelFile) position.getContainingFile();
         if (file == null) {
-            System.out.println("DEBUG SIMPLE: File is null");
             return;
         }
         
-        System.out.println("DEBUG SIMPLE: File: " + file.getName());
         
         // Just iterate through all children without any limits
         for (PsiElement child : file.getChildren()) {
-            System.out.println("DEBUG SIMPLE: Child: " + child.getClass().getSimpleName() + " - " + child.getText().substring(0, Math.min(20, child.getText().length())).trim());
             
             if (child instanceof PhelList) {
                 PhelList list = (PhelList) child;
                 
                 // Get children array and look for def + variable pattern  
                 PsiElement[] children = list.getChildren();
-                System.out.println("DEBUG SIMPLE: Children array length: " + children.length);
                 for (int i = 0; i < children.length; i++) {
-                    System.out.println("DEBUG SIMPLE: Child[" + i + "]: " + children[i].getClass().getSimpleName() + " - '" + children[i].getText() + "'");
                 }
                 
                 // Look for (def symbol-name ...) pattern 
@@ -427,16 +468,13 @@ public class PhelLocalSymbolCompletions {
                     PsiElement defChild = children[i];
                     if ((defChild instanceof PhelSymbol || defChild instanceof PhelAccessImpl) 
                         && "def".equals(defChild.getText())) {
-                        System.out.println("DEBUG SIMPLE: Found 'def' at index " + i);
                         
                         // Check next element for the variable name
                         if (i + 1 < children.length) {
                             PsiElement nameChild = children[i + 1];
-                            System.out.println("DEBUG SIMPLE: Name child: " + nameChild.getClass().getSimpleName() + " - '" + nameChild.getText() + "'");
                             
                             if (nameChild instanceof PhelSymbol || nameChild instanceof PhelAccessImpl) {
                                 String symbolName = nameChild.getText();
-                                System.out.println("DEBUG SIMPLE: ADDING SYMBOL: " + symbolName);
                                 addSymbolCompletion(result, symbolName, "Simple Global Variable", DEFINITION_ICON, addedSymbols);
                                 break;
                             }
@@ -506,7 +544,6 @@ public class PhelLocalSymbolCompletions {
         PhelFile file = (PhelFile) position.getContainingFile();
         if (file != null) {
             // DEBUG: Print debug info
-            System.out.println("DEBUG: Processing file for local definitions: " + file.getName());
             
             // Limit the number of top-level definitions we process
             int definitionCount = 0;
@@ -515,20 +552,16 @@ public class PhelLocalSymbolCompletions {
             for (PsiElement child : file.getChildren()) {
                 if (definitionCount >= MAX_DEFINITIONS) break;
                 
-                System.out.println("DEBUG: Found child: " + child.getClass().getSimpleName() + " - " + child.getText().substring(0, Math.min(50, child.getText().length())));
                 
                 if (child instanceof PhelList) {
                     PhelList list = (PhelList) child;
                     PsiElement[] children = list.getChildren();
                     
-                    System.out.println("DEBUG: PhelList has " + children.length + " children");
                     
                     // Check if we have at least 3 elements (opening paren, def-type, symbol-name)
                     if (children.length >= 3) {
                         // Debug: show all children
-                        System.out.println("DEBUG: All children:");
                         for (int i = 0; i < children.length; i++) {
-                            System.out.println("DEBUG:   Child[" + i + "]: " + children[i].getClass().getSimpleName() + " - '" + children[i].getText() + "'");
                         }
                         
                         // Look for definition type starting from first child
@@ -540,7 +573,6 @@ public class PhelLocalSymbolCompletions {
                             PsiElement childElement = children[i];
                             if (childElement instanceof PhelSymbol || childElement instanceof PhelAccessImpl) {
                                 String text = childElement.getText();
-                                System.out.println("DEBUG: Checking element[" + i + "]: " + childElement.getClass().getSimpleName() + " - '" + text + "'");
                                 
                                 if (text.equals("defn") || text.equals("defn-") || 
                                     text.equals("def") || text.equals("defmacro") || 
@@ -548,12 +580,10 @@ public class PhelLocalSymbolCompletions {
                                     
                                     defTypeElement = childElement;
                                     String defType = text;
-                                    System.out.println("DEBUG: Found DefType: '" + defType + "' at index " + i);
                                     
                                     // Name should be the next element
                                     if (i + 1 < children.length) {
                                         nameElement = children[i + 1];
-                                        System.out.println("DEBUG: Name element: " + nameElement.getClass().getSimpleName() + " - '" + nameElement.getText() + "'");
                                         
                                         if (nameElement instanceof PhelSymbol || nameElement instanceof PhelAccessImpl) {
                                             String symbolName = nameElement.getText();
@@ -568,12 +598,10 @@ public class PhelLocalSymbolCompletions {
                                                 displayType += " (recursive)";
                                             }
                                             
-                                            System.out.println("DEBUG: ADDING completion: " + symbolName + " (" + displayType + ")");
                                             addSymbolCompletion(result, symbolName, displayType, DEFINITION_ICON, addedSymbols);
                                             definitionCount++;
                                             break; // Found what we need
                                         } else {
-                                            System.out.println("DEBUG: Name element is not a symbol: " + nameElement.getClass().getSimpleName());
                                         }
                                     }
                                     break;
@@ -581,14 +609,11 @@ public class PhelLocalSymbolCompletions {
                             }
                         }
                     } else {
-                        System.out.println("DEBUG: Not enough children in PhelList: " + children.length);
                     }
                 }
             }
             
-            System.out.println("DEBUG: Total definitions processed: " + definitionCount);
         } else {
-            System.out.println("DEBUG: File is null!");
         }
     }
 

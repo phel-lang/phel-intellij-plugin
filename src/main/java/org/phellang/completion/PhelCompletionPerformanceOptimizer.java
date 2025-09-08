@@ -114,15 +114,12 @@ public class PhelCompletionPerformanceOptimizer {
             return;
         }
 
-        System.out.println("DEBUG OPTIMIZER: Processing scope: " + scope.getClass().getSimpleName() + " - " + scope.getText().substring(0, Math.min(30, scope.getText().length())));
 
         if (scope instanceof PhelList) {
             PhelList list = (PhelList) scope;
             PsiElement[] children = list.getChildren();
             
-            System.out.println("DEBUG OPTIMIZER: PhelList has " + children.length + " children");
             for (int i = 0; i < Math.min(3, children.length); i++) {
-                System.out.println("DEBUG OPTIMIZER: Child[" + i + "]: " + children[i].getClass().getSimpleName() + " - '" + children[i].getText() + "'");
             }
             
             // Look for binding forms - check all children, not just first
@@ -130,7 +127,6 @@ public class PhelCompletionPerformanceOptimizer {
                 PsiElement child = children[i];
                 if (child instanceof PhelSymbol || child instanceof PhelAccessImpl) {
                     String symbolName = child.getText();
-                    System.out.println("DEBUG OPTIMIZER: Found potential keyword: '" + symbolName + "' at index " + i);
                     
                     // Handle different binding forms efficiently
                     switch (symbolName) {
@@ -146,49 +142,38 @@ public class PhelCompletionPerformanceOptimizer {
                                 case "when-let": bindingType = "When-Let Binding"; break;
                                 default: bindingType = "Let Binding"; break;
                             }
-                            System.out.println("DEBUG OPTIMIZER: Processing " + symbolName.toUpperCase() + " binding");
                             PhelVec bindingVec = PsiTreeUtil.findChildOfType(list, PhelVec.class);
                             if (bindingVec != null) {
-                                System.out.println("DEBUG OPTIMIZER: Found binding vector");
                                 // EDGE CASE FIX: Check for empty binding vector
                                 PsiElement[] vecChildren = bindingVec.getChildren();
                                 if (vecChildren.length == 0) {
-                                    System.out.println("DEBUG OPTIMIZER: Empty binding vector detected");
                                 } else {
                                     extractBindingsFromVector(bindingVec, bindings, bindingType);
                                 }
                             } else {
-                                System.out.println("DEBUG OPTIMIZER: No binding vector found");
                             }
                             break;
                         case "defn":
                         case "defn-":
                         case "fn":
-                            System.out.println("DEBUG OPTIMIZER: Processing FUNCTION parameters");
                             PhelVec paramVec = PsiTreeUtil.findChildOfType(list, PhelVec.class);
                             if (paramVec != null) {
-                                System.out.println("DEBUG OPTIMIZER: Found parameter vector");
                                 extractParametersFromVector(paramVec, bindings, "Function Parameter");
                             }
                             // Continue recursing to find let bindings inside function body
-                            System.out.println("DEBUG OPTIMIZER: Continuing to search inside function body");
                             break;
                         case "for":
                         case "dofor":
-                            System.out.println("DEBUG OPTIMIZER: Processing FOR binding");
                             PhelVec forVec = PsiTreeUtil.findChildOfType(list, PhelVec.class);
                             if (forVec != null) {
                                 extractBindingsFromVector(forVec, bindings, "For Binding");
                             }
                             break;
                         case "catch":
-                            System.out.println("DEBUG OPTIMIZER: Processing CATCH binding");
                             // EDGE CASE FIX: Robust catch parsing (catch ExceptionType varname ...)
                             PsiElement[] catchChildren = list.getChildren();
-                            System.out.println("DEBUG OPTIMIZER: Catch has " + catchChildren.length + " children");
                             if (catchChildren.length >= 3) {
                                 for (int j = 0; j < catchChildren.length; j++) {
-                                    System.out.println("DEBUG OPTIMIZER: Catch child[" + j + "]: " + catchChildren[j].getClass().getSimpleName() + " - '" + catchChildren[j].getText() + "'");
                                 }
                                 // Find the catch variable (should be after exception type)
                                 boolean foundExceptionType = false;
@@ -205,14 +190,12 @@ public class PhelCompletionPerformanceOptimizer {
                                         }
                                         // This should be the catch variable
                                         if (!elementText.startsWith("(") && !bindings.containsKey(elementText)) {
-                                            System.out.println("DEBUG OPTIMIZER: Adding catch binding: '" + elementText + "'");
                                             bindings.put(elementText, "Catch Binding");
                                             break;
                                         }
                                     }
                                 }
                             } else {
-                                System.out.println("DEBUG OPTIMIZER: WARNING - Malformed catch block, not enough children");
                             }
                             break;
                     }
@@ -237,10 +220,8 @@ public class PhelCompletionPerformanceOptimizer {
                                                   @NotNull Map<String, String> bindings, 
                                                   String type) {
         PsiElement[] children = vector.getChildren();
-        System.out.println("DEBUG OPTIMIZER: Extracting parameters from vector with " + children.length + " children");
         
         if (children.length == 0) {
-            System.out.println("DEBUG OPTIMIZER: Empty parameter vector");
             return;
         }
         
@@ -250,16 +231,13 @@ public class PhelCompletionPerformanceOptimizer {
                 
                 // EDGE CASE FIX: Skip special parameter symbols 
                 if (paramName.equals("&") || paramName.equals("...")) {
-                    System.out.println("DEBUG OPTIMIZER: Skipping special parameter symbol: '" + paramName + "'");
                     continue;
                 }
                 
                 // EDGE CASE FIX: Handle shadowing - innermost scope wins
                 if (!bindings.containsKey(paramName)) {
-                    System.out.println("DEBUG OPTIMIZER: Adding parameter: '" + paramName + "' (" + type + ")");
                     bindings.put(paramName, type);
                 } else {
-                    System.out.println("DEBUG OPTIMIZER: Parameter shadowing detected - keeping innermost: '" + paramName + "'");
                 }
             }
         }
@@ -272,10 +250,8 @@ public class PhelCompletionPerformanceOptimizer {
                                                 @NotNull Map<String, String> bindings, 
                                                 String type) {
         PsiElement[] children = vector.getChildren();
-        System.out.println("DEBUG OPTIMIZER: Extracting bindings from vector with " + children.length + " children");
         
         for (int i = 0; i < Math.min(10, children.length); i++) {
-            System.out.println("DEBUG OPTIMIZER: Vector child[" + i + "]: " + children[i].getClass().getSimpleName() + " - '" + children[i].getText() + "'");
         }
         
         // EDGE CASE FIX: Proper bounds checking for malformed binding vectors
@@ -283,23 +259,19 @@ public class PhelCompletionPerformanceOptimizer {
             PsiElement child = children[i];
             if (child instanceof PhelSymbol || child instanceof PhelAccessImpl) {
                 String symbolName = child.getText();
-                System.out.println("DEBUG OPTIMIZER: Adding binding: '" + symbolName + "' (" + type + ")");
                 
                 // EDGE CASE FIX: Variable shadowing - use most recent binding (closest scope)
                 // Only add if not already present (first occurrence wins = innermost scope)
                 if (!bindings.containsKey(symbolName)) {
                     bindings.put(symbolName, type);
                 } else {
-                    System.out.println("DEBUG OPTIMIZER: Shadowing detected - keeping innermost binding for: '" + symbolName + "'");
                 }
             } else {
-                System.out.println("DEBUG OPTIMIZER: Skipping non-symbol child[" + i + "]: " + child.getClass().getSimpleName());
             }
         }
         
         // EDGE CASE FIX: Check for odd number of bindings (malformed)
         if (children.length % 2 != 0) {
-            System.out.println("DEBUG OPTIMIZER: WARNING - Odd number of binding elements (" + children.length + "), possible malformed binding vector");
         }
     }
 

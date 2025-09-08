@@ -119,11 +119,14 @@ public class PhelLanguageCompletions {
     }
 
     private static void addSpecialForm(@NotNull CompletionResultSet result, String name, String signature, String description) {
-        result.addElement(LookupElementBuilder.create(name).withIcon(SPECIAL_FORM_ICON).withTypeText(signature).withTailText(" - " + description, true).withBoldness(true) // Special forms are bold
-        );
+        // Special forms get high priority as they are core language constructs
+        PhelCompletionRanking.addRankedCompletion(result, name, PhelCompletionRanking.Priority.SPECIAL_FORMS, 
+                                                signature, description, SPECIAL_FORM_ICON);
     }
 
     private static void addMacro(@NotNull CompletionResultSet result, String name, String signature, String description) {
-        result.addElement(LookupElementBuilder.create(name).withIcon(MACRO_ICON).withTypeText(signature).withTailText(" - " + description, true));
+        // Macros get medium priority - less common than special forms but more than regular functions
+        PhelCompletionRanking.addRankedCompletion(result, name, PhelCompletionRanking.Priority.MACROS, 
+                                                signature, description, MACRO_ICON);
     }
 }

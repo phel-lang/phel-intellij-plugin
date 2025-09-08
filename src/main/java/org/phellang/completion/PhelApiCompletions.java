@@ -18,13 +18,14 @@ public class PhelApiCompletions {
 
     /**
      * Add core Phel functions with documentation and type information
+     * Enhanced with smart ranking system and context-aware prioritization
      */
-    public static void addCoreFunctions(@NotNull CompletionResultSet result, String prefix) {
-        // Core data structure functions
-        addFunction(result, "count", "(count xs)", "Returns the number of items in the collection", FUNCTION_ICON);
-        addFunction(result, "get", "(get coll key)", "Returns the value mapped to key, nil if key not present", FUNCTION_ICON);
-        addFunction(result, "get-in", "(get-in coll [k & ks])", "Returns the value in a nested data structure", FUNCTION_ICON);
-        addFunction(result, "put", "(put coll key val)", "Returns a new collection with val added/updated at key", FUNCTION_ICON);
+    public static void addCoreFunctions(@NotNull CompletionResultSet result, String prefix, @NotNull com.intellij.psi.PsiElement element) {
+        // Core data structure functions with context-aware ranking
+        addFunctionWithContext(result, "count", "(count xs)", "Returns the number of items in the collection", FUNCTION_ICON, element);
+        addFunctionWithContext(result, "get", "(get coll key)", "Returns the value mapped to key, nil if key not present", FUNCTION_ICON, element);
+        addFunctionWithContext(result, "get-in", "(get-in coll [k & ks])", "Returns the value in a nested data structure", FUNCTION_ICON, element);
+        addFunctionWithContext(result, "put", "(put coll key val)", "Returns a new collection with val added/updated at key", FUNCTION_ICON, element);
         addFunction(result, "put-in", "(put-in coll [k & ks] val)", "Puts a value into a nested data structure", FUNCTION_ICON);
         addFunction(result, "unset", "(unset coll key)", "Returns coll without key", FUNCTION_ICON);
         addFunction(result, "unset-in", "(unset-in coll [k & ks])", "Removes a value from a nested data structure", FUNCTION_ICON);
@@ -153,22 +154,22 @@ public class PhelApiCompletions {
     /**
      * Add predicate functions (functions ending with ?)
      */
-    public static void addPredicateFunctions(@NotNull CompletionResultSet result, String prefix) {
-        // Type predicates
-        addFunction(result, "nil?", "(nil? x)", "Returns true if x is nil", PREDICATE_ICON);
-        addFunction(result, "some?", "(some? x)", "Returns true if x is not nil", PREDICATE_ICON);
-        addFunction(result, "true?", "(true? x)", "Returns true if x is true", PREDICATE_ICON);
-        addFunction(result, "false?", "(false? x)", "Returns true if x is false", PREDICATE_ICON);
-        addFunction(result, "truthy?", "(truthy? x)", "Returns true if x is truthy", PREDICATE_ICON);
-        addFunction(result, "boolean?", "(boolean? x)", "Returns true if x is boolean", PREDICATE_ICON);
-        addFunction(result, "number?", "(number? x)", "Returns true if x is number", PREDICATE_ICON);
-        addFunction(result, "int?", "(int? x)", "Returns true if x is integer", PREDICATE_ICON);
-        addFunction(result, "float?", "(float? x)", "Returns true if x is float", PREDICATE_ICON);
-        addFunction(result, "string?", "(string? x)", "Returns true if x is string", PREDICATE_ICON);
-        addFunction(result, "keyword?", "(keyword? x)", "Returns true if x is keyword", PREDICATE_ICON);
-        addFunction(result, "symbol?", "(symbol? x)", "Returns true if x is symbol", PREDICATE_ICON);
-        addFunction(result, "function?", "(function? x)", "Returns true if x is function", PREDICATE_ICON);
-        addFunction(result, "var?", "(var? x)", "Returns true if x is variable", PREDICATE_ICON);
+    public static void addPredicateFunctions(@NotNull CompletionResultSet result, String prefix, @NotNull com.intellij.psi.PsiElement element) {
+        // Type predicates with context-aware ranking (boosted in filter contexts)
+        addFunctionWithContext(result, "nil?", "(nil? x)", "Returns true if x is nil", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "some?", "(some? x)", "Returns true if x is not nil", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "true?", "(true? x)", "Returns true if x is true", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "false?", "(false? x)", "Returns true if x is false", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "truthy?", "(truthy? x)", "Returns true if x is truthy", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "boolean?", "(boolean? x)", "Returns true if x is boolean", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "number?", "(number? x)", "Returns true if x is number", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "int?", "(int? x)", "Returns true if x is integer", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "float?", "(float? x)", "Returns true if x is float", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "string?", "(string? x)", "Returns true if x is string", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "keyword?", "(keyword? x)", "Returns true if x is keyword", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "symbol?", "(symbol? x)", "Returns true if x is symbol", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "function?", "(function? x)", "Returns true if x is function", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "var?", "(var? x)", "Returns true if x is variable", PREDICATE_ICON, element);
 
         // Collection predicates
         addFunction(result, "list?", "(list? x)", "Returns true if x is list", PREDICATE_ICON);
@@ -204,7 +205,7 @@ public class PhelApiCompletions {
     /**
      * Add collection manipulation functions
      */
-    public static void addCollectionFunctions(@NotNull CompletionResultSet result, String prefix) {
+    public static void addCollectionFunctions(@NotNull CompletionResultSet result, String prefix, @NotNull com.intellij.psi.PsiElement element) {
         addFunction(result, "cons", "(cons x xs)", "Returns new collection with item prepended", FUNCTION_ICON);
         addFunction(result, "conj", "(conj coll & items)", "Returns collection with items added", FUNCTION_ICON);
         addFunction(result, "push", "(push coll item)", "Returns collection with item pushed", FUNCTION_ICON);
@@ -228,7 +229,7 @@ public class PhelApiCompletions {
     /**
      * Add arithmetic and math functions
      */
-    public static void addArithmeticFunctions(@NotNull CompletionResultSet result, String prefix) {
+    public static void addArithmeticFunctions(@NotNull CompletionResultSet result, String prefix, @NotNull com.intellij.psi.PsiElement element) {
         addFunction(result, "+", "(+ & xs)", "Addition", FUNCTION_ICON);
         addFunction(result, "-", "(- & xs)", "Subtraction", FUNCTION_ICON);
         addFunction(result, "*", "(* & xs)", "Multiplication", FUNCTION_ICON);
@@ -253,12 +254,46 @@ public class PhelApiCompletions {
     }
 
     private static void addFunction(@NotNull CompletionResultSet result, String name, String signature, String description, Icon icon) {
-        result.addElement(
-                LookupElementBuilder.create(name)
-                        .withIcon(icon)
-                        .withTypeText(signature)
-                        .withTailText(" - " + description, true)
-                        .withPresentableText(name)
-        );
+        // Use smart ranking with default API function priority
+        PhelCompletionRanking.Priority priority = PhelCompletionRanking.Priority.API_FUNCTIONS;
+        
+        // Boost priority for commonly used functions
+        if (isCommonBuiltin(name)) {
+            priority = PhelCompletionRanking.Priority.COMMON_BUILTINS;
+        } else if (isCollectionFunction(name)) {
+            priority = PhelCompletionRanking.Priority.COLLECTION_FUNCTIONS;
+        }
+        
+        PhelCompletionRanking.addRankedCompletion(result, name, priority, signature, description, icon);
+    }
+    
+    /**
+     * Enhanced version with contextual ranking
+     */
+    private static void addFunctionWithContext(@NotNull CompletionResultSet result, String name, String signature, String description, Icon icon, @NotNull com.intellij.psi.PsiElement context) {
+        PhelCompletionRanking.Priority priority = PhelCompletionRanking.getContextualPriority(name, context, "API Function");
+        PhelCompletionRanking.addRankedCompletion(result, name, priority, signature, description, icon);
+    }
+    
+    /**
+     * Check if function is commonly used builtin
+     */
+    private static boolean isCommonBuiltin(String name) {
+        return java.util.Arrays.asList(
+            "map", "filter", "reduce", "get", "put", "count", "first", "rest",
+            "+", "-", "*", "/", "=", "<", ">", "<=", ">=", 
+            "str", "print", "println", "nil?", "empty?"
+        ).contains(name);
+    }
+    
+    /**
+     * Check if function operates on collections
+     */
+    private static boolean isCollectionFunction(String name) {
+        return java.util.Arrays.asList(
+            "conj", "cons", "concat", "reverse", "sort", "sort-by", "group-by",
+            "partition", "take", "drop", "take-while", "drop-while", 
+            "assoc", "dissoc", "keys", "vals", "merge"
+        ).contains(name);
     }
 }
