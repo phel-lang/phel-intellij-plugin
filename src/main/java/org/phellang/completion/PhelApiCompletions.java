@@ -21,7 +21,7 @@ public class PhelApiCompletions {
      */
     public static void addCoreFunctions(@NotNull CompletionResultSet result, String prefix) {
         // Core data structure functions
-        addFunction(result, "count", "(count coll)", "Returns the number of items in the collection", FUNCTION_ICON);
+        addFunction(result, "count", "(count xs)", "Returns the number of items in the collection", FUNCTION_ICON);
         addFunction(result, "get", "(get coll key)", "Returns the value mapped to key, nil if key not present", FUNCTION_ICON);
         addFunction(result, "get-in", "(get-in coll [k & ks])", "Returns the value in a nested data structure", FUNCTION_ICON);
         addFunction(result, "put", "(put coll key val)", "Returns a new collection with val added/updated at key", FUNCTION_ICON);
@@ -47,18 +47,18 @@ public class PhelApiCompletions {
         addFunction(result, "pop", "(pop coll)", "Returns collection with last item (vector) or first item (list) removed", FUNCTION_ICON);
 
         // Higher-order functions
-        addFunction(result, "map", "(map f coll)", "Returns collection with f applied to each item", FUNCTION_ICON);
-        addFunction(result, "filter", "(filter pred coll)", "Returns collection of items for which pred returns true", FUNCTION_ICON);
-        addFunction(result, "remove", "(remove pred coll)", "Returns collection of items for which pred returns false", FUNCTION_ICON);
-        addFunction(result, "reduce", "(reduce f coll)", "Reduces collection using f", FUNCTION_ICON);
+        addFunction(result, "map", "(map f & xs)", "Returns collection with f applied to each item", FUNCTION_ICON);
+        addFunction(result, "filter", "(filter pred xs)", "Returns collection of items for which pred returns true", FUNCTION_ICON);
+        addFunction(result, "remove", "(remove pred xs)", "Returns collection of items for which pred returns false", FUNCTION_ICON);
+        addFunction(result, "reduce", "(reduce f & xs)", "Reduces collection using f", FUNCTION_ICON);
         addFunction(result, "reduce2", "(reduce2 f init coll)", "Reduces collection using f with initial value", FUNCTION_ICON);
-        addFunction(result, "keep", "(keep f coll)", "Returns collection of non-nil results of f applied to items", FUNCTION_ICON);
-        addFunction(result, "keep-indexed", "(keep-indexed f coll)", "Like keep but f takes index and item", FUNCTION_ICON);
-        addFunction(result, "map-indexed", "(map-indexed f coll)", "Like map but f takes index and item", FUNCTION_ICON);
+        addFunction(result, "keep", "(keep pred xs)", "Returns collection of non-nil results of pred applied to items", FUNCTION_ICON);
+        addFunction(result, "keep-indexed", "(keep-indexed pred xs)", "Like keep but pred takes index and item", FUNCTION_ICON);
+        addFunction(result, "map-indexed", "(map-indexed f xs)", "Like map but f takes index and item", FUNCTION_ICON);
 
         // Utility functions
-        addFunction(result, "apply", "(apply f args)", "Applies f to args, with last arg as sequence", FUNCTION_ICON);
-        addFunction(result, "comp", "(comp & fns)", "Composes functions right to left", FUNCTION_ICON);
+        addFunction(result, "apply", "(apply f & args)", "Applies f to args, with last arg as sequence", FUNCTION_ICON);
+        addFunction(result, "comp", "(comp & fs)", "Composes functions right to left", FUNCTION_ICON);
         addFunction(result, "partial", "(partial f & args)", "Returns function with args partially applied", FUNCTION_ICON);
         addFunction(result, "constantly", "(constantly x)", "Returns function that always returns x", FUNCTION_ICON);
         addFunction(result, "identity", "(identity x)", "Returns x unchanged", FUNCTION_ICON);
@@ -84,7 +84,7 @@ public class PhelApiCompletions {
 
         // Variables
         addFunction(result, "var", "(var value)", "Creates new variable with value", FUNCTION_ICON);
-        addFunction(result, "deref", "(deref var)", "Returns value of variable", FUNCTION_ICON);
+        addFunction(result, "deref", "(deref variable)", "Returns value of variable", FUNCTION_ICON);
         addFunction(result, "set!", "(set! var value)", "Sets variable to value", FUNCTION_ICON);
         addFunction(result, "swap!", "(swap! var f & args)", "Atomically updates variable with f", FUNCTION_ICON);
 
@@ -95,7 +95,7 @@ public class PhelApiCompletions {
         // Set operations
         addFunction(result, "union", "(union & sets)", "Returns union of sets", FUNCTION_ICON);
         addFunction(result, "intersection", "(intersection s1 s2)", "Returns intersection of sets", FUNCTION_ICON);
-        addFunction(result, "difference", "(difference s1 s2)", "Returns difference of sets", FUNCTION_ICON);
+        addFunction(result, "difference", "(difference set & sets)", "Returns difference of sets", FUNCTION_ICON);
         addFunction(result, "symmetric-difference", "(symmetric-difference s1 s2)", "Returns symmetric difference", FUNCTION_ICON);
 
         // Random functions
@@ -109,24 +109,45 @@ public class PhelApiCompletions {
         addFunction(result, "repeatedly", "(repeatedly n f)", "Returns sequence of n calls to f", FUNCTION_ICON);
 
         // More collection functions
-        addFunction(result, "take", "(take n coll)", "Returns first n items", FUNCTION_ICON);
-        addFunction(result, "take-while", "(take-while pred coll)", "Returns items while pred is true", FUNCTION_ICON);
-        addFunction(result, "drop", "(drop n coll)", "Returns collection without first n items", FUNCTION_ICON);
-        addFunction(result, "drop-while", "(drop-while pred coll)", "Returns collection after dropping while pred is true", FUNCTION_ICON);
-        addFunction(result, "concat", "(concat & colls)", "Concatenates collections", FUNCTION_ICON);
-        addFunction(result, "flatten", "(flatten coll)", "Flattens nested collections", FUNCTION_ICON);
-        addFunction(result, "distinct", "(distinct coll)", "Returns collection with duplicates removed", FUNCTION_ICON);
-        addFunction(result, "partition", "(partition n coll)", "Returns collection partitioned into chunks of size n", FUNCTION_ICON);
-        addFunction(result, "interleave", "(interleave & colls)", "Interleaves collections", FUNCTION_ICON);
-        addFunction(result, "interpose", "(interpose sep coll)", "Interposes sep between items", FUNCTION_ICON);
+        addFunction(result, "take", "(take n xs)", "Returns first n items", FUNCTION_ICON);
+        addFunction(result, "take-while", "(take-while pred xs)", "Returns items while pred is true", FUNCTION_ICON);
+        addFunction(result, "drop", "(drop n xs)", "Returns collection without first n items", FUNCTION_ICON);
+        addFunction(result, "drop-while", "(drop-while pred xs)", "Returns collection after dropping while pred is true", FUNCTION_ICON);
+        addFunction(result, "concat", "(concat arr & xs)", "Concatenates collections", FUNCTION_ICON);
+        addFunction(result, "flatten", "(flatten xs)", "Flattens nested collections", FUNCTION_ICON);
+        addFunction(result, "distinct", "(distinct xs)", "Returns collection with duplicates removed", FUNCTION_ICON);
+        addFunction(result, "partition", "(partition n xs)", "Returns collection partitioned into chunks of size n", FUNCTION_ICON);
+        addFunction(result, "interleave", "(interleave & xs)", "Interleaves collections", FUNCTION_ICON);
+        addFunction(result, "interpose", "(interpose sep xs)", "Interposes sep between items", FUNCTION_ICON);
 
         // Sorting and comparison
-        addFunction(result, "sort", "(sort coll)", "Returns sorted collection", FUNCTION_ICON);
-        addFunction(result, "sort-by", "(sort-by keyfn coll)", "Returns collection sorted by keyfn", FUNCTION_ICON);
+        addFunction(result, "sort", "(sort xs)", "Returns sorted collection", FUNCTION_ICON);
+        addFunction(result, "sort-by", "(sort-by keyfn xs)", "Returns collection sorted by keyfn", FUNCTION_ICON);
         addFunction(result, "compare", "(compare x y)", "Compares x and y", FUNCTION_ICON);
         addFunction(result, "max", "(max & args)", "Returns maximum value", FUNCTION_ICON);
         addFunction(result, "min", "(min & args)", "Returns minimum value", FUNCTION_ICON);
-        addFunction(result, "extreme", "(extreme f coll)", "Returns extreme value using f", FUNCTION_ICON);
+        addFunction(result, "extreme", "(extreme order args)", "Returns extreme value using order function", FUNCTION_ICON);
+        
+        // Additional documented functions from official API
+        addFunction(result, "butlast", "(butlast xs)", "Returns all but the last element", FUNCTION_ICON);
+        addFunction(result, "dedupe", "(dedupe xs)", "Returns collection with consecutive duplicates removed", FUNCTION_ICON);
+        addFunction(result, "drop-last", "(drop-last n xs)", "Returns collection without last n items", FUNCTION_ICON);
+        addFunction(result, "every?", "(every? pred xs)", "Returns true if pred is true for every element", PREDICATE_ICON);
+        addFunction(result, "all?", "(all? pred xs)", "Returns true if pred is true for every element", PREDICATE_ICON);
+        addFunction(result, "mapcat", "(mapcat f & xs)", "Maps f over collections then concatenates results", FUNCTION_ICON);
+        addFunction(result, "assoc", "(assoc ds key value)", "Associates key with value in data structure", FUNCTION_ICON);
+        addFunction(result, "assoc-in", "(assoc-in ds ks v)", "Associates value in nested data structure", FUNCTION_ICON);
+        addFunction(result, "dissoc", "(dissoc ds key)", "Dissociates key from data structure", FUNCTION_ICON);
+        addFunction(result, "dissoc-in", "(dissoc-in ds ks)", "Dissociates key from nested data structure", FUNCTION_ICON);
+        addFunction(result, "coerce-in", "(coerce-in v min max)", "Coerces value between min and max", FUNCTION_ICON);
+        addFunction(result, "comment", "(comment &)", "Comments out expressions", FUNCTION_ICON);
+        addFunction(result, "difference-pair", "(difference-pair s1 s2)", "Returns difference between two sets as pair", FUNCTION_ICON);
+        
+        // Threading macros documented in API
+        addFunction(result, "->", "(-> x & forms)", "Thread-first macro", FUNCTION_ICON);
+        addFunction(result, "->>", "(->> x & forms)", "Thread-last macro", FUNCTION_ICON);
+        addFunction(result, "as->", "(as-> expr name & forms)", "Thread with alias", FUNCTION_ICON);
+        addFunction(result, "doto", "(doto x & forms)", "Evaluates forms with x as first argument", FUNCTION_ICON);
     }
 
     /**
@@ -175,17 +196,20 @@ public class PhelApiCompletions {
         addFunction(result, "php-array?", "(php-array? x)", "Returns true if x is PHP array", PREDICATE_ICON);
         addFunction(result, "php-object?", "(php-object? x)", "Returns true if x is PHP object", PREDICATE_ICON);
         addFunction(result, "php-resource?", "(php-resource? x)", "Returns true if x is PHP resource", PREDICATE_ICON);
+        
+        // Additional documented predicates from official API
+        addFunction(result, "not-empty?", "(not-empty? x)", "Returns true if collection is not empty", PREDICATE_ICON);
     }
 
     /**
      * Add collection manipulation functions
      */
     public static void addCollectionFunctions(@NotNull CompletionResultSet result, String prefix) {
-        addFunction(result, "cons", "(cons item coll)", "Returns new collection with item prepended", FUNCTION_ICON);
+        addFunction(result, "cons", "(cons x xs)", "Returns new collection with item prepended", FUNCTION_ICON);
         addFunction(result, "conj", "(conj coll & items)", "Returns collection with items added", FUNCTION_ICON);
         addFunction(result, "push", "(push coll item)", "Returns collection with item pushed", FUNCTION_ICON);
         addFunction(result, "find", "(find coll key)", "Returns key-value pair for key in coll", FUNCTION_ICON);
-        addFunction(result, "find-index", "(find-index pred coll)", "Returns index of first item matching pred", FUNCTION_ICON);
+        addFunction(result, "find-index", "(find-index pred xs)", "Returns index of first item matching pred", FUNCTION_ICON);
         addFunction(result, "contains?", "(contains? coll key)", "Returns true if coll contains key", PREDICATE_ICON);
         addFunction(result, "contains-value?", "(contains-value? coll value)", "Returns true if coll contains value", PREDICATE_ICON);
         addFunction(result, "keys", "(keys coll)", "Returns keys of associative collection", FUNCTION_ICON);
@@ -194,10 +218,10 @@ public class PhelApiCompletions {
         addFunction(result, "pairs", "(pairs coll)", "Returns pairs from collection", FUNCTION_ICON);
         addFunction(result, "merge", "(merge & maps)", "Merges maps", FUNCTION_ICON);
         addFunction(result, "merge-with", "(merge-with f & maps)", "Merges maps using f for conflicts", FUNCTION_ICON);
-        addFunction(result, "deep-merge", "(deep-merge & maps)", "Deep merges maps", FUNCTION_ICON);
+        addFunction(result, "deep-merge", "(deep-merge & args)", "Deep merges maps", FUNCTION_ICON);
         addFunction(result, "invert", "(invert map)", "Returns map with keys and values swapped", FUNCTION_ICON);
-        addFunction(result, "group-by", "(group-by f coll)", "Groups collection by result of f", FUNCTION_ICON);
-        addFunction(result, "frequencies", "(frequencies coll)", "Returns frequency map", FUNCTION_ICON);
+        addFunction(result, "group-by", "(group-by f xs)", "Groups collection by result of f", FUNCTION_ICON);
+        addFunction(result, "frequencies", "(frequencies xs)", "Returns frequency map", FUNCTION_ICON);
         addFunction(result, "zipcoll", "(zipcoll keys values)", "Creates map from keys and values", FUNCTION_ICON);
     }
 
@@ -205,20 +229,20 @@ public class PhelApiCompletions {
      * Add arithmetic and math functions
      */
     public static void addArithmeticFunctions(@NotNull CompletionResultSet result, String prefix) {
-        addFunction(result, "+", "(+ & args)", "Addition", FUNCTION_ICON);
-        addFunction(result, "-", "(- & args)", "Subtraction", FUNCTION_ICON);
-        addFunction(result, "*", "(* & args)", "Multiplication", FUNCTION_ICON);
-        addFunction(result, "/", "(/ & args)", "Division", FUNCTION_ICON);
+        addFunction(result, "+", "(+ & xs)", "Addition", FUNCTION_ICON);
+        addFunction(result, "-", "(- & xs)", "Subtraction", FUNCTION_ICON);
+        addFunction(result, "*", "(* & xs)", "Multiplication", FUNCTION_ICON);
+        addFunction(result, "/", "(/ & xs)", "Division", FUNCTION_ICON);
         addFunction(result, "%", "(% dividend divisor)", "Modulo operation", FUNCTION_ICON);
-        addFunction(result, "**", "(** base exp)", "Exponentiation", FUNCTION_ICON);
+        addFunction(result, "**", "(** a x)", "Exponentiation", FUNCTION_ICON);
         addFunction(result, "inc", "(inc x)", "Increments x by 1", FUNCTION_ICON);
         addFunction(result, "dec", "(dec x)", "Decrements x by 1", FUNCTION_ICON);
-        addFunction(result, "mean", "(mean coll)", "Returns arithmetic mean", FUNCTION_ICON);
+        addFunction(result, "mean", "(mean xs)", "Returns arithmetic mean", FUNCTION_ICON);
 
         // Bitwise operations
-        addFunction(result, "bit-and", "(bit-and x y)", "Bitwise AND", FUNCTION_ICON);
-        addFunction(result, "bit-or", "(bit-or x y)", "Bitwise OR", FUNCTION_ICON);
-        addFunction(result, "bit-xor", "(bit-xor x y)", "Bitwise XOR", FUNCTION_ICON);
+        addFunction(result, "bit-and", "(bit-and x y & args)", "Bitwise AND", FUNCTION_ICON);
+        addFunction(result, "bit-or", "(bit-or x y & args)", "Bitwise OR", FUNCTION_ICON);
+        addFunction(result, "bit-xor", "(bit-xor x y & args)", "Bitwise XOR", FUNCTION_ICON);
         addFunction(result, "bit-not", "(bit-not x)", "Bitwise NOT", FUNCTION_ICON);
         addFunction(result, "bit-shift-left", "(bit-shift-left x n)", "Bitwise left shift", FUNCTION_ICON);
         addFunction(result, "bit-shift-right", "(bit-shift-right x n)", "Bitwise right shift", FUNCTION_ICON);

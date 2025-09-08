@@ -456,7 +456,7 @@ public class PhelDocumentationProvider extends AbstractDocumentationProvider {
         // ===== ADDITIONAL CORE FUNCTIONS =====
         FUNCTION_DOCS.put("apply",
                 "<h3>apply</h3>" +
-                "<p><b>Signature:</b> <code>(apply f expr*)</code></p>" +
+                "<p><b>Signature:</b> <code>(apply f & args)</code></p>" +
                 "<p>Calls the function with the given arguments. The last argument must be a list of values, which are passed as separate arguments, rather than a single list.</p>");
 
         FUNCTION_DOCS.put("partial",
@@ -486,8 +486,8 @@ public class PhelDocumentationProvider extends AbstractDocumentationProvider {
 
         FUNCTION_DOCS.put("find",
                 "<h3>find</h3>" +
-                "<p><b>Signature:</b> <code>(find pred xs)</code></p>" +
-                "<p>Returns the first item in xs where (pred item) evaluates to true.</p>");
+                "<p><b>Signature:</b> <code>(find coll key)</code></p>" +
+                "<p>Returns the key-value pair for key in coll.</p>");
 
         // ===== JSON FUNCTIONS =====
         FUNCTION_DOCS.put("json/encode",
@@ -571,8 +571,71 @@ public class PhelDocumentationProvider extends AbstractDocumentationProvider {
                 "<p><b>HTTP Module</b></p>" +
                 "<p><b>Signature:</b> <code>(http/response-from-map response-map)</code></p>" +
                 "<p>Creates a response struct from a map. The map can have :status, :headers, :body, :version, :reason keys.</p>");
-        
-        // Add more comprehensive documentation as needed...
+
+        FUNCTION_DOCS.put("keep",
+                "<h3>keep</h3>" +
+                "<p><b>Signature:</b> <code>(keep pred xs)</code></p>" +
+                "<p>Returns a collection of non-nil results of (pred x) applied to items in xs.</p>");
+
+        FUNCTION_DOCS.put("keep-indexed",
+                "<h3>keep-indexed</h3>" +
+                "<p><b>Signature:</b> <code>(keep-indexed pred xs)</code></p>" +
+                "<p>Like keep but pred takes index and item as arguments.</p>");
+
+        FUNCTION_DOCS.put("butlast",
+                "<h3>butlast</h3>" +
+                "<p><b>Signature:</b> <code>(butlast xs)</code></p>" +
+                "<p>Returns all but the last element of xs.</p>");
+
+        FUNCTION_DOCS.put("dedupe",
+                "<h3>dedupe</h3>" +
+                "<p><b>Signature:</b> <code>(dedupe xs)</code></p>" +
+                "<p>Returns collection with consecutive duplicates removed.</p>");
+
+        FUNCTION_DOCS.put("every?",
+                "<h3>every?</h3>" +
+                "<p><b>Signature:</b> <code>(every? pred xs)</code></p>" +
+                "<p>Returns true if pred is true for every element.</p>");
+
+        FUNCTION_DOCS.put("all?",
+                "<h3>all?</h3>" +
+                "<p><b>Signature:</b> <code>(all? pred xs)</code></p>" +
+                "<p>Returns true if pred is true for every element.</p>");
+
+        FUNCTION_DOCS.put("mapcat",
+                "<h3>mapcat</h3>" +
+                "<p><b>Signature:</b> <code>(mapcat f & xs)</code></p>" +
+                "<p>Maps f over collections then concatenates results.</p>");
+
+        FUNCTION_DOCS.put("bit-and",
+                "<h3>bit-and</h3>" +
+                "<p><b>Signature:</b> <code>(bit-and x y & args)</code></p>" +
+                "<p>Bitwise AND operation. Can take multiple arguments.</p>");
+
+        FUNCTION_DOCS.put("bit-or",
+                "<h3>bit-or</h3>" +
+                "<p><b>Signature:</b> <code>(bit-or x y & args)</code></p>" +
+                "<p>Bitwise OR operation. Can take multiple arguments.</p>");
+
+        FUNCTION_DOCS.put("bit-xor",
+                "<h3>bit-xor</h3>" +
+                "<p><b>Signature:</b> <code>(bit-xor x y & args)</code></p>" +
+                "<p>Bitwise XOR operation. Can take multiple arguments.</p>");
+
+        FUNCTION_DOCS.put("bit-not",
+                "<h3>bit-not</h3>" +
+                "<p><b>Signature:</b> <code>(bit-not x)</code></p>" +
+                "<p>Bitwise NOT operation.</p>");
+
+        FUNCTION_DOCS.put("bit-shift-left",
+                "<h3>bit-shift-left</h3>" +
+                "<p><b>Signature:</b> <code>(bit-shift-left x n)</code></p>" +
+                "<p>Bitwise left shift operation.</p>");
+
+        FUNCTION_DOCS.put("bit-shift-right",
+                "<h3>bit-shift-right</h3>" +
+                "<p><b>Signature:</b> <code>(bit-shift-right x n)</code></p>" +
+                "<p>Bitwise right shift operation.</p>");
     }
 
     @Nullable
