@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Provides context-aware prioritization of completion suggestions
  */
 public class PhelCompletionRanking {
+    
+    private static final Logger LOG = Logger.getInstance(PhelCompletionRanking.class);
 
     /**
      * Priority levels for different types of completions
@@ -301,25 +304,40 @@ public class PhelCompletionRanking {
      */
     @Nullable
     private static String getCurrentFunctionContext(@NotNull PsiElement element) {
-        PhelList parentList = findParentFunctionCall(element);
-        if (parentList != null) {
-            PsiElement[] children = parentList.getChildren();
+        try {
+            PhelList parentList = findParentFunctionCall(element);
+            if (parentList == null) {
+                return null;
+            }
+            
+            PsiElement[] children = PhelCompletionErrorHandler.safeGetChildren(parentList);
             
             for (int i = 0; i < children.length; i++) {
-                PsiElement child = children[i];
+                PsiElement child = PhelCompletionErrorHandler.safeArrayAccess(children, i);
+                if (child == null) {
+                    continue;
+                }
                 
                 // Skip opening parenthesis, look for actual function name
                 if (child instanceof PhelSymbol) {
-                    String context = child.getText();
-                    return context;
+                    String context = PhelCompletionErrorHandler.safeGetText(child);
+                    if (!context.isEmpty() && !context.equals("(") && !context.equals(")")) {
+                        return context;
+                    }
                 }
                 // Try PhelAccessImpl as well
                 if (child instanceof org.phellang.language.psi.impl.PhelAccessImpl) {
-                    String context = child.getText();
-                    return context;
+                    String context = PhelCompletionErrorHandler.safeGetText(child);
+                    if (!context.isEmpty() && !context.equals("(") && !context.equals(")")) {
+                        return context;
+                    }
                 }
             }
+            
+        } catch (Exception e) {
+            LOG.warn("Error getting current function context", e);
         }
+        
         return null;
     }
     
@@ -328,21 +346,38 @@ public class PhelCompletionRanking {
      */
     @Nullable
     private static PhelList findParentFunctionCall(@NotNull PsiElement element) {
-        PsiElement current = element.getParent();
-        while (current != null) {
-            if (current instanceof PhelList) {
-                PhelList list = (PhelList) current;
-                PsiElement[] children = list.getChildren();
-                // Make sure this list has a function name (not just an empty parenthesis)
-                if (children.length > 0) {
-                    PsiElement firstChild = children[0];
-                    // Skip lists that start with just "(" - look for actual function calls
-                    if (!(firstChild.getText().equals("(") && children.length <= 2)) {
-                        return list;
+        try {
+            PsiElement current = element.getParent();
+            int depth = 0;
+            final int MAX_DEPTH = 50; // Prevent infinite loops in malformed PSI trees
+            
+            while (current != null && depth < MAX_DEPTH) {
+                if (current instanceof PhelList) {
+                    PhelList list = (PhelList) current;
+                    PsiElement[] children = PhelCompletionErrorHandler.safeGetChildren(list);
+                    
+                    // Make sure this list has a function name (not just an empty parenthesis)
+                    if (children.length > 0) {
+                        PsiElement firstChild = PhelCompletionErrorHandler.safeArrayAccess(children, 0);
+                        if (firstChild != null) {
+                            String firstChildText = PhelCompletionErrorHandler.safeGetText(firstChild);
+                            // Skip lists that start with just "(" - look for actual function calls
+                            if (!(firstChildText.equals("(") && children.length <= 2)) {
+                                return list;
+                            }
+                        }
                     }
                 }
+                current = current.getParent();
+                depth++;
             }
-            current = current.getParent();
+            
+            if (depth >= MAX_DEPTH) {
+                LOG.warn("Maximum PSI tree traversal depth reached while finding parent function call");
+            }
+            
+        } catch (Exception e) {
+            LOG.warn("Error finding parent function call", e);
         }
         return null;
     }

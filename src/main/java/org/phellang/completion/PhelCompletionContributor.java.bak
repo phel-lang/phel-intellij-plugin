@@ -6,15 +6,9 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.phellang.PhelIcons;
@@ -23,12 +17,8 @@ import org.phellang.language.psi.PhelSymbol;
 import org.phellang.language.psi.PhelTypes;
 import org.phellang.language.psi.PhelVec;
 import org.phellang.language.psi.impl.PhelAccessImpl;
-import org.phellang.language.psi.PhelAccess;
 
 import javax.swing.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Main completion contributor for Phel language
@@ -130,6 +120,7 @@ public class PhelCompletionContributor extends CompletionContributor {
         private void performCompletionWithValidation(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) throws Exception {
             PsiElement element = parameters.getPosition();
             
+            // DEBUG: Show what element we're working with
             // Validate completion context before proceeding
             if (!PhelCompletionErrorHandler.isCompletionContextValid(element)) {
                 throw new IllegalStateException("Invalid completion context: PSI element or tree is malformed");
@@ -469,9 +460,12 @@ public class PhelCompletionContributor extends CompletionContributor {
             // Choose the best vector from our candidates
             for (PhelVec vector : vectors) {
                 String vectorText = vector.getText();
+                System.out.println("DEBUG PARAM VECTOR: Considering vector: '" + 
+                    (vectorText.length() > 50 ? vectorText.substring(0, 50) + "... (length=" + vectorText.length() + ")" : vectorText) + "'");
                 
                 // Skip malformed giant vectors
                 if (vectorText.length() > 1000) {
+                    System.out.println("DEBUG PARAM VECTOR: Skipping giant vector (malformed syntax)");
                     continue;
                 }
                 
@@ -483,8 +477,10 @@ public class PhelCompletionContributor extends CompletionContributor {
                     int cursorOffsetInVector = cursorOffset - vectorStart;
                     
                     if (cursorOffsetInVector >= vectorText.length() - 1) {
+                        System.out.println("DEBUG PARAM VECTOR: Cursor is after small completed vector - keep looking for parent");
                         continue; // Keep looking for a parent vector we're actually inside
                     } else {
+                        System.out.println("DEBUG PARAM VECTOR: Cursor inside small vector");
                         closestVector = vector;
                         break;
                     }
@@ -492,6 +488,7 @@ public class PhelCompletionContributor extends CompletionContributor {
                 
                 // Priority 2: Unclosed vectors that we might be inside (intermediate vectors like [b ...])
                 else if (!vectorText.endsWith("]") && vectorText.length() < 500) {
+                    System.out.println("DEBUG PARAM VECTOR: Found unclosed intermediate vector - likely the one we want");
                     closestVector = vector;
                     break; // This is probably the vector we're inside that needs closing
                 }
@@ -505,13 +502,17 @@ public class PhelCompletionContributor extends CompletionContributor {
             }
             
             if (closestVector == null) {
+                System.out.println("DEBUG PARAM VECTOR: No vector ancestor found");
                 return false; // No vector ancestor
             }
             
             String vectorText = closestVector.getText();
+            System.out.println("DEBUG PARAM VECTOR: Closest vector found: '" + 
+                (vectorText.length() > 100 ? vectorText.substring(0, 100) + "... (truncated, length=" + vectorText.length() + ")" : vectorText) + "'");
             
             // ROBUSTNESS: Handle malformed/incomplete syntax where vectors are huge due to missing closing brackets
             if (vectorText.length() > 1000) {
+                System.out.println("DEBUG PARAM VECTOR: Vector unusually large (" + vectorText.length() + " chars) - likely malformed syntax, treating as NOT inside");
                 return false; // Probably malformed syntax with missing closing brackets
             }
             
@@ -521,9 +522,11 @@ public class PhelCompletionContributor extends CompletionContributor {
             int cursorOffsetInVector = cursorOffset - vectorStart;
             int vectorLength = vectorText.length();
             
+            System.out.println("DEBUG PARAM VECTOR: Cursor offset in vector: " + cursorOffsetInVector + " / " + vectorLength);
             
             // If vector ends with ] and cursor is at or after the closing ], we're NOT inside
             if (vectorText.endsWith("]") && cursorOffsetInVector >= vectorLength - 1) {
+                System.out.println("DEBUG PARAM VECTOR: Cursor at/after closing ] - NOT inside vector");
                 return false; // We're after the closing ], not inside
             }
             
@@ -543,12 +546,14 @@ public class PhelCompletionContributor extends CompletionContributor {
                             text.equals("defmacro") || text.equals("defmacro-") ||
                             text.equals("fn") || text.equals("let") || 
                             text.equals("for") || text.equals("loop")) {
+                            System.out.println("DEBUG PARAM VECTOR: Found " + text + " context, cursor IS inside vector");
                             return true; // This vector is in a binding context and cursor is inside
                         }
                     }
                 }
             }
             
+            System.out.println("DEBUG PARAM VECTOR: Vector not in parameter/binding context");
             return false;
         }
         
@@ -556,6 +561,8 @@ public class PhelCompletionContributor extends CompletionContributor {
          * Add parameter completions - suggests parameter names and closing ]
          */
         private void addParameterCompletions(CompletionResultSet result) {
+            System.out.println("DEBUG PARAMETER COMPLETIONS: Starting addParameterCompletions");
+            System.out.println("DEBUG PARAMETER COMPLETIONS: Result set class: " + result.getClass().getSimpleName());
             
             // Suggest closing bracket to end parameter vector - HIGHEST PRIORITY
             PhelCompletionRanking.addRankedCompletion(
@@ -566,6 +573,7 @@ public class PhelCompletionContributor extends CompletionContributor {
                 "Close parameter vector",
                 org.phellang.PhelIcons.FILE
             );
+            System.out.println("DEBUG PARAMETER COMPLETIONS: Added closing bracket ] with SPECIAL_FORMS priority (55.0)");
             
             // Suggest common parameter names
             String[] commonParams = {
@@ -590,7 +598,9 @@ public class PhelCompletionContributor extends CompletionContributor {
                     "Parameter name",
                     PhelIconProvider.PARAMETER
                 );
+                System.out.println("DEBUG PARAMETER COMPLETIONS: Added parameter: " + param + " with PROJECT_SYMBOLS priority (25.0)");
             }
+            System.out.println("DEBUG PARAMETER COMPLETIONS: Finished adding " + commonParams.length + " parameters");
         }
         
         /**
@@ -785,7 +795,9 @@ public class PhelCompletionContributor extends CompletionContributor {
                             
                             // Special handling for forms where certain positions are expression contexts, not arguments
                             boolean isExpression = isExpressionContext(functionName, cursorPosition, functionIndex);
+                            System.out.println("DEBUG FUNCTION CONTEXT: " + functionName + " - cursorPosition=" + cursorPosition + ", functionIndex=" + functionIndex + ", isExpression=" + isExpression);
                             if (isExpression) {
+                                System.out.println("DEBUG FUNCTION CONTEXT: In expression context for '" + functionName + "' - returning null for expression completions");
                                 return null; // Allow normal expression completions including "("
                             }
                             
@@ -1145,6 +1157,7 @@ public class PhelCompletionContributor extends CompletionContributor {
                 
                 // Check what kind of namespace completion context we're in
                 String contextText = getCurrentTextContext(element, 50);
+                System.out.println("DEBUG NS: Context text: " + contextText);
                 
                 // Determine completion type based on context  
                 boolean inRequire = isInRequireContext(element);
@@ -1169,6 +1182,7 @@ public class PhelCompletionContributor extends CompletionContributor {
                 }
                 
             } catch (Exception e) {
+                System.out.println("DEBUG NS: Error in namespace completion: " + e.getMessage());
                 // Fallback to basic completions
                 addTopLevelNamespaceCompletions(result);
             }
@@ -1178,29 +1192,15 @@ public class PhelCompletionContributor extends CompletionContributor {
          * Add top-level namespace completions (:require, :require-file, :use)
          */
         private void addTopLevelNamespaceCompletions(CompletionResultSet result) {
-            System.out.println("DEBUG NS: addTopLevelNamespaceCompletions called");
-            
-            // FIRST: Suggest closing the ns form - highest priority
-            PhelCompletionRanking.addRankedCompletion(
-                result,
-                ")",
-                PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS, // Highest priority (100.0)
-                null,
-                "Close ns form",
-                org.phellang.PhelIcons.FILE
-            );
-            System.out.println("DEBUG NS: Added ) to close ns form");
-            
-            // THEN: Suggest additional namespace declaration options
+            // Suggest namespace declaration options
             PhelCompletionRanking.addRankedCompletion(
                 result,
                 "(:require",
                 PhelCompletionRanking.Priority.SPECIAL_FORMS,
-                "(:require namespace\\name :as alias)",
-                "Import namespace with optional alias",
+                "(:require [namespace :as alias :refer [symbols]])",
+                "Import namespace with optional alias and symbol references",
                 org.phellang.PhelIcons.FILE
             );
-            System.out.println("DEBUG NS: Added (:require completion");
             
             PhelCompletionRanking.addRankedCompletion(
                 result,
@@ -1210,18 +1210,15 @@ public class PhelCompletionContributor extends CompletionContributor {
                 "Include PHP file (e.g., vendor/autoload.php)",
                 org.phellang.PhelIcons.FILE
             );
-            System.out.println("DEBUG NS: Added (:require-file completion");
             
             PhelCompletionRanking.addRankedCompletion(
                 result,
                 "(:use",
                 PhelCompletionRanking.Priority.MACROS, // Lower priority - can be for PHP classes
-                "(:use namespace\\name) or (:use Some\\Php\\Class)",
+                "(:use [namespace] or (:use Some\\Php\\Class)",
                 "Import symbols from namespace or PHP class",
                 org.phellang.PhelIcons.FILE
             );
-            System.out.println("DEBUG NS: Added (:use completion");
-            System.out.println("DEBUG NS: Finished adding top-level namespace completions");
         }
         
         /**
@@ -1229,121 +1226,30 @@ public class PhelCompletionContributor extends CompletionContributor {
          */
         private boolean isInRequireContext(PsiElement element) {
             String context = getCurrentTextContext(element, 200);
-            
-            System.out.println("DEBUG NS: isInRequireContext - context: '" + context + "'");
+            System.out.println("DEBUG NS: isInRequireContext checking: '" + context + "'");
             
             boolean hasRequire = context.contains(":require") || context.contains("(:require");
             boolean hasRequireFile = context.contains(":require-file") || context.contains("(:require-file");
             
-            // Check if we're inside an incomplete require statement vs after a completed one
-            // Look for complete (:require ...) patterns in the context
-            boolean afterCompleteRequire = false;
+            System.out.println("DEBUG NS: hasRequire=" + hasRequire + ", hasRequireFile=" + hasRequireFile);
             
-            // Simpler approach: if context contains a line ending with ) and current line is just IntellijIdeaRulezzz
-            String[] lines = context.split("\\n");
-            System.out.println("DEBUG NS: Split into " + lines.length + " lines");
-            for (int i = 0; i < lines.length; i++) {
-                System.out.println("DEBUG NS: Line[" + i + "]: '" + lines[i] + "'");
-            }
-            
-            if (lines.length >= 2) {
-                String currentLine = lines[lines.length - 1].trim();
-                System.out.println("DEBUG NS: Current line: '" + currentLine + "'");
-                
-                // If current line is just the IntelliJ placeholder, check previous lines for complete forms
-                if (currentLine.equals("IntellijIdeaRulezzz") || currentLine.isEmpty()) {
-                    // Look for any complete require forms in previous lines
-                    for (int i = 0; i < lines.length - 1; i++) {
-                        String line = lines[i].trim();
-                        System.out.println("DEBUG NS: Checking previous line[" + i + "]: '" + line + "'");
-                        // Simple check: line contains :require and ends with )
-                        if (line.contains(":require") && line.endsWith(")")) {
-                            System.out.println("DEBUG NS: Found complete require form on previous line!");
-                            afterCompleteRequire = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            System.out.println("DEBUG NS: hasRequire=" + hasRequire + ", hasRequireFile=" + hasRequireFile + 
-                             ", afterCompleteRequire=" + afterCompleteRequire);
-            
-            return hasRequire && !hasRequireFile && !afterCompleteRequire;
+            return hasRequire && !hasRequireFile;
         }
         
         /**
          * Check if we're in a :require-file context
          */
         private boolean isInRequireFileContext(PsiElement element) {
-            String context = getCurrentTextContext(element, 200);
-            
-            System.out.println("DEBUG NS: isInRequireFileContext - context: '" + context + "'");
-            
-            boolean hasRequireFile = context.contains(":require-file") || context.contains("(:require-file");
-            
-            // Use same simple line-by-line approach as isInRequireContext
-            String[] lines = context.split("\\n");
-            System.out.println("DEBUG NS: Split into " + lines.length + " lines");
-            for (int i = 0; i < lines.length; i++) {
-                System.out.println("DEBUG NS: Line[" + i + "]: '" + lines[i] + "'");
-            }
-            
-            boolean afterCompleteRequireFile = false;
-            if (lines.length >= 2) {
-                String currentLine = lines[lines.length - 1].trim();
-                System.out.println("DEBUG NS: Current line: '" + currentLine + "'");
-                
-                // If current line is just the IntelliJ placeholder, check previous lines for complete forms
-                if (currentLine.equals("IntellijIdeaRulezzz") || currentLine.isEmpty()) {
-                    // Look for any complete require-file forms in previous lines
-                    for (int i = 0; i < lines.length - 1; i++) {
-                        String line = lines[i].trim();
-                        System.out.println("DEBUG NS: Checking previous line[" + i + "]: '" + line + "'");
-                        // Simple check: line contains :require-file and ends with )
-                        if (line.contains(":require-file") && line.endsWith(")")) {
-                            System.out.println("DEBUG NS: Found complete require-file form on previous line!");
-                            afterCompleteRequireFile = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            System.out.println("DEBUG NS: hasRequireFile=" + hasRequireFile + ", afterCompleteRequireFile=" + afterCompleteRequireFile);
-            
-            return hasRequireFile && !afterCompleteRequireFile;
+            String context = getCurrentTextContext(element, 100);
+            return context.contains(":require-file") || context.contains("(:require-file");
         }
         
         /**
          * Check if we're in a :use context
          */
         private boolean isInUseContext(PsiElement element) {
-            String context = getCurrentTextContext(element, 200);
-            
-            boolean hasUse = context.contains(":use") || context.contains("(:use");
-            
-            // Use same simple line-by-line approach
-            String[] lines = context.split("\\n");
-            boolean afterCompleteUse = false;
-            if (lines.length >= 2) {
-                String currentLine = lines[lines.length - 1].trim();
-                
-                // If current line is just the IntelliJ placeholder, check previous lines for complete forms
-                if (currentLine.equals("IntellijIdeaRulezzz") || currentLine.isEmpty()) {
-                    // Look for any complete use forms in previous lines
-                    for (int i = 0; i < lines.length - 1; i++) {
-                        String line = lines[i].trim();
-                        // Simple check: line contains :use and ends with )
-                        if (line.contains(":use") && line.endsWith(")")) {
-                            afterCompleteUse = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            return hasUse && !afterCompleteUse;
+            String context = getCurrentTextContext(element, 100);
+            return context.contains(":use") || context.contains("(:use");
         }
         
         /**
@@ -1351,28 +1257,11 @@ public class PhelCompletionContributor extends CompletionContributor {
          */
         private void addRequireCompletions(CompletionResultSet result, PsiElement element) {
             String context = getCurrentTextContext(element, 200);
+            System.out.println("DEBUG NS: addRequireCompletions context: '" + context + "'");
             
-            System.out.println("DEBUG NS REQUIRE: context = '" + context + "'");
-            
-            // Extract the current namespace prefix being typed
-            String namespacePrefix = extractNamespacePrefix(context);
-            System.out.println("DEBUG NS REQUIRE: extracted prefix = '" + namespacePrefix + "'");
-            
-            // Improved logic: detect different completion scenarios
-            boolean hasCompleteNamespaceWithSpace = context.matches(".*:require\\s+[a-zA-Z][a-zA-Z0-9\\\\.-]+\\s+.*");
-            boolean justAfterRequire = context.matches(".*:require\\s*IntellijIdeaRulezzz.*") ||
-                                     context.matches(".*\\(:require\\s*IntellijIdeaRulezzz.*");
-            boolean hasPartialNamespace = !namespacePrefix.isEmpty();
-            boolean isCompleteKnownNamespace = isKnownCompleteNamespace(namespacePrefix);
-            
-            System.out.println("DEBUG NS REQUIRE: hasCompleteNamespaceWithSpace = " + hasCompleteNamespaceWithSpace + 
-                             ", justAfterRequire = " + justAfterRequire + 
-                             ", hasPartialNamespace = " + hasPartialNamespace +
-                             ", isCompleteKnownNamespace = " + isCompleteKnownNamespace);
-            
-            // Case 1: After a complete known namespace (like "phel\base64") - suggest options
-            if (isCompleteKnownNamespace) {
-                System.out.println("DEBUG NS REQUIRE: Complete known namespace '" + namespacePrefix + "' - suggesting :as, :refer, )");
+            // If we're after a namespace name inside brackets, suggest :as and :refer
+            if (context.matches(".*\\[\\s*[a-zA-Z][a-zA-Z0-9\\\\.-]*\\s*")) {
+                System.out.println("DEBUG NS: After namespace name in brackets - suggesting :as and :refer");
                 PhelCompletionRanking.addRankedCompletion(
                     result,
                     ":as",
@@ -1391,59 +1280,18 @@ public class PhelCompletionContributor extends CompletionContributor {
                     org.phellang.PhelIcons.FILE
                 );
                 
-                // Add ) to close the require form
                 PhelCompletionRanking.addRankedCompletion(
                     result,
-                    ")",
+                    "]",
                     PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS,
                     null,
-                    "Close :require form",
+                    "Close namespace import",
                     org.phellang.PhelIcons.FILE
                 );
             }
-            // Case 2: Just after :require OR typing partial namespace (like "phel\")
-            else if (justAfterRequire || hasPartialNamespace) {
-                System.out.println("DEBUG NS REQUIRE: Suggesting namespace names (prefix: '" + namespacePrefix + "')");
-                // Suggest common Phel namespaces with prefix filtering
-                addCommonPhelNamespacesWithPrefix(result, namespacePrefix);
-                
-                // Suggest actual namespaces found in project .phel files with prefix filtering
-                addProjectPhelNamespacesWithPrefix(result, element, namespacePrefix);
-            }
-            // Case 3: After a complete namespace name followed by space - suggest options
-            else if (hasCompleteNamespaceWithSpace) {
-                System.out.println("DEBUG NS REQUIRE: After complete namespace - suggesting :as, :refer, )");
-                PhelCompletionRanking.addRankedCompletion(
-                    result,
-                    ":as",
-                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
-                    ":as alias-name",
-                    "Create an alias for the namespace",
-                    org.phellang.PhelIcons.FILE
-                );
-                
-                PhelCompletionRanking.addRankedCompletion(
-                    result,
-                    ":refer",
-                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
-                    ":refer [symbol1 symbol2]",
-                    "Import specific symbols directly",
-                    org.phellang.PhelIcons.FILE
-                );
-                
-                // Add ) to close the require form
-                PhelCompletionRanking.addRankedCompletion(
-                    result,
-                    ")",
-                    PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS,
-                    null,
-                    "Close :require form",
-                    org.phellang.PhelIcons.FILE
-                );
-            }
-            // Case 3: After :refer, suggest [ to start symbol list
-            else if (context.contains(":refer") && !context.contains("[")) {
-                System.out.println("DEBUG NS REQUIRE: After :refer - suggesting [");
+            // If we're after :refer, suggest [
+            else if (context.contains(":refer")) {
+                System.out.println("DEBUG NS: After :refer - suggesting [");
                 PhelCompletionRanking.addRankedCompletion(
                     result,
                     "[",
@@ -1453,22 +1301,50 @@ public class PhelCompletionContributor extends CompletionContributor {
                     org.phellang.PhelIcons.FILE
                 );
             }
-            // Case 4: Inside :refer [...], suggest ] to close
-            else if (context.contains(":refer") && context.contains("[") && !context.contains("]")) {
-                System.out.println("DEBUG NS REQUIRE: Inside :refer [...] - suggesting ]");
-                PhelCompletionRanking.addRankedCompletion(
-                    result,
-                    "]",
-                    PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS,
-                    null,
-                    "Close :refer symbol list",
-                    org.phellang.PhelIcons.FILE
-                );
-            }
-            // Case 5: Unexpected fallback - should not happen with good logic
+            // If we're directly after :require but not in brackets yet
             else {
-                System.out.println("DEBUG NS REQUIRE: UNEXPECTED fallback case - context: '" + context + "'");
-                System.out.println("DEBUG NS REQUIRE: This should not happen - please check logic!");
+                System.out.println("DEBUG NS: Directly after :require - suggesting [ and namespace names");
+                
+                try {
+                    System.out.println("DEBUG NS: Adding [ bracket completion");
+                    PhelCompletionRanking.addRankedCompletion(
+                        result,
+                        "[",
+                        PhelCompletionRanking.Priority.SPECIAL_FORMS,
+                        "[namespace-name :as alias :refer [symbols]]",
+                        "Start complex namespace import with options",
+                        org.phellang.PhelIcons.FILE
+                    );
+                    System.out.println("DEBUG NS: Successfully added [ bracket completion");
+                    
+                    System.out.println("DEBUG NS: Adding common Phel namespaces");
+                    // Suggest common Phel namespaces for direct import (without brackets)
+                    addCommonPhelNamespaces(result);
+                    System.out.println("DEBUG NS: Successfully added common Phel namespaces");
+                    
+                    System.out.println("DEBUG NS: Adding direct namespace example");
+                    // Add suggestion for direct namespace import style
+                    PhelCompletionRanking.addRankedCompletion(
+                        result,
+                        "my\\phel\\module",
+                        PhelCompletionRanking.Priority.API_FUNCTIONS,
+                        null,
+                        "Direct namespace import (example)",
+                        PhelIconProvider.NAMESPACE
+                    );
+                    System.out.println("DEBUG NS: Successfully added direct namespace example");
+                    
+                    // Also try adding a simple direct completion to test if result set is working
+                    System.out.println("DEBUG NS: Adding simple test completion");
+                    result.addElement(com.intellij.codeInsight.lookup.LookupElementBuilder.create("TEST-COMPLETION")
+                        .withTypeText("Debug test")
+                        .withIcon(org.phellang.PhelIcons.FILE));
+                    System.out.println("DEBUG NS: Successfully added simple test completion");
+                    
+                } catch (Exception e) {
+                    System.out.println("DEBUG NS: ERROR in addRequireCompletions: " + e.getMessage());
+                    e.printStackTrace();
+                }
             }
         }
         
@@ -1476,84 +1352,23 @@ public class PhelCompletionContributor extends CompletionContributor {
          * Add completions for :require-file context
          */
         private void addRequireFileCompletions(CompletionResultSet result, PsiElement element) {
-            String context = getCurrentTextContext(element, 200);
+            // Suggest common PHP file paths
+            String[] commonPaths = {
+                "\"vendor/autoload.php\"",
+                "\"bootstrap.php\"",
+                "\"config.php\"",
+                "\"functions.php\""
+            };
             
-            System.out.println("DEBUG NS REQUIRE-FILE: context = '" + context + "'");
-            
-            // Check if there's already a filename string in the context
-            boolean hasFilename = context.matches(".*:require-file\\s+\"[^\"]+\".*");
-            boolean justAfterRequireFile = context.matches(".*:require-file\\s*IntellijIdeaRulezzz.*") ||
-                                         context.matches(".*\\(:require-file\\s*IntellijIdeaRulezzz.*");
-            
-            System.out.println("DEBUG NS REQUIRE-FILE: hasFilename = " + hasFilename + ", justAfterRequireFile = " + justAfterRequireFile);
-            
-            // Case 1: Just after :require-file (no filename yet)
-            if (justAfterRequireFile) {
-                System.out.println("DEBUG NS REQUIRE-FILE: Just after :require-file - suggesting quotes and filenames");
-                
-                // Suggest common PHP file paths
-                String[] commonPaths = {
-                    "\"vendor/autoload.php\"",
-                    "\"bootstrap.php\"",
-                    "\"config.php\"",
-                    "\"functions.php\""
-                };
-                
-                for (String path : commonPaths) {
-                    PhelCompletionRanking.addRankedCompletion(
-                        result,
-                        path,
-                        PhelCompletionRanking.Priority.API_FUNCTIONS,
-                        null,
-                        "Common PHP file to include",
-                        PhelIconProvider.PHP_INTEROP
-                    );
-                }
-            }
-            // Case 2: After a filename - suggest options
-            else if (hasFilename) {
-                System.out.println("DEBUG NS REQUIRE-FILE: After filename - suggesting :as and )");
-                
+            for (String path : commonPaths) {
                 PhelCompletionRanking.addRankedCompletion(
                     result,
-                    ":as",
-                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
-                    ":as alias-name",
-                    "Create alias for the included file",
-                    org.phellang.PhelIcons.FILE
-                );
-                
-                PhelCompletionRanking.addRankedCompletion(
-                    result,
-                    ")",
-                    PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS,
+                    path,
+                    PhelCompletionRanking.Priority.API_FUNCTIONS,
                     null,
-                    "Close :require-file form",
-                    org.phellang.PhelIcons.FILE
+                    "Common PHP file to include",
+                    PhelIconProvider.PHP_INTEROP
                 );
-            }
-            // Case 3: Fallback
-            else {
-                System.out.println("DEBUG NS REQUIRE-FILE: Fallback case - suggesting filenames");
-                
-                // Suggest common PHP file paths
-                String[] commonPaths = {
-                    "\"vendor/autoload.php\"",
-                    "\"bootstrap.php\"",
-                    "\"config.php\"",
-                    "\"functions.php\""
-                };
-                
-                for (String path : commonPaths) {
-                    PhelCompletionRanking.addRankedCompletion(
-                        result,
-                        path,
-                        PhelCompletionRanking.Priority.API_FUNCTIONS,
-                        null,
-                        "Common PHP file to include",
-                        PhelIconProvider.PHP_INTEROP
-                    );
-                }
             }
         }
         
@@ -1561,62 +1376,24 @@ public class PhelCompletionContributor extends CompletionContributor {
          * Add completions for :use context
          */
         private void addUseCompletions(CompletionResultSet result, PsiElement element) {
-            String context = getCurrentTextContext(element, 200);
+            String context = getCurrentTextContext(element, 100);
             
-            System.out.println("DEBUG NS USE: context = '" + context + "'");
-            
-            // Check if there's already a PHP class in the context
-            boolean hasClass = context.matches(".*:use\\s+\\\\?[a-zA-Z][a-zA-Z0-9\\\\.-]+.*");
-            boolean justAfterUse = context.matches(".*:use\\s*IntellijIdeaRulezzz.*") ||
-                                 context.matches(".*\\(:use\\s*IntellijIdeaRulezzz.*");
-            
-            System.out.println("DEBUG NS USE: hasClass = " + hasClass + ", justAfterUse = " + justAfterUse);
-            
-            // Case 1: Just after :use (no class yet)
-            if (justAfterUse) {
-                System.out.println("DEBUG NS USE: Just after :use - suggesting PHP class names");
-                
-                // :use is for PHP classes only, not Phel namespaces
+            // Check if we're dealing with PHP class imports or Phel namespace imports
+            if (context.matches(".*\\\\.*") || context.matches(".*[A-Z][a-zA-Z]*.*")) {
+                // Looks like PHP class context
                 addPhpClassCompletions(result);
-                
-                // Add example suggestions
+            } else {
+                // Regular namespace context
                 PhelCompletionRanking.addRankedCompletion(
                     result,
-                    "\\DateTime",
-                    PhelCompletionRanking.Priority.API_FUNCTIONS,
-                    null,
-                    "PHP DateTime class (example)",
-                    PhelIconProvider.PHP_INTEROP
-                );
-            }
-            // Case 2: After a PHP class name - suggest options
-            else if (hasClass) {
-                System.out.println("DEBUG NS USE: After PHP class - suggesting :as and )");
-                
-                PhelCompletionRanking.addRankedCompletion(
-                    result,
-                    ":as",
+                    "[",
                     PhelCompletionRanking.Priority.SPECIAL_FORMS,
-                    ":as alias-name",
-                    "Create alias for the imported PHP class",
+                    "[namespace-name]",
+                    "Start namespace import for :use",
                     org.phellang.PhelIcons.FILE
                 );
                 
-                PhelCompletionRanking.addRankedCompletion(
-                    result,
-                    ")",
-                    PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS,
-                    null,
-                    "Close :use form",
-                    org.phellang.PhelIcons.FILE
-                );
-            }
-            // Case 3: Fallback
-            else {
-                System.out.println("DEBUG NS USE: Fallback case - suggesting PHP class names only");
-                
-                // :use is for PHP classes only, not Phel namespaces
-                addPhpClassCompletions(result);
+                addCommonPhelNamespaces(result);
             }
         }
         
@@ -1654,17 +1431,25 @@ public class PhelCompletionContributor extends CompletionContributor {
                 "phel\\repl", "phel\\trace"
             };
             
+            System.out.println("DEBUG NS: addCommonPhelNamespaces called with " + commonNamespaces.length + " namespaces");
             
             for (String namespace : commonNamespaces) {
-                PhelCompletionRanking.addRankedCompletion(
-                    result,
-                    namespace,
-                    PhelCompletionRanking.Priority.API_FUNCTIONS,
-                    null,
-                    "Common Phel namespace",
-                    PhelIconProvider.NAMESPACE
-                );
+                try {
+                    System.out.println("DEBUG NS: Adding namespace: " + namespace);
+                    PhelCompletionRanking.addRankedCompletion(
+                        result,
+                        namespace,
+                        PhelCompletionRanking.Priority.API_FUNCTIONS,
+                        null,
+                        "Common Phel namespace",
+                        PhelIconProvider.NAMESPACE
+                    );
+                    System.out.println("DEBUG NS: Successfully added namespace: " + namespace);
+                } catch (Exception e) {
+                    System.out.println("DEBUG NS: ERROR adding namespace " + namespace + ": " + e.getMessage());
+                }
             }
+            System.out.println("DEBUG NS: Finished adding common Phel namespaces");
         }
         
         /**
@@ -1693,248 +1478,13 @@ public class PhelCompletionContributor extends CompletionContributor {
                     }
                 }
                 
+                System.out.println("DEBUG NS: Full context from parent: " + context.toString());
                 return context.toString();
                 
             } catch (Exception e) {
+                System.out.println("DEBUG NS: Error in getCurrentTextContext: " + e.getMessage());
                 return "";
             }
-        }
-        
-        /**
-         * Scan project .phel files and extract namespace declarations for completion
-         */
-        private void addProjectPhelNamespaces(CompletionResultSet result, PsiElement element) {
-            try {
-                System.out.println("DEBUG PROJECT NS: Scanning project for .phel namespaces");
-                
-                // Get the project from the PSI element
-                Project project = element.getProject();
-                
-                // Use GlobalSearchScope to find all .phel files in the project
-                GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-                
-                // Find all .phel files using FilenameIndex
-                Collection<VirtualFile> phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", scope);
-                
-                System.out.println("DEBUG PROJECT NS: Found " + phelFiles.size() + " .phel files");
-                
-                Set<String> foundNamespaces = new HashSet<>();
-                
-                for (VirtualFile virtualFile : phelFiles) {
-                    try {
-                        // Get PSI file from virtual file
-                        PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
-                        
-                        if (psiFile != null) {
-                            String namespace = extractNamespaceFromPhelFile(psiFile);
-                            if (namespace != null && !namespace.isEmpty()) {
-                                foundNamespaces.add(namespace);
-                                System.out.println("DEBUG PROJECT NS: Found namespace: " + namespace + " in " + virtualFile.getName());
-                            }
-                        }
-                    } catch (Exception e) {
-                        System.out.println("DEBUG PROJECT NS: Error processing file " + virtualFile.getName() + ": " + e.getMessage());
-                    }
-                }
-                
-                // Add found namespaces to completion results
-                for (String namespace : foundNamespaces) {
-                    PhelCompletionRanking.addRankedCompletion(
-                        result,
-                        namespace,
-                        PhelCompletionRanking.Priority.PROJECT_SYMBOLS, // Higher priority than common ones
-                        null,
-                        "Project namespace from " + namespace.replace("\\", "/") + ".phel",
-                        PhelIconProvider.NAMESPACE
-                    );
-                }
-                
-                System.out.println("DEBUG PROJECT NS: Added " + foundNamespaces.size() + " project namespaces to completion");
-                
-            } catch (Exception e) {
-                System.out.println("DEBUG PROJECT NS: Error scanning project namespaces: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-        
-        /**
-         * Extract namespace declaration from a .phel file
-         */
-        private String extractNamespaceFromPhelFile(PsiFile psiFile) {
-            try {
-                // Look for (ns namespace-name) declarations
-                PsiElement[] children = psiFile.getChildren();
-                
-                for (PsiElement child : children) {
-                    if (child instanceof PhelList) {
-                        PhelList list = (PhelList) child;
-                        PsiElement[] listChildren = list.getChildren();
-                        
-                        // Check if first element is 'ns'
-                        if (listChildren.length >= 2) {
-                            PsiElement firstElement = listChildren[0];
-                            if (firstElement instanceof PhelAccess) {
-                                String firstText = firstElement.getText().trim();
-                                if ("ns".equals(firstText)) {
-                                    // Second element should be the namespace name
-                                    PsiElement secondElement = listChildren[1];
-                                    if (secondElement instanceof PhelAccess) {
-                                        String namespace = secondElement.getText().trim();
-                                        System.out.println("DEBUG EXTRACT NS: Found namespace declaration: " + namespace);
-                                        return namespace;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("DEBUG EXTRACT NS: Error extracting namespace: " + e.getMessage());
-            }
-            
-            return null;
-        }
-        
-        /**
-         * Extract namespace prefix from the current context (e.g., "phel\" from "(:require phel\IntellijIdeaRulezzz")
-         */
-        private String extractNamespacePrefix(String context) {
-            try {
-                // Look for pattern: (:require PREFIX_HERE IntellijIdeaRulezzz
-                int requirePos = context.lastIndexOf(":require");
-                if (requirePos == -1) return "";
-                
-                String afterRequire = context.substring(requirePos + 8); // Skip ":require"
-                
-                // Find the namespace part before IntellijIdeaRulezzz
-                int ideaPos = afterRequire.indexOf("IntellijIdeaRulezzz");
-                if (ideaPos == -1) return "";
-                
-                String beforeIdea = afterRequire.substring(0, ideaPos).trim();
-                
-                // Remove any leading whitespace and extract the last word (partial namespace)
-                String[] parts = beforeIdea.split("\\s+");
-                if (parts.length > 0) {
-                    String lastPart = parts[parts.length - 1];
-                    // Only return if it looks like a namespace prefix (contains letters/backslash)
-                    if (lastPart.matches("[a-zA-Z][a-zA-Z0-9\\\\.-]*")) {
-                        System.out.println("DEBUG PREFIX: Found namespace prefix: '" + lastPart + "'");
-                        return lastPart;
-                    }
-                }
-                
-                return "";
-            } catch (Exception e) {
-                System.out.println("DEBUG PREFIX: Error extracting prefix: " + e.getMessage());
-                return "";
-            }
-        }
-        
-        /**
-         * Add common Phel namespaces with prefix filtering
-         */
-        private void addCommonPhelNamespacesWithPrefix(CompletionResultSet result, String prefix) {
-            String[] commonNamespaces = {
-                "phel\\test", "phel\\json", "phel\\http", "phel\\str", "phel\\html", 
-                "phel\\core", "phel\\base64", "phel\\local", "phel\\repl", "phel\\trace"
-            };
-            
-            for (String namespace : commonNamespaces) {
-                // Filter by prefix (case insensitive)
-                if (prefix.isEmpty() || namespace.toLowerCase().startsWith(prefix.toLowerCase())) {
-                    PhelCompletionRanking.addRankedCompletion(
-                        result,
-                        namespace,
-                        PhelCompletionRanking.Priority.API_FUNCTIONS,
-                        null,
-                        "Common Phel namespace",
-                        PhelIconProvider.NAMESPACE
-                    );
-                    System.out.println("DEBUG PREFIX FILTER: Added common namespace: " + namespace);
-                }
-            }
-        }
-        
-        /**
-         * Add project Phel namespaces with prefix filtering
-         */
-        private void addProjectPhelNamespacesWithPrefix(CompletionResultSet result, PsiElement element, String prefix) {
-            try {
-                System.out.println("DEBUG PROJECT NS PREFIX: Scanning with prefix '" + prefix + "'");
-                
-                // Get the project from the PSI element
-                Project project = element.getProject();
-                
-                // Use GlobalSearchScope to find all .phel files in the project
-                GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-                
-                // Find all .phel files using FilenameIndex
-                Collection<VirtualFile> phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", scope);
-                
-                Set<String> foundNamespaces = new HashSet<>();
-                
-                for (VirtualFile virtualFile : phelFiles) {
-                    try {
-                        // Get PSI file from virtual file
-                        PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
-                        
-                        if (psiFile != null) {
-                            String namespace = extractNamespaceFromPhelFile(psiFile);
-                            if (namespace != null && !namespace.isEmpty()) {
-                                // Filter by prefix (case insensitive)
-                                if (prefix.isEmpty() || namespace.toLowerCase().startsWith(prefix.toLowerCase())) {
-                                    foundNamespaces.add(namespace);
-                                    System.out.println("DEBUG PROJECT NS PREFIX: Found matching namespace: " + namespace);
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        System.out.println("DEBUG PROJECT NS PREFIX: Error processing file " + virtualFile.getName() + ": " + e.getMessage());
-                    }
-                }
-                
-                // Add found namespaces to completion results
-                for (String namespace : foundNamespaces) {
-                    PhelCompletionRanking.addRankedCompletion(
-                        result,
-                        namespace,
-                        PhelCompletionRanking.Priority.PROJECT_SYMBOLS, // Higher priority than common ones
-                        null,
-                        "Project namespace from " + namespace.replace("\\", "/") + ".phel",
-                        PhelIconProvider.NAMESPACE
-                    );
-                }
-                
-                System.out.println("DEBUG PROJECT NS PREFIX: Added " + foundNamespaces.size() + " matching project namespaces");
-                
-            } catch (Exception e) {
-                System.out.println("DEBUG PROJECT NS PREFIX: Error scanning project namespaces: " + e.getMessage());
-            }
-        }
-        
-        /**
-         * Check if the given text looks like a complete namespace (not partial)
-         * Simple heuristic: if it doesn't end with backslash and has proper namespace format
-         */
-        private boolean isKnownCompleteNamespace(String namespace) {
-            if (namespace == null || namespace.isEmpty()) {
-                return false;
-            }
-            
-            // If it ends with backslash, it's still partial (e.g., "phel\")
-            if (namespace.endsWith("\\")) {
-                System.out.println("DEBUG KNOWN NS: '" + namespace + "' ends with backslash - still partial");
-                return false;
-            }
-            
-            // Check if it looks like a complete namespace format: word\word (at least one backslash)
-            if (namespace.matches("[a-zA-Z][a-zA-Z0-9]*\\\\[a-zA-Z][a-zA-Z0-9.-]*")) {
-                System.out.println("DEBUG KNOWN NS: '" + namespace + "' looks like a complete namespace");
-                return true;
-            }
-            
-            System.out.println("DEBUG KNOWN NS: '" + namespace + "' is not a complete namespace format");
-            return false;
         }
     }
 
