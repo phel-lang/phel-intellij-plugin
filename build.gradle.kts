@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "org.phellang"
-version = "0.1.1"
+version = "0.1.2"
 
 repositories {
     mavenCentral()
@@ -67,7 +67,7 @@ tasks {
     intellijPlatform {
         patchPluginXml {
             sinceBuild.set("242")
-            untilBuild.set("242.*")
+            untilBuild.set("252.*")
         }
 
         signPlugin {
