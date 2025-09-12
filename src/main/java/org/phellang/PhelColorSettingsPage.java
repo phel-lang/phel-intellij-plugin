@@ -18,6 +18,7 @@ public class PhelColorSettingsPage implements ColorSettingsPage {
 
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
             new AttributesDescriptor("Comments", PhelSyntaxHighlighter.COMMENT),
+            new AttributesDescriptor("Form Comments (Commented Out)", PhelAnnotator.COMMENTED_OUT_FORM),
             new AttributesDescriptor("Strings", PhelSyntaxHighlighter.STRING),
             new AttributesDescriptor("Numbers", PhelSyntaxHighlighter.NUMBER),
             new AttributesDescriptor("Keywords", PhelSyntaxHighlighter.KEYWORD_IDENTIFIER),

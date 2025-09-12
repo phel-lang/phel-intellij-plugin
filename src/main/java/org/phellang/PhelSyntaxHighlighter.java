@@ -124,7 +124,7 @@ public class PhelSyntaxHighlighter extends SyntaxHighlighterBase {
         String tokenName = tokenType.toString();
         
         // Comments
-        if (tokenType.equals(PhelTypes.LINE_COMMENT)) {
+        if (tokenType.equals(PhelTypes.LINE_COMMENT) || tokenType.equals(PhelTypes.FORM_COMMENT)) {
             return COMMENT_KEYS;
         }
         

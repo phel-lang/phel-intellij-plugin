@@ -21,8 +21,19 @@ Use **Playwright MCP** to fetch the SDK pages when you need detailed guidance. D
 
 ### Comments
 
-- Line comments start with `#` character
-- No block comments supported
+- Line comments start with `#` or `;` character
+- Form comments use `#_` to comment out the next form
+- Form comments can be stacked: `#_#_` comments out two forms
+- No traditional block comments supported
+
+Example:
+```phel
+# This is a line comment
+; This is also a line comment
+[:one :two :three]     # results to [:one :two :three]
+[#_:one :two :three]   # results to [:two :three] 
+[#_#_:one :two :three] # results to [:three]
+```
 
 ### Keywords
 
@@ -47,3 +58,18 @@ Use **Playwright MCP** to fetch the SDK pages when you need detailed guidance. D
 - Every file must start with `(ns namespace\name)`
 - Top-level forms: `def`, `defn`, `defmacro`, comments
 - Bare literals at top level are not idiomatic
+
+### Reader Macros
+
+- Quote: `'form` (shorthand for `(quote form)`)
+- Syntax quote: `` `form`` (template with auto-gensym)
+- Unquote: `~form` (evaluate within syntax quote)
+- Unquote-splice: `~@form` (splice sequence within syntax quote)  
+- Comma: `,form` (whitespace in templates)
+- Comma-splice: `,@form` (whitespace splice)
+- Meta: `^{:meta true} form` (attach metadata)
+
+### Special Forms and Macros
+
+Core special forms: `def`, `defn`, `let`, `if`, `when`, `fn`, `do`, `quote`, `var`, `throw`, `try`
+Core macros: `when-let`, `if-let`, `defmacro`, `time`, `binding`

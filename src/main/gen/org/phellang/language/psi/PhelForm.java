@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface PhelForm extends PsiElement {
 
   @Nullable
+  PhelFormCommentMacro getFormCommentMacro();
+
+  @Nullable
   PhelSymbol getSymbol();
 
   @NotNull

@@ -14,17 +14,32 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-<p>Phel is a functional programming language that compiles to PHP. It is a dialect of Lisp inspired by Clojure and Janet.</p>
-<b>Features</b>
+<p><strong>Phel</strong> is a functional programming language that transpiles to PHP. It is a dialect of Lisp inspired by Clojure and Janet.</p>
+
+<h3>IDE Features</h3>
+<ul>
+  <li><strong>Intelligent Code Completion</strong> - Context-aware suggestions for functions, macros, and symbols</li>
+  <li><strong>Template Completions</strong> - Smart templates for common constructs (def, defn, let, if, when, fn)</li>
+  <li><strong>Namespace Support</strong> - Auto-completion for namespace functions (str/, json/, core/, etc.)</li>
+  <li><strong>Form Comment Highlighting</strong> - Full support for #_ form comments with stacking (#_#_)</li>
+  <li><strong>Syntax Highlighting</strong> - Semantic highlighting for keywords, symbols, comments, and special forms</li>
+  <li><strong>Smart Editing</strong> - Auto-insertion of parentheses, bracket matching, and quote handling</li>
+  <li><strong>Symbol Navigation</strong> - Go-to definition and find usages for Phel symbols</li>
+  <li><strong>Comment Support</strong> - Line comments (#, ;) and form comments (#_) with proper IDE integration</li>
+</ul>
+
+<h3>Language Features</h3>
 <ul>
   <li>Built on PHP's ecosystem</li>
+  <li>Persistent data structures (Lists, Vectors, Maps and Sets)</li>
+  <li>Macros and special forms</li>
+  <li>Recursive functions with tail-call optimization</li>
+  <li>Powerful but simple Lisp syntax</li>
+  <li>REPL support</li>
   <li>Good error reporting</li>
-  <li>Persistent Datastructures (Lists, Vectors, Maps and Sets)</li>
-  <li>Macros</li>
-  <li>Recursive functions</li>
-  <li>Powerful but simple Syntax</li>
-  <li>REPL</li>
 </ul>
+
+<p>Learn more at <a href="https://phel-lang.org/">phel-lang.org</a></p>
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.

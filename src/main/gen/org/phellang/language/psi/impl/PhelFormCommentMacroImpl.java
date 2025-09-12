@@ -11,14 +11,14 @@ import static org.phellang.language.psi.PhelTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.phellang.language.psi.*;
 
-public class PhelFormImpl extends ASTWrapperPsiElement implements PhelForm {
+public class PhelFormCommentMacroImpl extends ASTWrapperPsiElement implements PhelFormCommentMacro {
 
-  public PhelFormImpl(@NotNull ASTNode node) {
+  public PhelFormCommentMacroImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PhelVisitor visitor) {
-    visitor.visitForm(this);
+    visitor.visitFormCommentMacro(this);
   }
 
   @Override
@@ -28,27 +28,9 @@ public class PhelFormImpl extends ASTWrapperPsiElement implements PhelForm {
   }
 
   @Override
-  @Nullable
-  public PhelFormCommentMacro getFormCommentMacro() {
-    return findChildByClass(PhelFormCommentMacro.class);
-  }
-
-  @Override
-  @Nullable
-  public PhelSymbol getSymbol() {
-    return findChildByClass(PhelSymbol.class);
-  }
-
-  @Override
   @NotNull
-  public List<PhelMetadata> getMetas() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PhelMetadata.class);
-  }
-
-  @Override
-  @NotNull
-  public List<PhelReaderMacro> getReaderMacros() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PhelReaderMacro.class);
+  public PhelForm getForm() {
+    return findNotNullChildByClass(PhelForm.class);
   }
 
 }

@@ -5,7 +5,6 @@
   psiImplPackage='org.phellang.language.psi.impl'
 
   psiClassPrefix='Phel'
-  psiImplPackage="org.phellang.language.psi.impl"
 
   elementTypeHolderClass="org.phellang.language.psi.PhelTypes"
   elementTypeClass="org.phellang.language.psi.PhelElementType"
@@ -13,17 +12,17 @@
 
   tokens=[
     whitespace='regexp:\s+'
-    line_comment='regexp:#.*'
+    line_comment='regexp:#[^_].*|;.*'
     string='regexp:"([^"]|\\")*"'
-    number='regexp:\d+(\.\d*)?([eE][+-]?\d+)?'
+    number='regexp:[+-]?[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?'
     hexnum='regexp:[+-]?0x[\da-fA-F_]+'
     binnum='regexp:[+-]?0b[01_]+'
     octnum='regexp:[+-]?0o[0-7_]+'
-    char='regexp:\\(u\d{4}|newline|space|backspace|return|.)'
+    char='regexp:\\([btrnf]|u[0-9a-fA-F]{4}|o[0-7]{3}|backspace|tab|newline|formfeed|return|space|.)'
     bool="regexp:true|false"
     nil='nil'
     nan='NAN'
-    sym="regexp:[\w.<>$%&=*/+\-!?_'[^\d]][\w.<>$%&=*/+\-!?_']*((:[\w<>$%&=*/+\-!?_'])+)?"
+    sym="regexp:[[\w<>$%&=*+\-!?_|\\@]--#\d][\w.<>$%&=*+\-!?_|'#\\@]*((:[\w<>$%&=*+\-!?_'])+)?"
 
     paren1='('
     paren2=')'
@@ -41,6 +40,7 @@
     hat="^"
     tilde="~"
     tilde_at="~@"
+    form_comment="#_"
 
     dot='.'
     dotdash='.-'
@@ -79,7 +79,7 @@ root ::= form *
 private root_entry ::= not_eof form  
 private not_eof ::= !<<eof>>
 
-form ::= form_prefix form_prefix * form_upper | form_inner
+form ::= form_prefix form_prefix * form_upper | form_inner | form_comment_macro
   {pin(".*")=1 methods=[form="" metas="metadata" readerMacros="reader_macro" toString]}
 private form_prefix ::= metadata | reader_macro
 
@@ -112,6 +112,7 @@ left access_left ::= ! '.'
 metadata ::= "^" (string | symbol | keyword | map)
 reader_macro ::= "'" | "~" | "~@" | "`" | "," | ",@"
 
+form_comment_macro ::= "#_" form
 
 private meta items ::= <<items_entry <<recover>> <<param>>>> * {recoverWhile="<<recover>>"}
 private meta items_entry ::= (not_eof <<recover>>) <<param>>

@@ -16,6 +16,10 @@ public class PhelVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitFormCommentMacro(@NotNull PhelFormCommentMacro o) {
+    visitPsiElement(o);
+  }
+
   public void visitKeyword(@NotNull PhelKeyword o) {
     visitSForm(o);
   }
