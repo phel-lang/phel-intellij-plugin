@@ -27,6 +27,8 @@ public class PhelLanguageCompletions {
         addSpecialForm(result, "defmacro-", "(defmacro- name doc? attr? [params*] body*)", "Defines a private macro");
         addSpecialForm(result, "defstruct", "(defstruct name [fields*])", "Defines a struct");
         addSpecialForm(result, "definterface", "(definterface name & methods)", "Defines an interface");
+        addSpecialForm(result, "defexception", "(defexception name)", "Defines a new exception");
+        addSpecialForm(result, "def-", "(def- name value)", "Define a private value that will not be exported");
 
         // Control flow special forms
         addSpecialForm(result, "if", "(if test then else?)", "Conditional expression");
@@ -116,6 +118,12 @@ public class PhelLanguageCompletions {
 
         // Output utilities
         addMacro(result, "with-output-buffer", "(with-output-buffer & body)", "Captures output in buffer");
+        
+        // Additional macros from official Phel core
+        addMacro(result, "if-let", "(if-let [binding test] then else?)", "If test is true, evaluates then with binding-form bound to the value of test");
+        addMacro(result, "when-let", "(when-let [binding test] & body)", "When test is true, evaluates body with binding-form bound to the value of test");
+        addMacro(result, "time", "(time expr)", "Evaluates expr and prints the time it took. Returns the value of expr");
+        addMacro(result, "binding", "(binding [bindings*] expr*)", "Temporary redefines definitions while executing the body");
     }
 
     private static void addSpecialForm(@NotNull CompletionResultSet result, String name, String signature, String description) {

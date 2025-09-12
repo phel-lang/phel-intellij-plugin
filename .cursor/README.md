@@ -79,11 +79,6 @@ Output format:
 - Code Snippets: Fully runnable examples where applicable
 - Verification / Testing: Steps or files to validate behavior
 - References: URLs from official documentation
-
-Note that the project lives under the following path (not in this project!): /Users/jesus/phel-project/
-That means, if you create some new file, you can do it over /Users/jesus/phel-project/test/{xxx}.phel directory
-
-The action to perform at the moment is to parse all rules and visit the links from `phel-docs.md` file
 ```
 
 ### Example Usage
@@ -92,24 +87,3 @@ The action to perform at the moment is to parse all rules and visit the links fr
 Task:
 Explain how destructuring works for maps and vectors in Phel, provide a runnable example, and a minimal test file.
 ```
-
-
--------
-
-== History //
-
-Read the `README.md` file
-
-Did you visit using the mcp ALL links from `phel-docs.md` rule?
-
-Yes, visit all of them
-
-I need that you now visit this link with mcp: @https://plugins.jetbrains.com/docs/intellij/references-and-resolve.html
-
-Note that the project lives under the following path (not in this project!): /Users/jesus/phel-project/
-That means, if you create some new file, you can do it over /Users/jesus/phel-project/test/{xxx}.phel directory
-
-Remember that Phel is a Lips (FP) language.
-I want to implement `reference and resolve` (go to definition) when `Cmd + B/Click`.
-We don't need mcp anymore, feel free to visit other pages looking for examples. Take your time.
-

@@ -85,11 +85,11 @@ public class PhelCompletionRanking {
                                                          @Nullable Icon icon) {
         LookupElementBuilder builder = LookupElementBuilder.create(name);
                 
-        if (signature != null) {
+        if (description != null) {
             builder = builder.withTypeText(description);
         }
         
-        if (description != null) {
+        if (signature != null) {
             builder = builder.withTailText(" " + signature, true);
         }
         
@@ -255,7 +255,7 @@ public class PhelCompletionRanking {
         return Arrays.asList(
             "map", "filter", "reduce", "get", "put", "count", "first", "rest",
             "+", "-", "*", "/", "=", "<", ">", "<=", ">=",
-            "str", "print", "println", "nil?", "empty?"
+            "str", "print", "println", "nil?", "empty?", "some", "cons", "conj"
         ).contains(name);
     }
     
@@ -285,8 +285,9 @@ public class PhelCompletionRanking {
     private static boolean isCollectionFunction(@NotNull String name) {
         return Arrays.asList(
             "conj", "cons", "concat", "reverse", "sort", "sort-by", "group-by",
-            "partition", "take", "drop", "take-while", "drop-while",
-            "assoc", "dissoc", "keys", "vals", "merge", "select-keys"
+            "partition", "take", "drop", "take-while", "drop-while", "take-last", "take-nth",
+            "assoc", "dissoc", "keys", "values", "merge", "select-keys", "zipmap", "zipcoll",
+            "shuffle", "frequencies", "invert", "split-at", "split-with", "partition-by"
         ).contains(name);
     }
     
@@ -295,7 +296,8 @@ public class PhelCompletionRanking {
      */
     private static boolean isStringFunction(@NotNull String name) {
         return name.startsWith("str/") || Arrays.asList(
-            "str", "subs", "format", "split", "join", "trim", "replace"
+            "str", "subs", "format", "split", "join", "trim", "replace", 
+            "name", "namespace", "full-name", "print-str"
         ).contains(name);
     }
     
