@@ -5,13 +5,13 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.PsiSearchHelper;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.indexing.FileBasedIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.phellang.PhelFileType;
@@ -406,10 +406,20 @@ public class PhelLocalSymbolCompletions {
         }
         
         try {
-            // Find all Phel files in the project
-            Collection<VirtualFile> phelFiles = FileBasedIndex.getInstance()
-                .getContainingFiles(FileTypeIndex.NAME, PhelFileType.INSTANCE, 
-                                   GlobalSearchScope.projectScope(project));
+            // Find all Phel files in the project using scope-restricted search
+            GlobalSearchScope searchScope = GlobalSearchScope.getScopeRestrictedByFileTypes(
+                GlobalSearchScope.projectScope(project), PhelFileType.INSTANCE);
+            
+            // Iterate through all project files and filter by type
+            Collection<VirtualFile> phelFiles = new java.util.ArrayList<>();
+            com.intellij.openapi.roots.ProjectRootManager.getInstance(project)
+                .getFileIndex().iterateContent(virtualFile -> {
+                    if (phelFiles.size() < 20 && // Limit for performance
+                        virtualFile.getFileType().equals(PhelFileType.INSTANCE)) {
+                        phelFiles.add(virtualFile);
+                    }
+                    return true;
+                });
             
             PsiManager psiManager = PsiManager.getInstance(project);
             PsiFile currentFile = position.getContainingFile();
