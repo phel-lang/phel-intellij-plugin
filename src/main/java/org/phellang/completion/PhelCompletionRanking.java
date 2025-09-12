@@ -86,11 +86,11 @@ public class PhelCompletionRanking {
         LookupElementBuilder builder = LookupElementBuilder.create(name);
                 
         if (signature != null) {
-            builder = builder.withTypeText(signature);
+            builder = builder.withTypeText(description);
         }
         
         if (description != null) {
-            builder = builder.withTailText(" - " + description, true);
+            builder = builder.withTailText(" " + signature, true);
         }
         
         if (icon != null) {

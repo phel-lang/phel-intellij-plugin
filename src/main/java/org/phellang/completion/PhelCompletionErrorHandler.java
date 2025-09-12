@@ -27,13 +27,10 @@ public class PhelCompletionErrorHandler {
     public static boolean withErrorHandling(@NotNull CompletionOperation operation, 
                                           @NotNull String context,
                                           @Nullable Runnable fallbackAction) {
-        System.out.println("DEBUG ERROR HANDLER: Starting error handling for: " + context);
         try {
             operation.execute();
-            System.out.println("DEBUG ERROR HANDLER: Operation completed successfully for: " + context);
             return true;
         } catch (NullPointerException e) {
-            System.out.println("DEBUG ERROR HANDLER: CAUGHT NULL POINTER EXCEPTION in: " + context);
             LOG.warn("Null pointer exception in completion: " + context, e);
             addErrorCompletion(operation.getResult(), "⚠️ PSI tree issue", 
                 "Completion failed due to null PSI element in " + context);
@@ -42,7 +39,6 @@ public class PhelCompletionErrorHandler {
             }
             return false;
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("DEBUG ERROR HANDLER: CAUGHT INDEX OUT OF BOUNDS in: " + context);
             LOG.warn("Index out of bounds in completion: " + context, e);
             addErrorCompletion(operation.getResult(), "⚠️ Malformed syntax", 
                 "Completion failed due to unexpected syntax structure");
@@ -51,7 +47,6 @@ public class PhelCompletionErrorHandler {
             }
             return false;
         } catch (ClassCastException e) {
-            System.out.println("DEBUG ERROR HANDLER: CAUGHT CLASS CAST EXCEPTION in: " + context);
             LOG.warn("Type casting error in completion: " + context, e);
             addErrorCompletion(operation.getResult(), "⚠️ Type mismatch", 
                 "Completion failed due to unexpected PSI element type");
@@ -60,7 +55,6 @@ public class PhelCompletionErrorHandler {
             }
             return false;
         } catch (Exception e) {
-            System.out.println("DEBUG ERROR HANDLER: CAUGHT GENERIC EXCEPTION in: " + context + " - " + e.getClass().getSimpleName() + ": " + e.getMessage());
             LOG.error("Unexpected error in completion: " + context, e);
             addErrorCompletion(operation.getResult(), "❌ Completion error", 
                 "Unexpected error: " + e.getMessage());
