@@ -6,9 +6,15 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 import org.phellang.PhelIcons;
@@ -17,8 +23,12 @@ import org.phellang.language.psi.PhelSymbol;
 import org.phellang.language.psi.PhelTypes;
 import org.phellang.language.psi.PhelVec;
 import org.phellang.language.psi.impl.PhelAccessImpl;
+import org.phellang.language.psi.PhelAccess;
 
 import javax.swing.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Main completion contributor for Phel language
@@ -72,6 +82,249 @@ public class PhelCompletionContributor extends CompletionContributor {
     }
 
     private static final NamespacedInsertHandler NAMESPACED_INSERT_HANDLER = new NamespacedInsertHandler();
+    
+    /**
+     * Custom insert handler for balanced parentheses - inserts "()" and positions cursor inside
+     */
+    public static class BalancedParenthesesInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            // Replace the completion with "()" 
+            String completionText = "()";
+            document.replaceString(caretOffset, context.getTailOffset(), completionText);
+            
+            // Position cursor between the parentheses
+            editor.getCaretModel().moveToOffset(caretOffset + 1);
+        }
+    }
+    
+    private static final BalancedParenthesesInsertHandler BALANCED_PARENS_INSERT_HANDLER = new BalancedParenthesesInsertHandler();
+    
+    /**
+     * Custom insert handler for balanced brackets - inserts "[]" and positions cursor inside
+     */
+    public static class BalancedBracketsInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            // Replace the completion with "[]" 
+            String completionText = "[]";
+            document.replaceString(caretOffset, context.getTailOffset(), completionText);
+            
+            // Position cursor between the brackets
+            editor.getCaretModel().moveToOffset(caretOffset + 1);
+        }
+    }
+    
+    private static final BalancedBracketsInsertHandler BALANCED_BRACKETS_INSERT_HANDLER = new BalancedBracketsInsertHandler();
+    
+    /**
+     * Template insert handler for defn - inserts "(defn name [params] body)" with "name" selected as placeholder
+     */
+    public static class DefnTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(defn name [] ())";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Select "name" placeholder for immediate editing
+            int nameStart = caretOffset + 6; // "(defn ".length()
+            int nameEnd = nameStart + 4; // "name".length()
+            editor.getSelectionModel().setSelection(nameStart, nameEnd);
+            editor.getCaretModel().moveToOffset(nameEnd);
+        }
+    }
+    
+    private static final DefnTemplateInsertHandler DEFN_TEMPLATE_INSERT_HANDLER = new DefnTemplateInsertHandler();
+    
+    /**
+     * Template insert handler for def - inserts "(def name value)" with "name" selected as placeholder
+     */
+    public static class DefTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(def name )";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Select "name" placeholder for immediate editing
+            int nameStart = caretOffset + 5; // "(def ".length()
+            int nameEnd = nameStart + 4; // "name".length()
+            editor.getSelectionModel().setSelection(nameStart, nameEnd);
+            editor.getCaretModel().moveToOffset(nameEnd);
+        }
+    }
+    
+    private static final DefTemplateInsertHandler DEF_TEMPLATE_INSERT_HANDLER = new DefTemplateInsertHandler();
+    
+    /**
+     * Template insert handler for let - inserts "(let [bindings] body)" with "bindings" selected as placeholder
+     */
+    public static class LetTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(let [bindings] )";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Select "bindings" placeholder for immediate editing
+            int bindingsStart = caretOffset + 6; // "(let [".length()
+            int bindingsEnd = bindingsStart + 8; // "bindings".length()
+            editor.getSelectionModel().setSelection(bindingsStart, bindingsEnd);
+            editor.getCaretModel().moveToOffset(bindingsEnd);
+        }
+    }
+    
+    private static final LetTemplateInsertHandler LET_TEMPLATE_INSERT_HANDLER = new LetTemplateInsertHandler();
+    
+    /**
+     * Template insert handler for if - inserts "(if condition then else)" with "condition" selected as placeholder
+     */
+    public static class IfTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(if condition) ";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Select "condition" placeholder for immediate editing
+            int conditionStart = caretOffset + 4; // "(if ".length()
+            int conditionEnd = conditionStart + 9; // "condition".length()
+            editor.getSelectionModel().setSelection(conditionStart, conditionEnd);
+            editor.getCaretModel().moveToOffset(conditionEnd);
+        }
+    }
+    
+    private static final IfTemplateInsertHandler IF_TEMPLATE_INSERT_HANDLER = new IfTemplateInsertHandler();
+    
+    /**
+     * Template insert handler for fn - inserts "(fn [params] body)" with "params" selected as placeholder
+     */
+    public static class FnTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(fn [params] )";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Select "params" placeholder for immediate editing
+            int paramsStart = caretOffset + 5; // "(fn [".length()
+            int paramsEnd = paramsStart + 6; // "params".length()
+            editor.getSelectionModel().setSelection(paramsStart, paramsEnd);
+            editor.getCaretModel().moveToOffset(paramsEnd);
+        }
+    }
+    
+    private static final FnTemplateInsertHandler FN_TEMPLATE_INSERT_HANDLER = new FnTemplateInsertHandler();
+    
+    /**
+     * Template insert handler for when - inserts "(when condition body)" with "condition" selected as placeholder
+     */
+    public static class WhenTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(when condition )";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Select "condition" placeholder for immediate editing
+            int conditionStart = caretOffset + 6; // "(when ".length()
+            int conditionEnd = conditionStart + 9; // "condition".length()
+            editor.getSelectionModel().setSelection(conditionStart, conditionEnd);
+            editor.getCaretModel().moveToOffset(conditionEnd);
+        }
+    }
+    
+    private static final WhenTemplateInsertHandler WHEN_TEMPLATE_INSERT_HANDLER = new WhenTemplateInsertHandler();
+    
+    /**
+     * Template insert handler for :require-file - inserts "(:require-file )" with cursor positioned inside
+     */
+    public static class RequireFileTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(:require-file )";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Position cursor inside the parentheses, after the space
+            int cursorPos = caretOffset + 15; // "(:require-file ".length()
+            editor.getCaretModel().moveToOffset(cursorPos);
+        }
+    }
+    
+    private static final RequireFileTemplateInsertHandler REQUIRE_FILE_TEMPLATE_INSERT_HANDLER = new RequireFileTemplateInsertHandler();
+    
+    /**
+     * Template insert handler for :require - inserts "(:require )" with cursor positioned inside
+     */
+    public static class RequireTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(:require )";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Position cursor inside the parentheses, after the space
+            int cursorPos = caretOffset + 10; // "(:require ".length()
+            editor.getCaretModel().moveToOffset(cursorPos);
+        }
+    }
+    
+    private static final RequireTemplateInsertHandler REQUIRE_TEMPLATE_INSERT_HANDLER = new RequireTemplateInsertHandler();
+    
+    /**
+     * Template insert handler for :use - inserts "(:use )" with cursor positioned inside
+     */
+    public static class UseTemplateInsertHandler implements InsertHandler<LookupElement> {
+        @Override
+        public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement item) {
+            Editor editor = context.getEditor();
+            Document document = editor.getDocument();
+            int caretOffset = context.getStartOffset();
+            
+            String template = "(:use )";
+            document.replaceString(caretOffset, context.getTailOffset(), template);
+            
+            // Position cursor inside the parentheses, after the space
+            int cursorPos = caretOffset + 6; // "(:use ".length()
+            editor.getCaretModel().moveToOffset(cursorPos);
+        }
+    }
+    
+    private static final UseTemplateInsertHandler USE_TEMPLATE_INSERT_HANDLER = new UseTemplateInsertHandler();
 
     /**
      * Creates a lookup element with proper insert handling for namespaced completions
@@ -104,7 +357,27 @@ public class PhelCompletionContributor extends CompletionContributor {
         @Override
         protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
 
+            // Comprehensive error handling for completion operation
+            PhelCompletionErrorHandler.withErrorHandling(
+                PhelCompletionErrorHandler.withResultSet(result, () -> {
+                    performCompletionWithValidation(parameters, result);
+                }),
+                "main completion process",
+                () -> {
+                    // Fallback: provide basic completions if detailed completion fails
+                    addBasicFallbackCompletions(result);
+                }
+            );
+        }
+        
+        private void performCompletionWithValidation(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) throws Exception {
             PsiElement element = parameters.getPosition();
+            
+            // Validate completion context before proceeding
+            if (!PhelCompletionErrorHandler.isCompletionContextValid(element)) {
+                throw new IllegalStateException("Invalid completion context: PSI element or tree is malformed");
+            }
+            
             String prefix = getCompletionPrefix(element);
             
 
@@ -112,7 +385,9 @@ public class PhelCompletionContributor extends CompletionContributor {
             // This is the ONLY valid syntax at top level, so return early
             if (shouldSuggestNewForm(element, prefix)) {
                 addNewFormCompletion(result);
-                return; // Don't show any other completions - only "(" is valid
+                // Also add template completions at top level for convenience
+                addTemplateCompletions(result);
+                return; // Don't show any other completions at top level
             }
 
             // Check if we're at the parameter vector position in definition forms
@@ -122,9 +397,16 @@ public class PhelCompletionContributor extends CompletionContributor {
             }
             
             // Check if we're inside a parameter vector
-            if (isInsideParameterVector(element)) {
-                addParameterCompletions(result);
-                return; // Only suggest parameter names and ]
+            boolean insideParamVector = isInsideParameterVector(element);
+            if (insideParamVector) {
+                addParameterCompletions(result, element);
+                return; // Only suggest parameter names and ] (if unclosed)
+            }
+
+            // Check if we're in a namespace (ns) context - special handling needed
+            if (isInNamespaceContext(element)) {
+            addNamespaceCompletions(result, element);
+                return; // Early return for namespace contexts
             }
 
             // Check if we're inside function arguments where only values are valid
@@ -167,12 +449,16 @@ public class PhelCompletionContributor extends CompletionContributor {
                 } else {
                 }
                 
-                // Finally add structural completions
+                // Add structural completions
                 if (isInDefinitionBodyContext(element)) {
                     addDefinitionBodyCompletion(result);
                 } else {
                     addExpressionCompletion(result);
                 }
+                
+                // Add template completions for common constructs (only in expression contexts)
+                addTemplateCompletions(result);
+                
                 return; // Early return for expression contexts
             }
             
@@ -190,8 +476,8 @@ public class PhelCompletionContributor extends CompletionContributor {
             // PRIORITY 4: Only add API functions if we're in a context where function names are valid
             if (isInFunctionNameContext) {
                 // Special forms and core macros - important language constructs
-                PhelLanguageCompletions.addSpecialForms(result, prefix);
-                PhelLanguageCompletions.addCoreMacros(result, prefix);
+            PhelLanguageCompletions.addSpecialForms(result, prefix);
+            PhelLanguageCompletions.addCoreMacros(result, prefix);
 
                 // Core API functions with context-aware ranking
                 PhelApiCompletions.addCoreFunctions(result, prefix, element);
@@ -200,10 +486,10 @@ public class PhelCompletionContributor extends CompletionContributor {
                 PhelApiCompletions.addArithmeticFunctions(result, prefix, element);
 
                 // Namespace functions
-                PhelNamespaceCompletions.addNamespaceFunctions(result, prefix, element);
+            PhelNamespaceCompletions.addNamespaceFunctions(result, prefix, element);
 
                 // PHP interop - lower priority
-                PhelPhpInteropCompletions.addPhpInterop(result, prefix);
+            PhelPhpInteropCompletions.addPhpInterop(result, prefix);
             }
         }
 
@@ -247,61 +533,122 @@ public class PhelCompletionContributor extends CompletionContributor {
         private void addNewFormCompletion(CompletionResultSet result) {
             
             LookupElementBuilder element = LookupElementBuilder
-                .create("(")
-                .withPresentableText("(  ← Start new expression")
-                .withTypeText("Only valid syntax at this level")
-                .withTailText(" (required)", true)
-                .withInsertHandler((context, item) -> {
-                    // After inserting "(", position cursor inside
-                    int caretOffset = context.getEditor().getCaretModel().getOffset();
-                    context.getEditor().getCaretModel().moveToOffset(caretOffset);
-                })
+                .create("()")
+                .withPresentableText("()")
+                .withTypeText("Start new expression")
+                .withInsertHandler(BALANCED_PARENS_INSERT_HANDLER)
                 .withIcon(org.phellang.PhelIcons.FILE)
                 .bold();
 
-            result.addElement(element);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                element, PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS.value));
         }
         
         /**
-         * Add completion for expressions in function bodies, let bodies, etc.
+         * Add completion for expressions in function bodies, let bodies, etc. - balanced ()
          */
         private void addExpressionCompletion(CompletionResultSet result) {
-            // Add opening parenthesis to start new expressions
-            LookupElementBuilder openParen = LookupElementBuilder
-                .create("(")
-                .withPresentableText("(")
-                .withTypeText("Start expression")
-                .withTailText(" (new expression)", true)
+            LookupElementBuilder balancedParen = LookupElementBuilder
+                .create("()")
+                .withPresentableText("()")
+                .withTypeText("Start new expression")
+                .withInsertHandler(BALANCED_PARENS_INSERT_HANDLER)
                 .withIcon(org.phellang.PhelIcons.FILE);
-            result.addElement(openParen);
             
-            // Add closing parenthesis to close current expression
-            LookupElementBuilder closeParen = LookupElementBuilder
-                .create(")")
-                .withPresentableText(")")
-                .withTypeText("Close expression")
-                .withTailText(" (end expression)", true)
-                .withIcon(org.phellang.PhelIcons.FILE);
-            result.addElement(closeParen);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                balancedParen, PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS.value));
         }
         
         /**
-         * Add completion for definition bodies (defn, defmacro) - only suggest (
+         * Add completion for definition bodies (defn, defmacro) - suggest balanced ()
          */
         private void addDefinitionBodyCompletion(CompletionResultSet result) {
-            // In function/macro bodies, only suggest opening parenthesis
-            LookupElementBuilder openParen = LookupElementBuilder
-                .create("(")
-                .withPresentableText("(")
-                .withTypeText("Start expression")
-                .withTailText(" (function body)", true)
+            // Focus on balanced parentheses for new expressions - users can manually type ) to close
+            LookupElementBuilder balancedParen = LookupElementBuilder
+                .create("()")
+                .withPresentableText("()")
+                .withTypeText("Start new expression")
+                .withInsertHandler(BALANCED_PARENS_INSERT_HANDLER)
                 .withIcon(org.phellang.PhelIcons.FILE);
-            result.addElement(openParen);
+            
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                balancedParen, PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS.value));
+        }
+        
+        /**
+         * Add template completions for common Phel constructs
+         */
+        private void addTemplateCompletions(CompletionResultSet result) {
+            // defn template - (defn name [params] body)
+            LookupElementBuilder defnTemplate = LookupElementBuilder
+                .create("defn-template")
+                .withPresentableText("defn")
+                .withTypeText("Function definition template")
+                .withTailText(" (defn name [params] body)", true)
+                .withInsertHandler(DEFN_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                defnTemplate, PhelCompletionRanking.Priority.API_FUNCTIONS.value));
+            
+            // def template - (def name value)
+            LookupElementBuilder defTemplate = LookupElementBuilder
+                .create("def-template")
+                .withPresentableText("def")
+                .withTypeText("Variable definition template")
+                .withTailText(" (def name value)", true)
+                .withInsertHandler(DEF_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                defTemplate, PhelCompletionRanking.Priority.API_FUNCTIONS.value));
+            
+            // let template - (let [bindings] body)
+            LookupElementBuilder letTemplate = LookupElementBuilder
+                .create("let-template")
+                .withPresentableText("let")
+                .withTypeText("Let binding template")
+                .withTailText(" (let [bindings] body)", true)
+                .withInsertHandler(LET_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                letTemplate, PhelCompletionRanking.Priority.API_FUNCTIONS.value));
+            
+            // if template - (if condition then else)
+            LookupElementBuilder ifTemplate = LookupElementBuilder
+                .create("if-template")
+                .withPresentableText("if")
+                .withTypeText("Conditional template")
+                .withTailText(" (if condition then else)", true)
+                .withInsertHandler(IF_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                ifTemplate, PhelCompletionRanking.Priority.API_FUNCTIONS.value));
+            
+            // fn template - (fn [params] body)
+            LookupElementBuilder fnTemplate = LookupElementBuilder
+                .create("fn-template")
+                .withPresentableText("fn")
+                .withTypeText("Anonymous function template")
+                .withTailText(" (fn [params] body)", true)
+                .withInsertHandler(FN_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                fnTemplate, PhelCompletionRanking.Priority.API_FUNCTIONS.value));
+            
+            // when template - (when condition body)
+            LookupElementBuilder whenTemplate = LookupElementBuilder
+                .create("when-template")
+                .withPresentableText("when")
+                .withTypeText("Conditional template")
+                .withTailText(" (when condition body)", true)
+                .withInsertHandler(WHEN_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                whenTemplate, PhelCompletionRanking.Priority.API_FUNCTIONS.value));
         }
         
         /**
          * Check if we're in a definition body context (defn, defmacro, fn)
-         * where only ( should be suggested, not )
+         * where both ( and ) should be suggested for function bodies
          */
         private boolean isInDefinitionBodyContext(PsiElement element) {
             PsiElement current = element;
@@ -315,10 +662,13 @@ public class PhelCompletionContributor extends CompletionContributor {
                         if (firstChild instanceof PhelSymbol || firstChild instanceof PhelAccessImpl) {
                             String text = firstChild.getText();
                             if (text.equals("defn") || text.equals("defn-") || 
-                                text.equals("defmacro") || text.equals("defmacro-")) {
+                                text.equals("defmacro") || text.equals("defmacro-") ||
+                                text.equals("deftest")) {
                                 // Check if we're in the body position (after parameters)
                                 int cursorPosition = getCursorPositionInList(list, element);
-                                int bodyStartPosition = 3; // defn/defmacro: name [params] body
+                                // defn/defmacro: name [params] body (position 3+)
+                                // deftest: test-name body (position 2+) 
+                                int bodyStartPosition = text.equals("deftest") ? 2 : 3;
                                 return cursorPosition >= bodyStartPosition;
                             }
                         }
@@ -388,61 +738,173 @@ public class PhelCompletionContributor extends CompletionContributor {
         private void addParameterVectorCompletion(CompletionResultSet result) {
             LookupElementBuilder element = LookupElementBuilder
                 .create("[")
-                .withPresentableText("[")
-                .withTypeText("Parameter vector")
-                .withTailText(" (function parameters)", true)
+                .withPresentableText("[]")
+                .withTypeText("Function parameters")
+                .withTailText(" Parameter vector", true)
+                .withInsertHandler(BALANCED_BRACKETS_INSERT_HANDLER)
                 .withIcon(org.phellang.PhelIcons.FILE);
-            
+
             result.addElement(element);
         }
         
         /**
-         * Check if we're inside a parameter vector [...]
-         * e.g., (defn factorial [n | should suggest parameter names and ]
+         * Check if we're inside a parameter/binding vector [...]
+         * e.g., (defn factorial [n |), (let [a |), (for [x |), (loop [i |) should suggest parameter names and ]
          */
         private boolean isInsideParameterVector(PsiElement element) {
+            // Find the MOST IMMEDIATE/CLOSEST PhelVec ancestor
+            // This is crucial for nested structures like (let [a (let [b (let [c ] |
+            PhelVec closestVector = null;
             PsiElement current = element;
+            
+            // Find all PhelVec ancestors and choose the best one
+            java.util.List<PhelVec> vectors = new java.util.ArrayList<>();
             while (current != null) {
                 if (current instanceof PhelVec) {
-                    // Check if this vector is in a parameter position
-                    PsiElement parent = current.getParent();
-                    
-                    if (parent instanceof PhelList) {
-                        PhelList list = (PhelList) parent;
-                        PsiElement[] children = list.getChildren();
-                        
-                        // Look for definition keywords
-                        for (int i = 0; i < children.length; i++) {
-                            PsiElement child = children[i];
-                            
-                            if (child instanceof PhelSymbol || child instanceof PhelAccessImpl) {
-                                String text = child.getText();
-                                if (text.equals("defn") || text.equals("defn-") || 
-                                    text.equals("defmacro") || text.equals("defmacro-") ||
-                                    text.equals("fn")) {
-                                    return true; // This vector is in a function definition
-                                }
-                            }
-                        }
-                    }
+                    vectors.add((PhelVec) current);
                 }
                 current = current.getParent();
             }
+            
+            // Choose the best vector from our candidates
+            for (PhelVec vector : vectors) {
+                String vectorText = vector.getText();
+                
+                // Skip malformed giant vectors
+                if (vectorText.length() > 1000) {
+                    continue;
+                }
+                
+                // Priority 1: Small completed vectors that are probably inner vectors like [c]
+                if (vectorText.endsWith("]") && vectorText.length() < 20) {
+                    // But check if cursor is actually after this vector (outside it)
+                    int cursorOffset = element.getTextOffset();
+                    int vectorStart = vector.getTextOffset();
+                    int cursorOffsetInVector = cursorOffset - vectorStart;
+                    
+                    if (cursorOffsetInVector >= vectorText.length() - 1) {
+                        continue; // Keep looking for a parent vector we're actually inside
+                    } else {
+                        closestVector = vector;
+                        break;
+                    }
+                }
+                
+                // Priority 2: Unclosed vectors that we might be inside (intermediate vectors like [b ...])
+                else if (!vectorText.endsWith("]") && vectorText.length() < 500) {
+                    closestVector = vector;
+                    break; // This is probably the vector we're inside that needs closing
+                }
+                
+                // Priority 3: Any reasonable-sized vector as fallback
+                else if (vectorText.length() < 100) {
+                    if (closestVector == null) {
+                        closestVector = vector;
+                    }
+                }
+            }
+            
+            if (closestVector == null) {
+                return false; // No vector ancestor
+            }
+            
+            String vectorText = closestVector.getText();
+            
+            // ROBUSTNESS: Handle malformed/incomplete syntax where vectors are huge due to missing closing brackets
+            if (vectorText.length() > 1000) {
+                return false; // Probably malformed syntax with missing closing brackets
+            }
+            
+            // Calculate cursor position relative to the vector start
+            int cursorOffset = element.getTextOffset();
+            int vectorStart = closestVector.getTextOffset();
+            int cursorOffsetInVector = cursorOffset - vectorStart;
+            int vectorLength = vectorText.length();
+            
+            
+            // If vector ends with ] and cursor is at or after the closing ], we're NOT inside
+            if (vectorText.endsWith("]") && cursorOffsetInVector >= vectorLength - 1) {
+                return false; // We're after the closing ], not inside
+            }
+            
+            // Check if this vector is in a parameter/binding position
+            PsiElement parent = closestVector.getParent();
+            if (parent instanceof PhelList) {
+                PhelList list = (PhelList) parent;
+                PsiElement[] children = list.getChildren();
+                
+                // Look for definition/binding keywords
+                for (int i = 0; i < children.length; i++) {
+                    PsiElement child = children[i];
+                    
+                    if (child instanceof PhelSymbol || child instanceof PhelAccessImpl) {
+                        String text = child.getText();
+                        if (text.equals("defn") || text.equals("defn-") || 
+                            text.equals("defmacro") || text.equals("defmacro-") ||
+                            text.equals("fn") || text.equals("let") || 
+                            text.equals("for") || text.equals("loop")) {
+                            return true; // This vector is in a binding context and cursor is inside
+                        }
+                    }
+                }
+            }
+            
             return false;
         }
         
         /**
-         * Add parameter completions - suggests parameter names and closing ]
+         * Check if we're inside a parameter vector that is already closed: [param|]
          */
-        private void addParameterCompletions(CompletionResultSet result) {
-            // Suggest closing bracket to end parameter vector
-            LookupElementBuilder closeBracket = LookupElementBuilder
-                .create("]")
-                .withPresentableText("]")
-                .withTypeText("Close parameters")
-                .withTailText(" (end parameter list)", true)
-                .withIcon(org.phellang.PhelIcons.FILE);
-            result.addElement(closeBracket);
+        private boolean isInsideClosedParameterVector(PsiElement element) {
+            // Find the immediate PhelVec ancestor
+            PsiElement current = element;
+            while (current != null) {
+                if (current instanceof PhelVec) {
+                    PhelVec vector = (PhelVec) current;
+                    String vectorText = vector.getText().trim();
+                    
+                    // Check if this vector ends with ] (is closed)
+                    if (vectorText.endsWith("]")) {
+                        // Verify that the cursor is actually INSIDE this closed vector
+                        int cursorOffset = element.getTextOffset();
+                        int vectorStart = vector.getTextOffset();
+                        int vectorEnd = vectorStart + vectorText.length();
+                        
+                        // If cursor is before the closing bracket, we're inside a closed vector
+                        if (cursorOffset >= vectorStart && cursorOffset < vectorEnd - 1) {
+                            return true;
+                        }
+                    }
+                    
+                    // Check parent vector if current one doesn't match
+                    current = current.getParent();
+                } else {
+                    current = current.getParent();
+                }
+            }
+            
+            return false;
+        }
+        
+        /**
+         * Add parameter completions - suggests parameter names and closing ] (if vector is unclosed)
+         */
+        private void addParameterCompletions(CompletionResultSet result, PsiElement element) {
+            
+            // Check if we're inside a closed parameter vector [param|]
+            boolean isVectorClosed = isInsideClosedParameterVector(element);
+            
+            // Only suggest closing bracket if the vector is NOT already closed
+            if (!isVectorClosed) {
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    "]",
+                    PhelCompletionRanking.Priority.SPECIAL_FORMS,  // High priority for structural elements like ]
+                    null,  // No signature
+                    "Close parameter vector",
+                    org.phellang.PhelIcons.FILE
+                );
+            }
             
             // Suggest common parameter names
             String[] commonParams = {
@@ -453,16 +915,20 @@ public class PhelCompletionContributor extends CompletionContributor {
                 "key", "val", "kv",      // Key-value pairs
                 "a", "b", "c",           // Generic arguments
                 "item", "elem",          // Collection elements
-                "acc", "result"          // Accumulators
+                "acc", "result",         // Accumulators
+                "param", "param3", "param4", "parameter", "params"  // Parameter-like names
             };
             
             for (String param : commonParams) {
-                LookupElementBuilder paramElement = LookupElementBuilder
-                    .create(param)
-                    .withPresentableText(param)
-                    .withTypeText("Parameter")
-                    .withIcon(AllIcons.Nodes.Parameter);
-                result.addElement(paramElement);
+                // Use smart ranking for parameter names - lower priority than closing bracket
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    param,
+                    PhelCompletionRanking.Priority.PROJECT_SYMBOLS,  // Lower priority for parameter suggestions (25.0)
+                    null,  // No signature
+                    "Parameter name",
+                    PhelIconProvider.PARAMETER
+                );
             }
         }
         
@@ -657,7 +1123,8 @@ public class PhelCompletionContributor extends CompletionContributor {
                             }
                             
                             // Special handling for forms where certain positions are expression contexts, not arguments
-                            if (isExpressionContext(functionName, cursorPosition, functionIndex)) {
+                            boolean isExpression = isExpressionContext(functionName, cursorPosition, functionIndex);
+                            if (isExpression) {
                                 return null; // Allow normal expression completions including "("
                             }
                             
@@ -711,11 +1178,40 @@ public class PhelCompletionContributor extends CompletionContributor {
         }
 
         /**
+         * Basic fallback completions when detailed completion fails
+         */
+        private void addBasicFallbackCompletions(@NotNull CompletionResultSet result) {
+            try {
+                // Provide basic Phel syntax completions as fallback
+                addBasicValues(result);
+                
+                // Add core language constructs with HIGHEST priority
+                LookupElementBuilder balancedParen = LookupElementBuilder.create("(")
+                    .withPresentableText("() ")
+                    .withTailText(" Start expression", true)
+                    .withInsertHandler(BALANCED_PARENS_INSERT_HANDLER)
+                    .withIcon(org.phellang.PhelIcons.FILE);
+                result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                    balancedParen, PhelCompletionRanking.Priority.CURRENT_SCOPE_LOCALS.value));
+                    
+                // Add most common functions without context-aware ranking
+                String[] commonFunctions = {"defn", "fn", "let", "if", "when", "map", "filter", "reduce", "get", "count"};
+                for (String func : commonFunctions) {
+                    result.addElement(LookupElementBuilder.create(func)
+                        .withIcon(PhelIconProvider.SPECIAL_FORM));
+                }
+            } catch (Exception e) {
+                // Even fallback failed - just provide minimal completion
+                result.addElement(LookupElementBuilder.create("(")
+                    .withTailText(" - Expression", true)
+                    .withInsertHandler(BALANCED_PARENS_INSERT_HANDLER));
+            }
+        }
+
+        /**
          * Add completions appropriate for function arguments (values, not function names)
          */
         private void addArgumentCompletions(CompletionResultSet result, PsiElement element, FunctionCallContext context) {
-            
-            
             // ONLY show things that can be VALUES in arguments:
             
             // 1. Local variables and parameters (highest priority)
@@ -731,87 +1227,30 @@ public class PhelCompletionContributor extends CompletionContributor {
             PhelApiCompletions.addCollectionFunctions(result, "", element);
             PhelApiCompletions.addArithmeticFunctions(result, "", element);
             
-            // 4. Context-aware nested expressions - only for functions that accept complex values
-            if (acceptsNestedExpressions(context.getFunctionName())) {
-                // Add opening parenthesis for nested expressions
+            // 4. Always allow nested expressions in arguments - any function can accept (nested-call) as arguments
+            // Add balanced parentheses for nested expressions
             LookupElementBuilder parenElement = LookupElementBuilder
-                .create("(")
-                .withPresentableText("(")
+                .create("()")
+                .withPresentableText("() ")
                 .withTypeText("Nested expression")
+                .withInsertHandler(BALANCED_PARENS_INSERT_HANDLER)
                 .withIcon(org.phellang.PhelIcons.FILE);
-            result.addElement(parenElement);
-            }
             
-            // 5. Always allow closing the current expression with )
-            LookupElementBuilder closeParenElement = LookupElementBuilder
-                .create(")")
-                .withPresentableText(")")
-                .withTypeText("Close expression")
-                .withIcon(org.phellang.PhelIcons.FILE);
-            result.addElement(closeParenElement);
-            
-            // 4. For numeric-only functions, suggest they need numbers
-            if (isNumericOnlyFunction(context.getFunctionName())) {
-                // Add helpful hint that this function only accepts numbers
-            }
-            
-            // 5. For variadic functions like print, suggest that more arguments are possible
-            if (isVariadicFunction(context.getFunctionName())) {
-            }
-            
-            // DON'T show:
-            // - Function names (defn, let, map, etc.) - these are invalid as arguments
-            // - Special forms - invalid as arguments  
-            // - Core API functions - invalid as arguments unless as nested calls
-            
+            // High priority for nested expressions (but not highest since values are also important in arguments)
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                parenElement, PhelCompletionRanking.Priority.COMMON_BUILTINS.value));
         }
 
-        /**
-         * Check if a function is variadic (takes & args)
-         */
-        private boolean isVariadicFunction(String functionName) {
-            String signature = PhelParameterHintProvider.getFunctionSignatureStatic(functionName);
-            return signature != null && signature.contains("&");
-        }
-        
-        /**
-         * Check if a function only accepts numeric arguments
-         */
-        private boolean isNumericOnlyFunction(String functionName) {
-            String[] numericFunctions = {"max", "min", "+", "-", "*", "/", "%", "**", 
-                                        "inc", "dec", "<", "<=", ">", ">=", "=", "not=",
-                                        "pos?", "neg?", "zero?", "one?", "even?", "odd?"};
-            for (String func : numericFunctions) {
-                if (func.equals(functionName)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        /**
-         * Check if a function accepts nested expressions as arguments
-         */
-        private boolean acceptsNestedExpressions(String functionName) {
-            // Functions that typically DON'T accept nested expressions as values
-            // These are special forms where arguments have special syntax/semantics
-            String[] noNestedExpressions = {"def", "defn", "let", "if", "when", "cond", "ns"};
-            for (String func : noNestedExpressions) {
-                if (func.equals(functionName)) {
-                    return false;
-                }
-            }
-            
-            // ALL other functions can accept nested expressions that evaluate to values
-            // This includes numeric functions like +, -, *, / which can accept (max 1 2), etc.
-            return true;
-        }
-        
         /**
          * Check if we're in an expression context rather than argument context
          * for special forms like defn, let, if, etc.
          */
         private boolean isExpressionContext(String functionName, int cursorPosition, int functionIndex) {
+            // For ns: (ns namespace-name (:require...) (:use...)) - special handling needed
+            if (functionName.equals("ns")) {
+                return false; // Handle ns specially, not as expression context
+            }
+            
             // For def: (def name value) - at position 3+, the def form is complete, allow new expressions
             if (functionName.equals("def")) {
                 return cursorPosition >= functionIndex + 3; // Position 3+ = after complete def, allow new expressions
@@ -832,6 +1271,12 @@ public class PhelCompletionContributor extends CompletionContributor {
             // For defmacro: (defmacro name [params] body1 body2 ...)
             if (functionName.equals("defmacro") || functionName.equals("defmacro-")) {
                 return cursorPosition >= functionIndex + 3; // Position 3+ = macro body
+            }
+            
+            // For deftest: (deftest test-name body1 body2 ...)
+            // Positions: 0=deftest, 1=test-name, 2+=test body expressions
+            if (functionName.equals("deftest")) {
+                return cursorPosition >= functionIndex + 2; // Position 2+ = test body
             }
             
             // For let: (let [bindings] body1 body2 ...)
@@ -901,7 +1346,745 @@ public class PhelCompletionContributor extends CompletionContributor {
                 return cursorPosition >= functionIndex + 2; // Position 2+ = method expressions
             }
             
+            // For with-output-buffer: (with-output-buffer expr1 expr2 ...)
+            // Positions: 0=with-output-buffer, 1+=body expressions
+            if (functionName.equals("with-output-buffer")) {
+                return cursorPosition >= functionIndex + 1; // Position 1+ = body expressions
+            }
+            
             return false; // Default: treat as argument context
+        }
+        
+        /**
+         * Check if we're in a namespace (ns) context that needs special completion
+         */
+        private boolean isInNamespaceContext(PsiElement element) {
+            // Find the parent list and check if it's an ns form
+            PsiElement current = element;
+            while (current != null) {
+                if (current instanceof PhelList) {
+                    PhelList list = (PhelList) current;
+                    PsiElement[] children = list.getChildren();
+                    
+                    if (children.length >= 1) {
+                        PsiElement firstChild = children[0];
+                        if (firstChild instanceof PhelSymbol || firstChild instanceof PhelAccessImpl) {
+                            String text = firstChild.getText();
+                            if (text.equals("ns")) {
+                                return true; // We're inside an ns form
+                            }
+                        }
+                    }
+                }
+                current = current.getParent();
+            }
+            return false;
+        }
+        
+        /**
+         * Add namespace-specific completions for ns forms
+         */
+        private void addNamespaceCompletions(CompletionResultSet result, PsiElement element) {
+            try {
+                // Find the ns list to understand the context
+                PhelList nsList = null;
+                PsiElement current = element;
+                while (current != null) {
+                    if (current instanceof PhelList) {
+                        PhelList list = (PhelList) current;
+                        PsiElement[] children = list.getChildren();
+                        if (children.length >= 1) {
+                            PsiElement firstChild = children[0];
+                            if ((firstChild instanceof PhelSymbol || firstChild instanceof PhelAccessImpl) 
+                                && firstChild.getText().equals("ns")) {
+                                nsList = list;
+                                break;
+                            }
+                        }
+                    }
+                    current = current.getParent();
+                }
+                
+                if (nsList == null) return;
+                
+                // Determine cursor position in the ns form
+                int cursorPosition = getCursorPositionInList(nsList, element);
+                PsiElement[] nsChildren = nsList.getChildren();
+                
+                // Position 0 = ns, Position 1 = namespace-name, Position 2+ = namespace options
+                if (cursorPosition <= 1) {
+                    // Still completing namespace name - no special completions needed
+                    return;
+                }
+                
+                // Check what kind of namespace completion context we're in
+                String contextText = getCurrentTextContext(element, 50);
+                
+                // Determine completion type based on context  
+                boolean inRequire = isInRequireContext(element);
+                boolean inRequireFile = isInRequireFileContext(element);
+                boolean inUse = isInUseContext(element);
+                
+                if (inRequire) {
+                    addRequireCompletions(result, element);
+                } else if (inRequireFile) {
+                    addRequireFileCompletions(result, element);
+                } else if (inUse) {
+                    addUseCompletions(result, element);
+                } else {
+                    // Top-level ns completions
+                    addTopLevelNamespaceCompletions(result);
+                }
+                
+            } catch (Exception e) {
+                // Fallback to basic completions
+                addTopLevelNamespaceCompletions(result);
+            }
+        }
+        
+        /**
+         * Add top-level namespace completions (:require, :require-file, :use)
+         */
+        private void addTopLevelNamespaceCompletions(CompletionResultSet result) {
+            // Add (:require with custom insert handler that positions cursor inside
+            LookupElementBuilder requireElement = LookupElementBuilder
+                .create("(:require )")
+                .withPresentableText("(:require )")
+                .withTypeText("Import namespace with optional alias")
+                .withTailText(" namespace\\name :as alias", true)
+                .withInsertHandler(REQUIRE_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                requireElement, PhelCompletionRanking.Priority.SPECIAL_FORMS.value));
+            
+            // Add (:require-file with custom insert handler that positions cursor inside
+            LookupElementBuilder requireFileElement = LookupElementBuilder
+                .create("(:require-file )")
+                .withPresentableText("(:require-file )")
+                .withTypeText("Include PHP file (e.g., vendor/autoload.php)")
+                .withTailText(" \"path/to/file.php\"", true)
+                .withInsertHandler(REQUIRE_FILE_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                requireFileElement, PhelCompletionRanking.Priority.SPECIAL_FORMS.value));
+            
+            // Add (:use with custom insert handler that positions cursor inside
+            LookupElementBuilder useElement = LookupElementBuilder
+                .create("(:use )")
+                .withPresentableText("(:use )")
+                .withTypeText("Import symbols from namespace or PHP class")
+                .withTailText(" namespace\\name) or Some\\Php\\Class)", true)
+                .withInsertHandler(USE_TEMPLATE_INSERT_HANDLER)
+                .withIcon(org.phellang.PhelIcons.FILE);
+            result.addElement(com.intellij.codeInsight.completion.PrioritizedLookupElement.withPriority(
+                useElement, PhelCompletionRanking.Priority.MACROS.value));
+        }
+        
+        /**
+         * Check if we're in a :require context (but not :require-file)
+         */
+        private boolean isInRequireContext(PsiElement element) {
+            String context = getCurrentTextContext(element, 200);
+            
+            
+            boolean hasRequire = context.contains(":require") || context.contains("(:require");
+            boolean hasRequireFile = context.contains(":require-file") || context.contains("(:require-file");
+            
+            // Check if we're inside an incomplete require statement vs after a completed one
+            // Look for complete (:require ...) patterns in the context
+            boolean afterCompleteRequire = false;
+            
+            // Simpler approach: if context contains a line ending with ) and current line is just IntellijIdeaRulezzz
+            String[] lines = context.split("\\n");
+            
+            if (lines.length >= 2) {
+                String currentLine = lines[lines.length - 1].trim();
+                
+                // If current line is just the IntelliJ placeholder, check previous lines for complete forms
+                if (currentLine.equals("IntellijIdeaRulezzz") || currentLine.isEmpty()) {
+                    // Look for any complete require forms in previous lines
+                    for (int i = 0; i < lines.length - 1; i++) {
+                        String line = lines[i].trim();
+                        // Simple check: line contains :require and ends with )
+                        if (line.contains(":require") && line.endsWith(")")) {
+                            afterCompleteRequire = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            
+            return hasRequire && !hasRequireFile && !afterCompleteRequire;
+        }
+        
+        /**
+         * Check if we're in a :require-file context
+         */
+        private boolean isInRequireFileContext(PsiElement element) {
+            String context = getCurrentTextContext(element, 200);
+            
+            
+            boolean hasRequireFile = context.contains(":require-file") || context.contains("(:require-file");
+            
+            // Use same simple line-by-line approach as isInRequireContext
+            String[] lines = context.split("\\n");
+            
+            boolean afterCompleteRequireFile = false;
+            if (lines.length >= 2) {
+                String currentLine = lines[lines.length - 1].trim();
+                
+                // If current line is just the IntelliJ placeholder, check previous lines for complete forms
+                if (currentLine.equals("IntellijIdeaRulezzz") || currentLine.isEmpty()) {
+                    // Look for any complete require-file forms in previous lines
+                    for (int i = 0; i < lines.length - 1; i++) {
+                        String line = lines[i].trim();
+                        // Simple check: line contains :require-file and ends with )
+                        if (line.contains(":require-file") && line.endsWith(")")) {
+                            afterCompleteRequireFile = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            
+            return hasRequireFile && !afterCompleteRequireFile;
+        }
+        
+        /**
+         * Check if we're in a :use context
+         */
+        private boolean isInUseContext(PsiElement element) {
+            String context = getCurrentTextContext(element, 200);
+            
+            boolean hasUse = context.contains(":use") || context.contains("(:use");
+            
+            // Use same simple line-by-line approach
+            String[] lines = context.split("\\n");
+            boolean afterCompleteUse = false;
+            if (lines.length >= 2) {
+                String currentLine = lines[lines.length - 1].trim();
+                
+                // If current line is just the IntelliJ placeholder, check previous lines for complete forms
+                if (currentLine.equals("IntellijIdeaRulezzz") || currentLine.isEmpty()) {
+                    // Look for any complete use forms in previous lines
+                    for (int i = 0; i < lines.length - 1; i++) {
+                        String line = lines[i].trim();
+                        // Simple check: line contains :use and ends with )
+                        if (line.contains(":use") && line.endsWith(")")) {
+                            afterCompleteUse = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return hasUse && !afterCompleteUse;
+        }
+        
+        /**
+         * Add completions for :require context
+         */
+        private void addRequireCompletions(CompletionResultSet result, PsiElement element) {
+            String context = getCurrentTextContext(element, 200);
+            
+            
+            // Extract the current namespace prefix being typed
+            String namespacePrefix = extractNamespacePrefix(context);
+            
+            // Improved logic: detect different completion scenarios
+            boolean hasCompleteNamespaceWithSpace = context.matches(".*:require\\s+[a-zA-Z][a-zA-Z0-9\\\\.-]+\\s+.*");
+            boolean justAfterRequire = context.matches(".*:require\\s*IntellijIdeaRulezzz.*") ||
+                                     context.matches(".*\\(:require\\s*IntellijIdeaRulezzz.*");
+            boolean hasPartialNamespace = !namespacePrefix.isEmpty();
+            boolean isCompleteKnownNamespace = isKnownCompleteNamespace(namespacePrefix);
+            
+            
+            // Case 1: After a complete known namespace (like "phel\base64") - suggest options
+            if (isCompleteKnownNamespace) {
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    ":as",
+                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
+                    ":as alias-name",
+                    "Create an alias for the namespace",
+                    org.phellang.PhelIcons.FILE
+                );
+                
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    ":refer []",
+                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
+                    ":refer [symbol1 symbol2]",
+                    "Import specific symbols directly",
+                    org.phellang.PhelIcons.FILE
+                );
+            }
+            // Case 2: Just after :require OR typing partial namespace (like "phel\")
+            else if (justAfterRequire || hasPartialNamespace) {
+                // Suggest common Phel namespaces with prefix filtering
+                addCommonPhelNamespacesWithPrefix(result, namespacePrefix);
+                
+                // Suggest actual namespaces found in project .phel files with prefix filtering
+                addProjectPhelNamespacesWithPrefix(result, element, namespacePrefix);
+            }
+            // Case 3: After a complete namespace name followed by space - suggest options
+            else if (hasCompleteNamespaceWithSpace) {
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    ":as",
+                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
+                    ":as alias-name",
+                    "Create an alias for the namespace",
+                    org.phellang.PhelIcons.FILE
+                );
+                
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    ":refer []",
+                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
+                    ":refer [symbol1 symbol2]",
+                    "Import specific symbols directly",
+                    org.phellang.PhelIcons.FILE
+                );
+            }
+            // Case 3: After :refer, suggest [ to start symbol list
+            else if (context.contains(":refer") && !context.contains("[")) {
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    "[",
+                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
+                    "[symbol-list]",
+                    "Start symbol list for :refer",
+                    org.phellang.PhelIcons.FILE
+                );
+            }
+            // Case 4: Unexpected fallback - should not happen with good logic
+            else {
+            }
+        }
+        
+        /**
+         * Add completions for :require-file context
+         */
+        private void addRequireFileCompletions(CompletionResultSet result, PsiElement element) {
+            String context = getCurrentTextContext(element, 200);
+            
+            
+            // Check if there's already a filename string in the context
+            boolean hasFilename = context.matches(".*:require-file\\s+\"[^\"]+\".*");
+            boolean justAfterRequireFile = context.matches(".*:require-file\\s*IntellijIdeaRulezzz.*") ||
+                                         context.matches(".*\\(:require-file\\s*IntellijIdeaRulezzz.*");
+            
+            
+            // Case 1: Just after :require-file (no filename yet)
+            if (justAfterRequireFile) {
+                
+                // Suggest common PHP file paths
+                String[] commonPaths = {
+                    "\"vendor/autoload.php\"",
+                    "\"bootstrap.php\"",
+                    "\"config.php\"",
+                    "\"functions.php\""
+                };
+                
+                for (String path : commonPaths) {
+                    PhelCompletionRanking.addRankedCompletion(
+                        result,
+                        path,
+                        PhelCompletionRanking.Priority.API_FUNCTIONS,
+                        null,
+                        "Common PHP file to include",
+                        PhelIconProvider.PHP_INTEROP
+                    );
+                }
+            }
+            // Case 2: After a filename - suggest options
+            else if (hasFilename) {
+                
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    ":as",
+                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
+                    ":as alias-name",
+                    "Create alias for the included file",
+                    org.phellang.PhelIcons.FILE
+                );
+                
+                // Removed ) completion - users can manually close the form
+            }
+            // Case 3: Fallback
+            else {
+                
+                // Suggest common PHP file paths
+                String[] commonPaths = {
+                    "\"vendor/autoload.php\"",
+                    "\"bootstrap.php\"",
+                    "\"config.php\"",
+                    "\"functions.php\""
+                };
+                
+                for (String path : commonPaths) {
+                    PhelCompletionRanking.addRankedCompletion(
+                        result,
+                        path,
+                        PhelCompletionRanking.Priority.API_FUNCTIONS,
+                        null,
+                        "Common PHP file to include",
+                        PhelIconProvider.PHP_INTEROP
+                    );
+                }
+            }
+        }
+        
+        /**
+         * Add completions for :use context
+         */
+        private void addUseCompletions(CompletionResultSet result, PsiElement element) {
+            String context = getCurrentTextContext(element, 200);
+            
+            
+            // Check if there's already a PHP class in the context
+            boolean hasClass = context.matches(".*:use\\s+\\\\?[a-zA-Z][a-zA-Z0-9\\\\.-]+.*");
+            boolean justAfterUse = context.matches(".*:use\\s*IntellijIdeaRulezzz.*") ||
+                                 context.matches(".*\\(:use\\s*IntellijIdeaRulezzz.*");
+            
+            
+            // Case 1: Just after :use (no class yet)
+            if (justAfterUse) {
+                
+                // :use is for PHP classes only, not Phel namespaces
+                addPhpClassCompletions(result);
+                
+                // Add example suggestions
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    "\\DateTime",
+                    PhelCompletionRanking.Priority.API_FUNCTIONS,
+                    null,
+                    "PHP DateTime class (example)",
+                    PhelIconProvider.PHP_INTEROP
+                );
+            }
+            // Case 2: After a PHP class name - suggest options
+            else if (hasClass) {
+                
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    ":as",
+                    PhelCompletionRanking.Priority.SPECIAL_FORMS,
+                    ":as alias-name",
+                    "Create alias for the imported PHP class",
+                    org.phellang.PhelIcons.FILE
+                );
+                
+                // Removed ) completion - users can manually close the form
+            }
+            // Case 3: Fallback
+            else {
+                
+                // :use is for PHP classes only, not Phel namespaces
+                addPhpClassCompletions(result);
+            }
+        }
+        
+        /**
+         * Add completions for PHP class imports
+         */
+        private void addPhpClassCompletions(CompletionResultSet result) {
+            // Suggest common PHP class patterns
+            String[] commonPhpClasses = {
+                "Exception",
+                "DateTime",
+                "PDO",
+                "stdClass"
+            };
+            
+            for (String className : commonPhpClasses) {
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    className,
+                    PhelCompletionRanking.Priority.PHP_INTEROP,
+                    null,
+                    "PHP class",
+                    PhelIconProvider.PHP_INTEROP
+                );
+            }
+        }
+        
+        /**
+         * Add common Phel namespace suggestions
+         */
+        private void addCommonPhelNamespaces(CompletionResultSet result) {
+            String[] commonNamespaces = {
+                "phel\\test", "phel\\json", "phel\\http", "phel\\str", 
+                "phel\\html", "phel\\core", "phel\\base64", "phel\\local",
+                "phel\\repl", "phel\\trace"
+            };
+            
+            
+            for (String namespace : commonNamespaces) {
+                PhelCompletionRanking.addRankedCompletion(
+                    result,
+                    namespace,
+                    PhelCompletionRanking.Priority.API_FUNCTIONS,
+                    null,
+                    "Common Phel namespace",
+                    PhelIconProvider.NAMESPACE
+                );
+            }
+        }
+        
+        /**
+         * Get text context around the current element for parsing
+         */
+        private String getCurrentTextContext(PsiElement element, int maxLength) {
+            try {
+                StringBuilder context = new StringBuilder();
+                
+                // First, get the parent list to understand the broader context
+                PsiElement parentList = element;
+                while (parentList != null && !(parentList instanceof PhelList)) {
+                    parentList = parentList.getParent();
+                }
+                
+                if (parentList != null) {
+                    String parentText = parentList.getText();
+                    if (parentText != null && parentText.length() <= maxLength) {
+                        context.append(parentText);
+                    } else if (parentText != null) {
+                        // If parent is too long, get a reasonable portion
+                        int cursorOffset = element.getTextOffset() - parentList.getTextOffset();
+                        int startOffset = Math.max(0, cursorOffset - maxLength / 2);
+                        int endOffset = Math.min(parentText.length(), cursorOffset + maxLength / 2);
+                        context.append(parentText.substring(startOffset, endOffset));
+                    }
+                }
+                
+                return context.toString();
+                
+            } catch (Exception e) {
+                return "";
+            }
+        }
+        
+        /**
+         * Scan project .phel files and extract namespace declarations for completion
+         */
+        private void addProjectPhelNamespaces(CompletionResultSet result, PsiElement element) {
+            try {
+                
+                // Get the project from the PSI element
+                Project project = element.getProject();
+                
+                // Use GlobalSearchScope to find all .phel files in the project
+                GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+                
+                // Find all .phel files using FilenameIndex
+                Collection<VirtualFile> phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", scope);
+                
+                
+                Set<String> foundNamespaces = new HashSet<>();
+                
+                for (VirtualFile virtualFile : phelFiles) {
+                    try {
+                        // Get PSI file from virtual file
+                        PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+                        
+                        if (psiFile != null) {
+                            String namespace = extractNamespaceFromPhelFile(psiFile);
+                            if (namespace != null && !namespace.isEmpty()) {
+                                foundNamespaces.add(namespace);
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+                
+                // Add found namespaces to completion results
+                for (String namespace : foundNamespaces) {
+                    PhelCompletionRanking.addRankedCompletion(
+                        result,
+                        namespace,
+                        PhelCompletionRanking.Priority.PROJECT_SYMBOLS, // Higher priority than common ones
+                        null,
+                        "Project namespace from " + namespace.replace("\\", "/") + ".phel",
+                        PhelIconProvider.NAMESPACE
+                    );
+                }
+                
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        /**
+         * Extract namespace declaration from a .phel file
+         */
+        private String extractNamespaceFromPhelFile(PsiFile psiFile) {
+            try {
+                // Look for (ns namespace-name) declarations
+                PsiElement[] children = psiFile.getChildren();
+                
+                for (PsiElement child : children) {
+                    if (child instanceof PhelList) {
+                        PhelList list = (PhelList) child;
+                        PsiElement[] listChildren = list.getChildren();
+                        
+                        // Check if first element is 'ns'
+                        if (listChildren.length >= 2) {
+                            PsiElement firstElement = listChildren[0];
+                            if (firstElement instanceof PhelAccess) {
+                                String firstText = firstElement.getText().trim();
+                                if ("ns".equals(firstText)) {
+                                    // Second element should be the namespace name
+                                    PsiElement secondElement = listChildren[1];
+                                    if (secondElement instanceof PhelAccess) {
+                                        String namespace = secondElement.getText().trim();
+                                        return namespace;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+            }
+            
+            return null;
+        }
+        
+        /**
+         * Extract namespace prefix from the current context (e.g., "phel\" from "(:require phel\IntellijIdeaRulezzz")
+         */
+        private String extractNamespacePrefix(String context) {
+            try {
+                // Look for pattern: (:require PREFIX_HERE IntellijIdeaRulezzz
+                int requirePos = context.lastIndexOf(":require");
+                if (requirePos == -1) return "";
+                
+                String afterRequire = context.substring(requirePos + 8); // Skip ":require"
+                
+                // Find the namespace part before IntellijIdeaRulezzz
+                int ideaPos = afterRequire.indexOf("IntellijIdeaRulezzz");
+                if (ideaPos == -1) return "";
+                
+                String beforeIdea = afterRequire.substring(0, ideaPos).trim();
+                
+                // Remove any leading whitespace and extract the last word (partial namespace)
+                String[] parts = beforeIdea.split("\\s+");
+                if (parts.length > 0) {
+                    String lastPart = parts[parts.length - 1];
+                    // Only return if it looks like a namespace prefix (contains letters/backslash)
+                    if (lastPart.matches("[a-zA-Z][a-zA-Z0-9\\\\.-]*")) {
+                        return lastPart;
+                    }
+                }
+                
+                return "";
+            } catch (Exception e) {
+                return "";
+            }
+        }
+        
+        /**
+         * Add common Phel namespaces with prefix filtering
+         */
+        private void addCommonPhelNamespacesWithPrefix(CompletionResultSet result, String prefix) {
+            String[] commonNamespaces = {
+                "phel\\test", "phel\\json", "phel\\http", "phel\\str", "phel\\html", 
+                "phel\\core", "phel\\base64", "phel\\local", "phel\\repl", "phel\\trace"
+            };
+            
+            for (String namespace : commonNamespaces) {
+                // Filter by prefix (case insensitive)
+                if (prefix.isEmpty() || namespace.toLowerCase().startsWith(prefix.toLowerCase())) {
+                    PhelCompletionRanking.addRankedCompletion(
+                        result,
+                        namespace,
+                        PhelCompletionRanking.Priority.API_FUNCTIONS,
+                        null,
+                        "Common Phel namespace",
+                        PhelIconProvider.NAMESPACE
+                    );
+                }
+            }
+        }
+        
+        /**
+         * Add project Phel namespaces with prefix filtering
+         */
+        private void addProjectPhelNamespacesWithPrefix(CompletionResultSet result, PsiElement element, String prefix) {
+            try {
+                
+                // Get the project from the PSI element
+                Project project = element.getProject();
+                
+                // Use GlobalSearchScope to find all .phel files in the project
+                GlobalSearchScope scope = GlobalSearchScope.allScope(project);
+                
+                // Find all .phel files using FilenameIndex
+                Collection<VirtualFile> phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", scope);
+                
+                Set<String> foundNamespaces = new HashSet<>();
+                
+                for (VirtualFile virtualFile : phelFiles) {
+                    try {
+                        // Get PSI file from virtual file
+                        PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
+                        
+                        if (psiFile != null) {
+                            String namespace = extractNamespaceFromPhelFile(psiFile);
+                            if (namespace != null && !namespace.isEmpty()) {
+                                // Filter by prefix (case insensitive)
+                                if (prefix.isEmpty() || namespace.toLowerCase().startsWith(prefix.toLowerCase())) {
+                                    foundNamespaces.add(namespace);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+                
+                // Add found namespaces to completion results
+                for (String namespace : foundNamespaces) {
+                    PhelCompletionRanking.addRankedCompletion(
+                        result,
+                        namespace,
+                        PhelCompletionRanking.Priority.PROJECT_SYMBOLS, // Higher priority than common ones
+                        null,
+                        "Project namespace from " + namespace.replace("\\", "/") + ".phel",
+                        PhelIconProvider.NAMESPACE
+                    );
+                }
+                
+                
+            } catch (Exception e) {
+            }
+        }
+        
+        /**
+         * Check if the given text looks like a complete namespace (not partial)
+         * Simple heuristic: if it doesn't end with backslash and has proper namespace format
+         */
+        private boolean isKnownCompleteNamespace(String namespace) {
+            if (namespace == null || namespace.isEmpty()) {
+                return false;
+            }
+            
+            // If it ends with backslash, it's still partial (e.g., "phel\")
+            if (namespace.endsWith("\\")) {
+                return false;
+            }
+            
+            // Check if it looks like a complete namespace format: word\word (at least one backslash)
+            if (namespace.matches("[a-zA-Z][a-zA-Z0-9]*\\\\[a-zA-Z][a-zA-Z0-9.-]*")) {
+                return true;
+            }
+            
+            return false;
         }
     }
 

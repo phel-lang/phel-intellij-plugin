@@ -40,9 +40,28 @@ public class PhelLocalSymbolCompletions {
      * Enhanced with performance optimizations
      */
     public static void addLocalSymbols(@NotNull CompletionResultSet result, @NotNull PsiElement position) {
+        // Comprehensive error handling for local symbol completion
+        PhelCompletionErrorHandler.withErrorHandling(
+            PhelCompletionErrorHandler.withResultSet(result, () -> {
+                addLocalSymbolsWithValidation(result, position);
+            }),
+            "local symbol completion",
+            () -> {
+                // Fallback: add basic local symbols if detailed analysis fails
+                addBasicLocalFallback(result, position);
+            }
+        );
+    }
+    
+    private static void addLocalSymbolsWithValidation(@NotNull CompletionResultSet result, @NotNull PsiElement position) throws Exception {
         // Performance check - skip expensive operations if needed
         if (PhelCompletionPerformanceOptimizer.shouldSkipExpensiveOperations(position)) {
             return;
+        }
+        
+        // Validate element before processing
+        if (!PhelCompletionErrorHandler.isCompletionContextValid(position)) {
+            throw new IllegalStateException("Invalid PSI element context for local symbol completion");
         }
         
         Set<String> addedSymbols = new HashSet<>();
@@ -317,6 +336,31 @@ public class PhelLocalSymbolCompletions {
                     
             // Apply priority using IntelliJ's PrioritizedLookupElement
             result.addElement(PrioritizedLookupElement.withPriority(element, priority.value));
+        }
+    }
+    
+    /**
+     * Basic fallback for local symbol completion when detailed analysis fails
+     */
+    private static void addBasicLocalFallback(@NotNull CompletionResultSet result, @NotNull PsiElement position) {
+        try {
+            // Try to add at least some basic local symbols using simple PSI traversal
+            String currentFunctionName = getCurrentFunctionName(position);
+            if (currentFunctionName != null && !currentFunctionName.isEmpty()) {
+                result.addElement(LookupElementBuilder.create(currentFunctionName)
+                    .withIcon(PhelIconProvider.RECURSIVE_FUNCTION)
+                    .withTailText(" (current function)", true));
+            }
+            
+            // Add common parameter names as fallback
+            String[] commonParams = {"x", "y", "n", "item", "coll", "f", "pred"};
+            for (String param : commonParams) {
+                result.addElement(LookupElementBuilder.create(param)
+                    .withIcon(PhelIconProvider.PARAMETER)
+                    .withTailText(" (common parameter)", true));
+            }
+        } catch (Exception e) {
+            // Even fallback failed - provide minimal completions
         }
     }
     

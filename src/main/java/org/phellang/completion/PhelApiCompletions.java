@@ -140,7 +140,6 @@ public class PhelApiCompletions {
         addFunction(result, "assoc-in", "(assoc-in ds ks v)", "Associates value in nested data structure", FUNCTION_ICON);
         addFunction(result, "dissoc", "(dissoc ds key)", "Dissociates key from data structure", FUNCTION_ICON);
         addFunction(result, "dissoc-in", "(dissoc-in ds ks)", "Dissociates key from nested data structure", FUNCTION_ICON);
-        addFunction(result, "coerce-in", "(coerce-in v min max)", "Coerces value between min and max", FUNCTION_ICON);
         addFunction(result, "comment", "(comment &)", "Comments out expressions", FUNCTION_ICON);
         addFunction(result, "difference-pair", "(difference-pair s1 s2)", "Returns difference between two sets as pair", FUNCTION_ICON);
         
@@ -149,6 +148,64 @@ public class PhelApiCompletions {
         addFunction(result, "->>", "(->> x & forms)", "Thread-last macro", FUNCTION_ICON);
         addFunction(result, "as->", "(as-> expr name & forms)", "Thread with alias", FUNCTION_ICON);
         addFunction(result, "doto", "(doto x & forms)", "Evaluates forms with x as first argument", FUNCTION_ICON);
+        
+        // Symbol and meta functions from official API
+        addFunction(result, "gensym", "(gensym)", "Generates a new unique symbol", FUNCTION_ICON);
+        addFunction(result, "symbol", "(symbol name-or-ns & [name])", "Returns a new symbol for given string with optional namespace", FUNCTION_ICON);
+        addFunction(result, "keyword", "(keyword x)", "Creates a new Keyword from a given string", FUNCTION_ICON);
+        
+        // Additional sequence navigation functions
+        addFunction(result, "ffirst", "(ffirst xs)", "Same as (first (first xs))", FUNCTION_ICON);
+        addFunction(result, "nfirst", "(nfirst xs)", "Same as (next (first xs))", FUNCTION_ICON);
+        addFunction(result, "nnext", "(nnext xs)", "Same as (next (next xs))", FUNCTION_ICON);
+        
+        // Advanced sequence functions  
+        addFunction(result, "take-last", "(take-last n xs)", "Takes the last n elements of xs", FUNCTION_ICON);
+        addFunction(result, "take-nth", "(take-nth n xs)", "Returns every nth item in xs", FUNCTION_ICON);
+        addFunction(result, "slice", "(slice xs & [offset & [length]])", "Extract a slice of xs", FUNCTION_ICON);
+        
+        // PHP conversion functions
+        addFunction(result, "to-php-array", "(to-php-array xs)", "Create a PHP Array from a sequential data structure", FUNCTION_ICON);
+        addFunction(result, "php-array-to-map", "(php-array-to-map arr)", "Converts a PHP Array to a map", FUNCTION_ICON);
+        addFunction(result, "phel->php", "(phel->php x)", "Recursively converts a Phel data structure to a PHP array", FUNCTION_ICON);
+        addFunction(result, "php->phel", "(php->phel x)", "Recursively converts a PHP array to Phel data structures", FUNCTION_ICON);
+        addFunction(result, "php-indexed-array", "(php-indexed-array & xs)", "Creates a PHP indexed array from the given values", FUNCTION_ICON);
+        addFunction(result, "php-associative-array", "(php-associative-array & xs)", "Creates a PHP associative array. An even number of parameters must be provided", FUNCTION_ICON);
+        
+        // Advanced collection functions
+        addFunction(result, "select-keys", "(select-keys m ks)", "Returns a new map including key value pairs from m selected with of keys ks", FUNCTION_ICON);
+        addFunction(result, "split-at", "(split-at n xs)", "Returns a vector of [(take n coll) (drop n coll)]", FUNCTION_ICON);
+        addFunction(result, "split-with", "(split-with f xs)", "Returns a vector of [(take-while pred coll) (drop-while pred coll)]", FUNCTION_ICON);
+        addFunction(result, "partition-by", "(partition-by f xs)", "Applies f to each value in xs, splitting them each time the return value changes", FUNCTION_ICON);
+        addFunction(result, "tree-seq", "(tree-seq branch? children root)", "Returns a vector of the nodes in the tree, via a depth-first walk", FUNCTION_ICON);
+        
+        // Math functions
+        addFunction(result, "sum", "(sum xs)", "Returns the sum of all elements is xs", FUNCTION_ICON);
+        addFunction(result, "mean", "(mean xs)", "Returns the mean of xs", FUNCTION_ICON);
+        addFunction(result, "median", "(median xs)", "Returns the median of xs", FUNCTION_ICON);
+        addFunction(result, "coerce-in", "(coerce-in v min max)", "Returns v if it is in the range, or min if v is less than min, or max if v is greater than max", FUNCTION_ICON);
+        
+        // File I/O functions
+        addFunction(result, "slurp", "(slurp filename & [opts])", "Reads entire file into a string", FUNCTION_ICON);
+        addFunction(result, "spit", "(spit filename data & [opts])", "Writes data to file, returning number of bytes written", FUNCTION_ICON);
+        
+        // String/name functions
+        addFunction(result, "name", "(name x)", "Returns the name string of a string, keyword or symbol", FUNCTION_ICON);
+        addFunction(result, "namespace", "(namespace x)", "Return the namespace string of a symbol or keyword. Nil if not present", FUNCTION_ICON);
+        addFunction(result, "full-name", "(full-name x)", "Return the namespace and name string of a string, keyword or symbol", FUNCTION_ICON);
+        
+        // Compilation functions
+        addFunction(result, "read-string", "(read-string s)", "Reads the first phel expression from the string s", FUNCTION_ICON);
+        addFunction(result, "eval", "(eval form)", "Evaluates a form and return the evaluated results", FUNCTION_ICON);
+        addFunction(result, "compile", "(compile form)", "Returns the compiled PHP code string for the given form", FUNCTION_ICON);
+        addFunction(result, "macroexpand", "(macroexpand form)", "Recursively expands the given form until it is no longer a macro call", FUNCTION_ICON);
+        addFunction(result, "macroexpand-1", "(macroexpand-1 form)", "Expands the given form once if it is a macro call", FUNCTION_ICON);
+        
+        // Regex functions  
+        addFunction(result, "re-seq", "(re-seq re s)", "Returns a sequence of successive matches of pattern in string", FUNCTION_ICON);
+        
+        // Generators
+        addFunction(result, "iterate", "(iterate f x)", "Returns an infinite sequence of x, (f x), (f (f x)), and so on", FUNCTION_ICON);
     }
 
     /**
@@ -200,6 +257,11 @@ public class PhelApiCompletions {
         
         // Additional documented predicates from official API
         addFunction(result, "not-empty?", "(not-empty? x)", "Returns true if collection is not empty", PREDICATE_ICON);
+        
+        // Missing predicates from official Phel core
+        addFunction(result, "struct?", "(struct? x)", "Returns true if x is a struct", PREDICATE_ICON);
+        addFunctionWithContext(result, "not-every?", "(not-every? pred xs)", "Returns false if (pred x) is logical true for every x in collection xs", PREDICATE_ICON, element);
+        addFunctionWithContext(result, "not-any?", "(not-any? pred xs)", "Returns true if (pred x) is logical false for every x in xs", PREDICATE_ICON, element);
     }
 
     /**
@@ -224,6 +286,12 @@ public class PhelApiCompletions {
         addFunction(result, "group-by", "(group-by f xs)", "Groups collection by result of f", FUNCTION_ICON);
         addFunction(result, "frequencies", "(frequencies xs)", "Returns frequency map", FUNCTION_ICON);
         addFunction(result, "zipcoll", "(zipcoll keys values)", "Creates map from keys and values", FUNCTION_ICON);
+        addFunction(result, "zipmap", "(zipmap keys vals)", "Returns a new map with the keys mapped to the corresponding values", FUNCTION_ICON);
+        
+        // Additional collection functions from official API
+        addFunction(result, "some", "(some pred xs)", "Returns the first logical true value of (pred x) for any x in xs, else nil", FUNCTION_ICON);
+        addFunction(result, "not-empty", "(not-empty coll)", "Returns coll if it contains elements, otherwise nil", FUNCTION_ICON);
+        addFunction(result, "shuffle", "(shuffle xs)", "Returns a random permutation of xs", FUNCTION_ICON);
     }
 
     /**

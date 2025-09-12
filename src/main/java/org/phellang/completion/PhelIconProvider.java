@@ -93,6 +93,12 @@ public class PhelIconProvider {
     // === NAMESPACE & PROJECT ICONS ===
     
     /**
+     * Namespaces - Package icon for namespace imports
+     * Used for: phel\test, phel\json, etc.
+     */
+    public static final Icon NAMESPACE = AllIcons.Nodes.Package; // Package icon for namespaces
+    
+    /**
      * Namespaced functions - Package icon with function overlay
      * Used for: str/split, http/get, json/encode, etc.
      */
