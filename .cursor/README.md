@@ -1,7 +1,9 @@
 # Phel IntelliJ Plugin Cursor Rules
 
 This folder contains Cursor rules and setup for developing IntelliJ IDEA plugins for the [Phel programming language](https://phel-lang.org/).  
-It integrates official Phel documentation, IntelliJ plugin guidelines, and testing/build workflows. Playwright MCP is used to fetch documentation pages dynamically for accurate context.
+It integrates official Phel documentation, IntelliJ plugin guidelines, and testing/build workflows.
+
+**Status**: The plugin is feature-complete with intelligent code completion, form comment highlighting, template completions, namespace support, and comprehensive syntax highlighting.
 
 ---
 
@@ -9,14 +11,14 @@ It integrates official Phel documentation, IntelliJ plugin guidelines, and testi
 
 ```txt
 .cursor/
-    rules/
-        communication.md      → Communication style
-        intellij-plugin.md    → IntelliJ plugin implementation guidelines
-        mcp.json              → Playwright MCP configuration
-        phel-docs.md          → Centralized official Phel documentation references
-        phel-language.md      → Language specification & compliance rules
-        testing-and-build.md  → Testing strategy and Gradle workflow
-        README.md
+    communication.md      → Communication style
+    intellij-plugin.md    → IntelliJ plugin implementation guidelines
+    mcp.json              → Playwright MCP configuration
+    phel-docs.md          → Centralized official Phel documentation references
+    phel-language.md      → Language specification & compliance rules
+    plugin-features.md    → Comprehensive feature documentation
+    testing-and-build.md  → Testing strategy and Gradle workflow
+    README.md             → This file
 ```
 
 ---
@@ -57,6 +59,7 @@ Use the following Cursor rule files:
 - communication.md
 - phel-language.md
 - intellij-plugin.md
+- plugin-features.md
 - testing-and-build.md
 - phel-docs.md
 
@@ -69,9 +72,6 @@ Instructions:
 3. Include testing guidance or verification steps if relevant
 4. Cite official links where appropriate (use the URLs in phel-docs.md)
 
-Task:
-{Insert your specific task or question here}
-
 Output format:
 
 - Context Summary: Short description of the docs or rules applied
@@ -79,9 +79,12 @@ Output format:
 - Code Snippets: Fully runnable examples where applicable
 - Verification / Testing: Steps or files to validate behavior
 - References: URLs from official documentation
+
+Task:
+{Insert your specific task or question here}
 ```
 
-### Example Usage
+### Task example
 
 ```md
 Task:

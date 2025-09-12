@@ -255,9 +255,6 @@ public class PhelApiCompletions {
         addFunction(result, "php-object?", "(php-object? x)", "Returns true if x is PHP object", PREDICATE_ICON);
         addFunction(result, "php-resource?", "(php-resource? x)", "Returns true if x is PHP resource", PREDICATE_ICON);
         
-        // Additional documented predicates from official API
-        addFunction(result, "not-empty?", "(not-empty? x)", "Returns true if collection is not empty", PREDICATE_ICON);
-        
         // Missing predicates from official Phel core
         addFunction(result, "struct?", "(struct? x)", "Returns true if x is a struct", PREDICATE_ICON);
         addFunctionWithContext(result, "not-every?", "(not-every? pred xs)", "Returns false if (pred x) is logical true for every x in collection xs", PREDICATE_ICON, element);

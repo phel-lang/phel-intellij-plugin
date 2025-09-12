@@ -65,6 +65,11 @@ public class PhelLanguageCompletions {
         addSpecialForm(result, "for", "(for seq-exprs body)", "List comprehension");
         addSpecialForm(result, "dofor", "(dofor seq-exprs body)", "For side effects");
         addSpecialForm(result, "foreach", "(foreach [binding coll] body*)", "PHP-style foreach");
+
+        // Testing constructs (deftest is a macro, but commonly used)
+        // Note: deftest is also available as test/deftest from the test namespace
+        addSpecialForm(result, "deftest", "(deftest test-name & body)", "Defines a test function with no arguments");
+        addSpecialForm(result, "is", "(is form & [message])", "Generic assertion macro for testing");
     }
 
     /**

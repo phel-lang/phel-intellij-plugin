@@ -10,6 +10,7 @@ public interface PhelTypes {
 
   IElementType ACCESS = new PhelElementType("ACCESS");
   IElementType FORM = new PhelElementType("FORM");
+  IElementType FORM_COMMENT_MACRO = new PhelElementType("FORM_COMMENT_MACRO");
   IElementType KEYWORD = new PhelElementType("KEYWORD");
   IElementType LIST = new PhelElementType("LIST");
   IElementType LITERAL = new PhelElementType("LITERAL");
@@ -34,6 +35,7 @@ public interface PhelTypes {
   IElementType DECREMENT = new PhelTokenType("--");
   IElementType DOT = new PhelTokenType(".");
   IElementType DOTDASH = new PhelTokenType(".-");
+  IElementType FORM_COMMENT = new PhelTokenType("#_");
   IElementType HAT = new PhelTokenType("^");
   IElementType HEXNUM = new PhelTokenType("hexnum");
   IElementType INCREMENT = new PhelTokenType("++");
@@ -66,6 +68,9 @@ public interface PhelTypes {
       }
       else if (type == FORM) {
         return new PhelFormImpl(node);
+      }
+      else if (type == FORM_COMMENT_MACRO) {
+        return new PhelFormCommentMacroImpl(node);
       }
       else if (type == KEYWORD) {
         return new PhelKeywordImpl(node);

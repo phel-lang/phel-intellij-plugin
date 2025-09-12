@@ -5,7 +5,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides comment handling for Phel language.
- * Supports line comments starting with '#' character.
+ * Supports line comments starting with '#' or ';' characters.
+ * Uses '#' as the default prefix for new comments (consistent with Clojure convention).
  */
 public class PhelCommenter implements Commenter {
 

@@ -19,7 +19,7 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 %state SYMBOL0, SYMBOL1, SYMBOL2, SYMBOL3
 
 WHITE_SPACE=\s+
-LINE_COMMENT=#.*
+LINE_COMMENT=#[^_].*|;.*
 STR_CHAR=[^\\\"]|\\.|\\\"
 STRING=\" {STR_CHAR}* \"
 NUMBER=[+-]? [0-9]+ (\.[0-9]*)? ([eE][+-]?[0-9]+)?
@@ -40,11 +40,12 @@ KEYWORD_TAIL={SYM_PART}+ ("/" {SYM_PART}+)? (":" {SYM_PART}+)?
 %%
 <YYINITIAL> {
   {WHITE_SPACE}          { return WHITE_SPACE; }
-  {LINE_COMMENT}         { return PhelTypes.LINE_COMMENT; }
 
   "^"                    { return PhelTypes.HAT; }
   ",@"                   { return PhelTypes.COMMA_AT; }
   "~@"                   { return PhelTypes.TILDE_AT; }
+  "#_"                   { return PhelTypes.FORM_COMMENT; }
+  {LINE_COMMENT}         { return PhelTypes.LINE_COMMENT; }
   ","                    { return PhelTypes.COMMA; }
   "~"                    { return PhelTypes.TILDE; }
   "("                    { return PhelTypes.PAREN1; }

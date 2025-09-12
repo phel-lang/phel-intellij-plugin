@@ -74,13 +74,14 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // form_prefix form_prefix * form_upper | form_inner
+  // form_prefix form_prefix * form_upper | form_inner | form_comment_macro
   public static boolean form(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "form")) return false;
     boolean result_;
     Marker marker_ = enter_section_(builder_, level_, _COLLAPSE_, FORM, "<form>");
     result_ = form_0(builder_, level_ + 1);
     if (!result_) result_ = form_inner(builder_, level_ + 1);
+    if (!result_) result_ = form_comment_macro(builder_, level_ + 1);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
   }
@@ -107,6 +108,19 @@ public class PhelParser implements PsiParser, LightPsiParser {
       if (!empty_element_parsed_guard_(builder_, "form_0_1", pos_)) break;
     }
     return true;
+  }
+
+  /* ********************************************************** */
+  // "#_" form
+  public static boolean form_comment_macro(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "form_comment_macro")) return false;
+    if (!nextTokenIs(builder_, FORM_COMMENT)) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeToken(builder_, FORM_COMMENT);
+    result_ = result_ && form(builder_, level_ + 1);
+    exit_section_(builder_, marker_, FORM_COMMENT_MACRO, result_);
+    return result_;
   }
 
   /* ********************************************************** */

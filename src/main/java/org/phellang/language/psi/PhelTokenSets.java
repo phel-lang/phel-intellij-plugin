@@ -17,7 +17,7 @@ public interface PhelTokenSets {
     TokenSet DOTDASH = TokenSet.create(PhelTypes.DOTDASH);
     TokenSet HAT = TokenSet.create(PhelTypes.HAT);
     TokenSet HEXNUM = TokenSet.create(PhelTypes.HEXNUM);
-    TokenSet LINE_COMMENT = TokenSet.create(PhelTypes.LINE_COMMENT);
+    TokenSet LINE_COMMENT = TokenSet.create(PhelTypes.LINE_COMMENT, PhelTypes.FORM_COMMENT);
     TokenSet NAN = TokenSet.create(PhelTypes.NAN);
     TokenSet NIL = TokenSet.create(PhelTypes.NIL);
     TokenSet NUMBER = TokenSet.create(PhelTypes.NUMBER);

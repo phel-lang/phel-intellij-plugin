@@ -331,19 +331,52 @@ public class PhelReference extends PsiReferenceBase<PhelSymbol> implements PsiPo
     
     /**
      * Provide completion variants for this reference.
+     * Returns symbols that are valid in this context.
      */
     @Override
     public Object @NotNull [] getVariants() {
-        // TODO: Implement completion variants
-        return new Object[0];
+        List<Object> variants = new ArrayList<>();
+        
+        // Add local scope definitions (let bindings, parameters)
+        PsiElement localDef = resolveInLocalScope();
+        if (localDef != null) {
+            variants.add(localDef);
+        }
+        
+        // Add file-level definitions
+        Collection<PsiElement> fileDefinitions = resolveInCurrentFile();
+        variants.addAll(fileDefinitions);
+        
+        // Add project-wide definitions (limited for performance)
+        if (variants.size() < 20) { // Limit to prevent performance issues
+            Collection<PsiElement> projectDefs = resolveInProject();
+            variants.addAll(projectDefs);
+        }
+        
+        return variants.toArray();
     }
     
     /**
      * Handle renaming of the referenced element.
+     * Updates the symbol text to the new name.
      */
     @Override
     public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
-        // TODO: Implement rename support
+        if (myElement instanceof PhelSymbol) {
+            PhelSymbol symbol = (PhelSymbol) myElement;
+            
+            // For qualified symbols like "ns/symbol", only rename the symbol part
+            String currentText = symbol.getText();
+            if (currentText != null && currentText.contains("/")) {
+                int slashIndex = currentText.lastIndexOf('/');
+                String qualifier = currentText.substring(0, slashIndex + 1);
+                String newText = qualifier + newElementName;
+                return symbol.setName(newText);
+            } else {
+                // For unqualified symbols, replace entire text
+                return symbol.setName(newElementName);
+            }
+        }
         return myElement;
     }
     

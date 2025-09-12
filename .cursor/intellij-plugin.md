@@ -47,8 +47,11 @@ Always register new features in `META-INF/plugin.xml`:
 
 ### Common Pitfalls
 
-- Don't assume Clojure syntax - always verify against official Phel docs (`phel-docs.md`)
-- Regenerate lexer/parser after `.flex`/`.bnf` changes
-- Don't forget to regenerate lexer/parser after .flex/.bnf changes
-- Always use `PhelTypes.TOKEN_NAME` in lexer returns
-- Clear Gradle caches if encountering build issues
+- **Namespace completion**: Use `PlainPrefixMatcher` for full `namespace/function` highlighting
+- **Form comments**: Implement both PSI-based and text-based detection for robustness
+- **PSI element types**: Use `PhelTypes.SYMBOL` not `PhelTypes.SYM` in completion logic
+- **Template priorities**: Balance completion priorities to show `()` first, then templates
+- **Don't assume Clojure syntax** - always verify against official Phel docs (`phel-docs.md`)
+- **Regenerate lexer/parser** after `.flex`/`.bnf` changes
+- **Always use `PhelTypes.TOKEN_NAME`** in lexer returns
+- **Clear Gradle caches** if encountering build issues

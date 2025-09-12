@@ -11,6 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import org.phellang.language.psi.PhelSymbol;
 import org.phellang.language.psi.PhelKeyword;
 import org.phellang.language.psi.PhelPsiUtil;
+import org.phellang.language.psi.PhelTypes;
+import org.phellang.language.psi.PhelForm;
+import org.phellang.language.psi.impl.PhelVecImpl;
+import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.tree.IElementType;
 
 import java.util.Set;
 
@@ -42,7 +47,11 @@ public class PhelAnnotator implements Annotator {
     // Namespace highlighting  
     public static final TextAttributesKey NAMESPACE_PREFIX =
             createTextAttributesKey("PHEL_NAMESPACE", DefaultLanguageHighlighterColors.CLASS_NAME);
-    
+        
+    // Form comment highlighting - for forms commented out by #_
+    public static final TextAttributesKey COMMENTED_OUT_FORM =
+            createTextAttributesKey("PHEL_COMMENTED_OUT_FORM", DefaultLanguageHighlighterColors.LINE_COMMENT);
+        
     // Function parameter highlighting (more distinct color)
     public static final TextAttributesKey FUNCTION_PARAMETER =
             createTextAttributesKey("PHEL_FUNCTION_PARAMETER", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
@@ -139,6 +148,15 @@ public class PhelAnnotator implements Annotator {
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
+        // Check if this element is commented out by #_ form comment
+        if (isCommentedOutByFormComment(element)) {
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                    .range(element.getTextRange())
+                    .textAttributes(COMMENTED_OUT_FORM)
+                    .create();
+            return; // Don't apply other highlighting to commented-out forms
+        }
+        
         if (element instanceof PhelKeyword) {
             annotatePhelKeyword((PhelKeyword) element, holder);
         } else if (element instanceof PhelSymbol) {
@@ -268,5 +286,209 @@ public class PhelAnnotator implements Annotator {
                 .range(keyword.getTextRange())
                 .textAttributes(PhelSyntaxHighlighter.KEYWORD)
                 .create();
+    }
+    
+    /**
+     * Check if an element is commented out by #_ form comment(s).
+     * Handles stacking of multiple #_ tokens (e.g., #_#_ comments out two forms).
+     */
+    private boolean isCommentedOutByFormComment(@NotNull PsiElement element) {
+        // First try text-based detection for vectors (workaround for grammar bug)
+        if (isInCommentedVectorByText(element)) {
+            return true;
+        }
+        
+        // Find the form that contains this element
+        PhelForm containingForm = findContainingForm(element);
+        if (containingForm == null) {
+            return false;
+        }
+        
+        // Check if this form is commented out by counting preceding #_ tokens
+        // First check the containing form itself, then check parent forms
+        return isFormCommentedOut(containingForm) || isParentFormCommentedOut(containingForm);
+    }
+    
+    /**
+     * Find the immediate form that contains the given element.
+     */
+    private PhelForm findContainingForm(@NotNull PsiElement element) {
+        PsiElement current = element;
+        while (current != null) {
+            if (current instanceof PhelForm) {
+                return (PhelForm) current;
+            }
+            current = current.getParent();
+        }
+        return null;
+    }
+    
+    /**
+     * Check if a form is commented out by counting preceding #_ tokens.
+     * Handles stacking: #_ comments out 1 form, #_#_ comments out 2 forms, etc.
+     */
+    private boolean isFormCommentedOut(@NotNull PhelForm form) {
+        PsiElement parent = form.getParent();
+        if (parent == null) {
+            return false;
+        }
+        
+        // Get all children of the parent to analyze the sequence
+        PsiElement[] children = parent.getChildren();
+        int formIndex = -1;
+        
+        // Find the index of our form
+        for (int i = 0; i < children.length; i++) {
+            if (children[i] == form) {
+                formIndex = i;
+                break;
+            }
+        }
+        
+        if (formIndex == -1) {
+            return false;
+        }
+        
+        // Find the sequence of forms that this form belongs to
+        // and check if #_ tokens precede that sequence
+        
+        // Step 1: Find the start of the form sequence that contains our form
+        int sequenceStart = formIndex;
+        for (int i = formIndex - 1; i >= 0; i--) {
+            PsiElement child = children[i];
+            if (child instanceof PsiWhiteSpace) {
+                continue; // Skip whitespace
+            } else if (child instanceof PhelForm) {
+                sequenceStart = i; // Found another form, extend sequence backwards
+            } else {
+                break; // Hit non-form, non-whitespace - end of sequence
+            }
+        }
+        
+        // Step 2: Count consecutive #_ tokens immediately before the sequence
+        int consecutiveFormComments = 0;
+        for (int i = sequenceStart - 1; i >= 0; i--) {
+            PsiElement child = children[i];
+            
+            if (child instanceof PsiWhiteSpace) {
+                continue; // Skip whitespace
+            } else if (child.getNode() != null && child.getNode().getElementType() == PhelTypes.FORM_COMMENT) {
+                consecutiveFormComments++;
+            } else if (isFormCommentMacro(child)) {
+                consecutiveFormComments++;
+            } else {
+                break;
+            }
+        }
+        
+        if (consecutiveFormComments == 0) {
+            return false;
+        }
+        
+        // Step 3: Determine position of our form within the sequence
+        int formPosition = 0;
+        for (int i = sequenceStart; i <= formIndex; i++) {
+            PsiElement child = children[i];
+            if (child instanceof PhelForm) {
+                formPosition++;
+                if (child == form) {
+                    break;
+                }
+            }
+        }
+        
+        return formPosition <= consecutiveFormComments;
+    }
+    
+    /**
+     * Check if any parent form is commented out by #_. This handles cases like [#_:one :two]
+     * where :one and :two are inside a vector that is commented out.
+     */
+    private boolean isParentFormCommentedOut(@NotNull PhelForm form) {
+        PsiElement parent = form.getParent();
+        while (parent != null) {
+            if (parent instanceof PhelForm) {
+                PhelForm parentForm = (PhelForm) parent;
+                if (isFormCommentedOut(parentForm)) {
+                    return true;
+                }
+                parent = parent.getParent();
+            } else {
+                break;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if a PSI element is a form_comment_macro (i.e., #_ form).
+     */
+    private boolean isFormCommentMacro(@NotNull PsiElement element) {
+        // Check if this is a form_comment_macro by looking at its structure
+        if (element.getNode() == null) {
+            return false;
+        }
+        
+        // Look for elements that start with #_ token
+        PsiElement[] children = element.getChildren();
+        if (children.length > 0) {
+            PsiElement firstChild = children[0];
+            if (firstChild.getNode() != null && firstChild.getNode().getElementType() == PhelTypes.FORM_COMMENT) {
+                return true;
+            }
+        }
+        
+        // Also check if the element itself is the form_comment token
+        return element.getNode().getElementType() == PhelTypes.FORM_COMMENT;
+    }
+    
+    /**
+     * Workaround for grammar bug: detect form comments by analyzing text content.
+     * This handles cases like [#_:one :two] where the PSI tree is missing #_ tokens.
+     */
+    private boolean isInCommentedVectorByText(@NotNull PsiElement element) {
+        // Check if we're inside a vector
+        PsiElement parent = element.getParent();
+        if (!(parent instanceof PhelVecImpl)) {
+            return false;
+        }
+        
+        PhelVecImpl vector = (PhelVecImpl) parent;
+        String vectorText = vector.getText();
+        
+        // Find element's position within the vector text
+        int elementOffsetInVector = element.getTextOffset() - vector.getTextOffset();
+        
+        // Look for #_ patterns before this element's position
+        String beforeElement = vectorText.substring(0, elementOffsetInVector);
+        
+        // Simple regex to find #_ patterns
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("#_");
+        java.util.regex.Matcher matcher = pattern.matcher(beforeElement);
+        
+        int formCommentCount = 0;
+        while (matcher.find()) {
+            formCommentCount++;
+        }
+        
+        if (formCommentCount > 0) {
+            // Count how many actual forms (keywords/symbols) appear before this element
+            String textBeforeForCounting = beforeElement.replaceAll("#_", "").trim();
+            
+            // Use regex to find all keywords and symbols in the text
+            java.util.regex.Pattern formPattern = java.util.regex.Pattern.compile("(:[\\w-]+|[a-zA-Z][\\w-]*)");
+            java.util.regex.Matcher formMatcher = formPattern.matcher(textBeforeForCounting);
+            
+            int formsBeforeCount = 0;
+            while (formMatcher.find()) {
+                formsBeforeCount++;
+            }
+            
+            // If this element is at position N (0-based) and there are M #_ tokens,
+            // then it's commented out if N < M
+            return formsBeforeCount < formCommentCount;
+        }
+        
+        return false;
     }
 }

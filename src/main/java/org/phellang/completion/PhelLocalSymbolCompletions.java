@@ -484,7 +484,7 @@ public class PhelLocalSymbolCompletions {
     }
 
     /**
-     * Simple version without any optimizations - for debugging
+     * Simple version for scanning all local definitions in current file
      */
     private static void addLocalDefinitionSymbolsSimple(@NotNull CompletionResultSet result, 
                                                       @NotNull PsiElement position, 
@@ -587,8 +587,6 @@ public class PhelLocalSymbolCompletions {
                                                          @NotNull Set<String> addedSymbols) {
         PhelFile file = (PhelFile) position.getContainingFile();
         if (file != null) {
-            // DEBUG: Print debug info
-            
             // Limit the number of top-level definitions we process
             int definitionCount = 0;
             final int MAX_DEFINITIONS = 50;
@@ -604,10 +602,6 @@ public class PhelLocalSymbolCompletions {
                     
                     // Check if we have at least 3 elements (opening paren, def-type, symbol-name)
                     if (children.length >= 3) {
-                        // Debug: show all children
-                        for (int i = 0; i < children.length; i++) {
-                        }
-                        
                         // Look for definition type starting from first child
                         PsiElement defTypeElement = null;
                         PsiElement nameElement = null;
