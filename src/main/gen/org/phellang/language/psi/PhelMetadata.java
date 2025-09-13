@@ -18,6 +18,6 @@ public interface PhelMetadata extends PsiElement {
 
   //WARNING: toString(...) is skipped
   //matching toString(PhelMetadata, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
 }

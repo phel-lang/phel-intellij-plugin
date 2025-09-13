@@ -3,7 +3,8 @@ import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 plugins {
     id("java")
-    id("org.jetbrains.intellij.platform") version "2.0.1"
+    id("org.jetbrains.kotlin.jvm") version "1.9.25"
+    id("org.jetbrains.intellij.platform") version "2.3.0"
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
 
@@ -22,6 +23,14 @@ sourceSets {
         java {
             srcDirs("src/main/gen")
         }
+        kotlin {
+            srcDirs("src/main/kotlin", "src/main/gen")
+        }
+    }
+    test {
+        kotlin {
+            srcDirs("src/test/kotlin")
+        }
     }
 }
 
@@ -30,10 +39,9 @@ dependencies {
     intellijPlatform {
         intellijIdeaCommunity("2024.2.5")
         bundledPlugin("com.intellij.java")
-        
+
         pluginVerifier()
         zipSigner()
-        instrumentationTools()
     }
 }
 
@@ -43,14 +51,18 @@ java {
     }
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 val generatePhelLexer = tasks.register<GenerateLexerTask>("generatePhelLexer") {
-    sourceFile.set(file("src/main/java/org/phellang/language/Phel.flex"))
+    sourceFile.set(file("src/main/kotlin/org/phellang/language/Phel.flex"))
     targetOutputDir.set(file("src/main/gen/org/phellang/language/"))
     purgeOldFiles.set(true)
 }
 
 val generatePhelParser = tasks.register<GenerateParserTask>("generatePhelParser") {
-    sourceFile.set(file("src/main/java/org/phellang/language/Phel.bnf"))
+    sourceFile.set(file("src/main/kotlin/org/phellang/language/Phel.bnf"))
     targetRootOutputDir.set(file("src/main/gen"))
     pathToParser.set("org/phellang/language/parser/PhelParser.java")
     pathToPsiRoot.set("org/phellang/language/psi")
@@ -61,6 +73,16 @@ tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
         options.release.set(21)
+        dependsOn(generatePhelLexer, generatePhelParser)
+    }
+
+    // Configure Kotlin compilation for main sources
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        compilerOptions {
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+            languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+            apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+        }
         dependsOn(generatePhelLexer, generatePhelParser)
     }
 

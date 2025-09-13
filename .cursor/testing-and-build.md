@@ -16,7 +16,7 @@ priority: medium
 
 - `./gradlew generatePhelLexer` → regenerate lexer from `.flex` files
 - `./gradlew generatePhelParser` → regenerate parser from `.bnf` files
-- `./gradlew compileJava` → compile Java sources
+- `./gradlew compileJava compileKotlin` → compile Java and Kotlin sources
 - `./gradlew runIde` → launch IDE with plugin for testing
 - `./gradlew build` → perform full build (may fail if IDE is running)
 

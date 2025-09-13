@@ -9,10 +9,10 @@ public interface PhelLiteral extends PhelSForm {
 
   //WARNING: getLiteralType(...) is skipped
   //matching getLiteralType(PhelLiteral, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
   //WARNING: getLiteralText(...) is skipped
   //matching getLiteralText(PhelLiteral, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
 }

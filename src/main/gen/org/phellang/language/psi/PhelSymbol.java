@@ -10,22 +10,22 @@ public interface PhelSymbol extends PsiNameIdentifierOwner {
 
   //WARNING: getName(...) is skipped
   //matching getName(PhelSymbol, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
   //WARNING: setName(...) is skipped
   //matching setName(PhelSymbol, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
   //WARNING: getNameIdentifier(...) is skipped
   //matching getNameIdentifier(PhelSymbol, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
   //WARNING: getTextOffset(...) is skipped
   //matching getTextOffset(PhelSymbol, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
   //WARNING: getReference(...) is skipped
   //matching getReference(PhelSymbol, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
 }
