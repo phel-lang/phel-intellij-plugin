@@ -19,7 +19,7 @@ class PhelTypedHandler : TypedHandlerDelegate() {
         }
 
         // Trigger completion popup for certain contexts after character has been inserted
-        if (c == '(' || c == '[') {
+        if (c == '(' || c == '[' || c == '{') {
             AutoPopupController.getInstance(project).autoPopupMemberLookup(editor, null)
         }
 
