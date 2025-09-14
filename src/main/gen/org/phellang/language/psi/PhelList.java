@@ -9,10 +9,10 @@ public interface PhelList extends PhelLVForm {
 
   //WARNING: getTextOffset(...) is skipped
   //matching getTextOffset(PhelList, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
   //WARNING: getFirst(...) is skipped
   //matching getFirst(PhelList, ...)
-  //methods are not found in null
+  //methods are not found in PhelPsiUtil
 
 }
