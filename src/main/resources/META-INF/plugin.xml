@@ -24,6 +24,7 @@
   <li><strong>Form Comment Highlighting</strong> - Full support for #_ form comments with stacking (#_#_)</li>
   <li><strong>Syntax Highlighting</strong> - Semantic highlighting for keywords, symbols, comments, and special forms</li>
   <li><strong>Smart Editing</strong> - Auto-insertion of parentheses, bracket matching, and quote handling</li>
+  <li><strong>Code Folding</strong> - Collapse and expand function definitions, data structures, and comment blocks</li>
   <li><strong>Symbol Navigation</strong> - Go-to definition and find usages for Phel symbols</li>
   <li><strong>Comment Support</strong> - Line comments (#, ;) and form comments (#_) with proper IDE integration</li>
 </ul>
@@ -86,5 +87,8 @@
         <lang.findUsagesProvider
                 language="Phel"
                 implementationClass="org.phellang.language.psi.PhelFindUsagesProvider"/>
+        <lang.foldingBuilder
+                language="Phel"
+                implementationClass="org.phellang.folding.PhelFoldingBuilder"/>
     </extensions>
 </idea-plugin>
