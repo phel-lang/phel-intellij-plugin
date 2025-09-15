@@ -16,10 +16,11 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 %type IElementType
 %unicode
 
-%state SYMBOL0, SYMBOL1, SYMBOL2, SYMBOL3
+%state SYMBOL0, SYMBOL1, SYMBOL2, SYMBOL3, MULTILINE_COMMENT
 
 WHITE_SPACE=\s+
-LINE_COMMENT=#[^_].*|;.*
+LINE_COMMENT=;.*
+HASH_LINE_COMMENT=#([^_|].*)?
 STR_CHAR=[^\\\"]|\\.|\\\"
 STRING=\" {STR_CHAR}* \"
 NUMBER=[+-]? [0-9]+ (\.[0-9]*)? ([eE][+-]?[0-9]+)?
@@ -45,6 +46,8 @@ KEYWORD_TAIL={SYM_PART}+ ("/" {SYM_PART}+)? (":" {SYM_PART}+)?
   ",@"                   { return PhelTypes.COMMA_AT; }
   "~@"                   { return PhelTypes.TILDE_AT; }
   "#_"                   { return PhelTypes.FORM_COMMENT; }
+  "#|"                   { yybegin(MULTILINE_COMMENT); return PhelTypes.MULTILINE_COMMENT; }
+  {HASH_LINE_COMMENT}    { return PhelTypes.LINE_COMMENT; }
   {LINE_COMMENT}         { return PhelTypes.LINE_COMMENT; }
   ","                    { return PhelTypes.COMMA; }
   "~"                    { return PhelTypes.TILDE; }
@@ -120,6 +123,11 @@ KEYWORD_TAIL={SYM_PART}+ ("/" {SYM_PART}+)? (":" {SYM_PART}+)?
 
 <YYINITIAL, SYMBOL2, SYMBOL3> {
   "/" {SYM_ANY}+         { yybegin(YYINITIAL); return BAD_CHARACTER; }
+}
+
+<MULTILINE_COMMENT> {
+  "|#"                   { yybegin(YYINITIAL); return PhelTypes.MULTILINE_COMMENT; }
+  [^]                    { return PhelTypes.MULTILINE_COMMENT; }
 }
 
 [^] { return BAD_CHARACTER; }

@@ -14,7 +14,8 @@
 
   tokens=[
     whitespace='regexp:\s+'
-    line_comment='regexp:#[^_].*|;.*'
+    line_comment='regexp:#[^_|].*|;.*'
+    multiline_comment='MULTILINE_COMMENT'
     string='regexp:"([^"]|\\")*"'
     number='regexp:[+-]?[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?'
     hexnum='regexp:[+-]?0x[\da-fA-F_]+'
@@ -82,7 +83,7 @@ root ::= form *
 private root_entry ::= not_eof form  
 private not_eof ::= !<<eof>>
 
-form ::= form_prefix form_prefix * form_upper | form_inner | form_comment_macro
+form ::= form_prefix form_prefix * form_upper | form_inner | form_comment_macro | multiline_comment | line_comment
   {pin(".*")=1 methods=[form="" metas="metadata" readerMacros="reader_macro" toString]}
 private form_prefix ::= metadata | reader_macro
 

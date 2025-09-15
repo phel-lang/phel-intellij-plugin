@@ -25,8 +25,8 @@ Use **Playwright MCP** to fetch SDK pages when detailed guidance is needed.
 
 ### Lexer and Parser (JFlex + Grammar-Kit)
 
-- Lexer: `src/main/java/org/phellang/language/Phel.flex`
-- Grammar: `src/main/java/org/phellang/language/Phel.bnf`
+- Lexer: `src/main/kotlin/org/phellang/language/Phel.flex`
+- Grammar: `src/main/kotlin/org/phellang/language/Phel.bnf`
 - Generated files: `src/main/gen/org/phellang/language/`
 - Always refer to official Phel docs (`phel-docs.md`) when verifying grammar or syntax rules
 
