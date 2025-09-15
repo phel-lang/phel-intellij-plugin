@@ -41,6 +41,7 @@ public interface PhelTypes {
   IElementType INCREMENT = new PhelTokenType("++");
   IElementType KEYWORD_TOKEN = new PhelTokenType("KEYWORD");
   IElementType LINE_COMMENT = new PhelTokenType("line_comment");
+  IElementType MULTILINE_COMMENT = new PhelTokenType("MULTILINE_COMMENT");
   IElementType NAN = new PhelTokenType("NAN");
   IElementType NIL = new PhelTokenType("nil");
   IElementType NOT_EQUAL = new PhelTokenType("!=");

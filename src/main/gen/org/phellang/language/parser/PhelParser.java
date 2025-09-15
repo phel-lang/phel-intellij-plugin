@@ -74,7 +74,7 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // form_prefix form_prefix * form_upper | form_inner | form_comment_macro
+  // form_prefix form_prefix * form_upper | form_inner | form_comment_macro | multiline_comment | line_comment
   public static boolean form(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "form")) return false;
     boolean result_;
@@ -82,6 +82,8 @@ public class PhelParser implements PsiParser, LightPsiParser {
     result_ = form_0(builder_, level_ + 1);
     if (!result_) result_ = form_inner(builder_, level_ + 1);
     if (!result_) result_ = form_comment_macro(builder_, level_ + 1);
+    if (!result_) result_ = consumeToken(builder_, MULTILINE_COMMENT);
+    if (!result_) result_ = consumeToken(builder_, LINE_COMMENT);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
   }

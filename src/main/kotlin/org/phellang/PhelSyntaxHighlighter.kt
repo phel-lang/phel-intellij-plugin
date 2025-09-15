@@ -19,7 +19,7 @@ class PhelSyntaxHighlighter : SyntaxHighlighterBase() {
         val tokenName: String = tokenType.toString()
 
         // Comments
-        if (tokenType == PhelTypes.LINE_COMMENT || tokenType == PhelTypes.FORM_COMMENT) {
+        if (tokenType == PhelTypes.LINE_COMMENT || tokenType == PhelTypes.FORM_COMMENT || tokenType == PhelTypes.MULTILINE_COMMENT) {
             return COMMENT_KEYS
         }
 
