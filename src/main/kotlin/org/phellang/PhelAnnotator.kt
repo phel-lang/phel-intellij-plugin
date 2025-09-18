@@ -26,6 +26,11 @@ class PhelAnnotator : Annotator {
             return  // Don't apply other highlighting to commented-out forms
         }
 
+        // Check if this element is inside a short function - if so, skip highlighting
+        if (isInsideShortFunction(element)) {
+            return
+        }
+
         if (element is PhelKeyword) {
             annotatePhelKeyword(element, holder)
         } else if (element is PhelSymbol) {
@@ -34,6 +39,18 @@ class PhelAnnotator : Annotator {
             if (text != null) {
                 annotateSymbol(element, text, holder)
             }
+        } else if (element is PhelShortFn) {
+            annotateShortFn(element, holder)
+        } else if (element is PhelSet) {
+            annotateSet(element, holder)
+        } else if (element.node.elementType == PhelTypes.HASH_BRACE) {
+            // Highlight the #{ token as part of a set
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(element.textRange)
+                .textAttributes(COLLECTION_TYPE).create()
+        } else if (element.node.elementType == PhelTypes.BRACE2 && isInsideSet(element)) {
+            // Highlight the } token as part of a set (not a map)
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(element.textRange)
+                .textAttributes(COLLECTION_TYPE).create()
         }
     }
 
@@ -236,36 +253,7 @@ class PhelAnnotator : Annotator {
     }
 
     private fun isPhpInteropSymbol(text: String): Boolean {
-        val validPhpSymbols = setOf(
-            "===",
-            "!==",
-            "==",
-            "!=",
-            "&&",
-            "||",
-            "<<",
-            ">>",
-            "++",
-            "--",
-            "^",
-            "~",
-            "+",
-            "-",
-            "*",
-            "/",
-            "%",
-            "&",
-            "|",
-            "<",
-            ">",
-            "<=",
-            ">=",
-            "=",
-            "!",
-            "::",
-            "->"
-        )
-        return validPhpSymbols.contains(text)
+        return VALID_PHP_SYMBOLS.contains(text)
     }
 
     private fun isPhpFunctionName(text: String): Boolean {
@@ -304,6 +292,52 @@ class PhelAnnotator : Annotator {
         // Highlight the entire keyword element
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(keyword.textRange)
             .textAttributes(PhelSyntaxHighlighter.KEYWORD).create()
+    }
+
+    /**
+     * Annotate short function syntax |(fn [x] x)
+     */
+    private fun annotateShortFn(shortFn: PhelShortFn, holder: AnnotationHolder) {
+        // Highlight the entire short function as a special form
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(shortFn.textRange).textAttributes(SPECIAL_FORM)
+            .create()
+    }
+
+    /**
+     * Annotate set data structure #{1 2 3}
+     */
+    private fun annotateSet(set: PhelSet, holder: AnnotationHolder) {
+        // Highlight the entire set as a collection type
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(set.textRange).textAttributes(COLLECTION_TYPE)
+            .create()
+    }
+
+    /**
+     * Check if an element is inside a short function
+     */
+    private fun isInsideShortFunction(element: PsiElement): Boolean {
+        var current = element.parent
+        while (current != null) {
+            if (current is PhelShortFn) {
+                return true
+            }
+            current = current.parent
+        }
+        return false
+    }
+
+    /**
+     * Check if an element is inside a set
+     */
+    private fun isInsideSet(element: PsiElement): Boolean {
+        var current = element.parent
+        while (current != null) {
+            if (current is PhelSet) {
+                return true
+            }
+            current = current.parent
+        }
+        return false
     }
 
     /**
@@ -536,6 +570,12 @@ val FUNCTION_PARAMETER: TextAttributesKey = TextAttributesKey.createTextAttribut
     "PHEL_FUNCTION_PARAMETER", DefaultLanguageHighlighterColors.INSTANCE_FIELD
 )
 
+// Collection type highlighting (for sets, vectors, maps, lists)
+@JvmField
+val COLLECTION_TYPE: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
+    "PHEL_COLLECTION_TYPE", DefaultLanguageHighlighterColors.STATIC_METHOD
+)
+
 // Core Phel special forms
 private val SPECIAL_FORMS = mutableSetOf<String?>(
     "def",
@@ -586,6 +626,37 @@ private val MACROS = mutableSetOf<String?>(
     "declare"
 )
 
+// Valid PHP interop symbols
+private val VALID_PHP_SYMBOLS = setOf(
+    "===",
+    "!==",
+    "==",
+    "!=",
+    "&&",
+    "||",
+    "<<",
+    ">>",
+    "++",
+    "--",
+    "^",
+    "~",
+    "+",
+    "-",
+    "*",
+    "/",
+    "%",
+    "&",
+    "|",
+    "<",
+    ">",
+    "<=",
+    ">=",
+    "=",
+    "!",
+    "::",
+    "->"
+)
+
 // Common core functions (subset for performance)
 private val CORE_FUNCTIONS = mutableSetOf<String?>(
     // Collection operations
@@ -615,6 +686,7 @@ private val CORE_FUNCTIONS = mutableSetOf<String?>(
     "next",
     "nnext",
     "nfirst",
+    "set",
 
     // Sequence operations
     "take",
@@ -768,6 +840,7 @@ private val CORE_FUNCTIONS = mutableSetOf<String?>(
     "invert",
     "merge-with",
     "deep-merge",
+    "disj",
 
     // String module functions (phel\str)
     "split",

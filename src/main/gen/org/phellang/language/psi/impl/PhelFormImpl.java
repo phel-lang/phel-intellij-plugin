@@ -35,6 +35,18 @@ public class PhelFormImpl extends ASTWrapperPsiElement implements PhelForm {
 
   @Override
   @Nullable
+  public PhelSet getSet() {
+    return findChildByClass(PhelSet.class);
+  }
+
+  @Override
+  @Nullable
+  public PhelShortFn getShortFn() {
+    return findChildByClass(PhelShortFn.class);
+  }
+
+  @Override
+  @Nullable
   public PhelSymbol getSymbol() {
     return findChildByClass(PhelSymbol.class);
   }

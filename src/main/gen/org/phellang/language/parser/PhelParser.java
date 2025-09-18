@@ -354,13 +354,15 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // list | vec | map
+  // list | vec | map | set | short_fn
   static boolean p_forms(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "p_forms")) return false;
     boolean result_;
     result_ = list(builder_, level_ + 1);
     if (!result_) result_ = vec(builder_, level_ + 1);
     if (!result_) result_ = map(builder_, level_ + 1);
+    if (!result_) result_ = set(builder_, level_ + 1);
+    if (!result_) result_ = short_fn(builder_, level_ + 1);
     return result_;
   }
 
@@ -434,6 +436,50 @@ public class PhelParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(builder_, level_, "s_forms_0_1")) return false;
     access_left(builder_, level_ + 1);
     return true;
+  }
+
+  /* ********************************************************** */
+  // '#{' set_body '}'
+  public static boolean set(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "set")) return false;
+    if (!nextTokenIs(builder_, HASH_BRACE)) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeToken(builder_, HASH_BRACE);
+    result_ = result_ && set_body(builder_, level_ + 1);
+    result_ = result_ && consumeToken(builder_, BRACE2);
+    exit_section_(builder_, marker_, SET, result_);
+    return result_;
+  }
+
+  /* ********************************************************** */
+  // <<items !'}' form>>
+  static boolean set_body(PsiBuilder builder_, int level_) {
+    return items(builder_, level_ + 1, PhelParser::set_body_0_0, PhelParser::form);
+  }
+
+  // !'}'
+  private static boolean set_body_0_0(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "set_body_0_0")) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_, level_, _NOT_);
+    result_ = !consumeToken(builder_, BRACE2);
+    exit_section_(builder_, level_, marker_, result_, false, null);
+    return result_;
+  }
+
+  /* ********************************************************** */
+  // "|(" list_body ")"
+  public static boolean short_fn(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "short_fn")) return false;
+    if (!nextTokenIs(builder_, FN_SHORT)) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeToken(builder_, FN_SHORT);
+    result_ = result_ && list_body(builder_, level_ + 1);
+    result_ = result_ && consumeToken(builder_, PAREN2);
+    exit_section_(builder_, marker_, SHORT_FN, result_);
+    return result_;
   }
 
   /* ********************************************************** */

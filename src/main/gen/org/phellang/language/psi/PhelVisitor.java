@@ -56,6 +56,14 @@ public class PhelVisitor extends PsiElementVisitor {
     visitForm(o);
   }
 
+  public void visitSet(@NotNull PhelSet o) {
+    visitPsiElement(o);
+  }
+
+  public void visitShortFn(@NotNull PhelShortFn o) {
+    visitPsiElement(o);
+  }
+
   public void visitSymbol(@NotNull PhelSymbol o) {
     visitPsiNameIdentifierOwner(o);
   }

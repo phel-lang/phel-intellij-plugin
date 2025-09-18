@@ -20,7 +20,7 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 
 WHITE_SPACE=\s+
 LINE_COMMENT=;.*
-HASH_LINE_COMMENT=#([^_|].*)?
+HASH_LINE_COMMENT=#([^_|{].*)?
 STR_CHAR=[^\\\"]|\\.|\\\"
 STRING=\" {STR_CHAR}* \"
 NUMBER=[+-]? [0-9]+ (\.[0-9]*)? ([eE][+-]?[0-9]+)?
@@ -32,7 +32,7 @@ BAD_LITERAL=\" ([^\\\"]|\\.|\\\")*
 
 SYM_START=[[\w<>$%&=*+\-!?_|\\@]--#\d] | ".."
 SYM_PART=[.]? {SYM_CHAR} | ".."
-SYM_CHAR=[\w<>$%&=*+\-!?_|'#\\@]
+SYM_CHAR=[\w<>$%&=*+\-!?_|'#\\@/]
 SYM_ANY={SYM_CHAR} | [./]
 
 QUALIFIED_SYMBOL={SYM_START}{SYM_TAIL}? ("/" | "\\") {SYM_TAIL}
@@ -44,13 +44,16 @@ KEYWORD_TAIL={SYM_PART}+ ("/" {SYM_PART}+)? (":" {SYM_PART}+)?
 <YYINITIAL> {
   {WHITE_SPACE}          { return WHITE_SPACE; }
 
+  "|("                   { return PhelTypes.FN_SHORT; }
   "^"                    { return PhelTypes.HAT; }
   ",@"                   { return PhelTypes.COMMA_AT; }
   "~@"                   { return PhelTypes.TILDE_AT; }
   "#_"                   { return PhelTypes.FORM_COMMENT; }
+  "#{"                   { return PhelTypes.HASH_BRACE; }
+  "|"                    { return PhelTypes.SYM; }
   "#|"                   { yybegin(MULTILINE_COMMENT); return PhelTypes.MULTILINE_COMMENT; }
-  {HASH_LINE_COMMENT}    { return PhelTypes.LINE_COMMENT; }
   {LINE_COMMENT}         { return PhelTypes.LINE_COMMENT; }
+  {HASH_LINE_COMMENT}    { return PhelTypes.LINE_COMMENT; }
   ","                    { return PhelTypes.COMMA; }
   "~"                    { return PhelTypes.TILDE; }
   "("                    { return PhelTypes.PAREN1; }

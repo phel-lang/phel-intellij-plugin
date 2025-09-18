@@ -44,6 +44,8 @@
     tilde="~"
     tilde_at="~@"
     form_comment="#_"
+    hash_brace="#{"
+    fn_short="|("
 
     dot='.'
     dotdash='.-'
@@ -89,16 +91,17 @@ private form_prefix ::= metadata | reader_macro
 
 upper form_upper ::= form_inner {elementType=form name=form}
 private form_inner ::= p_forms | s_forms
-private p_forms ::= list | vec | map
+private p_forms ::= list | vec | map | set | short_fn
 private s_forms ::= symbol access_left? | keyword | literal | access
 
 fake p_form ::= form * {methods=[forms="form"]}
-fake l_v_form ::=
+fake l_v_form ::= set
 fake s_form ::=
 list ::= '(' list_body ')'
   {methods=[getTextOffset getFirst]}
 vec ::= '[' vec_body ']'
 map ::= '{' map_body '}'
+set ::= '#{' set_body '}'
 symbol ::= symbol_qualified
   {extends="org.phellang.language.psi.PhelNamedElementImpl"
    implements="com.intellij.psi.PsiNameIdentifierOwner"
@@ -117,6 +120,7 @@ metadata ::= "^" (string | symbol | keyword | map)
 reader_macro ::= "'" | "~" | "~@" | "`" | "," | ",@"
 
 form_comment_macro ::= "#_" form
+short_fn ::= "|(" list_body ")"
 
 private meta items ::= <<items_entry <<recover>> <<param>>>> * {recoverWhile="<<recover>>"}
 private meta items_entry ::= (not_eof <<recover>>) <<param>>
@@ -125,3 +129,4 @@ private list_body ::= <<items !')' form>>
 private vec_body ::= <<items !']' form>>
 private map_body ::= <<items !'}' map_entry>>
 private map_entry ::=  form form {pin=2}
+private set_body ::= <<items !'}' form>>

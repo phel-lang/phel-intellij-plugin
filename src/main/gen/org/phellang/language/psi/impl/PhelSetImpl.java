@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.phellang.language.psi.PhelTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.phellang.language.psi.*;
 
-public class PhelLVFormImpl extends PhelPFormImpl implements PhelLVForm {
+public class PhelSetImpl extends ASTWrapperPsiElement implements PhelSet {
 
-  public PhelLVFormImpl(@NotNull ASTNode node) {
+  public PhelSetImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull PhelVisitor visitor) {
-    visitor.visitLVForm(this);
+    visitor.visitSet(this);
   }
 
   @Override
@@ -29,8 +29,8 @@ public class PhelLVFormImpl extends PhelPFormImpl implements PhelLVForm {
 
   @Override
   @NotNull
-  public PhelSet getSet() {
-    return findNotNullChildByClass(PhelSet.class);
+  public List<PhelForm> getFormList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, PhelForm.class);
   }
 
 }
