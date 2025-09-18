@@ -9,9 +9,9 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import org.phellang.language.psi.*
+import org.phellang.language.psi.impl.PhelAccessImpl
 import org.phellang.language.psi.impl.PhelVecImpl
 import java.util.regex.Pattern
-import kotlin.math.max
 
 /**
  * Advanced annotator for context-sensitive Phel syntax highlighting
@@ -45,7 +45,22 @@ class PhelAnnotator : Annotator {
             return
         }
 
-        // PHP interop patterns
+        // Check for PHP interop patterns that span multiple tokens (php/SYMBOL)
+        val phpInteropRange = findPhpInteropRange(symbol)
+        if (phpInteropRange != null) {
+            // Only create annotation if this is the qualified symbol itself, not a sub-element
+            if (phpInteropRange == symbol.textRange) {
+                holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(phpInteropRange)
+                    .textAttributes(PHP_INTEROP).create()
+                return
+            } else {
+                // This is a sub-element of a qualified symbol, skip highlighting here
+                // The qualified symbol will be highlighted when it's processed
+                return
+            }
+        }
+
+        // PHP interop patterns (single token)
         if (isPhpInterop(text)) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
                 .textAttributes(PHP_INTEROP).create()
@@ -59,12 +74,6 @@ class PhelAnnotator : Annotator {
             return
         }
 
-        // Namespace prefix highlighting
-        if (hasNamespacePrefix(text)) {
-            highlightNamespacePrefix(symbol, text, holder)
-            return
-        }
-
         // Special forms (highest priority)
         if (SPECIAL_FORMS.contains(text)) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
@@ -74,26 +83,236 @@ class PhelAnnotator : Annotator {
 
         // Macros
         if (MACROS.contains(text)) {
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange).textAttributes(MACRO)
-                .create()
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
+                .textAttributes(SPECIAL_FORM).create()
             return
+        }
+
+        // Check for qualified symbol patterns that span multiple tokens (namespace/symbol)
+        val qualifiedSymbolRange = findQualifiedSymbolRange(symbol)
+        if (qualifiedSymbolRange != null) {
+            // Only create annotation if this is the qualified symbol itself, not a sub-element
+            if (qualifiedSymbolRange == symbol.textRange) {
+                holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(qualifiedSymbolRange)
+                    .textAttributes(NAMESPACE_PREFIX).create()
+                return
+            } else {
+                // This is a sub-element of a qualified symbol, skip highlighting here
+                // The qualified symbol will be highlighted when it's processed
+                return
+            }
         }
 
         // Core functions
         if (CORE_FUNCTIONS.contains(text)) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
-                .textAttributes(CORE_FUNCTION).create()
+                .textAttributes(SPECIAL_FORM).create()
+            return
+        }
+
+        // Namespace prefix highlighting (single token)
+        if (hasNamespacePrefix(text)) {
+            highlightNamespacePrefix(symbol, text, holder)
+            return
+        }
+
+        // Check if this is a sub-element of a qualified symbol (like 'json' in 'json/encode')
+        if (isSubElementOfQualifiedSymbol(symbol)) {
+            return
+        }
+
+        // Function call position - highlight user-defined functions in function position
+        if (isInFunctionCallPosition(symbol)) {
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
+                .textAttributes(SPECIAL_FORM).create()
             return
         }
     }
 
+    private fun isInFunctionCallPosition(symbol: PhelSymbol): Boolean {
+        var current = symbol.parent
+        while (current != null && current !is PhelList) {
+            current = current.parent
+        }
+
+        if (current is PhelList) {
+            val list = current
+            val children: Array<PsiElement> = list.children
+
+            // Find the first symbol/access element (function name position)
+            for (i in children.indices) {
+                val child = children[i]
+
+                // Check if this child is a symbol or access (like in completion code)
+                if (child is PhelSymbol || child is PhelAccessImpl) {
+                    // Check if our symbol is this child directly, OR if our symbol is contained within this child
+                    val isDirectMatch = child === symbol
+                    val isContained = child.textRange.contains(symbol.textRange)
+                    return isDirectMatch || isContained
+                }
+            }
+        }
+
+        return false
+    }
+
+    /**
+     * Find PHP interop range that spans multiple tokens (php/SYMBOL).
+     * Returns the TextRange for the entire php/SYMBOL construction, or null if not found.
+     */
+    private fun findPhpInteropRange(symbol: PhelSymbol): TextRange? {
+        val text = symbol.text ?: return null
+
+        // Check if this is the "php" part of a php/SYMBOL construction
+        if (text == "php") {
+            return findPhpInteropRangeFromPhp(symbol)
+        }
+
+        // Check if this is the SYMBOL part of a php/SYMBOL construction
+        // This includes both operators and function names
+        if (isPhpInteropSymbol(text) || isPhpFunctionName(text)) {
+            return findPhpInteropRangeFromSymbol(symbol)
+        }
+
+        return null
+    }
+
+    private fun findPhpInteropRangeFromPhp(phpSymbol: PhelSymbol): TextRange? {
+        val parent = phpSymbol.parent
+
+        // Check if this is a qualified symbol (php/SYMBOL structure)
+        if (parent is PhelSymbol) {
+            val qualifiedText = parent.text
+
+            if (qualifiedText != null && qualifiedText.startsWith("php/")) {
+                val symbolPart = qualifiedText.substring(4) // Remove "php/" prefix
+
+                if (isPhpInteropSymbol(symbolPart) || isPhpFunctionName(symbolPart)) {
+                    // Return range for the entire qualified symbol
+                    return parent.textRange
+                }
+            }
+        }
+
+        // Fallback to the old logic for list-based structures
+        if (parent !is PhelList) return null
+
+        val children = parent.children
+        val phpIndex = children.indexOf(phpSymbol)
+        if (phpIndex == -1 || phpIndex + 2 >= children.size) return null
+
+        // Check if next token is a slash
+        val nextToken = children[phpIndex + 1]
+        if (nextToken.node.elementType != PhelTypes.SLASH) return null
+
+        // Check if token after slash is a symbol
+        val symbolToken = children[phpIndex + 2]
+        if (symbolToken !is PhelSymbol) return null
+
+        val symbolText = symbolToken.text
+        if (symbolText == null || !isPhpInteropSymbol(symbolText)) return null
+
+        // Return range from start of "php" to end of symbol
+        val startOffset = phpSymbol.textRange.startOffset
+        val endOffset = symbolToken.textRange.endOffset
+        return TextRange.create(startOffset, endOffset)
+    }
+
+    /**
+     * Find PHP interop range when we have the SYMBOL token.
+     */
+    private fun findPhpInteropRangeFromSymbol(symbol: PhelSymbol): TextRange? {
+        val parent = symbol.parent
+
+        // Check if this is a qualified symbol (php/SYMBOL structure)
+        if (parent is PhelSymbol) {
+            val qualifiedText = parent.text
+
+            if (qualifiedText != null && qualifiedText.startsWith("php/")) {
+                val symbolPart = qualifiedText.substring(4) // Remove "php/" prefix
+
+                if (isPhpInteropSymbol(symbolPart) || isPhpFunctionName(symbolPart)) {
+                    // Return range for the entire qualified symbol
+                    return parent.textRange
+                }
+            }
+        }
+
+        // Fallback to the old logic for list-based structures
+        if (parent !is PhelList) return null
+
+        val children = parent.children
+        val symbolIndex = children.indexOf(symbol)
+        if (symbolIndex < 2) return null
+
+        // Check if previous tokens are "php" and "/"
+        val slashToken = children[symbolIndex - 1]
+        if (slashToken.node.elementType != PhelTypes.SLASH) return null
+
+        val phpToken = children[symbolIndex - 2]
+        if (phpToken !is PhelSymbol || phpToken.text != "php") return null
+
+        // Return range from start of "php" to end of symbol
+        val startOffset = phpToken.textRange.startOffset
+        val endOffset = symbol.textRange.endOffset
+        return TextRange.create(startOffset, endOffset)
+    }
+
+    private fun isPhpInteropSymbol(text: String): Boolean {
+        val validPhpSymbols = setOf(
+            "===",
+            "!==",
+            "==",
+            "!=",
+            "&&",
+            "||",
+            "<<",
+            ">>",
+            "++",
+            "--",
+            "^",
+            "~",
+            "+",
+            "-",
+            "*",
+            "/",
+            "%",
+            "&",
+            "|",
+            "<",
+            ">",
+            "<=",
+            ">=",
+            "=",
+            "!",
+            "::",
+            "->"
+        )
+        return validPhpSymbols.contains(text)
+    }
+
+    private fun isPhpFunctionName(text: String): Boolean {
+        // Check if it's a valid PHP identifier (starts with letter or underscore, followed by letters, digits, underscores)
+        if (text.isEmpty()) return false
+
+        val firstChar = text[0]
+        if (!firstChar.isLetter() && firstChar != '_') return false
+
+        // Check remaining characters
+        for (i in 1 until text.length) {
+            val char = text[i]
+            if (!char.isLetterOrDigit() && char != '_') return false
+        }
+
+        return true
+    }
+
     private fun isPhpInterop(text: String): Boolean {
-        return text.startsWith("php/") || text == "php/->" || text == "php/::" || text == "php/new" || text.startsWith("php/a") ||  // php/aget, php/aset, php/apush, php/aunset
-                text.startsWith("php/o") // php/oset
+        return text.startsWith("php/")
     }
 
     private fun isPhpVariable(text: String): Boolean {
-        return text.startsWith("php/$") || text == "php/\$_SERVER" || text == "php/\$_GET" || text == "php/\$_POST" || text == "php/\$_COOKIE" || text == "php/\$_FILES" || text == "php/\$_SESSION" || text == "php/\$GLOBALS"
+        return text.startsWith("php/$")
     }
 
     private fun hasNamespacePrefix(text: String): Boolean {
@@ -101,22 +320,122 @@ class PhelAnnotator : Annotator {
         return (text.contains("/") && !text.startsWith("php/")) || text.contains("\\")
     }
 
-    private fun highlightNamespacePrefix(symbol: PhelSymbol, text: String, holder: AnnotationHolder) {
-        var separatorIndex: Int
+    private fun highlightNamespacePrefix(
+        symbol: PhelSymbol, @Suppress("UNUSED_PARAMETER") text: String, holder: AnnotationHolder
+    ) {
+        // Highlight the entire qualified symbol with consistent color
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
+            .textAttributes(NAMESPACE_PREFIX).create()
+    }
 
-        // Find the last separator (/ or \)
-        val slashIndex = text.lastIndexOf('/')
-        val backslashIndex = text.lastIndexOf('\\')
-        separatorIndex = max(slashIndex, backslashIndex)
-
-        if (separatorIndex > 0) {
-            // Highlight only the namespace part (before the separator)
-            val startOffset = symbol.textRange.startOffset
-            val endOffset = startOffset + separatorIndex
-
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(TextRange.create(startOffset, endOffset))
-                .textAttributes(NAMESPACE_PREFIX).create()
+    private fun isSubElementOfQualifiedSymbol(symbol: PhelSymbol): Boolean {
+        val parent = symbol.parent
+        if (parent is PhelSymbol) {
+            val parentText = parent.text
+            if (parentText != null && (parentText.contains("/") || parentText.contains("\\"))) {
+                return true
+            }
         }
+        return false
+    }
+
+    private fun findQualifiedSymbolRange(symbol: PhelSymbol): TextRange? {
+        val text = symbol.text ?: return null
+
+        // Check if this is the namespace part of a namespace/symbol construction
+        if (isValidNamespaceName(text)) {
+            return findQualifiedSymbolRangeFromNamespace(symbol)
+        }
+
+        // Check if this is the symbol part of a namespace/symbol construction
+        if (text.startsWith("/")) {
+            return findQualifiedSymbolRangeFromSymbol(symbol)
+        }
+
+        return null
+    }
+
+    private fun findQualifiedSymbolRangeFromNamespace(namespaceSymbol: PhelSymbol): TextRange? {
+        val parent = namespaceSymbol.parent
+
+        // Check if this is a qualified symbol (namespace/symbol structure)
+        if (parent is PhelSymbol) {
+            val qualifiedText = parent.text
+
+            if (qualifiedText != null && qualifiedText.contains("/")) {
+                // Return range for the entire qualified symbol
+                return parent.textRange
+            }
+        }
+
+        // Fallback to the old logic for list-based structures
+        if (parent !is PhelList) return null
+
+        val children = parent.children
+        val namespaceIndex = children.indexOf(namespaceSymbol)
+        if (namespaceIndex == -1 || namespaceIndex + 2 >= children.size) return null
+
+        // Check if next token is a slash
+        val nextToken = children[namespaceIndex + 1]
+        if (nextToken.node.elementType != PhelTypes.SLASH) return null
+
+        // Check if token after slash is a symbol
+        val symbolToken = children[namespaceIndex + 2]
+        if (symbolToken !is PhelSymbol) return null
+
+        // Return range from start of namespace to end of symbol
+        val startOffset = namespaceSymbol.textRange.startOffset
+        val endOffset = symbolToken.textRange.endOffset
+        return TextRange.create(startOffset, endOffset)
+    }
+
+    private fun findQualifiedSymbolRangeFromSymbol(symbol: PhelSymbol): TextRange? {
+        val parent = symbol.parent
+
+        // Check if this is a qualified symbol (namespace/symbol structure)
+        if (parent is PhelSymbol) {
+            val qualifiedText = parent.text
+
+            if (qualifiedText != null && qualifiedText.contains("/")) {
+                // Return range for the entire qualified symbol
+                return parent.textRange
+            }
+        }
+
+        // Fallback to the old logic for list-based structures
+        if (parent !is PhelList) return null
+
+        val children = parent.children
+        val symbolIndex = children.indexOf(symbol)
+        if (symbolIndex < 2) return null
+
+        // Check if previous tokens are namespace and "/"
+        val slashToken = children[symbolIndex - 1]
+        if (slashToken.node.elementType != PhelTypes.SLASH) return null
+
+        val namespaceToken = children[symbolIndex - 2]
+        if (namespaceToken !is PhelSymbol || !isValidNamespaceName(namespaceToken.text ?: "")) return null
+
+        // Return range from start of namespace to end of symbol
+        val startOffset = namespaceToken.textRange.startOffset
+        val endOffset = symbol.textRange.endOffset
+        return TextRange.create(startOffset, endOffset)
+    }
+
+    private fun isValidNamespaceName(text: String): Boolean {
+        // Check if it's a valid namespace name (starts with letter or underscore, followed by letters, digits, underscores)
+        if (text.isEmpty()) return false
+
+        val firstChar = text[0]
+        if (!firstChar.isLetter() && firstChar != '_') return false
+
+        // Check remaining characters
+        for (i in 1 until text.length) {
+            val char = text[i]
+            if (!char.isLetterOrDigit() && char != '_') return false
+        }
+
+        return true
     }
 
     /**
@@ -339,16 +658,6 @@ val PHP_VARIABLE: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
     "PHEL_PHP_VARIABLE", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE
 )
 
-// Built-in function categories
-@JvmField
-val CORE_FUNCTION: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-    "PHEL_CORE_FUNCTION", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL
-)
-
-@JvmField
-val MACRO: TextAttributesKey =
-    TextAttributesKey.createTextAttributesKey("PHEL_MACRO", DefaultLanguageHighlighterColors.KEYWORD)
-
 @JvmField
 val SPECIAL_FORM: TextAttributesKey =
     TextAttributesKey.createTextAttributesKey("PHEL_SPECIAL_FORM", DefaultLanguageHighlighterColors.KEYWORD)
@@ -356,7 +665,7 @@ val SPECIAL_FORM: TextAttributesKey =
 // Namespace highlighting
 @JvmField
 val NAMESPACE_PREFIX: TextAttributesKey =
-    TextAttributesKey.createTextAttributesKey("PHEL_NAMESPACE", DefaultLanguageHighlighterColors.CLASS_NAME)
+    TextAttributesKey.createTextAttributesKey("PHEL_NAMESPACE", DefaultLanguageHighlighterColors.IDENTIFIER)
 
 // Form comment highlighting - for forms commented out by #_
 @JvmField

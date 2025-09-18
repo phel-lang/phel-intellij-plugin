@@ -155,9 +155,7 @@ private val DESCRIPTORS = arrayOf(
     AttributesDescriptor("Bad characters", PhelSyntaxHighlighter.BAD_CHARACTER),  // Additional descriptors for annotator colors
     AttributesDescriptor("PHP interop", PHP_INTEROP),
     AttributesDescriptor("PHP variables", PHP_VARIABLE),
-    AttributesDescriptor("Core functions", CORE_FUNCTION),
-    AttributesDescriptor("Macros", MACRO),
-    AttributesDescriptor("Special forms", SPECIAL_FORM),
+    AttributesDescriptor("Functions", SPECIAL_FORM),
     AttributesDescriptor("Namespace prefix", NAMESPACE_PREFIX),
     AttributesDescriptor("Function parameters", FUNCTION_PARAMETER),
 )
