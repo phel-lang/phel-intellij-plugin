@@ -9,7 +9,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import org.phellang.language.psi.*
-import org.phellang.language.psi.impl.PhelAccessImpl
+import org.phellang.language.psi.PhelAccess
 import org.phellang.language.psi.impl.PhelVecImpl
 import java.util.regex.Pattern
 
@@ -88,21 +88,6 @@ class PhelAnnotator : Annotator {
             return
         }
 
-        // Check for qualified symbol patterns that span multiple tokens (namespace/symbol)
-        val qualifiedSymbolRange = findQualifiedSymbolRange(symbol)
-        if (qualifiedSymbolRange != null) {
-            // Only create annotation if this is the qualified symbol itself, not a sub-element
-            if (qualifiedSymbolRange == symbol.textRange) {
-                holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(qualifiedSymbolRange)
-                    .textAttributes(NAMESPACE_PREFIX).create()
-                return
-            } else {
-                // This is a sub-element of a qualified symbol, skip highlighting here
-                // The qualified symbol will be highlighted when it's processed
-                return
-            }
-        }
-
         // Core functions
         if (CORE_FUNCTIONS.contains(text)) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
@@ -110,14 +95,10 @@ class PhelAnnotator : Annotator {
             return
         }
 
-        // Namespace prefix highlighting (single token)
+        // Namespace prefix highlighting (qualified symbols are now single tokens)
         if (hasNamespacePrefix(text)) {
-            highlightNamespacePrefix(symbol, text, holder)
-            return
-        }
-
-        // Check if this is a sub-element of a qualified symbol (like 'json' in 'json/encode')
-        if (isSubElementOfQualifiedSymbol(symbol)) {
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
+                .textAttributes(NAMESPACE_PREFIX).create()
             return
         }
 
@@ -137,19 +118,15 @@ class PhelAnnotator : Annotator {
 
         if (current is PhelList) {
             val list = current
-            val children: Array<PsiElement> = list.children
 
-            // Find the first symbol/access element (function name position)
-            for (i in children.indices) {
-                val child = children[i]
+            // Get the first form in the list (function name position)
+            val firstForm = list.forms.firstOrNull()
 
-                // Check if this child is a symbol or access (like in completion code)
-                if (child is PhelSymbol || child is PhelAccessImpl) {
-                    // Check if our symbol is this child directly, OR if our symbol is contained within this child
-                    val isDirectMatch = child === symbol
-                    val isContained = child.textRange.contains(symbol.textRange)
-                    return isDirectMatch || isContained
-                }
+            if (firstForm is PhelSymbol) {
+                return firstForm === symbol
+            } else if (firstForm is PhelAccess) {
+                // Check if our symbol is contained within the first form (access)
+                return firstForm.textRange.contains(symbol.textRange)
             }
         }
 
@@ -318,124 +295,6 @@ class PhelAnnotator : Annotator {
     private fun hasNamespacePrefix(text: String): Boolean {
         // Check for namespace separators: / or \
         return (text.contains("/") && !text.startsWith("php/")) || text.contains("\\")
-    }
-
-    private fun highlightNamespacePrefix(
-        symbol: PhelSymbol, @Suppress("UNUSED_PARAMETER") text: String, holder: AnnotationHolder
-    ) {
-        // Highlight the entire qualified symbol with consistent color
-        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
-            .textAttributes(NAMESPACE_PREFIX).create()
-    }
-
-    private fun isSubElementOfQualifiedSymbol(symbol: PhelSymbol): Boolean {
-        val parent = symbol.parent
-        if (parent is PhelSymbol) {
-            val parentText = parent.text
-            if (parentText != null && (parentText.contains("/") || parentText.contains("\\"))) {
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun findQualifiedSymbolRange(symbol: PhelSymbol): TextRange? {
-        val text = symbol.text ?: return null
-
-        // Check if this is the namespace part of a namespace/symbol construction
-        if (isValidNamespaceName(text)) {
-            return findQualifiedSymbolRangeFromNamespace(symbol)
-        }
-
-        // Check if this is the symbol part of a namespace/symbol construction
-        if (text.startsWith("/")) {
-            return findQualifiedSymbolRangeFromSymbol(symbol)
-        }
-
-        return null
-    }
-
-    private fun findQualifiedSymbolRangeFromNamespace(namespaceSymbol: PhelSymbol): TextRange? {
-        val parent = namespaceSymbol.parent
-
-        // Check if this is a qualified symbol (namespace/symbol structure)
-        if (parent is PhelSymbol) {
-            val qualifiedText = parent.text
-
-            if (qualifiedText != null && qualifiedText.contains("/")) {
-                // Return range for the entire qualified symbol
-                return parent.textRange
-            }
-        }
-
-        // Fallback to the old logic for list-based structures
-        if (parent !is PhelList) return null
-
-        val children = parent.children
-        val namespaceIndex = children.indexOf(namespaceSymbol)
-        if (namespaceIndex == -1 || namespaceIndex + 2 >= children.size) return null
-
-        // Check if next token is a slash
-        val nextToken = children[namespaceIndex + 1]
-        if (nextToken.node.elementType != PhelTypes.SLASH) return null
-
-        // Check if token after slash is a symbol
-        val symbolToken = children[namespaceIndex + 2]
-        if (symbolToken !is PhelSymbol) return null
-
-        // Return range from start of namespace to end of symbol
-        val startOffset = namespaceSymbol.textRange.startOffset
-        val endOffset = symbolToken.textRange.endOffset
-        return TextRange.create(startOffset, endOffset)
-    }
-
-    private fun findQualifiedSymbolRangeFromSymbol(symbol: PhelSymbol): TextRange? {
-        val parent = symbol.parent
-
-        // Check if this is a qualified symbol (namespace/symbol structure)
-        if (parent is PhelSymbol) {
-            val qualifiedText = parent.text
-
-            if (qualifiedText != null && qualifiedText.contains("/")) {
-                // Return range for the entire qualified symbol
-                return parent.textRange
-            }
-        }
-
-        // Fallback to the old logic for list-based structures
-        if (parent !is PhelList) return null
-
-        val children = parent.children
-        val symbolIndex = children.indexOf(symbol)
-        if (symbolIndex < 2) return null
-
-        // Check if previous tokens are namespace and "/"
-        val slashToken = children[symbolIndex - 1]
-        if (slashToken.node.elementType != PhelTypes.SLASH) return null
-
-        val namespaceToken = children[symbolIndex - 2]
-        if (namespaceToken !is PhelSymbol || !isValidNamespaceName(namespaceToken.text ?: "")) return null
-
-        // Return range from start of namespace to end of symbol
-        val startOffset = namespaceToken.textRange.startOffset
-        val endOffset = symbol.textRange.endOffset
-        return TextRange.create(startOffset, endOffset)
-    }
-
-    private fun isValidNamespaceName(text: String): Boolean {
-        // Check if it's a valid namespace name (starts with letter or underscore, followed by letters, digits, underscores)
-        if (text.isEmpty()) return false
-
-        val firstChar = text[0]
-        if (!firstChar.isLetter() && firstChar != '_') return false
-
-        // Check remaining characters
-        for (i in 1 until text.length) {
-            val char = text[i]
-            if (!char.isLetterOrDigit() && char != '_') return false
-        }
-
-        return true
     }
 
     /**
@@ -627,7 +486,6 @@ class PhelAnnotator : Annotator {
             // Count how many actual forms (keywords/symbols) appear before this element
             val textBeforeForCounting = beforeElement.replace("#_".toRegex(), "").trim { it <= ' ' }
 
-
             // Use regex to find all keywords and symbols in the text
             val formPattern = Pattern.compile("(:[\\w-]+|[a-zA-Z][\\w-]*)")
             val formMatcher = formPattern.matcher(textBeforeForCounting)
@@ -636,7 +494,6 @@ class PhelAnnotator : Annotator {
             while (formMatcher.find()) {
                 formsBeforeCount++
             }
-
 
             // If this element is at position N (0-based) and there are M #_ tokens,
             // then it's commented out if N < M
