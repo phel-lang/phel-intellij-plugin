@@ -30,15 +30,9 @@ OCTNUM=[+-]? "0o" [0-7_]+
 CHARACTER=\\([btrnf]|u[0-9a-fA-F]{4}|o[0-7]{3}|backspace|tab|newline|formfeed|return|space|.)
 BAD_LITERAL=\" ([^\\\"]|\\.|\\\")*
 
-SYM_START=[[\w<>$%&=*+\-!?_|\\@]--#\d] | ".."
-SYM_PART=[.]? {SYM_CHAR} | ".."
-SYM_CHAR=[\w<>$%&=*+\-!?_|'#\\@/]
-SYM_ANY={SYM_CHAR} | [./]
+ATOM=[^\(\)\[\]\{\}',`@ \n\r\t\#]+
 
-QUALIFIED_SYMBOL={SYM_START}{SYM_TAIL}? ("/" | "\\") {SYM_TAIL}
-
-SYM_TAIL={SYM_PART}+ (":" {SYM_PART}+)?
-KEYWORD_TAIL={SYM_PART}+ ("/" {SYM_PART}+)? (":" {SYM_PART}+)?
+KEYWORD_TAIL={ATOM} ("/" {ATOM})? (":" {ATOM}+)?
 
 %%
 <YYINITIAL> {
@@ -84,11 +78,9 @@ KEYWORD_TAIL={SYM_PART}+ ("/" {SYM_PART}+)? (":" {SYM_PART}+)?
   ":"                    { return PhelTypes.COLON; }
   ".-"                   { return PhelTypes.DOTDASH; }
   "."                    { return PhelTypes.DOT; }
-  "/" {SYM_ANY}+         { return BAD_CHARACTER; }
   "/"                    { return PhelTypes.SLASH; }
 
-  {QUALIFIED_SYMBOL}     { return PhelTypes.SYM; }
-  {SYM_START}{SYM_TAIL}? { return PhelTypes.SYM; }
+  {ATOM}                 { return PhelTypes.SYM; }
 }
 
 <MULTILINE_COMMENT> {

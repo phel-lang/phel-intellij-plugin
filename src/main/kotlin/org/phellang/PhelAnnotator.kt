@@ -112,17 +112,17 @@ class PhelAnnotator : Annotator {
             return
         }
 
-        // Namespace prefix highlighting (qualified symbols are now single tokens)
-        if (hasNamespacePrefix(text)) {
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
-                .textAttributes(NAMESPACE_PREFIX).create()
-            return
-        }
-
         // Function call position - highlight user-defined functions in function position
         if (isInFunctionCallPosition(symbol)) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
                 .textAttributes(SPECIAL_FORM).create()
+            return
+        }
+
+        // Namespace prefix highlighting
+        if (hasNamespacePrefix(text)) {
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
+                .textAttributes(NAMESPACE_PREFIX).create()
             return
         }
     }
