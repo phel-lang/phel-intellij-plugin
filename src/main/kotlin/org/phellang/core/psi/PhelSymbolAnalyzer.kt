@@ -1,15 +1,19 @@
 package org.phellang.core.psi
 
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.config.PhelConfiguration
+import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
 
-/**
- * Specialized analyzer for Phel symbols and their contexts.
- * Handles definition detection, binding analysis, and symbol classification.
- */
 object PhelSymbolAnalyzer {
+
+    @JvmStatic
+    fun isSymbolType(symbolText: String?, priority: PhelCompletionPriority): Boolean {
+        if (symbolText == null) return false
+
+        return symbolText in PhelFunctionRegistry.getFunctions(priority).map { it.name }
+    }
 
     /**
      * Check if this symbol is in a definition position (being defined rather than referenced).
@@ -36,7 +40,7 @@ object PhelSymbolAnalyzer {
                     val firstSymbol = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
                     if (firstSymbol != null) {
                         val firstSymbolText = firstSymbol.text
-                        if (isDefiningForm(firstSymbolText)) {
+                        if (isSymbolType(firstSymbolText, PhelCompletionPriority.SPECIAL_FORMS)) {
                             // Check if this symbol is the second element (the name being defined)
                             val forms = PsiTreeUtil.getChildrenOfType(containingList, PhelForm::class.java)
                             if (forms != null && forms.size > 1) {
@@ -49,43 +53,7 @@ object PhelSymbolAnalyzer {
             }
 
             false
-        }, "isDefinition") ?: false
-    }
-
-    /**
-     * Check if a symbol represents a defining form (def, defn, defmacro, etc.).
-     */
-    @JvmStatic
-    fun isDefiningForm(symbolText: String?): Boolean {
-        if (symbolText == null) return false
-        return symbolText in PhelConfiguration.Language.DEFINING_FORMS
-    }
-
-    /**
-     * Check if a symbol represents a binding form (let, for, etc.).
-     */
-    @JvmStatic
-    fun isBindingForm(symbolText: String?): Boolean {
-        if (symbolText == null) return false
-        return symbolText in PhelConfiguration.Language.BINDING_FORMS
-    }
-
-    /**
-     * Check if a symbol represents a function form (defn, fn, etc.).
-     */
-    @JvmStatic
-    fun isFunctionForm(symbolText: String?): Boolean {
-        if (symbolText == null) return false
-        return symbolText in PhelConfiguration.Language.FUNCTION_FORMS
-    }
-
-    /**
-     * Check if a symbol represents a special form.
-     */
-    @JvmStatic
-    fun isSpecialForm(symbolText: String?): Boolean {
-        if (symbolText == null) return false
-        return symbolText in PhelConfiguration.Language.SPECIAL_FORMS
+        }) ?: false
     }
 
     /**
@@ -109,7 +77,7 @@ object PhelSymbolAnalyzer {
 
             val keyword = firstSymbol.text
 
-            if (keyword == "defn" || keyword == "defn-" || keyword == "defmacro" || keyword == "defmacro-") {
+            if (isSymbolType(keyword, PhelCompletionPriority.SPECIAL_FORMS)) {
                 // For (defn name [params] ...) and (defn- name [params] ...), parameter vector is at forms[2]
                 return@safeOperation forms.size >= 3 && forms[2] === paramVec
             } else if (keyword == "fn") {
@@ -118,7 +86,7 @@ object PhelSymbolAnalyzer {
             }
 
             false
-        }, "isFunctionParameter") ?: false
+        }) ?: false
     }
 
     /**
@@ -140,7 +108,7 @@ object PhelSymbolAnalyzer {
             // Check if first symbol is a binding form
             val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: return@safeOperation false
             val formType = firstSymbol.text
-            if (!isBindingForm(formType)) return@safeOperation false
+            if (!isSymbolType(formType, PhelCompletionPriority.CONTROL_FLOW)) return@safeOperation false
 
             // Check if binding vector is at forms[1]
             if (forms[1] !== bindingVec) return@safeOperation false
@@ -158,45 +126,6 @@ object PhelSymbolAnalyzer {
             }
 
             false
-        }, "isLetBinding") ?: false
-    }
-
-    /**
-     * Get the symbol type based on its context.
-     */
-    @JvmStatic
-    fun getSymbolType(symbol: PhelSymbol): String {
-        return when {
-            isDefinition(symbol) -> "definition"
-            isFunctionParameter(symbol) -> "parameter"
-            isLetBinding(symbol) -> "binding"
-            else -> "reference"
-        }
-    }
-
-    /**
-     * Check if symbol is qualified (contains namespace).
-     */
-    @JvmStatic
-    fun isQualifiedSymbol(symbol: PhelSymbol): Boolean {
-        return PhelErrorHandler.safeOperation({
-            val text = symbol.text ?: return@safeOperation false
-            text.contains('/')
-        }, "isQualifiedSymbol") ?: false
-    }
-
-    /**
-     * Get the binding scope of a symbol (function, let, loop, etc.).
-     */
-    @JvmStatic
-    fun getBindingScope(symbol: PhelSymbol): String? {
-        return PhelErrorHandler.safeOperation({
-            when {
-                isFunctionParameter(symbol) -> "function"
-                isLetBinding(symbol) -> "let"
-                isDefinition(symbol) -> "global"
-                else -> null
-            }
-        }, "getBindingScope")
+        }) ?: false
     }
 }
