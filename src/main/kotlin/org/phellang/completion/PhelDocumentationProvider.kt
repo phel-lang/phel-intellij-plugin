@@ -3,6 +3,7 @@ package org.phellang.completion
 import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.*
 
 /**
@@ -63,7 +64,7 @@ class PhelDocumentationProvider : AbstractDocumentationProvider() {
     private fun categorizeSymbol(element: PsiElement?, symbolName: String): String {
         // First check if this is a definition and determine its type
         if (element is PhelSymbol) {
-            if (PhelPsiUtil.isDefinition(element)) {
+            if (PhelSymbolAnalyzer.isDefinition(element)) {
                 // Check if it's a function parameter or let binding first
                 if (isInParameterVector(element)) {
                     return "Function Parameter"
