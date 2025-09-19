@@ -87,6 +87,10 @@ tasks {
     }
 
     intellijPlatform {
+        buildSearchableOptions {
+            enabled = false
+        }
+
         patchPluginXml {
             sinceBuild.set("242")
             untilBuild.set("252.*")

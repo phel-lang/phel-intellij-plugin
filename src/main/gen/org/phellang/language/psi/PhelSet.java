@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PhelLVForm extends PhelPForm {
+public interface PhelSet extends PsiElement {
 
   @NotNull
-  PhelSet getSet();
+  List<PhelForm> getFormList();
 
 }

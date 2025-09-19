@@ -9,9 +9,9 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import org.phellang.language.psi.*
+import org.phellang.language.psi.PhelAccess
 import org.phellang.language.psi.impl.PhelVecImpl
 import java.util.regex.Pattern
-import kotlin.math.max
 
 /**
  * Advanced annotator for context-sensitive Phel syntax highlighting
@@ -26,6 +26,11 @@ class PhelAnnotator : Annotator {
             return  // Don't apply other highlighting to commented-out forms
         }
 
+        // Check if this element is inside a short function - if so, skip highlighting
+        if (isInsideShortFunction(element)) {
+            return
+        }
+
         if (element is PhelKeyword) {
             annotatePhelKeyword(element, holder)
         } else if (element is PhelSymbol) {
@@ -34,6 +39,18 @@ class PhelAnnotator : Annotator {
             if (text != null) {
                 annotateSymbol(element, text, holder)
             }
+        } else if (element is PhelShortFn) {
+            annotateShortFn(element, holder)
+        } else if (element is PhelSet) {
+            annotateSet(element, holder)
+        } else if (element.node.elementType == PhelTypes.HASH_BRACE) {
+            // Highlight the #{ token as part of a set
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(element.textRange)
+                .textAttributes(COLLECTION_TYPE).create()
+        } else if (element.node.elementType == PhelTypes.BRACE2 && isInsideSet(element)) {
+            // Highlight the } token as part of a set (not a map)
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(element.textRange)
+                .textAttributes(COLLECTION_TYPE).create()
         }
     }
 
@@ -45,7 +62,22 @@ class PhelAnnotator : Annotator {
             return
         }
 
-        // PHP interop patterns
+        // Check for PHP interop patterns that span multiple tokens (php/SYMBOL)
+        val phpInteropRange = findPhpInteropRange(symbol)
+        if (phpInteropRange != null) {
+            // Only create annotation if this is the qualified symbol itself, not a sub-element
+            if (phpInteropRange == symbol.textRange) {
+                holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(phpInteropRange)
+                    .textAttributes(PHP_INTEROP).create()
+                return
+            } else {
+                // This is a sub-element of a qualified symbol, skip highlighting here
+                // The qualified symbol will be highlighted when it's processed
+                return
+            }
+        }
+
+        // PHP interop patterns (single token)
         if (isPhpInterop(text)) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
                 .textAttributes(PHP_INTEROP).create()
@@ -59,12 +91,6 @@ class PhelAnnotator : Annotator {
             return
         }
 
-        // Namespace prefix highlighting
-        if (hasNamespacePrefix(text)) {
-            highlightNamespacePrefix(symbol, text, holder)
-            return
-        }
-
         // Special forms (highest priority)
         if (SPECIAL_FORMS.contains(text)) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
@@ -74,49 +100,189 @@ class PhelAnnotator : Annotator {
 
         // Macros
         if (MACROS.contains(text)) {
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange).textAttributes(MACRO)
-                .create()
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
+                .textAttributes(SPECIAL_FORM).create()
             return
         }
 
         // Core functions
         if (CORE_FUNCTIONS.contains(text)) {
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
-                .textAttributes(CORE_FUNCTION).create()
+                .textAttributes(SPECIAL_FORM).create()
+            return
+        }
+
+        // Function call position - highlight user-defined functions in function position
+        if (isInFunctionCallPosition(symbol)) {
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
+                .textAttributes(SPECIAL_FORM).create()
+            return
+        }
+
+        // Namespace prefix highlighting
+        if (hasNamespacePrefix(text)) {
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(symbol.textRange)
+                .textAttributes(NAMESPACE_PREFIX).create()
             return
         }
     }
 
+    private fun isInFunctionCallPosition(symbol: PhelSymbol): Boolean {
+        var current = symbol.parent
+        while (current != null && current !is PhelList) {
+            current = current.parent
+        }
+
+        if (current is PhelList) {
+            val list = current
+
+            // Get the first form in the list (function name position)
+            val firstForm = list.forms.firstOrNull()
+
+            if (firstForm is PhelSymbol) {
+                return firstForm === symbol
+            } else if (firstForm is PhelAccess) {
+                // Check if our symbol is contained within the first form (access)
+                return firstForm.textRange.contains(symbol.textRange)
+            }
+        }
+
+        return false
+    }
+
+    /**
+     * Find PHP interop range that spans multiple tokens (php/SYMBOL).
+     * Returns the TextRange for the entire php/SYMBOL construction, or null if not found.
+     */
+    private fun findPhpInteropRange(symbol: PhelSymbol): TextRange? {
+        val text = symbol.text ?: return null
+
+        // Check if this is the "php" part of a php/SYMBOL construction
+        if (text == "php") {
+            return findPhpInteropRangeFromPhp(symbol)
+        }
+
+        // Check if this is the SYMBOL part of a php/SYMBOL construction
+        // This includes both operators and function names
+        if (isPhpInteropSymbol(text) || isPhpFunctionName(text)) {
+            return findPhpInteropRangeFromSymbol(symbol)
+        }
+
+        return null
+    }
+
+    private fun findPhpInteropRangeFromPhp(phpSymbol: PhelSymbol): TextRange? {
+        val parent = phpSymbol.parent
+
+        // Check if this is a qualified symbol (php/SYMBOL structure)
+        if (parent is PhelSymbol) {
+            val qualifiedText = parent.text
+
+            if (qualifiedText != null && qualifiedText.startsWith("php/")) {
+                val symbolPart = qualifiedText.substring(4) // Remove "php/" prefix
+
+                if (isPhpInteropSymbol(symbolPart) || isPhpFunctionName(symbolPart)) {
+                    // Return range for the entire qualified symbol
+                    return parent.textRange
+                }
+            }
+        }
+
+        // Fallback to the old logic for list-based structures
+        if (parent !is PhelList) return null
+
+        val children = parent.children
+        val phpIndex = children.indexOf(phpSymbol)
+        if (phpIndex == -1 || phpIndex + 2 >= children.size) return null
+
+        // Check if next token is a slash
+        val nextToken = children[phpIndex + 1]
+        if (nextToken.node.elementType != PhelTypes.SLASH) return null
+
+        // Check if token after slash is a symbol
+        val symbolToken = children[phpIndex + 2]
+        if (symbolToken !is PhelSymbol) return null
+
+        val symbolText = symbolToken.text
+        if (symbolText == null || !isPhpInteropSymbol(symbolText)) return null
+
+        // Return range from start of "php" to end of symbol
+        val startOffset = phpSymbol.textRange.startOffset
+        val endOffset = symbolToken.textRange.endOffset
+        return TextRange.create(startOffset, endOffset)
+    }
+
+    /**
+     * Find PHP interop range when we have the SYMBOL token.
+     */
+    private fun findPhpInteropRangeFromSymbol(symbol: PhelSymbol): TextRange? {
+        val parent = symbol.parent
+
+        // Check if this is a qualified symbol (php/SYMBOL structure)
+        if (parent is PhelSymbol) {
+            val qualifiedText = parent.text
+
+            if (qualifiedText != null && qualifiedText.startsWith("php/")) {
+                val symbolPart = qualifiedText.substring(4) // Remove "php/" prefix
+
+                if (isPhpInteropSymbol(symbolPart) || isPhpFunctionName(symbolPart)) {
+                    // Return range for the entire qualified symbol
+                    return parent.textRange
+                }
+            }
+        }
+
+        // Fallback to the old logic for list-based structures
+        if (parent !is PhelList) return null
+
+        val children = parent.children
+        val symbolIndex = children.indexOf(symbol)
+        if (symbolIndex < 2) return null
+
+        // Check if previous tokens are "php" and "/"
+        val slashToken = children[symbolIndex - 1]
+        if (slashToken.node.elementType != PhelTypes.SLASH) return null
+
+        val phpToken = children[symbolIndex - 2]
+        if (phpToken !is PhelSymbol || phpToken.text != "php") return null
+
+        // Return range from start of "php" to end of symbol
+        val startOffset = phpToken.textRange.startOffset
+        val endOffset = symbol.textRange.endOffset
+        return TextRange.create(startOffset, endOffset)
+    }
+
+    private fun isPhpInteropSymbol(text: String): Boolean {
+        return VALID_PHP_SYMBOLS.contains(text)
+    }
+
+    private fun isPhpFunctionName(text: String): Boolean {
+        // Check if it's a valid PHP identifier (starts with letter or underscore, followed by letters, digits, underscores)
+        if (text.isEmpty()) return false
+
+        val firstChar = text[0]
+        if (!firstChar.isLetter() && firstChar != '_') return false
+
+        // Check remaining characters
+        for (i in 1 until text.length) {
+            val char = text[i]
+            if (!char.isLetterOrDigit() && char != '_') return false
+        }
+
+        return true
+    }
+
     private fun isPhpInterop(text: String): Boolean {
-        return text.startsWith("php/") || text == "php/->" || text == "php/::" || text == "php/new" || text.startsWith("php/a") ||  // php/aget, php/aset, php/apush, php/aunset
-                text.startsWith("php/o") // php/oset
+        return text.startsWith("php/")
     }
 
     private fun isPhpVariable(text: String): Boolean {
-        return text.startsWith("php/$") || text == "php/\$_SERVER" || text == "php/\$_GET" || text == "php/\$_POST" || text == "php/\$_COOKIE" || text == "php/\$_FILES" || text == "php/\$_SESSION" || text == "php/\$GLOBALS"
+        return text.startsWith("php/$")
     }
 
     private fun hasNamespacePrefix(text: String): Boolean {
         // Check for namespace separators: / or \
         return (text.contains("/") && !text.startsWith("php/")) || text.contains("\\")
-    }
-
-    private fun highlightNamespacePrefix(symbol: PhelSymbol, text: String, holder: AnnotationHolder) {
-        var separatorIndex: Int
-
-        // Find the last separator (/ or \)
-        val slashIndex = text.lastIndexOf('/')
-        val backslashIndex = text.lastIndexOf('\\')
-        separatorIndex = max(slashIndex, backslashIndex)
-
-        if (separatorIndex > 0) {
-            // Highlight only the namespace part (before the separator)
-            val startOffset = symbol.textRange.startOffset
-            val endOffset = startOffset + separatorIndex
-
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(TextRange.create(startOffset, endOffset))
-                .textAttributes(NAMESPACE_PREFIX).create()
-        }
     }
 
     /**
@@ -126,6 +292,52 @@ class PhelAnnotator : Annotator {
         // Highlight the entire keyword element
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(keyword.textRange)
             .textAttributes(PhelSyntaxHighlighter.KEYWORD).create()
+    }
+
+    /**
+     * Annotate short function syntax |(fn [x] x)
+     */
+    private fun annotateShortFn(shortFn: PhelShortFn, holder: AnnotationHolder) {
+        // Highlight the entire short function as a special form
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(shortFn.textRange).textAttributes(SPECIAL_FORM)
+            .create()
+    }
+
+    /**
+     * Annotate set data structure #{1 2 3}
+     */
+    private fun annotateSet(set: PhelSet, holder: AnnotationHolder) {
+        // Highlight the entire set as a collection type
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(set.textRange).textAttributes(COLLECTION_TYPE)
+            .create()
+    }
+
+    /**
+     * Check if an element is inside a short function
+     */
+    private fun isInsideShortFunction(element: PsiElement): Boolean {
+        var current = element.parent
+        while (current != null) {
+            if (current is PhelShortFn) {
+                return true
+            }
+            current = current.parent
+        }
+        return false
+    }
+
+    /**
+     * Check if an element is inside a set
+     */
+    private fun isInsideSet(element: PsiElement): Boolean {
+        var current = element.parent
+        while (current != null) {
+            if (current is PhelSet) {
+                return true
+            }
+            current = current.parent
+        }
+        return false
     }
 
     /**
@@ -308,7 +520,6 @@ class PhelAnnotator : Annotator {
             // Count how many actual forms (keywords/symbols) appear before this element
             val textBeforeForCounting = beforeElement.replace("#_".toRegex(), "").trim { it <= ' ' }
 
-
             // Use regex to find all keywords and symbols in the text
             val formPattern = Pattern.compile("(:[\\w-]+|[a-zA-Z][\\w-]*)")
             val formMatcher = formPattern.matcher(textBeforeForCounting)
@@ -317,7 +528,6 @@ class PhelAnnotator : Annotator {
             while (formMatcher.find()) {
                 formsBeforeCount++
             }
-
 
             // If this element is at position N (0-based) and there are M #_ tokens,
             // then it's commented out if N < M
@@ -339,16 +549,6 @@ val PHP_VARIABLE: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
     "PHEL_PHP_VARIABLE", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE
 )
 
-// Built-in function categories
-@JvmField
-val CORE_FUNCTION: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-    "PHEL_CORE_FUNCTION", DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL
-)
-
-@JvmField
-val MACRO: TextAttributesKey =
-    TextAttributesKey.createTextAttributesKey("PHEL_MACRO", DefaultLanguageHighlighterColors.KEYWORD)
-
 @JvmField
 val SPECIAL_FORM: TextAttributesKey =
     TextAttributesKey.createTextAttributesKey("PHEL_SPECIAL_FORM", DefaultLanguageHighlighterColors.KEYWORD)
@@ -356,7 +556,7 @@ val SPECIAL_FORM: TextAttributesKey =
 // Namespace highlighting
 @JvmField
 val NAMESPACE_PREFIX: TextAttributesKey =
-    TextAttributesKey.createTextAttributesKey("PHEL_NAMESPACE", DefaultLanguageHighlighterColors.CLASS_NAME)
+    TextAttributesKey.createTextAttributesKey("PHEL_NAMESPACE", DefaultLanguageHighlighterColors.IDENTIFIER)
 
 // Form comment highlighting - for forms commented out by #_
 @JvmField
@@ -368,6 +568,12 @@ val COMMENTED_OUT_FORM: TextAttributesKey = TextAttributesKey.createTextAttribut
 @JvmField
 val FUNCTION_PARAMETER: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
     "PHEL_FUNCTION_PARAMETER", DefaultLanguageHighlighterColors.INSTANCE_FIELD
+)
+
+// Collection type highlighting (for sets, vectors, maps, lists)
+@JvmField
+val COLLECTION_TYPE: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
+    "PHEL_COLLECTION_TYPE", DefaultLanguageHighlighterColors.STATIC_METHOD
 )
 
 // Core Phel special forms
@@ -420,6 +626,37 @@ private val MACROS = mutableSetOf<String?>(
     "declare"
 )
 
+// Valid PHP interop symbols
+private val VALID_PHP_SYMBOLS = setOf(
+    "===",
+    "!==",
+    "==",
+    "!=",
+    "&&",
+    "||",
+    "<<",
+    ">>",
+    "++",
+    "--",
+    "^",
+    "~",
+    "+",
+    "-",
+    "*",
+    "/",
+    "%",
+    "&",
+    "|",
+    "<",
+    ">",
+    "<=",
+    ">=",
+    "=",
+    "!",
+    "::",
+    "->"
+)
+
 // Common core functions (subset for performance)
 private val CORE_FUNCTIONS = mutableSetOf<String?>(
     // Collection operations
@@ -449,6 +686,7 @@ private val CORE_FUNCTIONS = mutableSetOf<String?>(
     "next",
     "nnext",
     "nfirst",
+    "set",
 
     // Sequence operations
     "take",
@@ -602,6 +840,7 @@ private val CORE_FUNCTIONS = mutableSetOf<String?>(
     "invert",
     "merge-with",
     "deep-merge",
+    "disj",
 
     // String module functions (phel\str)
     "split",

@@ -11,6 +11,12 @@ public interface PhelForm extends PsiElement {
   PhelFormCommentMacro getFormCommentMacro();
 
   @Nullable
+  PhelSet getSet();
+
+  @Nullable
+  PhelShortFn getShortFn();
+
+  @Nullable
   PhelSymbol getSymbol();
 
   @NotNull

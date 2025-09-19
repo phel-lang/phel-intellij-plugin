@@ -17,6 +17,8 @@ public interface PhelTypes {
   IElementType MAP = new PhelElementType("MAP");
   IElementType METADATA = new PhelElementType("METADATA");
   IElementType READER_MACRO = new PhelElementType("READER_MACRO");
+  IElementType SET = new PhelElementType("SET");
+  IElementType SHORT_FN = new PhelElementType("SHORT_FN");
   IElementType SYMBOL = new PhelElementType("SYMBOL");
   IElementType VEC = new PhelElementType("VEC");
 
@@ -35,7 +37,9 @@ public interface PhelTypes {
   IElementType DECREMENT = new PhelTokenType("--");
   IElementType DOT = new PhelTokenType(".");
   IElementType DOTDASH = new PhelTokenType(".-");
+  IElementType FN_SHORT = new PhelTokenType("|(");
   IElementType FORM_COMMENT = new PhelTokenType("#_");
+  IElementType HASH_BRACE = new PhelTokenType("#{");
   IElementType HAT = new PhelTokenType("^");
   IElementType HEXNUM = new PhelTokenType("hexnum");
   IElementType INCREMENT = new PhelTokenType("++");
@@ -90,6 +94,12 @@ public interface PhelTypes {
       }
       else if (type == READER_MACRO) {
         return new PhelReaderMacroImpl(node);
+      }
+      else if (type == SET) {
+        return new PhelSetImpl(node);
+      }
+      else if (type == SHORT_FN) {
+        return new PhelShortFnImpl(node);
       }
       else if (type == SYMBOL) {
         return new PhelSymbolImpl(node);

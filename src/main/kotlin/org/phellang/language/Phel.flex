@@ -16,11 +16,11 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 %type IElementType
 %unicode
 
-%state SYMBOL0, SYMBOL1, SYMBOL2, SYMBOL3, MULTILINE_COMMENT
+%state MULTILINE_COMMENT
 
 WHITE_SPACE=\s+
 LINE_COMMENT=;.*
-HASH_LINE_COMMENT=#([^_|].*)?
+HASH_LINE_COMMENT=#([^_|{].*)?
 STR_CHAR=[^\\\"]|\\.|\\\"
 STRING=\" {STR_CHAR}* \"
 NUMBER=[+-]? [0-9]+ (\.[0-9]*)? ([eE][+-]?[0-9]+)?
@@ -30,25 +30,24 @@ OCTNUM=[+-]? "0o" [0-7_]+
 CHARACTER=\\([btrnf]|u[0-9a-fA-F]{4}|o[0-7]{3}|backspace|tab|newline|formfeed|return|space|.)
 BAD_LITERAL=\" ([^\\\"]|\\.|\\\")*
 
-SYM_START=[[\w<>$%&=*+\-!?_|\\@]--#\d] | ".."
-SYM_PART=[.]? {SYM_CHAR} | ".."
-SYM_CHAR=[\w<>$%&=*+\-!?_|'#\\@]
-SYM_ANY={SYM_CHAR} | [./]
+ATOM=[^\(\)\[\]\{\}',`@ \n\r\t\#]+
 
-SYM_TAIL={SYM_PART}+ (":" {SYM_PART}+)?
-KEYWORD_TAIL={SYM_PART}+ ("/" {SYM_PART}+)? (":" {SYM_PART}+)?
+KEYWORD_TAIL={ATOM} ("/" {ATOM})? (":" {ATOM}+)?
 
 %%
 <YYINITIAL> {
   {WHITE_SPACE}          { return WHITE_SPACE; }
 
+  "|("                   { return PhelTypes.FN_SHORT; }
   "^"                    { return PhelTypes.HAT; }
   ",@"                   { return PhelTypes.COMMA_AT; }
   "~@"                   { return PhelTypes.TILDE_AT; }
   "#_"                   { return PhelTypes.FORM_COMMENT; }
+  "#{"                   { return PhelTypes.HASH_BRACE; }
+  "|"                    { return PhelTypes.SYM; }
   "#|"                   { yybegin(MULTILINE_COMMENT); return PhelTypes.MULTILINE_COMMENT; }
-  {HASH_LINE_COMMENT}    { return PhelTypes.LINE_COMMENT; }
   {LINE_COMMENT}         { return PhelTypes.LINE_COMMENT; }
+  {HASH_LINE_COMMENT}    { return PhelTypes.LINE_COMMENT; }
   ","                    { return PhelTypes.COMMA; }
   "~"                    { return PhelTypes.TILDE; }
   "("                    { return PhelTypes.PAREN1; }
@@ -74,55 +73,14 @@ KEYWORD_TAIL={SYM_PART}+ ("/" {SYM_PART}+)? (":" {SYM_PART}+)?
   {BAD_LITERAL}          { return BAD_CHARACTER; }
 
   "::" {KEYWORD_TAIL}    { return PhelTypes.KEYWORD_TOKEN; }
-  "::"                   { yybegin(SYMBOL0); return PhelTypes.COLONCOLON; }
+  "::"                   { return PhelTypes.COLONCOLON; }
   ":" {KEYWORD_TAIL}     { return PhelTypes.KEYWORD_TOKEN; }
-  ":"                    { yybegin(SYMBOL0); return PhelTypes.COLON; }
-  ".-"  /  {SYM_CHAR}    { yybegin(SYMBOL0); return PhelTypes.DOTDASH; }
-  ".-"                   { return PhelTypes.SYM; }
-  "."   /  {SYM_CHAR}    { yybegin(SYMBOL0); return PhelTypes.DOT; }
-  "."                    { return PhelTypes.SYM; }
-  "/" {SYM_ANY}+         { yybegin(YYINITIAL); return BAD_CHARACTER; }
-  "/"                    { return PhelTypes.SYM; }
+  ":"                    { return PhelTypes.COLON; }
+  ".-"                   { return PhelTypes.DOTDASH; }
+  "."                    { return PhelTypes.DOT; }
+  "/"                    { return PhelTypes.SLASH; }
 
-  {SYM_START}{SYM_TAIL}? { yybegin(SYMBOL1); return PhelTypes.SYM; }
-}
-
-<SYMBOL0> {
-  {SYM_TAIL}             { yybegin(SYMBOL1); return PhelTypes.SYM; }
-  [^]                    { yybegin(YYINITIAL); yypushback(yylength()); }
-}
-
-<SYMBOL1> {
-  ":"                    { yybegin(YYINITIAL); return BAD_CHARACTER; }
-  "/"                    { yybegin(SYMBOL2); return PhelTypes.SLASH; }
-  "."                    { yybegin(YYINITIAL); return PhelTypes.DOT; }
-  [^]                    { yybegin(YYINITIAL); yypushback(yylength()); }
-}
-
-<SYMBOL2> {
-  "::"                   { yybegin(YYINITIAL); return PhelTypes.COLONCOLON; }
-  ".-"                   { yybegin(YYINITIAL); return PhelTypes.DOTDASH; }
-  "!=="                  { yybegin(YYINITIAL); return PhelTypes.NOT_IDENTICAL; }
-  "!="                   { yybegin(YYINITIAL); return PhelTypes.NOT_EQUAL; }
-  "&&"                   { yybegin(YYINITIAL); return PhelTypes.AND_AND; }
-  "||"                   { yybegin(YYINITIAL); return PhelTypes.OR_OR; }
-  "<<"                   { yybegin(YYINITIAL); return PhelTypes.SHIFT_LEFT; }
-  ">>"                   { yybegin(YYINITIAL); return PhelTypes.SHIFT_RIGHT; }
-  "++"                   { yybegin(YYINITIAL); return PhelTypes.INCREMENT; }
-  "--"                   { yybegin(YYINITIAL); return PhelTypes.DECREMENT; }
-  "^"                    { yybegin(YYINITIAL); return PhelTypes.HAT; }
-  "~"                    { yybegin(YYINITIAL); return PhelTypes.TILDE; }
-  {SYM_TAIL}             { yybegin(SYMBOL3); return PhelTypes.SYM; }
-}
-
-<SYMBOL2, SYMBOL3> {
-  ":"                    { yybegin(YYINITIAL); return BAD_CHARACTER; }
-  "."                    { yybegin(YYINITIAL); return PhelTypes.DOT; }
-  [^]                    { yybegin(YYINITIAL); yypushback(yylength()); }
-}
-
-<YYINITIAL, SYMBOL2, SYMBOL3> {
-  "/" {SYM_ANY}+         { yybegin(YYINITIAL); return BAD_CHARACTER; }
+  {ATOM}                 { return PhelTypes.SYM; }
 }
 
 <MULTILINE_COMMENT> {
