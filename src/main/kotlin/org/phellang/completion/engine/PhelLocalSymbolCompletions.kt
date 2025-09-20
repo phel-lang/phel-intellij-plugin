@@ -1,4 +1,4 @@
-package org.phellang.completion.engine.types
+package org.phellang.completion.engine
 
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import org.phellang.PhelFileType
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
+import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.completion.infrastructure.PhelCompletionUtils
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.core.utils.PhelPerformanceUtils
@@ -19,9 +20,6 @@ import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.impl.PhelAccessImpl
 import javax.swing.Icon
 
-/**
- * Provides completions for parameters, let bindings, and other local variables in the current scope
- */
 object PhelLocalSymbolCompletions {
     val PARAMETER_ICON = AllIcons.Nodes.Parameter
     val METHOD_ICON = AllIcons.Nodes.Method
@@ -295,26 +293,57 @@ object PhelLocalSymbolCompletions {
     ) {
         val file = position.containingFile as PhelFile? ?: return
 
-        // Just iterate through all children without any limits
+        // Iterate through all top-level forms in the current file
         for (child in file.children) {
             if (child is PhelList) {
-                // Get children array and look for def + variable pattern  
                 val children: Array<PsiElement> = child.children
 
-                // Look for (def symbol-name ...) pattern 
-                for (i in 0..<children.size - 1) {
-                    val defChild = children[i]
-                    if ((defChild is PhelSymbol || defChild is PhelAccessImpl) && "def" == defChild.text) {
-                        // Check next element for the variable name
-                        if (i + 1 < children.size) {
-                            val nameChild = children[i + 1]
+                // Look for definition forms: (defn name ...), (def name ...), etc.
+                if (children.size >= 2) {
+                    val firstElement = children[0]
 
-                            if (nameChild is PhelSymbol || nameChild is PhelAccessImpl) {
-                                val symbolName = nameChild.text
-                                addSymbolCompletion(
-                                    result, symbolName, "Global Variable", METHOD_ICON, addedSymbols
-                                )
-                                break
+                    if (firstElement is PhelSymbol || firstElement is PhelAccessImpl) {
+                        val defType = firstElement.text
+                        val localDefinitionTypes = arrayOf(
+                            "def",
+                            "defn",
+                            "defn-",
+                            "defmacro",
+                            "defmacro-",
+                            "defexception",
+                            "defexception*",
+                            "definterface",
+                            "definterface*",
+                            "defstruct",
+                            "defstruct*"
+                        )
+
+                        if (localDefinitionTypes.contains(defType)) {
+                            val nameElement = children[1]
+                            if (nameElement is PhelSymbol || nameElement is PhelAccessImpl) {
+                                val symbolName = nameElement.text
+                                // Use highest priority for local function definitions
+                                val priority = when (defType) {
+                                    "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
+                                    else -> PhelCompletionPriority.PROJECT_SYMBOLS
+                                }
+
+                                val displayType = when (defType) {
+                                    "def" -> "Local Variable"
+                                    "defn", "defn-" -> "Local Function"
+                                    "defmacro", "defmacro-" -> "Local Macro"
+                                    "defexception", "defexception*" -> "Local Exception"
+                                    "definterface", "definterface*" -> "Local Interface"
+                                    "defstruct", "defstruct*" -> "Local Struct"
+                                    else -> "Local Definition"
+                                }
+
+                                if (!addedSymbols.contains(symbolName) && !symbolName.trim().isEmpty()) {
+                                    addedSymbols.add(symbolName)
+                                    PhelCompletionUtils.addRankedCompletion(
+                                        result, symbolName, "", displayType, priority
+                                    )
+                                }
                             }
                         }
                     }
