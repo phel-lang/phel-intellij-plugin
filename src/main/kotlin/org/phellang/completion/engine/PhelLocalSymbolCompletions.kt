@@ -90,26 +90,22 @@ object PhelLocalSymbolCompletions {
 
                         // Check if this is a function definition
                         if (functionType == "defn" || functionType == "defn-" || functionType == "defmacro" || functionType == "defmacro-" || functionType == "fn") {
-                            // Find the parameter vector
-                            val paramVectorIndex = if (functionType == "fn") 1 else 2
-
-                            if (children.size > paramVectorIndex) {
-                                val paramElement = children[paramVectorIndex]
-                                if (paramElement is PhelVec) {
-                                    // Extract parameters from the vector
-                                    val paramChildren = paramElement.children
-                                    for (paramChild in paramChildren) {
-                                        if (paramChild is PhelSymbol || paramChild is PhelAccessImpl) {
-                                            val paramName = paramChild.text
-                                            if (paramName != null && paramName.isNotEmpty()) {
-                                                addSymbolCompletion(
-                                                    result,
-                                                    paramName,
-                                                    "Function Parameter",
-                                                    PARAMETER_ICON,
-                                                    addedSymbols
-                                                )
-                                            }
+                            // Find the parameter vector dynamically (handles docstrings and metadata)
+                            val paramVec = findParameterVectorInFunction(current)
+                            if (paramVec != null) {
+                                // Extract parameters from the vector
+                                val paramChildren = paramVec.children
+                                for (paramChild in paramChildren) {
+                                    if (paramChild is PhelSymbol || paramChild is PhelAccessImpl) {
+                                        val paramName = paramChild.text
+                                        if (paramName != null && paramName.isNotEmpty()) {
+                                            addSymbolCompletion(
+                                                result,
+                                                paramName,
+                                                "Function Parameter",
+                                                PARAMETER_ICON,
+                                                addedSymbols
+                                            )
                                         }
                                     }
                                 }
@@ -381,5 +377,41 @@ object PhelLocalSymbolCompletions {
         }
 
         return null // Not inside a function definition
+    }
+
+    /**
+     * Find the parameter vector in a function definition.
+     * Handles both fn and defn forms with optional docstrings and metadata.
+     */
+    private fun findParameterVectorInFunction(functionList: PhelList): PhelVec? {
+        val children = functionList.children
+        if (children.isEmpty()) return null
+        
+        val firstChild = children[0]
+        val functionType = when {
+            firstChild is PhelSymbol -> firstChild.text
+            firstChild is PhelAccessImpl -> firstChild.text
+            else -> return null
+        }
+        
+        return when (functionType) {
+            "fn" -> {
+                // For (fn [params] ...), parameter vector is at index 1
+                if (children.size >= 2 && children[1] is PhelVec) {
+                    children[1] as PhelVec
+                } else null
+            }
+            "defn", "defn-", "defmacro", "defmacro-" -> {
+                // For defn forms, find the first vector after the function name
+                // Skip docstring and metadata: (defn name "doc" {:meta} [params] ...)
+                for (i in 2 until children.size) {
+                    if (children[i] is PhelVec) {
+                        return children[i] as PhelVec
+                    }
+                }
+                null
+            }
+            else -> null
+        }
     }
 }

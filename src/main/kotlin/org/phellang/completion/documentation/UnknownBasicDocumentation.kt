@@ -13,8 +13,13 @@ object UnknownBasicDocumentation {
     }
 
     private fun categorizeSymbol(element: PsiElement?): String {
-        // First check if this is a definition and determine its type
         if (element is PhelSymbol) {
+            // First check if this is a parameter reference (usage in function body)
+            if (PhelSymbolAnalyzer.isParameterReference(element)) {
+                return "Function Parameter"
+            }
+            
+            // Then check if this is a definition and determine its type
             if (PhelSymbolAnalyzer.isDefinition(element)) {
                 // Check if it's a function parameter or let binding first
                 if (isInParameterVector(element)) {

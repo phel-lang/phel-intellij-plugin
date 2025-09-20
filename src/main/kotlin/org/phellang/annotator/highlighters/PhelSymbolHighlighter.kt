@@ -17,8 +17,8 @@ object PhelSymbolHighlighter {
     fun annotateSymbol(symbol: PhelSymbol, text: String, holder: AnnotationHolder) {
         if (!PhelAnnotationUtils.isValidText(text)) return
 
-        // Function parameters (check first, before other classifications)
-        if (PhelSymbolAnalyzer.isDefinition(symbol)) {
+        // Function parameters and let bindings (check first, before other classifications)
+        if (PhelSymbolAnalyzer.isDefinition(symbol) || PhelSymbolAnalyzer.isParameterReference(symbol)) {
             PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_PARAMETER)
             return
         }
