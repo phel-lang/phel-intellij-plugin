@@ -8,7 +8,6 @@ import org.phellang.PhelIcons
 import org.phellang.completion.handlers.*
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
-import org.phellang.completion.engine.types.PhelLocalSymbolCompletions
 import org.phellang.core.utils.PhelErrorHandler
 
 class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {

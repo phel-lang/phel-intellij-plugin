@@ -1,4 +1,4 @@
-package org.phellang.completion.engine.types
+package org.phellang.completion.engine
 
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import org.phellang.PhelFileType
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
+import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.completion.infrastructure.PhelCompletionUtils
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.core.utils.PhelPerformanceUtils
@@ -19,9 +20,6 @@ import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.impl.PhelAccessImpl
 import javax.swing.Icon
 
-/**
- * Provides completions for parameters, let bindings, and other local variables in the current scope
- */
 object PhelLocalSymbolCompletions {
     val PARAMETER_ICON = AllIcons.Nodes.Parameter
     val METHOD_ICON = AllIcons.Nodes.Method
@@ -92,26 +90,22 @@ object PhelLocalSymbolCompletions {
 
                         // Check if this is a function definition
                         if (functionType == "defn" || functionType == "defn-" || functionType == "defmacro" || functionType == "defmacro-" || functionType == "fn") {
-                            // Find the parameter vector
-                            val paramVectorIndex = if (functionType == "fn") 1 else 2
-
-                            if (children.size > paramVectorIndex) {
-                                val paramElement = children[paramVectorIndex]
-                                if (paramElement is PhelVec) {
-                                    // Extract parameters from the vector
-                                    val paramChildren = paramElement.children
-                                    for (paramChild in paramChildren) {
-                                        if (paramChild is PhelSymbol || paramChild is PhelAccessImpl) {
-                                            val paramName = paramChild.text
-                                            if (paramName != null && paramName.isNotEmpty()) {
-                                                addSymbolCompletion(
-                                                    result,
-                                                    paramName,
-                                                    "Function Parameter",
-                                                    PARAMETER_ICON,
-                                                    addedSymbols
-                                                )
-                                            }
+                            // Find the parameter vector dynamically (handles docstrings and metadata)
+                            val paramVec = findParameterVectorInFunction(current)
+                            if (paramVec != null) {
+                                // Extract parameters from the vector
+                                val paramChildren = paramVec.children
+                                for (paramChild in paramChildren) {
+                                    if (paramChild is PhelSymbol || paramChild is PhelAccessImpl) {
+                                        val paramName = paramChild.text
+                                        if (paramName != null && paramName.isNotEmpty()) {
+                                            addSymbolCompletion(
+                                                result,
+                                                paramName,
+                                                "Function Parameter",
+                                                PARAMETER_ICON,
+                                                addedSymbols
+                                            )
                                         }
                                     }
                                 }
@@ -295,26 +289,57 @@ object PhelLocalSymbolCompletions {
     ) {
         val file = position.containingFile as PhelFile? ?: return
 
-        // Just iterate through all children without any limits
+        // Iterate through all top-level forms in the current file
         for (child in file.children) {
             if (child is PhelList) {
-                // Get children array and look for def + variable pattern  
                 val children: Array<PsiElement> = child.children
 
-                // Look for (def symbol-name ...) pattern 
-                for (i in 0..<children.size - 1) {
-                    val defChild = children[i]
-                    if ((defChild is PhelSymbol || defChild is PhelAccessImpl) && "def" == defChild.text) {
-                        // Check next element for the variable name
-                        if (i + 1 < children.size) {
-                            val nameChild = children[i + 1]
+                // Look for definition forms: (defn name ...), (def name ...), etc.
+                if (children.size >= 2) {
+                    val firstElement = children[0]
 
-                            if (nameChild is PhelSymbol || nameChild is PhelAccessImpl) {
-                                val symbolName = nameChild.text
-                                addSymbolCompletion(
-                                    result, symbolName, "Global Variable", METHOD_ICON, addedSymbols
-                                )
-                                break
+                    if (firstElement is PhelSymbol || firstElement is PhelAccessImpl) {
+                        val defType = firstElement.text
+                        val localDefinitionTypes = arrayOf(
+                            "def",
+                            "defn",
+                            "defn-",
+                            "defmacro",
+                            "defmacro-",
+                            "defexception",
+                            "defexception*",
+                            "definterface",
+                            "definterface*",
+                            "defstruct",
+                            "defstruct*"
+                        )
+
+                        if (localDefinitionTypes.contains(defType)) {
+                            val nameElement = children[1]
+                            if (nameElement is PhelSymbol || nameElement is PhelAccessImpl) {
+                                val symbolName = nameElement.text
+                                // Use highest priority for local function definitions
+                                val priority = when (defType) {
+                                    "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
+                                    else -> PhelCompletionPriority.PROJECT_SYMBOLS
+                                }
+
+                                val displayType = when (defType) {
+                                    "def" -> "Local Variable"
+                                    "defn", "defn-" -> "Local Function"
+                                    "defmacro", "defmacro-" -> "Local Macro"
+                                    "defexception", "defexception*" -> "Local Exception"
+                                    "definterface", "definterface*" -> "Local Interface"
+                                    "defstruct", "defstruct*" -> "Local Struct"
+                                    else -> "Local Definition"
+                                }
+
+                                if (!addedSymbols.contains(symbolName) && !symbolName.trim().isEmpty()) {
+                                    addedSymbols.add(symbolName)
+                                    PhelCompletionUtils.addRankedCompletion(
+                                        result, symbolName, "", displayType, priority
+                                    )
+                                }
                             }
                         }
                     }
@@ -352,5 +377,41 @@ object PhelLocalSymbolCompletions {
         }
 
         return null // Not inside a function definition
+    }
+
+    /**
+     * Find the parameter vector in a function definition.
+     * Handles both fn and defn forms with optional docstrings and metadata.
+     */
+    private fun findParameterVectorInFunction(functionList: PhelList): PhelVec? {
+        val children = functionList.children
+        if (children.isEmpty()) return null
+        
+        val firstChild = children[0]
+        val functionType = when {
+            firstChild is PhelSymbol -> firstChild.text
+            firstChild is PhelAccessImpl -> firstChild.text
+            else -> return null
+        }
+        
+        return when (functionType) {
+            "fn" -> {
+                // For (fn [params] ...), parameter vector is at index 1
+                if (children.size >= 2 && children[1] is PhelVec) {
+                    children[1] as PhelVec
+                } else null
+            }
+            "defn", "defn-", "defmacro", "defmacro-" -> {
+                // For defn forms, find the first vector after the function name
+                // Skip docstring and metadata: (defn name "doc" {:meta} [params] ...)
+                for (i in 2 until children.size) {
+                    if (children[i] is PhelVec) {
+                        return children[i] as PhelVec
+                    }
+                }
+                null
+            }
+            else -> null
+        }
     }
 }

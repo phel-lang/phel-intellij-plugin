@@ -66,13 +66,13 @@
                 implementation="org.phellang.PhelColorSettingsPage"/>
         <annotator
                 language="Phel"
-                implementationClass="org.phellang.PhelAnnotator"/>
+                implementationClass="org.phellang.annotator.PhelAnnotator"/>
         <completion.contributor
                 language="Phel"
                 implementationClass="org.phellang.completion.PhelCompletionContributor"/>
         <lang.documentationProvider
                 language="Phel"
-                implementationClass="org.phellang.completion.PhelDocumentationProvider"/>
+                implementationClass="org.phellang.completion.infrastructure.PhelDocumentationProvider"/>
         <lang.commenter
                 language="Phel"
                 implementationClass="org.phellang.PhelCommenter"/>

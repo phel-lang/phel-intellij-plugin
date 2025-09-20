@@ -8,13 +8,18 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 
 object UnknownBasicDocumentation {
-    fun generateBasicDocForElement(element: PhelSymbol, symbolName: String): String {
-        return categorizeSymbol(element, symbolName)
+    fun generateBasicDocForElement(element: PhelSymbol): String {
+        return categorizeSymbol(element)
     }
 
-    private fun categorizeSymbol(element: PsiElement?, symbolName: String): String {
-        // First check if this is a definition and determine its type
+    private fun categorizeSymbol(element: PsiElement?): String {
         if (element is PhelSymbol) {
+            // First check if this is a parameter reference (usage in function body)
+            if (PhelSymbolAnalyzer.isParameterReference(element)) {
+                return "Function Parameter"
+            }
+            
+            // Then check if this is a definition and determine its type
             if (PhelSymbolAnalyzer.isDefinition(element)) {
                 // Check if it's a function parameter or let binding first
                 if (isInParameterVector(element)) {

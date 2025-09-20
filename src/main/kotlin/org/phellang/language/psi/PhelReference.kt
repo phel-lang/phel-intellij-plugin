@@ -23,10 +23,6 @@ class PhelReference @JvmOverloads constructor(
 ) : PsiReferenceBase<PhelSymbol?>(element, calculateRangeInElement(element)), PsiPolyVariantReference {
     private val symbolName: String? = PhelPsiUtils.getName(element)
 
-    /**
-     * Resolve to multiple targets. This is the key method for polyvariant references.
-     * Returns all possible targets that this symbol could refer to.
-     */
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         if (symbolName == null || symbolName.isEmpty()) {
             return ResolveResult.EMPTY_ARRAY
@@ -48,9 +44,6 @@ class PhelReference @JvmOverloads constructor(
         return results.toTypedArray<ResolveResult>()
     }
 
-    /**
-     * Find all definitions for a symbol usage (original multiResolve logic).
-     */
     private fun findDefinitions(results: MutableList<ResolveResult>) {
         // 1. Check local scope first - but collect ALL definitions for polyvariant resolution
         val localDefinition = resolveInLocalScope()
@@ -110,10 +103,6 @@ class PhelReference @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Find all usages of this symbol (for when clicking on definitions).
-     * This includes both actual usages AND other definitions (not the one being clicked).
-     */
     private fun findAllUsages(): MutableCollection<PsiElement> {
         val usages: MutableList<PsiElement> = ArrayList()
 
@@ -191,9 +180,6 @@ class PhelReference @JvmOverloads constructor(
             return true
         }
 
-    /**
-     * Find usages within local scope only (for performance optimization)
-     */
     private fun findUsagesInLocalScope(): MutableCollection<PsiElement> {
         val usages: MutableList<PsiElement> = ArrayList()
 
@@ -214,9 +200,6 @@ class PhelReference @JvmOverloads constructor(
         return usages
     }
 
-    /**
-     * Find the containing form (defn, fn, let, etc.) for scoped search
-     */
     private fun findContainingForm(): PhelList? {
         var current = myElement!!.parent
 
@@ -242,10 +225,6 @@ class PhelReference @JvmOverloads constructor(
         return null
     }
 
-    /**
-     * Single target resolution - returns null for multiple targets to force modal display.
-     * This ensures IntelliJ shows a selection modal when multiple targets exist.
-     */
     override fun resolve(): PsiElement? {
         val results = multiResolve(false)
 
@@ -259,9 +238,6 @@ class PhelReference @JvmOverloads constructor(
         return if (results.isNotEmpty()) results[0].element else null
     }
 
-    /**
-     * Check if this reference points to the given element.
-     */
     override fun isReferenceTo(element: PsiElement): Boolean {
         val results = multiResolve(false)
         for (result in results) {
@@ -272,10 +248,6 @@ class PhelReference @JvmOverloads constructor(
         return false
     }
 
-    /**
-     * Provide completion variants for this reference.
-     * Returns symbols that are valid in this context.
-     */
     override fun getVariants(): Array<Any?> {
         val variants: MutableList<Any?> = ArrayList()
 
@@ -298,10 +270,6 @@ class PhelReference @JvmOverloads constructor(
         return variants.toTypedArray()
     }
 
-    /**
-     * Handle renaming of the referenced element.
-     * Updates the symbol text to the new name.
-     */
     @Throws(IncorrectOperationException::class)
     override fun handleElementRename(newElementName: String): PsiElement? {
         if (myElement is PhelSymbol) {
@@ -322,19 +290,12 @@ class PhelReference @JvmOverloads constructor(
         return null
     }
 
-    /**
-     * Bind this reference to a different element.
-     */
     @Throws(IncorrectOperationException::class)
     override fun bindToElement(element: PsiElement): PsiElement? {
         return myElement
     }
 
     // === Resolution Methods ===
-    /**
-     * Resolve in local scope: let bindings, function parameters, etc.
-     * Local bindings have highest priority and shadow everything else.
-     */
     private fun resolveInLocalScope(): PsiElement? {
         var current: PsiElement? = myElement
 
@@ -361,9 +322,6 @@ class PhelReference @JvmOverloads constructor(
         return null
     }
 
-    /**
-     * Resolve in current file: def, defn, defmacro, etc.
-     */
     private fun resolveInCurrentFile(): MutableCollection<PsiElement> {
         val results: MutableList<PsiElement> = ArrayList()
         val file = myElement!!.containingFile
@@ -381,9 +339,6 @@ class PhelReference @JvmOverloads constructor(
         return results
     }
 
-    /**
-     * Resolve in entire project: search all .phel files.
-     */
     private fun resolveInProject(): MutableCollection<PsiElement> {
         val results: MutableList<PsiElement> = ArrayList()
         val project = myElement!!.project
@@ -413,9 +368,6 @@ class PhelReference @JvmOverloads constructor(
     }
 
     // === Helper Methods ===
-    /**
-     * Find symbol in let bindings: (let [symbol value] ...)
-     */
     private fun findInLetBindings(letForm: PhelList): PsiElement? {
         val forms = PsiTreeUtil.getChildrenOfType(letForm, PhelForm::class.java)
         if (forms == null || forms.size < 2) {
@@ -476,26 +428,7 @@ class PhelReference @JvmOverloads constructor(
 
                 if (fnKeyword != null) {
                     val keyword = fnKeyword.text
-                    var paramVec: PhelVec? = null
-
-                    // Handle different function types:
-                    // (defn name [params] body) - parameter vector at forms[2]
-                    // (fn [params] body) - parameter vector at forms[1] 
-                    if (keyword == "defn" || keyword == "defn-" || keyword == "defmacro" || keyword == "defmacro-") {
-                        if (forms.size >= 3) {
-                            paramVec = if (forms[2] is PhelVec) {
-                                forms[2] as PhelVec
-                            } else {
-                                PsiTreeUtil.findChildOfType(forms[2], PhelVec::class.java)
-                            }
-                        }
-                    } else if (keyword == "fn") {
-                        paramVec = if (forms[1] is PhelVec) {
-                            forms[1] as PhelVec
-                        } else {
-                            PsiTreeUtil.findChildOfType(forms[1], PhelVec::class.java)
-                        }
-                    }
+                    val paramVec = findParameterVectorInForms(forms, keyword)
 
                     if (paramVec != null) {
                         val params = PsiTreeUtil.getChildrenOfType(paramVec, PhelForm::class.java)
@@ -536,20 +469,8 @@ class PhelReference @JvmOverloads constructor(
                 val fnKeyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: continue
 
                 val keyword = fnKeyword.text
-                var paramVec: PhelVec? = null
 
-                // Handle different function types
-                if (keyword == "defn" || keyword == "defn-" || keyword == "defmacro" || keyword == "defmacro-") {
-                    if (forms.size >= 3) {
-                        paramVec = PsiTreeUtil.findChildOfType(forms[2], PhelVec::class.java)
-                    }
-                } else if (keyword == "fn") {
-                    paramVec = PsiTreeUtil.findChildOfType(forms[1], PhelVec::class.java)
-                } else {
-                    continue  // Not a function we recognize
-                }
-
-                if (paramVec == null) continue
+                val paramVec = findParameterVectorInForms(forms, keyword) ?: continue
 
                 val params = PsiTreeUtil.getChildrenOfType(paramVec, PhelForm::class.java) ?: continue
 
@@ -593,9 +514,6 @@ class PhelReference @JvmOverloads constructor(
         return null
     }
 
-    /**
-     * Check if a keyword is a defining form.
-     */
     private fun isDefiningKeyword(keyword: String?): Boolean {
         if (keyword == null) return false
 
@@ -618,6 +536,37 @@ class PhelReference @JvmOverloads constructor(
 
             // For unqualified symbols, reference the entire text
             return TextRange.from(0, text.length)
+        }
+    }
+
+    private fun findParameterVectorInForms(forms: Array<PhelForm>, keyword: String): PhelVec? {
+        return when (keyword) {
+            "fn" -> {
+                // For (fn [params] ...), parameter vector is at index 1
+                if (forms.size >= 2) {
+                    if (forms[1] is PhelVec) {
+                        forms[1] as PhelVec
+                    } else {
+                        PsiTreeUtil.findChildOfType(forms[1], PhelVec::class.java)
+                    }
+                } else null
+            }
+            "defn", "defn-", "defmacro", "defmacro-" -> {
+                // For defn forms, find the first vector after the function name
+                // Skip docstring and metadata: (defn name "doc" {:meta} [params] ...)
+                for (i in 2 until forms.size) {
+                    if (forms[i] is PhelVec) {
+                        return forms[i] as PhelVec
+                    }
+                    // Also check if the form contains a vector (for nested structures)
+                    val nestedVec = PsiTreeUtil.findChildOfType(forms[i], PhelVec::class.java)
+                    if (nestedVec != null) {
+                        return nestedVec
+                    }
+                }
+                null
+            }
+            else -> null
         }
     }
 }

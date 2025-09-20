@@ -1,4 +1,4 @@
-package org.phellang.completion
+package org.phellang.completion.infrastructure
 
 import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.psi.PsiElement
@@ -6,7 +6,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.completion.documentation.PhelFunctionDocumentation
 import org.phellang.completion.documentation.UnknownBasicDocumentation
-import org.phellang.language.psi.*
+import org.phellang.language.psi.PhelSymbol
 
 class PhelDocumentationProvider : AbstractDocumentationProvider() {
 
@@ -30,7 +30,7 @@ class PhelDocumentationProvider : AbstractDocumentationProvider() {
                 }
 
                 val signature = getSignature(symbolName) ?: symbolName
-                val category = UnknownBasicDocumentation.generateBasicDocForElement(elementToClassify, symbolName)
+                val category = UnknownBasicDocumentation.generateBasicDocForElement(elementToClassify)
                 return wrapInHtml("<h3>$symbolName</h3><p><b>Type:</b> $category</p><p><b>Signature:</b> <code>$signature</code></p><p>Documentation not available for this symbol.</p>")
             }
         }
