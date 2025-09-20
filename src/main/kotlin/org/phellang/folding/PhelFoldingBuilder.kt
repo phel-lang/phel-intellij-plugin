@@ -116,18 +116,18 @@ class PhelFoldingBuilder : FoldingBuilder {
             isDefiningForm(firstText) && forms.size >= 2 -> {
                 val nameSymbol = PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
                 val name = nameSymbol?.text
-                if (name != null) "$firstText $name..." else "$firstText..."
+                if (name != null) "($firstText $name..." else "$firstText..."
             }
 
             // Namespace declarations
             firstText == "ns" && forms.size >= 2 -> {
                 val nameSymbol = PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
                 val name = nameSymbol?.text
-                if (name != null) "ns $name..." else "ns..."
+                if (name != null) "(ns $name..." else "ns..."
             }
 
             // Generic forms - show first symbol
-            else -> "$firstText..."
+            else -> "($firstText..."
         }
     }
 
