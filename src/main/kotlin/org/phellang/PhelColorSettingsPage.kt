@@ -133,7 +133,6 @@ class PhelColorSettingsPage : ColorSettingsPage {
 
 private val DESCRIPTORS = arrayOf(
     AttributesDescriptor("Comments", PhelSyntaxHighlighter.COMMENT),
-    AttributesDescriptor("Form comments", COMMENTED_OUT_FORM),
     AttributesDescriptor("Strings", PhelSyntaxHighlighter.STRING),
     AttributesDescriptor("Numbers", PhelSyntaxHighlighter.NUMBER),
     AttributesDescriptor("Keywords", PhelSyntaxHighlighter.KEYWORD_IDENTIFIER),
@@ -152,10 +151,5 @@ private val DESCRIPTORS = arrayOf(
     AttributesDescriptor("Metadata", PhelSyntaxHighlighter.METADATA),
     AttributesDescriptor("Dot operator", PhelSyntaxHighlighter.DOT_OPERATOR),
     AttributesDescriptor("Comma", PhelSyntaxHighlighter.COMMA),
-    AttributesDescriptor("Bad characters", PhelSyntaxHighlighter.BAD_CHARACTER),  // Additional descriptors for annotator colors
-    AttributesDescriptor("PHP interop", PHP_INTEROP),
-    AttributesDescriptor("PHP variables", PHP_VARIABLE),
-    AttributesDescriptor("Functions", SPECIAL_FORM),
-    AttributesDescriptor("Namespace prefix", NAMESPACE_PREFIX),
-    AttributesDescriptor("Function parameters", FUNCTION_PARAMETER),
+    AttributesDescriptor("Bad characters", PhelSyntaxHighlighter.BAD_CHARACTER),
 )

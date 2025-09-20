@@ -78,7 +78,6 @@ KEYWORD_TAIL={ATOM} ("/" {ATOM})? (":" {ATOM}+)?
   ":"                    { return PhelTypes.COLON; }
   ".-"                   { return PhelTypes.DOTDASH; }
   "."                    { return PhelTypes.DOT; }
-  "/"                    { return PhelTypes.SLASH; }
 
   {ATOM}                 { return PhelTypes.SYM; }
 }

@@ -8,11 +8,11 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 
 object UnknownBasicDocumentation {
-    fun generateBasicDocForElement(element: PhelSymbol, symbolName: String): String {
-        return categorizeSymbol(element, symbolName)
+    fun generateBasicDocForElement(element: PhelSymbol): String {
+        return categorizeSymbol(element)
     }
 
-    private fun categorizeSymbol(element: PsiElement?, symbolName: String): String {
+    private fun categorizeSymbol(element: PsiElement?): String {
         // First check if this is a definition and determine its type
         if (element is PhelSymbol) {
             if (PhelSymbolAnalyzer.isDefinition(element)) {
