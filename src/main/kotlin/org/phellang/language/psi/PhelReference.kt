@@ -6,6 +6,7 @@ import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
+import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.psi.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 
@@ -213,7 +214,8 @@ class PhelReference @JvmOverloads constructor(
                     val firstSymbol = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
                     if (firstSymbol != null) {
                         val keyword = firstSymbol.text
-                        if (keyword == "defn" || keyword == "defn-" || keyword == "defmacro" || keyword == "defmacro-" || keyword == "fn" || keyword == "let" || keyword == "if-let" || keyword == "for" || keyword == "binding" || keyword == "loop" || keyword == "foreach" || keyword == "dofor" || keyword == "try" || keyword == "catch") {
+                        if (PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.SPECIAL_FORMS) ||
+                            PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.CONTROL_FLOW)) {
                             return list
                         }
                     }
@@ -517,7 +519,7 @@ class PhelReference @JvmOverloads constructor(
     private fun isDefiningKeyword(keyword: String?): Boolean {
         if (keyword == null) return false
 
-        return keyword == "def" || keyword == "defn" || keyword == "defmacro" || keyword == "defstruct" || keyword == "declare" || keyword == "def-" || keyword == "defn-" || keyword == "defmacro-"
+        return PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.SPECIAL_FORMS)
     }
 
     companion object {

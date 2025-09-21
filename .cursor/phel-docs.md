@@ -25,6 +25,7 @@ Always use the Playwright MCP server to load the full content of these pages whe
 - [Namespaces](https://raw.githubusercontent.com/phel-lang/phel-lang.org/master/content/documentation/namespaces.md)
 - [Interfaces](https://raw.githubusercontent.com/phel-lang/phel-lang.org/master/content/documentation/interfaces.md)
 - [PHP Interop](https://raw.githubusercontent.com/phel-lang/phel-lang.org/master/content/documentation/php-interop.md)
+- [Debug](https://raw.githubusercontent.com/phel-lang/phel-lang.org/refs/heads/master/content/documentation/debug.md)
 
 ### Advanced
 

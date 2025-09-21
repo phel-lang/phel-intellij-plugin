@@ -26,10 +26,4 @@ object PhelElementHighlighter {
             PhelAnnotationUtils.createAnnotation(holder, set, COLLECTION_TYPE)
         }
     }
-
-    fun annotateHashBrace(element: com.intellij.psi.PsiElement, holder: AnnotationHolder) {
-        if (PhelAnnotationUtils.shouldAnnotate(element)) {
-            PhelAnnotationUtils.createAnnotation(holder, element, COLLECTION_TYPE)
-        }
-    }
 }

@@ -10,4 +10,5 @@ enum class Namespace {
     REPL,
     STR,
     TEST,
+    DEBUG,
 }

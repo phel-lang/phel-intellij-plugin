@@ -180,10 +180,6 @@ class PhelSyntaxHighlighter : SyntaxHighlighterBase() {
         val SYMBOL: TextAttributesKey =
             TextAttributesKey.createTextAttributesKey("PHEL_SYMBOL", DefaultLanguageHighlighterColors.IDENTIFIER)
 
-        @JvmField
-        val KEYWORD_IDENTIFIER: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-            "PHEL_KEYWORD_ID", DefaultLanguageHighlighterColors.INSTANCE_FIELD
-        )
 
         // Special operators
         @JvmField

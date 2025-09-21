@@ -29,9 +29,8 @@ class PhelDocumentationProvider : AbstractDocumentationProvider() {
                     return wrapInHtml(doc)
                 }
 
-                val signature = getSignature(symbolName) ?: symbolName
                 val category = UnknownBasicDocumentation.generateBasicDocForElement(elementToClassify)
-                return wrapInHtml("<h3>$symbolName</h3><p><b>Type:</b> $category</p><p><b>Signature:</b> <code>$signature</code></p><p>Documentation not available for this symbol.</p>")
+                return wrapInHtml("<h3>$symbolName</h3><br />$category<br /><br />")
             }
         }
 
