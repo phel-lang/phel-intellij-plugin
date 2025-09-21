@@ -20,7 +20,7 @@ class PhelTypedHandler : TypedHandlerDelegate() {
 
         // Trigger completion popup for certain contexts after character has been inserted
         if (c == '(' || c == '[' || c == '{') {
-            AutoPopupController.getInstance(project).autoPopupMemberLookup(editor, null)
+            AutoPopupController.getInstance(project).scheduleAutoPopup(editor)
         }
 
         return Result.CONTINUE
@@ -58,9 +58,6 @@ class PhelTypedHandler : TypedHandlerDelegate() {
         return Result.CONTINUE
     }
 
-    /**
-     * Returns the closing character for a given opening character
-     */
     private fun getClosingCharacter(c: Char): String? {
         return when (c) {
             '(' -> ")"
@@ -70,16 +67,10 @@ class PhelTypedHandler : TypedHandlerDelegate() {
         }
     }
 
-    /**
-     * Returns true if the character is a closing bracket/brace/parenthesis
-     */
     private fun isClosingCharacter(c: Char): Boolean {
         return c == ')' || c == ']' || c == '}'
     }
 
-    /**
-     * Determines if we should auto-close the character at the given position
-     */
     private fun shouldAutoClose(document: Document, offset: Int): Boolean {
         val text = document.charsSequence
 
@@ -99,9 +90,6 @@ class PhelTypedHandler : TypedHandlerDelegate() {
         return true
     }
 
-    /**
-     * Determines if we should skip typing a closing character because it's already present
-     */
     private fun shouldSkipClosingChar(document: Document, offset: Int, closingChar: Char): Boolean {
         val text = document.charsSequence
 
@@ -115,9 +103,6 @@ class PhelTypedHandler : TypedHandlerDelegate() {
         return charAtOffset == closingChar
     }
 
-    /**
-     * Special handling for quote characters
-     */
     private fun handleQuoteCharacter(editor: Editor, document: Document, offset: Int): Result {
         val text = document.charsSequence
 
@@ -141,9 +126,6 @@ class PhelTypedHandler : TypedHandlerDelegate() {
         return Result.CONTINUE
     }
 
-    /**
-     * Simple heuristic to determine if we're inside a string literal
-     */
     private fun isInsideString(text: CharSequence, offset: Int): Boolean {
         // Count unescaped quotes before this position
         var quoteCount = 0
