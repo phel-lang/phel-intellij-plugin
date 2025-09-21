@@ -6,7 +6,7 @@ import com.intellij.psi.FileViewProvider
 import org.phellang.PhelFileType
 import org.phellang.PhelLanguage
 
-class PhelFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, PhelLanguage.INSTANCE) {
+class PhelFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, PhelLanguage) {
     override fun getFileType(): FileType {
         return PhelFileType.INSTANCE
     }

@@ -10,8 +10,6 @@
   elementTypeClass="org.phellang.language.psi.PhelElementType"
   tokenTypeClass="org.phellang.language.psi.PhelTokenType"
 
-  psiImplUtilClass="org.phellang.language.psi.PhelPsiUtil"
-
   tokens=[
     whitespace='regexp:\s+'
     line_comment='regexp:#[^_|].*|;.*'

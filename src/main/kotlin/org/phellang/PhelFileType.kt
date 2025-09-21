@@ -3,7 +3,7 @@ package org.phellang
 import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon
 
-class PhelFileType private constructor() : LanguageFileType(PhelLanguage.INSTANCE) {
+class PhelFileType private constructor() : LanguageFileType(PhelLanguage) {
     // Note: This companion object MUST be placed here - ignore IDE suggestion
     companion object {
         @JvmField

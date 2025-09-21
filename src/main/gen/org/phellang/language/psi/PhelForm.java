@@ -27,6 +27,6 @@ public interface PhelForm extends PsiElement {
 
   //WARNING: toString(...) is skipped
   //matching toString(PhelForm, ...)
-  //methods are not found in PhelPsiUtil
+  //methods are not found in null
 
 }

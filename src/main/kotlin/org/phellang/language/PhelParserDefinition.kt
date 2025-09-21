@@ -47,4 +47,4 @@ internal class PhelParserDefinition : ParserDefinition {
 }
 
 @JvmField
-val FILE: IFileElementType = IFileElementType(PhelLanguage.INSTANCE)
+val FILE: IFileElementType = IFileElementType(PhelLanguage)
