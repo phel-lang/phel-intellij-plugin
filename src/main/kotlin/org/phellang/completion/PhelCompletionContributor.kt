@@ -14,7 +14,7 @@ class PhelCompletionContributor : CompletionContributor() {
     init {
         extend(
             CompletionType.BASIC,
-            PlatformPatterns.psiElement(PhelTypes.SYM).withLanguage(PhelLanguage.INSTANCE),
+            PlatformPatterns.psiElement(PhelTypes.SYM).withLanguage(PhelLanguage),
             PhelMainCompletionProvider()
         )
     }

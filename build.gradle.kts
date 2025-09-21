@@ -67,6 +67,16 @@ val generatePhelParser = tasks.register<GenerateParserTask>("generatePhelParser"
     pathToParser.set("org/phellang/language/parser/PhelParser.java")
     pathToPsiRoot.set("org/phellang/language/psi")
     purgeOldFiles.set(true)
+
+    // Suppress warnings from IntelliJ's internal libraries
+    jvmArgs = listOf(
+        "--add-opens=java.base/sun.misc=ALL-UNNAMED",
+        "--add-opens=java.base/java.lang=ALL-UNNAMED",
+        "--add-opens=java.base/java.util=ALL-UNNAMED",
+        "--add-opens=java.desktop/java.awt=ALL-UNNAMED",
+        "-Dfile.encoding=UTF-8",
+        "-Djava.awt.headless=true"
+    )
 }
 
 tasks {
