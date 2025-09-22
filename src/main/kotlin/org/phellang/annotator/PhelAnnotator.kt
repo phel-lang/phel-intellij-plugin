@@ -4,7 +4,6 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.psi.PsiElement
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.COMMENTED_OUT_FORM
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.COLLECTION_TYPE
 import org.phellang.annotator.analyzers.PhelCommentAnalyzer
 import org.phellang.annotator.highlighters.PhelElementHighlighter
 import org.phellang.annotator.highlighters.PhelSymbolHighlighter
@@ -44,22 +43,6 @@ class PhelAnnotator : Annotator {
 
             is PhelSet -> {
                 PhelElementHighlighter.annotateSet(element, holder)
-            }
-
-            else -> {
-                when (element.node.elementType) {
-                    PhelTypes.HASH_BRACE -> {
-                        // Highlight the #{ token as part of a set
-                        PhelAnnotationUtils.createAnnotation(holder, element, COLLECTION_TYPE)
-                    }
-
-                    PhelTypes.BRACE2 -> {
-                        if (PhelCommentAnalyzer.isInsideSet(element)) {
-                            // Highlight the } token as part of a set (not a map)
-                            PhelAnnotationUtils.createAnnotation(holder, element, COLLECTION_TYPE)
-                        }
-                    }
-                }
             }
         }
     }

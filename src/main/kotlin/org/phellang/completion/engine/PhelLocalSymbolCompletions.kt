@@ -11,6 +11,7 @@ import org.phellang.PhelFileType
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.completion.infrastructure.PhelCompletionUtils
+import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.core.utils.PhelPerformanceUtils
 import org.phellang.language.psi.PhelFile
@@ -89,7 +90,7 @@ object PhelLocalSymbolCompletions {
                         val functionType = firstChild.text
 
                         // Check if this is a function definition
-                        if (functionType == "defn" || functionType == "defn-" || functionType == "defmacro" || functionType == "defmacro-" || functionType == "fn") {
+                        if (PhelSymbolAnalyzer.isSymbolType(functionType, PhelCompletionPriority.SPECIAL_FORMS)) {
                             // Find the parameter vector dynamically (handles docstrings and metadata)
                             val paramVec = findParameterVectorInFunction(current)
                             if (paramVec != null) {

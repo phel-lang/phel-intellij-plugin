@@ -112,8 +112,8 @@ class PhelColorSettingsPage : ColorSettingsPage {
                 "\n#|" +
                 "\nI am a multiline comment" +
                 "\n" +
-                "\nIf you know Lisp or Clojure, you'll feel right at home." +
-                "\nIf you don't — this is a great place to start." +
+                "\nIf you know Lisp or Clojure, you'll feel right at home," +
+                "\nelse, this is a great place to start." +
                 "\n|#"
     }
 
@@ -135,23 +135,40 @@ class PhelColorSettingsPage : ColorSettingsPage {
 }
 
 private val DESCRIPTORS = arrayOf(
+    // Basic syntax elements
     AttributesDescriptor("Comments", PhelSyntaxHighlighter.COMMENT),
     AttributesDescriptor("Strings", PhelSyntaxHighlighter.STRING),
     AttributesDescriptor("Numbers", PhelSyntaxHighlighter.NUMBER),
-    AttributesDescriptor("Keywords", PhelSyntaxHighlighter.KEYWORD_IDENTIFIER),
     AttributesDescriptor("Booleans", PhelSyntaxHighlighter.BOOLEAN),
     AttributesDescriptor("Nil", PhelSyntaxHighlighter.NIL_LITERAL),
     AttributesDescriptor("NAN", PhelSyntaxHighlighter.NAN_LITERAL),
     AttributesDescriptor("Characters", PhelSyntaxHighlighter.CHARACTER),
+    
+    // Delimiters
     AttributesDescriptor("Parentheses", PhelSyntaxHighlighter.PARENTHESES),
     AttributesDescriptor("Brackets", PhelSyntaxHighlighter.BRACKETS),
     AttributesDescriptor("Braces", PhelSyntaxHighlighter.BRACES),
+    
+    // Macro syntax
     AttributesDescriptor("Quote", PhelSyntaxHighlighter.QUOTE),
     AttributesDescriptor("Syntax quote", PhelSyntaxHighlighter.SYNTAX_QUOTE),
     AttributesDescriptor("Unquote", PhelSyntaxHighlighter.UNQUOTE),
     AttributesDescriptor("Unquote splicing", PhelSyntaxHighlighter.UNQUOTE_SPLICING),
-    AttributesDescriptor("Symbols", PhelSyntaxHighlighter.SYMBOL),
     AttributesDescriptor("Metadata", PhelSyntaxHighlighter.METADATA),
+    
+    // Semantic highlighting (from annotator)
+    AttributesDescriptor("Function names (in call position)", org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_NAME),
+    AttributesDescriptor("Function calls", org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_CALL),
+    AttributesDescriptor("Function parameters", org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_PARAMETER),
+    AttributesDescriptor("Variadic parameters (&)", org.phellang.annotator.infrastructure.PhelAnnotationConstants.VARIADIC_PARAMETER),
+    AttributesDescriptor("PHP interop", org.phellang.annotator.infrastructure.PhelAnnotationConstants.PHP_INTEROP),
+    AttributesDescriptor("Namespace symbols", org.phellang.annotator.infrastructure.PhelAnnotationConstants.NAMESPACE_SYMBOL),
+    AttributesDescriptor("Short functions", org.phellang.annotator.infrastructure.PhelAnnotationConstants.SHORT_FUNCTION),
+    AttributesDescriptor("Commented out forms", org.phellang.annotator.infrastructure.PhelAnnotationConstants.COMMENTED_OUT_FORM),
+    AttributesDescriptor("Regular symbols", org.phellang.annotator.infrastructure.PhelAnnotationConstants.REGULAR_SYMBOL),
+    
+    // Basic symbols and operators
+    AttributesDescriptor("Symbols", PhelSyntaxHighlighter.SYMBOL),
     AttributesDescriptor("Dot operator", PhelSyntaxHighlighter.DOT_OPERATOR),
     AttributesDescriptor("Comma", PhelSyntaxHighlighter.COMMA),
     AttributesDescriptor("Bad characters", PhelSyntaxHighlighter.BAD_CHARACTER),

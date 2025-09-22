@@ -83,6 +83,7 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
             PhelRegistryCompletionHelper.addJsonFunctions(result)
             PhelRegistryCompletionHelper.addHtmlFunctions(result)
             PhelRegistryCompletionHelper.addHttpFunctions(result)
+            PhelRegistryCompletionHelper.addDebugFunctions(result)
             PhelRegistryCompletionHelper.addBase64Functions(result)
             PhelRegistryCompletionHelper.addTestFunctions(result)
             PhelRegistryCompletionHelper.addPhpInteropFunctions(result)

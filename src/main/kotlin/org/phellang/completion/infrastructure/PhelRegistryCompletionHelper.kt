@@ -32,6 +32,11 @@ object PhelRegistryCompletionHelper {
     }
 
     @JvmStatic
+    fun addDebugFunctions(result: CompletionResultSet) {
+        addNamespaceFunctions(result, Namespace.DEBUG)
+    }
+
+    @JvmStatic
     fun addTestFunctions(result: CompletionResultSet) {
         addNamespaceFunctions(result, Namespace.TEST)
     }

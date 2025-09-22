@@ -11,9 +11,6 @@ enum class PhelCompletionPriority(val value: Double) {
     // Essential language constructs
     SPECIAL_FORMS(80.0),
     CONTROL_FLOW(75.0),
-
-    // Commonly used functions
-    COMMON_BUILTINS(60.0),
     CORE_FUNCTIONS(55.0),
     STRING_FUNCTIONS(52.0),
 
@@ -29,6 +26,7 @@ enum class PhelCompletionPriority(val value: Double) {
     TEST_FUNCTIONS(21.0),
 
     // Specialized and external functions
+    DEBUG_FUNCTIONS(17.0),
     REPL_FUNCTIONS(16.0),
     BASE64_FUNCTIONS(15.0),
     PHP_INTEROP(12.0),
