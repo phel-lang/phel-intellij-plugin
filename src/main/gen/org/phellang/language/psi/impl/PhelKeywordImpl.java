@@ -12,7 +12,7 @@ import org.phellang.language.psi.*;
 
 public class PhelKeywordImpl extends PhelSFormImpl implements PhelKeyword {
 
-  public PhelKeywordImpl(@NotNull ASTNode node) {
+  public PhelKeywordImpl(ASTNode node) {
     super(node);
   }
 

@@ -7,7 +7,7 @@ import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 
-object UnknownBasicDocumentation {
+object PhelBasicDocumentation {
     fun generateBasicDocForElement(element: PhelSymbol): String {
         return categorizeSymbol(element)
     }
@@ -16,9 +16,9 @@ object UnknownBasicDocumentation {
         if (element is PhelSymbol) {
             // First check if this is a parameter reference (usage in function body)
             if (PhelSymbolAnalyzer.isParameterReference(element)) {
-                return "Function Parameter"
+                return "Function Argument"
             }
-            
+
             // Then check if this is a definition and determine its type
             if (PhelSymbolAnalyzer.isDefinition(element)) {
                 // Check if it's a function parameter or let binding first

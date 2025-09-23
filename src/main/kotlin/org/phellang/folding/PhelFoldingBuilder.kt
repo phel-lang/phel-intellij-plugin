@@ -9,9 +9,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
 
-/**
- * Supports folding of function definitions, large data structures, comment blocks, and more.
- */
 class PhelFoldingBuilder : FoldingBuilder {
 
     override fun buildFoldRegions(node: ASTNode, document: Document): Array<FoldingDescriptor> {

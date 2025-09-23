@@ -5,58 +5,69 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 
 object PhelAnnotationConstants {
 
-    @JvmField
-    val NAMESPACE_SYMBOL: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_NAMESPACE_SYMBOL", DefaultLanguageHighlighterColors.CLASS_REFERENCE
-    )
+    val NAMESPACE_SYMBOL: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_NAMESPACE_SYMBOL", DefaultLanguageHighlighterColors.CLASS_REFERENCE
+        )
+    }
 
-    @JvmField
-    val FUNCTION_NAME: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_FUNCTION_NAME", DefaultLanguageHighlighterColors.CONSTANT
-    )
+    val FUNCTION_NAME: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_FUNCTION_NAME", DefaultLanguageHighlighterColors.CONSTANT
+        )
+    }
 
-    @JvmField
-    val SHORT_FUNCTION: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_SHORT_FUNCTION", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
-    )
+    val SHORT_FUNCTION: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_SHORT_FUNCTION", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
+        )
+    }
 
-    @JvmField
-    val PHP_INTEROP: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_PHP_INTEROP", DefaultLanguageHighlighterColors.NUMBER
-    )
+    val PHP_INTEROP: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_PHP_INTEROP", DefaultLanguageHighlighterColors.NUMBER
+        )
+    }
 
-    @JvmField
-    val FUNCTION_CALL: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_FUNCTION_CALL", DefaultLanguageHighlighterColors.KEYWORD
-    )
+    val FUNCTION_CALL: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_FUNCTION_CALL", DefaultLanguageHighlighterColors.KEYWORD
+        )
+    }
 
-    @JvmField
-    val COMMENTED_OUT_FORM: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_COMMENTED_OUT_FORM", DefaultLanguageHighlighterColors.LINE_COMMENT
-    )
+    val COMMENTED_OUT_FORM: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_COMMENTED_OUT_FORM", DefaultLanguageHighlighterColors.LINE_COMMENT
+        )
+    }
 
-    @JvmField
-    val FUNCTION_PARAMETER: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_FUNCTION_PARAMETER", DefaultLanguageHighlighterColors.PARAMETER
-    )
+    val FUNCTION_PARAMETER: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_FUNCTION_PARAMETER", DefaultLanguageHighlighterColors.PARAMETER
+        )
+    }
 
-    @JvmField
-    val COLLECTION_TYPE: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_COLLECTION_TYPE", DefaultLanguageHighlighterColors.BRACES
-    )
+    val COLLECTION_TYPE: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_COLLECTION_TYPE", DefaultLanguageHighlighterColors.BRACES
+        )
+    }
 
-    @JvmField
-    val KEYWORD: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_KEYWORD", DefaultLanguageHighlighterColors.INSTANCE_FIELD
-    )
+    val KEYWORD: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_SEMANTIC_KEYWORD", DefaultLanguageHighlighterColors.INSTANCE_FIELD
+        )
+    }
 
-    @JvmField
-    val REGULAR_SYMBOL: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_REGULAR_SYMBOL", DefaultLanguageHighlighterColors.LOCAL_VARIABLE
-    )
+    val REGULAR_SYMBOL: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_REGULAR_SYMBOL", DefaultLanguageHighlighterColors.LOCAL_VARIABLE
+        )
+    }
 
-    @JvmField
-    val VARIADIC_PARAMETER: TextAttributesKey = TextAttributesKey.createTextAttributesKey(
-        "PHEL_VARIADIC_PARAMETER", DefaultLanguageHighlighterColors.STATIC_FIELD
-    )
+    val VARIADIC_PARAMETER: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_VARIADIC_PARAMETER", DefaultLanguageHighlighterColors.STATIC_FIELD
+        )
+    }
 }

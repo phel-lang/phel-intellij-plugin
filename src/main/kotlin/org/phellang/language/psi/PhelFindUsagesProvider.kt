@@ -12,10 +12,6 @@ import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.PhelLexerAdapter
 import kotlin.math.min
 
-/**
- * Provides information about how Phel elements should be displayed in find usages and navigation.
- * This determines whether elements are labeled as "variable", "function", "macro", etc.
- */
 class PhelFindUsagesProvider : FindUsagesProvider {
     override fun getWordsScanner(): WordsScanner {
         return DefaultWordsScanner(
@@ -61,9 +57,6 @@ class PhelFindUsagesProvider : FindUsagesProvider {
         return "element"
     }
 
-    /**
-     * Get the defining keyword (def, defn, defmacro, etc.) for a symbol definition.
-     */
     private fun getDefiningKeyword(symbol: PhelSymbol): String? {
         val containingList = PsiTreeUtil.getParentOfType(symbol, PhelList::class.java)
         if (containingList != null) {
@@ -137,13 +130,11 @@ class PhelFindUsagesProvider : FindUsagesProvider {
     private fun getLocationInfo(symbol: PhelSymbol): String {
         val location = StringBuilder()
 
-        // Add file name
         val containingFile = symbol.containingFile
         if (containingFile != null) {
             val fileName = containingFile.name
             location.append("(").append(fileName)
 
-            // Add line number
             val lineNumber = getLineNumber(symbol)
             if (lineNumber > 0) {
                 location.append(":").append(lineNumber)

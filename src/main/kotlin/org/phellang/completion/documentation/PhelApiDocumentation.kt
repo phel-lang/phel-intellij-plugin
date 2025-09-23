@@ -2,7 +2,7 @@ package org.phellang.completion.documentation
 
 import org.phellang.completion.data.PhelFunctionRegistry
 
-object PhelFunctionDocumentation {
+object PhelApiDocumentation {
 
     val functionDocs = mutableMapOf<String, String>()
 

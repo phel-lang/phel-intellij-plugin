@@ -19,16 +19,6 @@ object PhelSymbolHighlighter {
     fun annotateSymbol(symbol: PhelSymbol, text: String, holder: AnnotationHolder) {
         if (!PhelAnnotationUtils.isValidText(text)) return
 
-        if (PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.SPECIAL_FORMS)
-            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.CONTROL_FLOW)
-            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.CORE_FUNCTIONS)
-            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.COLLECTION_FUNCTIONS)
-            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.MACROS)
-        ) {
-            PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_CALL)
-            return
-        }
-
         // Variadic parameter marker (&) - check before other parameter checks
         if (text == "&") {
             if (PhelSymbolAnalyzer.isInParameterVector(symbol)) {
@@ -43,6 +33,16 @@ object PhelSymbolHighlighter {
             || PhelSymbolAnalyzer.isLetBinding(symbol)
         ) {
             PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_PARAMETER)
+            return
+        }
+
+        if (PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.SPECIAL_FORMS)
+            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.CONTROL_FLOW)
+            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.CORE_FUNCTIONS)
+            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.COLLECTION_FUNCTIONS)
+            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.MACROS)
+        ) {
+            PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_CALL)
             return
         }
 

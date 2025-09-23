@@ -25,7 +25,6 @@ interface PhelTokenSets {
         val PAREN1: TokenSet = TokenSet.create(PhelTypes.PAREN1)
         val PAREN2: TokenSet = TokenSet.create(PhelTypes.PAREN2)
         val QUOTE: TokenSet = TokenSet.create(PhelTypes.QUOTE)
-        val SLASH: TokenSet = TokenSet.create(PhelTypes.SLASH)
         val STRING: TokenSet = TokenSet.create(PhelTypes.STRING)
         val SYM: TokenSet = TokenSet.create(PhelTypes.SYM)
         val SYNTAX_QUOTE: TokenSet = TokenSet.create(PhelTypes.SYNTAX_QUOTE)

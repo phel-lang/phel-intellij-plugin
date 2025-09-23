@@ -12,7 +12,7 @@ import org.phellang.language.psi.*;
 
 public class PhelLVFormImpl extends PhelPFormImpl implements PhelLVForm {
 
-  public PhelLVFormImpl(@NotNull ASTNode node) {
+  public PhelLVFormImpl(ASTNode node) {
     super(node);
   }
 

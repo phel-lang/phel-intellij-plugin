@@ -8,10 +8,6 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 
-/**
- * Typed handler for Phel language - provides auto-closing of paired characters
- * Automatically inserts closing brackets, braces, parentheses, and quotes
- */
 class PhelTypedHandler : TypedHandlerDelegate() {
     override fun charTyped(c: Char, project: Project, editor: Editor, file: PsiFile): Result {
         if (file.fileType !is PhelFileType) {

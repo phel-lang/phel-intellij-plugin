@@ -395,18 +395,6 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // not_eof form
-  static boolean root_entry(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "root_entry")) return false;
-    boolean result_;
-    Marker marker_ = enter_section_(builder_);
-    result_ = not_eof(builder_, level_ + 1);
-    result_ = result_ && form(builder_, level_ + 1);
-    exit_section_(builder_, marker_, null, result_);
-    return result_;
-  }
-
-  /* ********************************************************** */
   // symbol access_left? | keyword | literal | access
   static boolean s_forms(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "s_forms")) return false;
@@ -495,19 +483,18 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '/' (sym | coloncolon | dot | dotdash | hat | tilde | and_and | or_or | shift_left | shift_right | not_equal | not_identical | increment | decrement)
+  // '/' (sym | coloncolon | dot | dotdash | hat | tilde)
   public static boolean symbol_nsq(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "symbol_nsq")) return false;
-    if (!nextTokenIsFast(builder_, SLASH)) return false;
     boolean result_;
-    Marker marker_ = enter_section_(builder_, level_, _LEFT_, SYMBOL, null);
-    result_ = consumeTokenFast(builder_, SLASH);
+    Marker marker_ = enter_section_(builder_, level_, _LEFT_, SYMBOL, "<symbol nsq>");
+    result_ = consumeTokenFast(builder_, "/");
     result_ = result_ && symbol_nsq_1(builder_, level_ + 1);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
   }
 
-  // sym | coloncolon | dot | dotdash | hat | tilde | and_and | or_or | shift_left | shift_right | not_equal | not_identical | increment | decrement
+  // sym | coloncolon | dot | dotdash | hat | tilde
   private static boolean symbol_nsq_1(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "symbol_nsq_1")) return false;
     boolean result_;
@@ -517,14 +504,6 @@ public class PhelParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = consumeTokenFast(builder_, DOTDASH);
     if (!result_) result_ = consumeTokenFast(builder_, HAT);
     if (!result_) result_ = consumeTokenFast(builder_, TILDE);
-    if (!result_) result_ = consumeTokenFast(builder_, AND_AND);
-    if (!result_) result_ = consumeTokenFast(builder_, OR_OR);
-    if (!result_) result_ = consumeTokenFast(builder_, SHIFT_LEFT);
-    if (!result_) result_ = consumeTokenFast(builder_, SHIFT_RIGHT);
-    if (!result_) result_ = consumeTokenFast(builder_, NOT_EQUAL);
-    if (!result_) result_ = consumeTokenFast(builder_, NOT_IDENTICAL);
-    if (!result_) result_ = consumeTokenFast(builder_, INCREMENT);
-    if (!result_) result_ = consumeTokenFast(builder_, DECREMENT);
     return result_;
   }
 

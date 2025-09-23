@@ -16,8 +16,4 @@ public interface PhelMetadata extends PsiElement {
   @Nullable
   PhelSymbol getSymbol();
 
-  //WARNING: toString(...) is skipped
-  //matching toString(PhelMetadata, ...)
-  //methods are not found in null
-
 }

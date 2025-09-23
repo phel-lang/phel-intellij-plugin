@@ -4,14 +4,15 @@ import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.completion.data.PhelFunctionRegistry
-import org.phellang.completion.documentation.PhelFunctionDocumentation
-import org.phellang.completion.documentation.UnknownBasicDocumentation
+import org.phellang.completion.documentation.PhelApiDocumentation
+import org.phellang.completion.documentation.PhelBasicDocumentation
+import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelSymbol
 
 class PhelDocumentationProvider : AbstractDocumentationProvider() {
 
     /**
-     * This is the modal that pop-ups when hovering over a function
+     * This is the modal that pop-ups when hovering over a symbol
      */
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
         val elementToClassify = originalElement as? PhelSymbol ?: if (originalElement != null) {
@@ -24,12 +25,21 @@ class PhelDocumentationProvider : AbstractDocumentationProvider() {
         if (elementToClassify is PhelSymbol) {
             val symbolName = elementToClassify.text
             if (symbolName != null && symbolName.isNotEmpty()) {
-                val doc = PhelFunctionDocumentation.functionDocs[symbolName]
-                if (doc != null) {
-                    return wrapInHtml(doc)
+                // Check if the symbol is a argument/parameter - avoid the argument "name" displays the doc from Phel function "name"
+                if (PhelSymbolAnalyzer.isParameterReference(elementToClassify) ||
+                    PhelSymbolAnalyzer.isFunctionParameter(elementToClassify) ||
+                    PhelSymbolAnalyzer.isLetBinding(elementToClassify)
+                ) {
+                    val category = PhelBasicDocumentation.generateBasicDocForElement(elementToClassify)
+                    return wrapInHtml("<h3>$symbolName</h3><br />$category<br /><br />")
                 }
 
-                val category = UnknownBasicDocumentation.generateBasicDocForElement(elementToClassify)
+                val doc = PhelApiDocumentation.functionDocs[symbolName]
+                if (doc != null) {
+                   return wrapInHtml(doc)
+                }
+
+                val category = PhelBasicDocumentation.generateBasicDocForElement(elementToClassify)
                 return wrapInHtml("<h3>$symbolName</h3><br />$category<br /><br />")
             }
         }
