@@ -5,7 +5,8 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 data class DataFunction(
     val name: String,
     val signature: String,
-    val description: String,
     val priority: PhelCompletionPriority = PhelCompletionPriority.CORE_FUNCTIONS,
-    val namespace: String? = null
+    val namespace: String,
+    val description: String,
+    val descriptionHtml: String
 )
