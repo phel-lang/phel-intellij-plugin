@@ -76,5 +76,13 @@
         <lang.foldingBuilder
                 language="Phel"
                 implementationClass="org.phellang.folding.PhelFoldingBuilder"/>
+        <internalFileTemplate name="Phel_File.phel"/>
     </extensions>
+
+    <actions>
+        <action id="Phel.NewFile" class="org.phellang.actions.CreatePhelFileAction" text="Phel File"
+                description="Create new Phel file">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewScratchFile"/>
+        </action>
+    </actions>
 </idea-plugin>
