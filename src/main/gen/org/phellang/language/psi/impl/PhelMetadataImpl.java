@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.phellang.language.psi.PhelTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.phellang.language.psi.PhelMetadataMixin;
 import org.phellang.language.psi.*;
 
-public class PhelMetadataImpl extends ASTWrapperPsiElement implements PhelMetadata {
+public class PhelMetadataImpl extends PhelMetadataMixin implements PhelMetadata {
 
-  public PhelMetadataImpl(@NotNull ASTNode node) {
+  public PhelMetadataImpl(ASTNode node) {
     super(node);
   }
 

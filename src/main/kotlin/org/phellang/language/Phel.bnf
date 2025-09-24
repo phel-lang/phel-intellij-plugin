@@ -12,7 +12,7 @@
 
   tokens=[
     whitespace='regexp:\s+'
-    line_comment='regexp:#[^_|].*|;.*'
+    line_comment='LINE_COMMENT'
     multiline_comment='MULTILINE_COMMENT'
     string='regexp:"([^"]|\\")*"'
     number='regexp:[+-]?[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?'
@@ -47,19 +47,8 @@
 
     dot='.'
     dotdash='.-'
-    slash='/'
     
-    // Multi-character PHP operators
-    and_and='&&'
-    or_or='||'
-    shift_left='<<'
-    shift_right='>>'
-    not_equal='!='
-    not_identical='!=='
-    increment='++'
-    decrement='--'
-    
-    keyword_token='KEYWORD'
+    keyword_token='KEYWORD_TOKEN'
   ]
   extends("p_form|s_form")=form
   extends("map|l_v_form")=p_form
@@ -74,17 +63,14 @@
 
   name("metadata")=form
 
-  methods("reader_macro")=[toString]
-  methods("metadata")=[toString]
   consumeTokenMethod("symbol_nsq")="fast"
 }
 
 root ::= form *
-private root_entry ::= not_eof form  
 private not_eof ::= !<<eof>>
 
 form ::= form_prefix form_prefix * form_upper | form_inner | form_comment_macro | multiline_comment | line_comment
-  {pin(".*")=1 methods=[form="" metas="metadata" readerMacros="reader_macro" toString]}
+  {pin(".*")=1 methods=[form="" metas="metadata" readerMacros="reader_macro"] mixin="org.phellang.language.psi.PhelFormMixin"}
 private form_prefix ::= metadata | reader_macro
 
 upper form_upper ::= form_inner {elementType=form name=form}
@@ -96,26 +82,27 @@ fake p_form ::= form * {methods=[forms="form"]}
 fake l_v_form ::= set
 fake s_form ::=
 list ::= '(' list_body ')'
-  {methods=[getTextOffset getFirst]}
+  {mixin="org.phellang.language.psi.PhelListMixin"}
 vec ::= '[' vec_body ']'
 map ::= '{' map_body '}'
 set ::= '#{' set_body '}'
 symbol ::= symbol_qualified
   {extends="org.phellang.language.psi.PhelNamedElementImpl"
-   implements="com.intellij.psi.PsiNameIdentifierOwner"
-   methods=[getName setName getNameIdentifier getTextOffset getReference]}
+   implements="com.intellij.psi.PsiNameIdentifierOwner"}
 keyword ::= keyword_token | (':' | '::') symbol_qualified
 private symbol_qualified ::= symbol_plain symbol_nsq?
 symbol_plain ::= sym
-left symbol_nsq ::= '/' (sym | coloncolon | dot | dotdash | hat | tilde | and_and | or_or | shift_left | shift_right | not_equal | not_identical | increment | decrement)
+left symbol_nsq ::= '/' (sym | coloncolon | dot | dotdash | hat | tilde)
 literal ::= number | hexnum | binnum | octnum | bool | nil | nan | string | char
-  {methods=[getLiteralType getLiteralText]}
+  {mixin="org.phellang.language.psi.PhelLiteralMixin"}
 
 access ::= ('.' | '.-') symbol
 left access_left ::= ! '.'
 
 metadata ::= "^" (string | symbol | keyword | map)
+  {mixin="org.phellang.language.psi.PhelMetadataMixin"}
 reader_macro ::= "'" | "~" | "~@" | "`" | "," | ",@"
+  {mixin="org.phellang.language.psi.PhelReaderMacroMixin"}
 
 form_comment_macro ::= "#_" form
 short_fn ::= "|(" list_body ")"

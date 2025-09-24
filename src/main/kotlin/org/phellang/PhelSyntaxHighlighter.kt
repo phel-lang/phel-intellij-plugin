@@ -78,11 +78,6 @@ class PhelSyntaxHighlighter : SyntaxHighlighterBase() {
             return KEYWORD_KEYS
         }
 
-        // Multi-character PHP operators
-        if (tokenType == PhelTypes.AND_AND || tokenType == PhelTypes.OR_OR || tokenType == PhelTypes.SHIFT_LEFT || tokenType == PhelTypes.SHIFT_RIGHT || tokenType == PhelTypes.NOT_EQUAL || tokenType == PhelTypes.NOT_IDENTICAL || tokenType == PhelTypes.INCREMENT || tokenType == PhelTypes.DECREMENT) {
-            return SYMBOL_KEYS
-        }
-
         // Metadata
         if (tokenType == PhelTypes.HAT) {
             return METADATA_KEYS

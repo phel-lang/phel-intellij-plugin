@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.phellang.language.psi.PhelTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.phellang.language.psi.PhelFormMixin;
 import org.phellang.language.psi.*;
 
-public class PhelFormImpl extends ASTWrapperPsiElement implements PhelForm {
+public class PhelFormImpl extends PhelFormMixin implements PhelForm {
 
-  public PhelFormImpl(@NotNull ASTNode node) {
+  public PhelFormImpl(ASTNode node) {
     super(node);
   }
 

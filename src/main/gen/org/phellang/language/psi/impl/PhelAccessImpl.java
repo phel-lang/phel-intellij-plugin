@@ -12,7 +12,7 @@ import org.phellang.language.psi.*;
 
 public class PhelAccessImpl extends PhelSFormImpl implements PhelAccess {
 
-  public PhelAccessImpl(@NotNull ASTNode node) {
+  public PhelAccessImpl(ASTNode node) {
     super(node);
   }
 

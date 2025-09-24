@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.phellang.language.psi.PhelTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.phellang.language.psi.PhelReaderMacroMixin;
 import org.phellang.language.psi.*;
 
-public class PhelReaderMacroImpl extends ASTWrapperPsiElement implements PhelReaderMacro {
+public class PhelReaderMacroImpl extends PhelReaderMacroMixin implements PhelReaderMacro {
 
-  public PhelReaderMacroImpl(@NotNull ASTNode node) {
+  public PhelReaderMacroImpl(ASTNode node) {
     super(node);
   }
 

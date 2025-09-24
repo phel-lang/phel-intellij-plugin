@@ -4,7 +4,7 @@ import com.intellij.lang.Commenter
 
 class PhelCommenter : Commenter {
     override fun getLineCommentPrefix(): String {
-        return "#"
+        return ";"
     }
 
     override fun getBlockCommentPrefix(): String? {

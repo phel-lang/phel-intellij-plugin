@@ -191,6 +191,8 @@ object PhelSymbolAnalyzer {
             val paramName = paramChild.text
             if (paramName == null || !paramName.isNotEmpty()) continue
 
+            if (paramName == "&") continue
+
             parameters.add(paramName)
         }
 

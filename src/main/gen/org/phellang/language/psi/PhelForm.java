@@ -25,8 +25,4 @@ public interface PhelForm extends PsiElement {
   @NotNull
   List<PhelReaderMacro> getReaderMacros();
 
-  //WARNING: toString(...) is skipped
-  //matching toString(PhelForm, ...)
-  //methods are not found in null
-
 }

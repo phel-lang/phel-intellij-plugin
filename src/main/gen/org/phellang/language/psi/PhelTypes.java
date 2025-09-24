@@ -22,7 +22,6 @@ public interface PhelTypes {
   IElementType SYMBOL = new PhelElementType("SYMBOL");
   IElementType VEC = new PhelElementType("VEC");
 
-  IElementType AND_AND = new PhelTokenType("&&");
   IElementType BINNUM = new PhelTokenType("binnum");
   IElementType BOOL = new PhelTokenType("bool");
   IElementType BRACE1 = new PhelTokenType("{");
@@ -34,7 +33,6 @@ public interface PhelTypes {
   IElementType COLONCOLON = new PhelTokenType("::");
   IElementType COMMA = new PhelTokenType(",");
   IElementType COMMA_AT = new PhelTokenType(",@");
-  IElementType DECREMENT = new PhelTokenType("--");
   IElementType DOT = new PhelTokenType(".");
   IElementType DOTDASH = new PhelTokenType(".-");
   IElementType FN_SHORT = new PhelTokenType("|(");
@@ -42,23 +40,16 @@ public interface PhelTypes {
   IElementType HASH_BRACE = new PhelTokenType("#{");
   IElementType HAT = new PhelTokenType("^");
   IElementType HEXNUM = new PhelTokenType("hexnum");
-  IElementType INCREMENT = new PhelTokenType("++");
-  IElementType KEYWORD_TOKEN = new PhelTokenType("KEYWORD");
-  IElementType LINE_COMMENT = new PhelTokenType("line_comment");
+  IElementType KEYWORD_TOKEN = new PhelTokenType("KEYWORD_TOKEN");
+  IElementType LINE_COMMENT = new PhelTokenType("LINE_COMMENT");
   IElementType MULTILINE_COMMENT = new PhelTokenType("MULTILINE_COMMENT");
   IElementType NAN = new PhelTokenType("NAN");
   IElementType NIL = new PhelTokenType("nil");
-  IElementType NOT_EQUAL = new PhelTokenType("!=");
-  IElementType NOT_IDENTICAL = new PhelTokenType("!==");
   IElementType NUMBER = new PhelTokenType("number");
   IElementType OCTNUM = new PhelTokenType("octnum");
-  IElementType OR_OR = new PhelTokenType("||");
   IElementType PAREN1 = new PhelTokenType("(");
   IElementType PAREN2 = new PhelTokenType(")");
   IElementType QUOTE = new PhelTokenType("'");
-  IElementType SHIFT_LEFT = new PhelTokenType("<<");
-  IElementType SHIFT_RIGHT = new PhelTokenType(">>");
-  IElementType SLASH = new PhelTokenType("/");
   IElementType STRING = new PhelTokenType("string");
   IElementType SYM = new PhelTokenType("sym");
   IElementType SYNTAX_QUOTE = new PhelTokenType("`");

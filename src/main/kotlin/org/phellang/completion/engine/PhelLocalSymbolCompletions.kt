@@ -296,55 +296,55 @@ object PhelLocalSymbolCompletions {
                 val children: Array<PsiElement> = child.children
 
                 // Look for definition forms: (defn name ...), (def name ...), etc.
-                if (children.size >= 2) {
-                    val firstElement = children[0]
+                if (children.size < 2) continue
 
-                    if (firstElement is PhelSymbol || firstElement is PhelAccessImpl) {
-                        val defType = firstElement.text
-                        val localDefinitionTypes = arrayOf(
-                            "def",
-                            "defn",
-                            "defn-",
-                            "defmacro",
-                            "defmacro-",
-                            "defexception",
-                            "defexception*",
-                            "definterface",
-                            "definterface*",
-                            "defstruct",
-                            "defstruct*"
-                        )
+                val firstElement = children[0]
 
-                        if (localDefinitionTypes.contains(defType)) {
-                            val nameElement = children[1]
-                            if (nameElement is PhelSymbol || nameElement is PhelAccessImpl) {
-                                val symbolName = nameElement.text
-                                // Use highest priority for local function definitions
-                                val priority = when (defType) {
-                                    "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
-                                    else -> PhelCompletionPriority.PROJECT_SYMBOLS
-                                }
+                if (firstElement !is PhelSymbol && firstElement !is PhelAccessImpl) continue
 
-                                val displayType = when (defType) {
-                                    "def" -> "Local Variable"
-                                    "defn", "defn-" -> "Local Function"
-                                    "defmacro", "defmacro-" -> "Local Macro"
-                                    "defexception", "defexception*" -> "Local Exception"
-                                    "definterface", "definterface*" -> "Local Interface"
-                                    "defstruct", "defstruct*" -> "Local Struct"
-                                    else -> "Local Definition"
-                                }
+                val defType = firstElement.text
+                val localDefinitionTypes = arrayOf(
+                    "def",
+                    "defn",
+                    "defn-",
+                    "defmacro",
+                    "defmacro-",
+                    "defexception",
+                    "defexception*",
+                    "definterface",
+                    "definterface*",
+                    "defstruct",
+                    "defstruct*"
+                )
 
-                                if (!addedSymbols.contains(symbolName) && !symbolName.trim().isEmpty()) {
-                                    addedSymbols.add(symbolName)
-                                    PhelCompletionUtils.addRankedCompletion(
-                                        result, symbolName, "", displayType, priority
-                                    )
-                                }
-                            }
-                        }
-                    }
+                if (!localDefinitionTypes.contains(defType)) continue
+
+                val nameElement = children[1]
+                if (nameElement !is PhelSymbol && nameElement !is PhelAccessImpl) continue
+
+                val symbolName = nameElement.text
+                // Use highest priority for local function definitions
+                val priority = when (defType) {
+                    "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
+                    else -> PhelCompletionPriority.PROJECT_SYMBOLS
                 }
+
+                val displayType = when (defType) {
+                    "def" -> "Local Variable"
+                    "defn", "defn-" -> "Local Function"
+                    "defmacro", "defmacro-" -> "Local Macro"
+                    "defexception", "defexception*" -> "Local Exception"
+                    "definterface", "definterface*" -> "Local Interface"
+                    "defstruct", "defstruct*" -> "Local Struct"
+                    else -> "Local Definition"
+                }
+
+                if (addedSymbols.contains(symbolName) || symbolName.trim().isEmpty()) continue
+
+                addedSymbols.add(symbolName)
+                PhelCompletionUtils.addRankedCompletion(
+                    result, symbolName, "", displayType, priority
+                )
             }
         }
     }

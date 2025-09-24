@@ -8,15 +8,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.phellang.language.psi.PhelTypes.*;
+import org.phellang.language.psi.PhelLiteralMixin;
 import org.phellang.language.psi.*;
 
-public class PhelLiteralImpl extends PhelSFormImpl implements PhelLiteral {
+public class PhelLiteralImpl extends PhelLiteralMixin implements PhelLiteral {
 
-  public PhelLiteralImpl(@NotNull ASTNode node) {
+  public PhelLiteralImpl(ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull PhelVisitor visitor) {
     visitor.visitLiteral(this);
   }
