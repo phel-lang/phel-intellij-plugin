@@ -11,7 +11,7 @@ class DefTemplateInsertHandler : InsertHandler<LookupElement?> {
             val editor = context.editor
             val document = editor.document
 
-            val template = "(def name value)"
+            val template = "(def name)"
             document.replaceString(context.startOffset, context.tailOffset, template)
 
             val nameStart = context.startOffset + 5 // Position after "(def "

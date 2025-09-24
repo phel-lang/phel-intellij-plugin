@@ -11,7 +11,7 @@ class IfTemplateInsertHandler : InsertHandler<LookupElement?> {
             val editor = context.editor
             val document = editor.document
 
-            val template = "(if condition then else)"
+            val template = "(if condition)"
             document.replaceString(context.startOffset, context.tailOffset, template)
 
             val conditionStart = context.startOffset + 4 // Position after "(if "

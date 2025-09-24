@@ -5,10 +5,6 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElement
 import org.phellang.core.utils.PhelErrorHandler
 
-/**
- * Custom insert handler for namespaced completions to prevent text duplication.
- * Handles completions containing '/' by properly replacing the typed prefix.
- */
 class NamespacedInsertHandler : InsertHandler<LookupElement?> {
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
         PhelErrorHandler.safeOperation {

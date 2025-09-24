@@ -2,6 +2,10 @@
 
 [![Build Status](https://img.shields.io/badge/status-active-brightgreen.svg)]()
 [![IntelliJ Platform](https://img.shields.io/badge/platform-IntelliJ-blue.svg)]()
+[![Version](https://img.shields.io/jetbrains/plugin/v/28459.svg)](https://plugins.jetbrains.com/plugin/28459)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/28459.svg)](https://plugins.jetbrains.com/plugin/28459)
+
+[![Plugin Icon](src/main/resources/META-INF/pluginIcon.svg)](https://plugins.jetbrains.com/plugin/28459-phel-lang)
 
 This plugin provides comprehensive IDE support for the [Phel programming language](https://phel-lang.org/) in JetBrains IDEs (IntelliJ IDEA, PhpStorm, WebStorm, etc.).
 
