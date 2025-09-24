@@ -70,6 +70,8 @@
                 implementationClass="org.phellang.PhelQuoteHandler"/>
         <typedHandler
                 implementation="org.phellang.PhelTypedHandler"/>
+        <enterHandlerDelegate
+                implementation="org.phellang.PhelEnterHandlerDelegate"/>
         <lang.findUsagesProvider
                 language="Phel"
                 implementationClass="org.phellang.language.psi.PhelFindUsagesProvider"/>
