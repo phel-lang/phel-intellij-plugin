@@ -76,6 +76,8 @@
         <lang.foldingBuilder
                 language="Phel"
                 implementationClass="org.phellang.folding.PhelFoldingBuilder"/>
+        <enterHandlerDelegate
+                implementation="org.phellang.editor.PhelEnterHandlerDelegate"/>
         <internalFileTemplate name="Phel_File.phel"/>
     </extensions>
 

@@ -11,7 +11,7 @@ class LetTemplateInsertHandler : InsertHandler<LookupElement?> {
             val editor = context.editor
             val document = editor.document
 
-            val template = "(let [bindings]\n  body)"
+            val template = "(let [bindings])"
             document.replaceString(context.startOffset, context.tailOffset, template)
 
             val bindingsStart = context.startOffset + 6 // Position after "(let ["

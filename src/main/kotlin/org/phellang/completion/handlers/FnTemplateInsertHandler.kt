@@ -11,10 +11,10 @@ class FnTemplateInsertHandler : InsertHandler<LookupElement?> {
             val editor = context.editor
             val document = editor.document
 
-            val template = "(fn [args] body)"
+            val template = "(fn [args])"
             document.replaceString(context.startOffset, context.tailOffset, template)
 
-            val argsStart = context.startOffset + 4 // Position after "(fn ["
+            val argsStart = context.startOffset + 5 // Position after "(fn ["
             editor.caretModel.moveToOffset(argsStart)
             editor.selectionModel.setSelection(argsStart, argsStart + 4) // Select "args"
         }
