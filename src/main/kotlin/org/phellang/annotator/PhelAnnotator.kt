@@ -13,18 +13,17 @@ import org.phellang.language.psi.*
 class PhelAnnotator : Annotator {
 
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        // Check if this element is commented out by #_ form comment
+        // Skip highlighting if this element is commented out by #_ form comment
         if (PhelCommentAnalyzer.isCommentedOutByFormComment(element)) {
             PhelAnnotationUtils.createAnnotation(holder, element, COMMENTED_OUT_FORM)
             return  // Don't apply other highlighting to commented-out forms
         }
 
-        // Check if this element is inside a short function - if so, skip highlighting
+        // Skip highlighting if element is inside a short function
         if (PhelCommentAnalyzer.isInsideShortFunction(element)) {
             return
         }
 
-        // Delegate to specialized highlighters based on element type
         when (element) {
             is PhelKeyword -> {
                 PhelElementHighlighter.annotateKeyword(element, holder)

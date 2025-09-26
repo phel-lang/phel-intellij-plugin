@@ -28,7 +28,6 @@ object PhelLocalSymbolCompletions {
 
     @JvmStatic
     fun addLocalSymbols(result: CompletionResultSet, position: PsiElement) {
-        // Comprehensive error handling for local symbol completion
         PhelCompletionErrorHandler.withErrorHandling(PhelCompletionErrorHandler.withResultSet {
             addLocalSymbolsWithValidation(result, position)
         }, "local symbol completion") {
@@ -80,7 +79,6 @@ object PhelLocalSymbolCompletions {
         var current = position.parent
         var depth = 0
 
-        // Walk up the PSI tree to find the containing function definition
         while (current != null && depth < 10) {
             if (current is PhelList) {
                 val children = current.children
@@ -89,9 +87,7 @@ object PhelLocalSymbolCompletions {
                     if (firstChild is PhelSymbol || firstChild is PhelAccessImpl) {
                         val functionType = firstChild.text
 
-                        // Check if this is a function definition
                         if (PhelSymbolAnalyzer.isSymbolType(functionType, PhelCompletionPriority.SPECIAL_FORMS)) {
-                            // Find the parameter vector dynamically (handles docstrings and metadata)
                             val paramVec = findParameterVectorInFunction(current)
                             if (paramVec != null) {
                                 // Extract parameters from the vector
@@ -323,7 +319,7 @@ object PhelLocalSymbolCompletions {
                 if (nameElement !is PhelSymbol && nameElement !is PhelAccessImpl) continue
 
                 val symbolName = nameElement.text
-                // Use highest priority for local function definitions
+                // Use the highest priority for local function definitions
                 val priority = when (defType) {
                     "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
                     else -> PhelCompletionPriority.PROJECT_SYMBOLS
@@ -352,7 +348,6 @@ object PhelLocalSymbolCompletions {
     private fun getCurrentFunctionName(position: PsiElement): String? {
         var current: PsiElement? = position
 
-        // Walk up the PSI tree to find the containing function definition
         while (current != null) {
             if (current is PhelList) {
                 val list = current
@@ -380,18 +375,13 @@ object PhelLocalSymbolCompletions {
         return null // Not inside a function definition
     }
 
-    /**
-     * Find the parameter vector in a function definition.
-     * Handles both fn and defn forms with optional docstrings and metadata.
-     */
     private fun findParameterVectorInFunction(functionList: PhelList): PhelVec? {
         val children = functionList.children
         if (children.isEmpty()) return null
-        
-        val firstChild = children[0]
-        val functionType = when {
-            firstChild is PhelSymbol -> firstChild.text
-            firstChild is PhelAccessImpl -> firstChild.text
+
+        val functionType = when (val firstChild = children[0]) {
+            is PhelSymbol -> firstChild.text
+            is PhelAccessImpl -> firstChild.text
             else -> return null
         }
         

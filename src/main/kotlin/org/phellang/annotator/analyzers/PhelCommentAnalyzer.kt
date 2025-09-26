@@ -78,18 +78,6 @@ object PhelCommentAnalyzer {
         return false
     }
 
-    fun isInsideSet(element: PsiElement): Boolean {
-        // Check if this element is inside a set
-        var current = element.parent
-        while (current != null) {
-            if (current is PhelSet) {
-                return true
-            }
-            current = current.parent
-        }
-        return false
-    }
-
     private fun findContainingForm(element: PsiElement): PhelForm? {
         // Walk up the PSI tree to find the containing form
         var current = element
@@ -101,9 +89,6 @@ object PhelCommentAnalyzer {
         }
         return null
     }
-
-    private data class Token(val type: TokenType, val start: Int, val end: Int, val text: String)
-    private enum class TokenType { COMMENT, FORM }
 
     private fun parseContainerTokens(containerText: String): List<Token> {
         val tokens = mutableListOf<Token>()

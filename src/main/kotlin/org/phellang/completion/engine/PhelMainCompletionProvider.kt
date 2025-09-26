@@ -22,22 +22,27 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
                 "Invalid completion context"
             }
 
-            val context = PhelCompletionContext(parameters)
+            val completionContext = PhelCompletionContext(parameters)
+
+            // Suppress completions in inappropriate contexts
+            if (completionContext.shouldSuppressCompletions()) {
+                return@safeOperation
+            }
 
             when {
                 // At top level (nothing written) - suggest structural completions
-                context.shouldSuggestNewForm() -> {
+                completionContext.shouldSuggestNewForm() -> {
                     addTemplateCompletions(result)
                 }
 
                 // Inside parentheses - suggest function completions
-                context.isInsideParentheses() -> {
-                    addGeneralCompletions(element = context.element, result = result)
+                completionContext.isInsideParentheses() -> {
+                    addGeneralCompletions(completionContext.element, result)
                 }
 
                 // Default case - general completions
                 else -> {
-                    addGeneralCompletions(element = context.element, result = result)
+                    addGeneralCompletions(completionContext.element, result)
                 }
             }
         }
