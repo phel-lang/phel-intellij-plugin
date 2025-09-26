@@ -14,21 +14,17 @@ object PhelBasicDocumentation {
 
     private fun categorizeSymbol(element: PsiElement?): String {
         if (element is PhelSymbol) {
-            // First check if this is a parameter reference (usage in function body)
             if (PhelSymbolAnalyzer.isParameterReference(element)) {
                 return "Function Argument"
             }
 
-            // Then check if this is a definition and determine its type
             if (PhelSymbolAnalyzer.isDefinition(element)) {
-                // Check if it's a function parameter or let binding first
                 if (isInParameterVector(element)) {
                     return "Function Parameter"
                 } else if (isInLetBinding(element)) {
                     return "Let Binding"
                 }
 
-                // Check the defining form to determine type
                 val definingForm = getDefiningForm(element)
                 return when (definingForm) {
                     "defn", "defn-" -> "Function Definition"
