@@ -8,6 +8,16 @@ plugins {
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
 
+tasks.withType<Wrapper> {
+    gradleVersion = "8.14"
+}
+
+System.setProperty("org.gradle.internal.deprecation.disable", "true")
+
+gradle.settingsEvaluated {
+    System.setProperty("org.gradle.internal.deprecation.disable", "true")
+}
+
 group = "org.phellang"
 version = "0.1.8"
 
@@ -43,6 +53,16 @@ dependencies {
         pluginVerifier()
         zipSigner()
     }
+
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+    testImplementation("org.mockito:mockito-core:5.6.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.6.0")
+}
+
+configurations.all {
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
 }
 
 java {
@@ -94,6 +114,23 @@ tasks {
             apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
         }
         dependsOn(generatePhelLexer, generatePhelParser)
+    }
+
+    test {
+        useJUnitPlatform {
+            includeEngines("junit-jupiter")
+        }
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+
+        systemProperty("idea.log.debug.categories", "")
+        systemProperty("idea.suppress.layout.warnings", "true")
+
+        jvmArgs(
+            "-Didea.log.debug.categories=",
+            "-Didea.suppress.layout.warnings=true"
+        )
     }
 
     intellijPlatform {
