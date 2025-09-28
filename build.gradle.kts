@@ -4,7 +4,7 @@ import org.jetbrains.grammarkit.tasks.GenerateParserTask
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    id("org.jetbrains.intellij.platform") version "2.3.0"
+    id("org.jetbrains.intellij.platform") version "2.9.0"
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
 
@@ -136,6 +136,13 @@ tasks {
     intellijPlatform {
         buildSearchableOptions {
             enabled = false
+        }
+
+        pluginVerification {
+            ides {
+                ide("IC", "2024.2.5")
+                ide("IC", "2024.3.1")
+            }
         }
 
         patchPluginXml {
