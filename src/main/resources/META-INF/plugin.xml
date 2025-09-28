@@ -64,7 +64,7 @@
                 implementationClass="org.phellang.PhelCommenter"/>
         <lang.braceMatcher
                 language="Phel"
-                implementationClass="org.phellang.PhelBraceMatcher"/>
+                implementationClass="org.phellang.editor.PhelBraceMatcher"/>
         <lang.quoteHandler
                 language="Phel"
                 implementationClass="org.phellang.PhelQuoteHandler"/>
