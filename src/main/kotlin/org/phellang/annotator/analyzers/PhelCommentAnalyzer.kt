@@ -2,13 +2,29 @@ package org.phellang.annotator.analyzers
 
 import com.intellij.psi.PsiElement
 import org.phellang.language.psi.*
+import java.util.regex.Pattern.compile
 
 object PhelCommentAnalyzer {
+
+    private val CONTAINER_TOKEN_PATTERN = compile("(#_|:[\\w-]+|[a-zA-Z][\\w-]*)")
+
+    private const val FORM_COMMENT_MARKER = "#_"
 
     fun isCommentedOutByFormComment(element: PsiElement): Boolean {
         val containingForm = findContainingForm(element) ?: return false
 
         return isInCommentedFormByText(containingForm)
+    }
+
+    fun isInsideShortFunction(element: PsiElement): Boolean {
+        var current = element.parent
+        while (current != null) {
+            if (current is PhelShortFn) {
+                return true
+            }
+            current = current.parent
+        }
+        return false
     }
 
     private fun isInCommentedFormByText(element: PsiElement): Boolean {
@@ -26,56 +42,65 @@ object PhelCommentAnalyzer {
         // Find all forms and #_ tokens in order
         val tokens = parseContainerTokens(containerText)
 
-        // Find the position of our target element
-        val targetOffset = targetElement.textOffset - container.textOffset
+        // Calculate the relative position of our target element within the container
+        val targetOffset = calculateRelativeOffset(targetElement, container)
+        if (targetOffset < 0) return false
 
         // Find which token our target element corresponds to
-        var targetTokenIndex = -1
+        val targetTokenIndex = findTargetTokenIndex(tokens, targetOffset)
+        if (targetTokenIndex == -1) return false
 
+        // Process tokens sequentially to determine which forms are commented
+        return isTokenCommented(tokens, targetTokenIndex)
+    }
+
+    private fun calculateRelativeOffset(targetElement: PsiElement, container: PsiElement): Int {
+        val targetOffset = targetElement.textOffset
+        val containerOffset = container.textOffset
+
+        return if (targetOffset >= containerOffset) {
+            targetOffset - containerOffset
+        } else {
+            -1 // Invalid offset
+        }
+    }
+
+    private fun findTargetTokenIndex(tokens: List<Token>, targetOffset: Int): Int {
         for (i in tokens.indices) {
             val token = tokens[i]
             if (token.type == TokenType.FORM) {
                 // Check if this form overlaps with our target element
                 if (token.start <= targetOffset && targetOffset < token.end) {
-                    targetTokenIndex = i
-                    break
+                    return i
                 }
             }
         }
+        return -1
+    }
 
-        if (targetTokenIndex == -1) return false
-
-        // Process tokens sequentially to determine which forms are commented
+    private fun isTokenCommented(tokens: List<Token>, targetTokenIndex: Int): Boolean {
         val commentedTokens = mutableSetOf<Int>()
         var pendingComments = 0
 
         for (i in tokens.indices) {
             val token = tokens[i]
-            if (token.type == TokenType.COMMENT) {
-                // Each #_ adds one pending comment
-                pendingComments++
-            } else if (token.type == TokenType.FORM) {
-                // If we have pending comments, this form gets commented
-                if (pendingComments > 0) {
-                    commentedTokens.add(i)
-                    pendingComments--
+            when (token.type) {
+                TokenType.COMMENT -> {
+                    // Each #_ adds one pending comment
+                    pendingComments++
+                }
+
+                TokenType.FORM -> {
+                    // If we have pending comments, this form gets commented
+                    if (pendingComments > 0) {
+                        commentedTokens.add(i)
+                        pendingComments--
+                    }
                 }
             }
         }
 
         return commentedTokens.contains(targetTokenIndex)
-    }
-
-    fun isInsideShortFunction(element: PsiElement): Boolean {
-        // Check if this element is inside a short function |(...)
-        var current = element.parent
-        while (current != null) {
-            if (current is PhelShortFn) {
-                return true
-            }
-            current = current.parent
-        }
-        return false
     }
 
     private fun findContainingForm(element: PsiElement): PhelForm? {
@@ -92,12 +117,11 @@ object PhelCommentAnalyzer {
 
     private fun parseContainerTokens(containerText: String): List<Token> {
         val tokens = mutableListOf<Token>()
-        val pattern = java.util.regex.Pattern.compile("(#_|:[\\w-]+|[a-zA-Z][\\w-]*)")
-        val matcher = pattern.matcher(containerText)
+        val matcher = CONTAINER_TOKEN_PATTERN.matcher(containerText)
 
         while (matcher.find()) {
             val text = matcher.group()
-            val type = if (text == "#_") TokenType.COMMENT else TokenType.FORM
+            val type = if (text == FORM_COMMENT_MARKER) TokenType.COMMENT else TokenType.FORM
             tokens.add(Token(type, matcher.start(), matcher.end(), text))
         }
 

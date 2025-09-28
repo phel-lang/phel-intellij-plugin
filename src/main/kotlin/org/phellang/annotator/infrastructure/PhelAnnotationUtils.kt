@@ -14,7 +14,7 @@ object PhelAnnotationUtils {
         createAnnotation(holder, element.textRange, textAttributes)
     }
 
-    fun createAnnotation(
+    private fun createAnnotation(
         holder: AnnotationHolder, range: TextRange, textAttributes: TextAttributesKey
     ) {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION).range(range).textAttributes(textAttributes).create()
