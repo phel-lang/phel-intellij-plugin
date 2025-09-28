@@ -49,7 +49,7 @@
                 language="Phel"
                 implementationClass="org.phellang.PhelSyntaxHighlighterFactory"/>
         <colorSettingsPage
-                implementation="org.phellang.PhelColorSettingsPage"/>
+                implementation="org.phellang.editor.PhelColorSettingsPage"/>
         <annotator
                 language="Phel"
                 implementationClass="org.phellang.annotator.PhelAnnotator"/>
