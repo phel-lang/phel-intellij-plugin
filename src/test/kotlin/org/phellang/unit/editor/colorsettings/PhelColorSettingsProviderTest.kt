@@ -3,9 +3,9 @@ package org.phellang.unit.editor.colorsettings
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.phellang.PhelSyntaxHighlighter
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants
 import org.phellang.editor.colorsettings.PhelColorSettingsProvider
+import org.phellang.syntax.attributes.PhelTextAttributesRegistry
 
 class PhelColorSettingsProviderTest {
 
@@ -42,8 +42,8 @@ class PhelColorSettingsProviderTest {
         val descriptors = provider.getAttributeDescriptors()
         val descriptorMap = descriptors.associateBy { it.displayName }
 
-        assertEquals(PhelSyntaxHighlighter.COMMENT, descriptorMap["Comments"]?.key)
-        assertEquals(PhelSyntaxHighlighter.STRING, descriptorMap["Strings"]?.key)
+        assertEquals(PhelTextAttributesRegistry.COMMENT, descriptorMap["Comments"]?.key)
+        assertEquals(PhelTextAttributesRegistry.STRING, descriptorMap["Strings"]?.key)
         assertEquals(PhelAnnotationConstants.FUNCTION_NAME, descriptorMap["Function names (in call position)"]?.key)
         assertEquals(PhelAnnotationConstants.PHP_INTEROP, descriptorMap["PHP interop"]?.key)
     }

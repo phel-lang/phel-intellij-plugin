@@ -1,33 +1,33 @@
 package org.phellang.editor.colorsettings
 
 import com.intellij.openapi.options.colors.AttributesDescriptor
-import org.phellang.PhelSyntaxHighlighter
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants
+import org.phellang.syntax.attributes.PhelTextAttributesRegistry
 
 class PhelColorSettingsProvider {
 
     fun getAttributeDescriptors(): Array<AttributesDescriptor> {
         return arrayOf(
             // Basic syntax elements
-            AttributesDescriptor("Comments", PhelSyntaxHighlighter.COMMENT),
-            AttributesDescriptor("Strings", PhelSyntaxHighlighter.STRING),
-            AttributesDescriptor("Numbers", PhelSyntaxHighlighter.NUMBER),
-            AttributesDescriptor("Booleans", PhelSyntaxHighlighter.BOOLEAN),
-            AttributesDescriptor("Nil", PhelSyntaxHighlighter.NIL_LITERAL),
-            AttributesDescriptor("NAN", PhelSyntaxHighlighter.NAN_LITERAL),
-            AttributesDescriptor("Characters", PhelSyntaxHighlighter.CHARACTER),
+            AttributesDescriptor("Comments", PhelTextAttributesRegistry.COMMENT),
+            AttributesDescriptor("Strings", PhelTextAttributesRegistry.STRING),
+            AttributesDescriptor("Numbers", PhelTextAttributesRegistry.NUMBER),
+            AttributesDescriptor("Booleans", PhelTextAttributesRegistry.BOOLEAN),
+            AttributesDescriptor("Nil", PhelTextAttributesRegistry.NIL_LITERAL),
+            AttributesDescriptor("NAN", PhelTextAttributesRegistry.NAN_LITERAL),
+            AttributesDescriptor("Characters", PhelTextAttributesRegistry.CHARACTER),
 
             // Delimiters
-            AttributesDescriptor("Parentheses", PhelSyntaxHighlighter.PARENTHESES),
-            AttributesDescriptor("Brackets", PhelSyntaxHighlighter.BRACKETS),
-            AttributesDescriptor("Braces", PhelSyntaxHighlighter.BRACES),
+            AttributesDescriptor("Parentheses", PhelTextAttributesRegistry.PARENTHESES),
+            AttributesDescriptor("Brackets", PhelTextAttributesRegistry.BRACKETS),
+            AttributesDescriptor("Braces", PhelTextAttributesRegistry.BRACES),
 
             // Macro syntax
-            AttributesDescriptor("Quote", PhelSyntaxHighlighter.QUOTE),
-            AttributesDescriptor("Syntax quote", PhelSyntaxHighlighter.SYNTAX_QUOTE),
-            AttributesDescriptor("Unquote", PhelSyntaxHighlighter.UNQUOTE),
-            AttributesDescriptor("Unquote splicing", PhelSyntaxHighlighter.UNQUOTE_SPLICING),
-            AttributesDescriptor("Metadata", PhelSyntaxHighlighter.METADATA),
+            AttributesDescriptor("Quote", PhelTextAttributesRegistry.QUOTE),
+            AttributesDescriptor("Syntax quote", PhelTextAttributesRegistry.SYNTAX_QUOTE),
+            AttributesDescriptor("Unquote", PhelTextAttributesRegistry.UNQUOTE),
+            AttributesDescriptor("Unquote splicing", PhelTextAttributesRegistry.UNQUOTE_SPLICING),
+            AttributesDescriptor("Metadata", PhelTextAttributesRegistry.METADATA),
 
             // Semantic highlighting (from annotator)
             AttributesDescriptor("Function names (in call position)", PhelAnnotationConstants.FUNCTION_NAME),
@@ -41,10 +41,10 @@ class PhelColorSettingsProvider {
             AttributesDescriptor("Regular symbols", PhelAnnotationConstants.REGULAR_SYMBOL),
 
             // Basic symbols and operators
-            AttributesDescriptor("Symbols", PhelSyntaxHighlighter.SYMBOL),
-            AttributesDescriptor("Dot operator", PhelSyntaxHighlighter.DOT_OPERATOR),
-            AttributesDescriptor("Comma", PhelSyntaxHighlighter.COMMA),
-            AttributesDescriptor("Bad characters", PhelSyntaxHighlighter.BAD_CHARACTER),
+            AttributesDescriptor("Symbols", PhelTextAttributesRegistry.SYMBOL),
+            AttributesDescriptor("Dot operator", PhelTextAttributesRegistry.DOT_OPERATOR),
+            AttributesDescriptor("Comma", PhelTextAttributesRegistry.COMMA),
+            AttributesDescriptor("Bad characters", PhelTextAttributesRegistry.BAD_CHARACTER),
         )
     }
 }
