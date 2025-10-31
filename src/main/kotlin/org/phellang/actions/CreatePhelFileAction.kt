@@ -22,7 +22,7 @@ class CreatePhelFileAction : CreateFileFromTemplateAction("Phel File", "Create n
     }
 
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
-        builder.setTitle("New Phel File").addKind("Phel file", PhelIcons.FILE, "Phel_File.phel")
+        builder.setTitle("New Phel File").addKind("Phel file", PhelIcons.FILE, "Phel File.phel")
     }
 
     override fun createFileFromTemplate(name: String, template: FileTemplate, dir: PsiDirectory): PsiFile? {
