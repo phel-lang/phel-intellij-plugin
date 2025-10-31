@@ -61,7 +61,7 @@
                 implementationClass="org.phellang.completion.infrastructure.PhelDocumentationProvider"/>
         <lang.commenter
                 language="Phel"
-                implementationClass="org.phellang.PhelCommenter"/>
+                implementationClass="org.phellang.editor.PhelCommenter"/>
         <lang.braceMatcher
                 language="Phel"
                 implementationClass="org.phellang.editor.PhelBraceMatcher"/>

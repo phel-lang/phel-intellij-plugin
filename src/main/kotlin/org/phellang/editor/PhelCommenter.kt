@@ -1,4 +1,4 @@
-package org.phellang
+package org.phellang.editor
 
 import com.intellij.lang.Commenter
 
