@@ -4,7 +4,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.options.colors.ColorDescriptor
 import org.phellang.PhelIcons
-import org.phellang.PhelSyntaxHighlighter
+import org.phellang.syntax.PhelSyntaxHighlighter
 import javax.swing.Icon
 
 class PhelColorSettingsConfiguration {

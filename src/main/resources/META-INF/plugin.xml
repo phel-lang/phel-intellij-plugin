@@ -45,9 +45,9 @@
         <lang.parserDefinition
                 language="Phel"
                 implementationClass="org.phellang.language.PhelParserDefinition"/>
-        <lang.syntaxHighlighterFactory
+        <lang.syntaxHighlighter
                 language="Phel"
-                implementationClass="org.phellang.PhelSyntaxHighlighterFactory"/>
+                implementationClass="org.phellang.syntax.PhelSyntaxHighlighter"/>
         <colorSettingsPage
                 implementation="org.phellang.editor.PhelColorSettingsPage"/>
         <annotator
