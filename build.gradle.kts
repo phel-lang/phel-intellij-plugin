@@ -3,7 +3,7 @@ import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.25"
+    id("org.jetbrains.kotlin.jvm") version "2.2.21"
     id("org.jetbrains.intellij.platform") version "2.9.0"
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
@@ -47,7 +47,9 @@ sourceSets {
 // Configure IntelliJ Platform Dependencies
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity("2024.2.5")
+        intellijIdea("2024.2.5") {
+            type.set(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity)
+        }
         bundledPlugin("com.intellij.java")
 
         pluginVerifier()
@@ -111,8 +113,8 @@ tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         compilerOptions {
             jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-            languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
-            apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+            languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
+            apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
         }
         dependsOn(generatePhelLexer, generatePhelParser)
     }
@@ -141,8 +143,8 @@ tasks {
 
         pluginVerification {
             ides {
-                ide("IC", "2024.2.5")
-                ide("IC", "2024.3.1")
+                create("IC", "2024.2.5")
+                create("IC", "2024.3.1")
             }
         }
 
