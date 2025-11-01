@@ -75,7 +75,7 @@
                 implementationClass="org.phellang.language.psi.PhelFindUsagesProvider"/>
         <lang.foldingBuilder
                 language="Phel"
-                implementationClass="org.phellang.folding.PhelFoldingBuilder"/>
+                implementationClass="org.phellang.editor.PhelFoldingBuilder"/>
         <enterHandlerDelegate
                 implementation="org.phellang.editor.PhelEnterHandlerDelegate"/>
         <internalFileTemplate name="Phel File.phel"/>
