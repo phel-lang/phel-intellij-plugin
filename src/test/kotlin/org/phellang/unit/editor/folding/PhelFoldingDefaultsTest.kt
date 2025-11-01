@@ -1,6 +1,7 @@
 package org.phellang.unit.editor.folding
 
 import com.intellij.lang.ASTNode
+import com.intellij.psi.util.PsiTreeUtil
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -13,23 +14,37 @@ class PhelFoldingDefaultsTest {
 
     @Test
     fun `isCollapsedByDefault should return true for namespace declarations`() {
-        val list = createMockListWithFirstSymbol("ns")
+        val list = mock(PhelList::class.java)
+        val form = mock(PhelForm::class.java)
+        val symbol = mock(PhelSymbol::class.java)
         val node = createMockNode(list)
 
-        val result = PhelFoldingDefaults.isCollapsedByDefault(node)
+        `when`(symbol.text).thenReturn("ns")
+        `when`(form.children).thenReturn(arrayOf(symbol))
+        `when`(list.children).thenReturn(arrayOf(form))
 
-        assertTrue(result)
+        withMockedPsiTreeUtil(list, form, symbol) {
+            val result = PhelFoldingDefaults.isCollapsedByDefault(node)
+            assertTrue(result)
+        }
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["defn", "def", "let", "if", "when", "for"])
     fun `isCollapsedByDefault should return false for non-namespace forms`(formName: String) {
-        val list = createMockListWithFirstSymbol(formName)
+        val list = mock(PhelList::class.java)
+        val form = mock(PhelForm::class.java)
+        val symbol = mock(PhelSymbol::class.java)
         val node = createMockNode(list)
 
-        val result = PhelFoldingDefaults.isCollapsedByDefault(node)
+        `when`(symbol.text).thenReturn(formName)
+        `when`(form.children).thenReturn(arrayOf(symbol))
+        `when`(list.children).thenReturn(arrayOf(form))
 
-        assertFalse(result)
+        withMockedPsiTreeUtil(list, form, symbol) {
+            val result = PhelFoldingDefaults.isCollapsedByDefault(node)
+            assertFalse(result)
+        }
     }
 
     @Test
@@ -105,16 +120,24 @@ class PhelFoldingDefaultsTest {
 
     @Test
     fun `defaults should be consistent across multiple calls`() {
-        val list = createMockListWithFirstSymbol("ns")
+        val list = mock(PhelList::class.java)
+        val form = mock(PhelForm::class.java)
+        val symbol = mock(PhelSymbol::class.java)
         val node = createMockNode(list)
 
-        val result1 = PhelFoldingDefaults.isCollapsedByDefault(node)
-        val result2 = PhelFoldingDefaults.isCollapsedByDefault(node)
-        val result3 = PhelFoldingDefaults.isCollapsedByDefault(node)
+        `when`(symbol.text).thenReturn("ns")
+        `when`(form.children).thenReturn(arrayOf(symbol))
+        `when`(list.children).thenReturn(arrayOf(form))
 
-        assertEquals(result1, result2)
-        assertEquals(result2, result3)
-        assertTrue(result1) // Should be collapsed by default
+        withMockedPsiTreeUtil(list, form, symbol) {
+            val result1 = PhelFoldingDefaults.isCollapsedByDefault(node)
+            val result2 = PhelFoldingDefaults.isCollapsedByDefault(node)
+            val result3 = PhelFoldingDefaults.isCollapsedByDefault(node)
+
+            assertEquals(result1, result2)
+            assertEquals(result2, result3)
+            assertTrue(result1) // Should be collapsed by default
+        }
     }
 
     @Test
@@ -166,15 +189,17 @@ class PhelFoldingDefaultsTest {
         return node
     }
 
-    private fun createMockListWithFirstSymbol(symbolText: String): PhelList {
-        val list = mock(PhelList::class.java)
-        val form = mock(PhelForm::class.java)
-        val symbol = mock(PhelSymbol::class.java)
+    private fun withMockedPsiTreeUtil(list: PhelList, form: PhelForm, symbol: PhelSymbol, action: () -> Unit) {
+        mockStatic(PsiTreeUtil::class.java).use { mockedPsiTreeUtil ->
+            mockedPsiTreeUtil.`when`<Array<PhelForm>> {
+                PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
+            }.thenReturn(arrayOf(form))
 
-        `when`(symbol.text).thenReturn(symbolText)
-        `when`(form.children).thenReturn(arrayOf(symbol))
-        `when`(list.children).thenReturn(arrayOf(form))
+            mockedPsiTreeUtil.`when`<PhelSymbol> {
+                PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+            }.thenReturn(symbol)
 
-        return list
+            action()
+        }
     }
 }

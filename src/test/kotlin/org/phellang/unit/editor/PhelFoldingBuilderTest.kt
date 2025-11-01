@@ -158,17 +158,32 @@ class PhelFoldingBuilderTest {
 
     @Test
     fun `isCollapsedByDefault should return true for namespace declarations`() {
-        val list = createMockListWithFirstSymbol("ns")
+        val list = Mockito.mock(PhelList::class.java)
+        val form = Mockito.mock(PhelForm::class.java)
+        val symbol = Mockito.mock(PhelSymbol::class.java)
         val node = createMockNode(list, TextRange(0, 50))
 
-        val result = foldingBuilder.isCollapsedByDefault(node)
+        Mockito.`when`(symbol.text).thenReturn("ns")
+        Mockito.`when`(form.children).thenReturn(arrayOf(symbol))
+        Mockito.`when`(list.children).thenReturn(arrayOf(form))
 
-        Assertions.assertTrue(result)
+        Mockito.mockStatic(PsiTreeUtil::class.java).use { mockedPsiTreeUtil ->
+            mockedPsiTreeUtil.`when`<Array<PhelForm>> {
+                PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
+            }.thenReturn(arrayOf(form))
+
+            mockedPsiTreeUtil.`when`<PhelSymbol> {
+                PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+            }.thenReturn(symbol)
+
+            val result = foldingBuilder.isCollapsedByDefault(node)
+            Assertions.assertTrue(result)
+        }
     }
 
     @Test
     fun `isCollapsedByDefault should return false for non-namespace forms`() {
-        val list = createMockListWithFirstSymbol("defn")
+        val list = createMockListWithDefnSymbol()
         val node = createMockNode(list, TextRange(0, 50))
 
         val result = foldingBuilder.isCollapsedByDefault(node)
@@ -308,12 +323,12 @@ class PhelFoldingBuilderTest {
         return node
     }
 
-    private fun createMockListWithFirstSymbol(symbolText: String): PhelList {
+    private fun createMockListWithDefnSymbol(): PhelList {
         val list = Mockito.mock(PhelList::class.java)
         val form = Mockito.mock(PhelForm::class.java)
         val symbol = Mockito.mock(PhelSymbol::class.java)
 
-        Mockito.`when`(symbol.text).thenReturn(symbolText)
+        Mockito.`when`(symbol.text).thenReturn("defn")
 
         // Mock the PSI tree structure properly
         Mockito.mockStatic(PsiTreeUtil::class.java).use { mockedPsiTreeUtil ->
