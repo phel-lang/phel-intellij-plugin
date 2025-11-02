@@ -69,7 +69,7 @@
                 language="Phel"
                 implementationClass="org.phellang.PhelQuoteHandler"/>
         <typedHandler
-                implementation="org.phellang.PhelTypedHandler"/>
+                implementation="org.phellang.editor.PhelTypedHandler"/>
         <lang.findUsagesProvider
                 language="Phel"
                 implementationClass="org.phellang.language.psi.PhelFindUsagesProvider"/>
