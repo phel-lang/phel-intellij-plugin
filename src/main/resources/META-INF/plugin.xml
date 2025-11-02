@@ -38,7 +38,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="Phel file"
-                implementationClass="org.phellang.PhelFileType"
+                implementationClass="org.phellang.language.infrastructure.PhelFileType"
                 fieldName="INSTANCE"
                 language="Phel"
                 extensions="phel"/>

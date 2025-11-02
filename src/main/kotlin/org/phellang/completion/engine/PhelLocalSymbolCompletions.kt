@@ -7,7 +7,7 @@ import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import org.phellang.PhelFileType
+import org.phellang.language.infrastructure.PhelFileType
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.completion.infrastructure.PhelCompletionUtils
