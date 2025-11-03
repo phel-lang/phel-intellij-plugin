@@ -4,7 +4,7 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
-import org.phellang.PhelIcons
+import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.completion.handlers.*
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper

@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
-import org.phellang.PhelFileType
+import org.phellang.language.infrastructure.PhelFileType
 import org.phellang.editor.typing.pairing.PhelCharacterPairing
 import org.phellang.editor.typing.pairing.PhelQuoteHandler
 

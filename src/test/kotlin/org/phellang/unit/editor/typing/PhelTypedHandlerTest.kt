@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito.*
-import org.phellang.PhelFileType
+import org.phellang.language.infrastructure.PhelFileType
 import org.phellang.editor.PhelTypedHandler
 
 class PhelTypedHandlerTest {
