@@ -67,7 +67,7 @@
                 implementationClass="org.phellang.editor.PhelBraceMatcher"/>
         <lang.quoteHandler
                 language="Phel"
-                implementationClass="org.phellang.PhelQuoteHandler"/>
+                implementationClass="org.phellang.editor.PhelQuoteHandler"/>
         <typedHandler
                 implementation="org.phellang.editor.PhelTypedHandler"/>
         <lang.findUsagesProvider
