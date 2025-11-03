@@ -4,7 +4,7 @@ import org.jetbrains.grammarkit.tasks.GenerateParserTask
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.2.21"
-    id("org.jetbrains.intellij.platform") version "2.9.0"
+    id("org.jetbrains.intellij.platform") version "2.10.4"
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
 
@@ -56,10 +56,10 @@ dependencies {
         zipSigner()
     }
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.1")
     testImplementation("org.mockito:mockito-core:5.20.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.20.0")
 }

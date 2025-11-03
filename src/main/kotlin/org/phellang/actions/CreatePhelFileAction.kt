@@ -7,7 +7,7 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
-import org.phellang.PhelIcons
+import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.actions.namespace.PhelNamespaceGenerator
 import org.phellang.actions.template.PhelFileTemplateHandler
 
