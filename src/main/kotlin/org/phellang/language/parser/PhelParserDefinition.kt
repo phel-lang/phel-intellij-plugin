@@ -10,9 +10,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
-import org.phellang.language.core.PhelLanguage
+import org.phellang.language.infrastructure.PhelLanguage
 import org.phellang.language.lexer.PhelLexerAdapter
-import org.phellang.language.parser.PhelParser
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.elements.PhelTokenSets
 import org.phellang.language.psi.PhelTypes
