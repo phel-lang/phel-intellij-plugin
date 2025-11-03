@@ -1,4 +1,4 @@
-package org.phellang
+package org.phellang.language.core
 
 import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon

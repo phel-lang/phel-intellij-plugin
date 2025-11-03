@@ -3,7 +3,7 @@ package org.phellang.editor.colorsettings
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.options.colors.ColorDescriptor
-import org.phellang.PhelIcons
+import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.syntax.PhelSyntaxHighlighter
 import javax.swing.Icon
 
