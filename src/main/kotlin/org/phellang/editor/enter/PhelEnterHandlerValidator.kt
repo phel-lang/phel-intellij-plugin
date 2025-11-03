@@ -1,7 +1,7 @@
 package org.phellang.editor.enter
 
 import com.intellij.psi.PsiFile
-import org.phellang.PhelFileType
+import org.phellang.language.infrastructure.PhelFileType
 
 class PhelEnterHandlerValidator {
 
