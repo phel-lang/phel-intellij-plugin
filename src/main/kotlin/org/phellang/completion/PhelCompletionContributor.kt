@@ -2,7 +2,7 @@ package org.phellang.completion
 
 import com.intellij.codeInsight.completion.*
 import com.intellij.patterns.PlatformPatterns
-import org.phellang.PhelLanguage
+import org.phellang.language.infrastructure.PhelLanguage
 import org.phellang.completion.engine.PhelMainCompletionProvider
 import org.phellang.language.psi.PhelTypes
 

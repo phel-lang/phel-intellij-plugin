@@ -1,4 +1,4 @@
-package org.phellang
+package org.phellang.language.infrastructure
 
 import com.intellij.lang.Language
 
