@@ -44,7 +44,7 @@
                 extensions="phel"/>
         <lang.parserDefinition
                 language="Phel"
-                implementationClass="org.phellang.language.PhelParserDefinition"/>
+                implementationClass="org.phellang.language.parser.PhelParserDefinition"/>
         <lang.syntaxHighlighter
                 language="Phel"
                 implementationClass="org.phellang.syntax.PhelSyntaxHighlighter"/>
@@ -72,7 +72,7 @@
                 implementation="org.phellang.editor.PhelTypedHandler"/>
         <lang.findUsagesProvider
                 language="Phel"
-                implementationClass="org.phellang.language.psi.PhelFindUsagesProvider"/>
+                implementationClass="org.phellang.language.psi.navigation.PhelFindUsagesProvider"/>
         <lang.foldingBuilder
                 language="Phel"
                 implementationClass="org.phellang.editor.PhelFoldingBuilder"/>

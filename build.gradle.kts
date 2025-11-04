@@ -85,7 +85,7 @@ val generatePhelLexer = tasks.register<GenerateLexerTask>("generatePhelLexer") {
 }
 
 val generatePhelParser = tasks.register<GenerateParserTask>("generatePhelParser") {
-    sourceFile.set(file("src/main/kotlin/org/phellang/language/Phel.bnf"))
+    sourceFile.set(file("src/main/kotlin/org/phellang/language/parser/Phel.bnf"))
     targetRootOutputDir.set(file("src/main/gen"))
     pathToParser.set("org/phellang/language/parser/PhelParser.java")
     pathToPsiRoot.set("org/phellang/language/psi")

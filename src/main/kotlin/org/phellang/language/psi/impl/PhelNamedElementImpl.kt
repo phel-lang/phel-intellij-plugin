@@ -9,8 +9,8 @@ import com.intellij.util.IncorrectOperationException
 import org.jetbrains.annotations.NonNls
 import org.phellang.core.psi.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
-import org.phellang.language.psi.PhelItemPresentation
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.navigation.PhelItemPresentation
 import org.phellang.language.psi.references.PhelReference
 
 /**

@@ -75,11 +75,13 @@ class PhelIconsTest {
     @Test
     fun `FILE icon should be thread-safe`() {
         // Test concurrent access to FILE icon
-        val fileIcons = mutableSetOf<Icon>()
+        val fileIcons = mutableListOf<Icon>()
 
         val threads = (1..10).map {
             Thread {
-                fileIcons.add(PhelIcons.FILE)
+                synchronized(fileIcons) {
+                    fileIcons.add(PhelIcons.FILE)
+                }
             }
         }
 
@@ -87,8 +89,8 @@ class PhelIconsTest {
         threads.forEach { it.join() }
 
         // All instances should be the same (cached)
-        assertEquals(1, fileIcons.size)
-        assertTrue(fileIcons.contains(PhelIcons.FILE))
+        assertEquals(10, fileIcons.size)
+        assertTrue(fileIcons.all { it === PhelIcons.FILE })
     }
 
     @Test

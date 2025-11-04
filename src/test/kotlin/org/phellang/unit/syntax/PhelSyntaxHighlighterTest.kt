@@ -4,7 +4,7 @@ import com.intellij.psi.TokenType
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.phellang.syntax.PhelSyntaxHighlighter
-import org.phellang.language.PhelLexerAdapter
+import org.phellang.language.lexer.PhelLexerAdapter
 import org.phellang.language.psi.PhelTypes
 import org.phellang.syntax.attributes.PhelTextAttributesRegistry
 

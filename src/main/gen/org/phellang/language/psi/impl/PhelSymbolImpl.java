@@ -8,7 +8,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.phellang.language.psi.PhelTypes.*;
-import org.phellang.language.psi.PhelNamedElementImpl;
 import org.phellang.language.psi.*;
 
 public class PhelSymbolImpl extends PhelNamedElementImpl implements PhelSymbol {

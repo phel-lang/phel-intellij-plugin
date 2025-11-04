@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.phellang.language.psi.PhelTypes.*;
-import org.phellang.language.psi.PhelMetadataMixin;
+import org.phellang.language.psi.mixins.PhelMetadataMixin;
 import org.phellang.language.psi.*;
 
 public class PhelMetadataImpl extends PhelMetadataMixin implements PhelMetadata {

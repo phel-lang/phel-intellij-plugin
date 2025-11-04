@@ -9,7 +9,7 @@ import com.intellij.util.IncorrectOperationException
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.psi.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
-import org.phellang.language.psi.PhelFile
+import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol

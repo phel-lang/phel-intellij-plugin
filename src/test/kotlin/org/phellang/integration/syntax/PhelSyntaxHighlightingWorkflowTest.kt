@@ -7,7 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.phellang.syntax.PhelSyntaxHighlighter
 import org.phellang.language.psi.PhelTypes
-import org.phellang.language.PhelLexerAdapter
+import org.phellang.language.lexer.PhelLexerAdapter
 import org.phellang.syntax.attributes.PhelTextAttributesRegistry
 import org.phellang.syntax.mapping.PhelTokenAttributeMapper
 import org.phellang.syntax.classification.PhelTokenClassifier
