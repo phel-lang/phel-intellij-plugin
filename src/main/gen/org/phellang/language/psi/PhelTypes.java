@@ -4,6 +4,8 @@ package org.phellang.language.psi;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.PsiElement;
 import com.intellij.lang.ASTNode;
+import org.phellang.language.psi.elements.PhelElementType;
+import org.phellang.language.psi.elements.PhelTokenType;
 import org.phellang.language.psi.impl.*;
 
 public interface PhelTypes {

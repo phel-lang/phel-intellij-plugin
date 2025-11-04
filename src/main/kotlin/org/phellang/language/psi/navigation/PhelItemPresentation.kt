@@ -148,6 +148,3 @@ class PhelItemPresentation(private val myElement: PhelSymbol) : ItemPresentation
         }
     }
 }
-
-
-

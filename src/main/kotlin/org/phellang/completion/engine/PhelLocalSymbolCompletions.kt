@@ -14,7 +14,7 @@ import org.phellang.completion.infrastructure.PhelCompletionUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.core.utils.PhelPerformanceUtils
-import org.phellang.language.psi.PhelFile
+import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec

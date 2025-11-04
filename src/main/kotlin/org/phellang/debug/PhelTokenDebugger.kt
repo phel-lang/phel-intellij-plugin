@@ -2,7 +2,7 @@ package org.phellang.debug
 
 import com.intellij.lexer.Lexer
 import com.intellij.psi.tree.IElementType
-import org.phellang.language.PhelLexerAdapter
+import org.phellang.language.lexer.PhelLexerAdapter
 
 /**
  * Debug utility to examine token types and their text content.

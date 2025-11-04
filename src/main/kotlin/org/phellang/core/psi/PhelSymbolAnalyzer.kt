@@ -5,6 +5,7 @@ import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
+import org.phellang.language.psi.files.PhelFile
 
 object PhelSymbolAnalyzer {
 

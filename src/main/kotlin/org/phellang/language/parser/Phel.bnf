@@ -82,27 +82,27 @@ fake p_form ::= form * {methods=[forms="form"]}
 fake l_v_form ::= set
 fake s_form ::=
 list ::= '(' list_body ')'
-  {mixin="org.phellang.language.psi.PhelListMixin"}
+  {mixin="org.phellang.language.psi.mixins.PhelListMixin"}
 vec ::= '[' vec_body ']'
 map ::= '{' map_body '}'
 set ::= '#{' set_body '}'
 symbol ::= symbol_qualified
-  {extends="org.phellang.language.psi.PhelNamedElementImpl"
+  {extends="org.phellang.language.psi.impl.PhelNamedElementImpl"
    implements="com.intellij.psi.PsiNameIdentifierOwner"}
 keyword ::= keyword_token | (':' | '::') symbol_qualified
 private symbol_qualified ::= symbol_plain symbol_nsq?
 symbol_plain ::= sym
 left symbol_nsq ::= '/' (sym | coloncolon | dot | dotdash | hat | tilde)
 literal ::= number | hexnum | binnum | octnum | bool | nil | nan | string | char
-  {mixin="org.phellang.language.psi.PhelLiteralMixin"}
+  {mixin="org.phellang.language.psi.mixins.PhelLiteralMixin"}
 
 access ::= ('.' | '.-') symbol
 left access_left ::= ! '.'
 
 metadata ::= "^" (string | symbol | keyword | map)
-  {mixin="org.phellang.language.psi.PhelMetadataMixin"}
+  {mixin="org.phellang.language.psi.mixins.PhelMetadataMixin"}
 reader_macro ::= "'" | "~" | "~@" | "`" | "," | ",@"
-  {mixin="org.phellang.language.psi.PhelReaderMacroMixin"}
+  {mixin="org.phellang.language.psi.mixins.PhelReaderMacroMixin"}
 
 form_comment_macro ::= "#_" form
 short_fn ::= "|(" list_body ")"

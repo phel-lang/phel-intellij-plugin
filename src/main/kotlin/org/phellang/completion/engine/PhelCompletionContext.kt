@@ -7,6 +7,7 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
+import org.phellang.language.psi.files.PhelFile
 
 class PhelCompletionContext(
     parameters: CompletionParameters
