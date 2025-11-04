@@ -8,7 +8,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 import org.phellang.language.infrastructure.PhelFileType
 import org.phellang.editor.typing.pairing.PhelCharacterPairing
-import org.phellang.editor.typing.pairing.PhelQuoteHandler
+import org.phellang.editor.quote.integration.PhelTypingQuoteHandler
 
 class PhelTypedHandler : TypedHandlerDelegate() {
 
@@ -47,7 +47,7 @@ class PhelTypedHandler : TypedHandlerDelegate() {
         }
 
         if (c == '"') {
-            return PhelQuoteHandler.handleQuoteCharacter(editor, document, offset)
+            return PhelTypingQuoteHandler.handleQuoteCharacter(editor, document, offset)
         }
 
         return Result.CONTINUE
