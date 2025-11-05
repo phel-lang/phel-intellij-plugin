@@ -1,6 +1,9 @@
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
+group = "org.phellang"
+version = "0.1.10"
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.2.21"
@@ -17,9 +20,6 @@ System.setProperty("org.gradle.internal.deprecation.disable", "true")
 gradle.settingsEvaluated {
     System.setProperty("org.gradle.internal.deprecation.disable", "true")
 }
-
-group = "org.phellang"
-version = "0.1.9"
 
 repositories {
     mavenCentral()
