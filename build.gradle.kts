@@ -8,7 +8,7 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.2.21"
     id("org.jetbrains.intellij.platform") version "2.10.4"
-    id("org.jetbrains.grammarkit") version "2022.3.2.2"
+    id("org.jetbrains.grammarkit") version "2023.3"
 }
 
 tasks.withType<Wrapper> {
