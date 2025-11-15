@@ -24,6 +24,7 @@ enum class PhelCompletionPriority(val value: Double) {
     HTTP_FUNCTIONS(23.0),
     JSON_FUNCTIONS(22.0),
     TEST_FUNCTIONS(21.0),
+    MOCK_FUNCTIONS(20.0),
 
     // Specialized and external functions
     DEBUG_FUNCTIONS(17.0),

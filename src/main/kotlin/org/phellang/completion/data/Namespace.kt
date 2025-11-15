@@ -6,6 +6,7 @@ enum class Namespace {
     HTML,
     HTTP,
     JSON,
+    MOCK,
     PHP,
     REPL,
     STR,

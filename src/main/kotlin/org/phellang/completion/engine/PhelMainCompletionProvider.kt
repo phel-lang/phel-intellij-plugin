@@ -93,6 +93,7 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
             PhelRegistryCompletionHelper.addTestFunctions(result)
             PhelRegistryCompletionHelper.addPhpInteropFunctions(result)
             PhelRegistryCompletionHelper.addReplFunctions(result)
+            PhelRegistryCompletionHelper.addMockFunctions(result)
         }
     }
 }

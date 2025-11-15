@@ -56,6 +56,11 @@ object PhelRegistryCompletionHelper {
         addNamespaceFunctions(result, Namespace.PHP)
     }
 
+    @JvmStatic
+    fun addMockFunctions(result: CompletionResultSet) {
+        addNamespaceFunctions(result, Namespace.MOCK)
+    }
+
     private fun addNamespaceFunctions(result: CompletionResultSet, namespace: Namespace) {
         val functions = PhelFunctionRegistry.getFunctions(namespace)
         functions.forEach { function ->
