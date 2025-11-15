@@ -25,6 +25,8 @@ object PhelTokenClassifier {
             isParentheses(tokenType) -> TokenCategory.PARENTHESES
             isBrackets(tokenType) -> TokenCategory.BRACKETS
             isBraces(tokenType) -> TokenCategory.BRACES
+            isSetOpener(tokenType) -> TokenCategory.BRACES
+            isShortFnOpener(tokenType) -> TokenCategory.PARENTHESES
             isQuote(tokenType) -> TokenCategory.QUOTE
             isSyntaxQuote(tokenType) -> TokenCategory.SYNTAX_QUOTE
             isUnquote(tokenType) -> TokenCategory.UNQUOTE
@@ -77,6 +79,14 @@ object PhelTokenClassifier {
 
     fun isBraces(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.BRACE1 || tokenType == PhelTypes.BRACE2
+    }
+
+    fun isSetOpener(tokenType: IElementType): Boolean {
+        return tokenType == PhelTypes.HASH_BRACE
+    }
+
+    fun isShortFnOpener(tokenType: IElementType): Boolean {
+        return tokenType == PhelTypes.FN_SHORT
     }
 
     fun isQuote(tokenType: IElementType): Boolean {
