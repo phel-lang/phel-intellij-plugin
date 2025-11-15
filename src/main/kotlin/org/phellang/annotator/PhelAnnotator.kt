@@ -39,10 +39,6 @@ class PhelAnnotator : Annotator {
             is PhelShortFn -> {
                 PhelElementHighlighter.annotateShortFunction(element, holder)
             }
-
-            is PhelSet -> {
-                PhelElementHighlighter.annotateSet(element, holder)
-            }
         }
     }
 }
