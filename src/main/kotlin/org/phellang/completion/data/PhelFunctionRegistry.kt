@@ -41,28 +41,28 @@ object PhelFunctionRegistry {
 
     private fun registerBase64Functions() {
         functions[Namespace.BASE64] = listOf(
-            DataFunction("base64/decode", "(decode s & [strict?])", PhelCompletionPriority.BASE64_FUNCTIONS, "base64", "Decodes a Base64 string. Optional `strict?` flag validates characters.  Example:    (decode \"SGVsbG8=\")    # => \"Hello\"", """
+            DataFunction("base64/decode", "(decode s & [strict?])", PhelCompletionPriority.BASE64_FUNCTIONS, "base64", "Decodes a Base64 string. Optional `strict?` flag validates characters", """
 <br /><code>(decode s & [strict?])</code><br /><br />
 Decodes a Base64 string. Optional <b>strict?</b> flag validates characters.<br />
 <br />
   <pre><code>(decode \"SGVsbG8=\")<br /># => \"Hello\"</code></pre>
 <br />
 """),
-            DataFunction("base64/decode-url", "(decode-url s & [strict?])", PhelCompletionPriority.BASE64_FUNCTIONS, "base64", "Decodes a URL-safe Base64 string. Adds padding automatically.  Example:    (decode-url \"SGVsbG8\")    # => \"Hello\"", """
+            DataFunction("base64/decode-url", "(decode-url s & [strict?])", PhelCompletionPriority.BASE64_FUNCTIONS, "base64", "Decodes a URL-safe Base64 string. Adds padding automatically", """
 <br /><code>(decode-url s & [strict?])</code><br /><br />
 Decodes a URL-safe Base64 string. Adds padding automatically.<br />
 <br />
   <pre><code>(decode-url \"SGVsbG8\")<br /># => \"Hello\"</code></pre>
 <br />
 """),
-            DataFunction("base64/encode", "(encode s)", PhelCompletionPriority.BASE64_FUNCTIONS, "base64", "Encodes a string to Base64.  Example:    (encode \"Hello\")    # => \"SGVsbG8=\"", """
+            DataFunction("base64/encode", "(encode s)", PhelCompletionPriority.BASE64_FUNCTIONS, "base64", "Encodes a string to Base64", """
 <br /><code>(encode s)</code><br /><br />
 Encodes a string to Base64.<br />
 <br />
   <pre><code>(encode \"Hello\")<br /># => \"SGVsbG8=\"</code></pre>
 <br />
 """),
-            DataFunction("base64/encode-url", "(encode-url s)", PhelCompletionPriority.BASE64_FUNCTIONS, "base64", "Encodes a string to URL-safe Base64 (no padding).  Example:    (encode-url \"Hello\")    # => \"SGVsbG8\"", """
+            DataFunction("base64/encode-url", "(encode-url s)", PhelCompletionPriority.BASE64_FUNCTIONS, "base64", "Encodes a string to URL-safe Base64 (no padding)", """
 <br /><code>(encode-url s)</code><br /><br />
 Encodes a string to URL-safe Base64 (no padding).<br />
 <br />
@@ -138,7 +138,7 @@ Returns the nominator divided by all the denominators. If <b>xs</b> is empty,<br
 returns 1. If <b>xs</b> has one value, returns the reciprocal of x.<br />
 <br />
 """),
-            DataFunction("<", "(< a & more)", PhelCompletionPriority.ARITHMETIC_FUNCTIONS, "core", "Checks if each argument is strictly less than the following argument.  Example:    (< 1 2 3 4)    # => true", """
+            DataFunction("<", "(< a & more)", PhelCompletionPriority.ARITHMETIC_FUNCTIONS, "core", "Checks if each argument is strictly less than the following argument", """
 <br /><code>(< a & more)</code><br /><br />
 Checks if each argument is strictly less than the following argument.<br />
 <br />
@@ -155,14 +155,14 @@ Checks if each argument is less than or equal to the following argument. Returns
 Alias for the spaceship PHP operator in ascending order. Returns an int.<br />
 <br />
 """),
-            DataFunction("=", "(= a & more)", PhelCompletionPriority.ARITHMETIC_FUNCTIONS, "core", "Checks if all values are equal (value equality, not identity).  Example:    (= [1 2 3] [1 2 3])    # => true", """
+            DataFunction("=", "(= a & more)", PhelCompletionPriority.ARITHMETIC_FUNCTIONS, "core", "Checks if all values are equal (value equality, not identity)", """
 <br /><code>(= a & more)</code><br /><br />
 Checks if all values are equal (value equality, not identity).<br />
 <br />
   <pre><code>(= [1 2 3] [1 2 3])<br /># => true</code></pre>
 <br />
 """),
-            DataFunction(">", "(> a & more)", PhelCompletionPriority.ARITHMETIC_FUNCTIONS, "core", "Checks if each argument is strictly greater than the following argument.  Example:    (> 4 3 2 1)    # => true", """
+            DataFunction(">", "(> a & more)", PhelCompletionPriority.ARITHMETIC_FUNCTIONS, "core", "Checks if each argument is strictly greater than the following argument", """
 <br /><code>(> a & more)</code><br /><br />
 Checks if each argument is strictly greater than the following argument.<br />
 <br />
@@ -183,14 +183,14 @@ Alias for the spaceship PHP operator in descending order. Returns an int.<br />
 Constant for Not a Number (NAN) values.<br />
 <br />
 """),
-            DataFunction("all?", "(all? pred coll)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if predicate is true for every element in collection, false otherwise.  Example:    (all? even? [2 4 6 8])    # => true", """
+            DataFunction("all?", "(all? pred coll)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if predicate is true for every element in collection, false otherwise", """
 <br /><code>(all? pred coll)</code><br /><br />
 Returns true if predicate is true for every element in collection, false otherwise.<br />
 <br />
   <pre><code>(all? even? [2 4 6 8])<br /># => true</code></pre>
 <br />
 """),
-            DataFunction("and", "(and & args)", PhelCompletionPriority.MACROS, "core", "Evaluates expressions left to right, returning the first falsy value or the last value.  Example:    (and true 1 \"hello\")    # => \"hello\"", """
+            DataFunction("and", "(and & args)", PhelCompletionPriority.MACROS, "core", "Evaluates expressions left to right, returning the first falsy value or the last value", """
 <br /><code>(and & args)</code><br /><br />
 Evaluates expressions left to right, returning the first falsy value or the last value.<br />
 <br />
@@ -218,7 +218,7 @@ Binds <b>name</b> to <b>expr</b>, evaluates the first form in the lexical contex
 <br />
 <br />
 """),
-            DataFunction("assoc", "(assoc ds key value)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Associates a value with a key in a collection.  Example:    (assoc {:a 1} :b 2)    # => {:a 1 :b 2}", """
+            DataFunction("assoc", "(assoc ds key value)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Associates a value with a key in a collection", """
 <br /><code>(assoc ds key value)</code><br /><br />
 Associates a value with a key in a collection.<br />
 <br />
@@ -301,7 +301,7 @@ Returns true if <b>x</b> is a boolean, false otherwise.<br />
 Returns all but the last item in <b>coll</b>.<br />
 <br />
 """),
-            DataFunction("case", "(case e & pairs)", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates expression and matches it against constant test values, returning the associated result.  Example:    (case x      1 \"one\"      2 \"two\"      \"other\")    # => \"one\" (when x is 1)", """
+            DataFunction("case", "(case e & pairs)", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates expression and matches it against constant test values, returning the associated result", """
 <br /><code>(case e & pairs)</code><br /><br />
 Evaluates expression and matches it against constant test values, returning the associated result.<br />
 <br />
@@ -345,13 +345,13 @@ Returns the compiled PHP code string for the given form.<br />
 Returns a function that takes the same arguments as <b>f</b> and returns the opposite truth value.<br />
 <br />
 """),
-            DataFunction("concat", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Concatenates multiple collections into a lazy sequence.  Example:    (concat [1 2] [3 4])    # => (1 2 3 4)", """
+            DataFunction("concat", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Concatenates multiple collections into a lazy sequence", """
 Concatenates multiple collections into a lazy sequence.<br />
 <br />
   <pre><code>(concat [1 2] [3 4])<br /># => (1 2 3 4)</code></pre>
 <br />
 """),
-            DataFunction("cond", "(cond & pairs)", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates test/expression pairs, returning the first matching expression.  Example:    (cond (< x 0) \"negative\" (> x 0) \"positive\" \"zero\")    # => \"negative\", \"positive\", or \"zero\" depending on x", """
+            DataFunction("cond", "(cond & pairs)", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates test/expression pairs, returning the first matching expression", """
 <br /><code>(cond & pairs)</code><br /><br />
 Evaluates test/expression pairs, returning the first matching expression.<br />
 <br />
@@ -370,7 +370,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
       # => <code>{:a 1 :b 2}</code><br />
 <br />
 """),
-            DataFunction("cons", "(cons x coll)", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Prepends an element to the beginning of a collection.  Example:    (cons 0 [1 2 3])    # => [0 1 2 3]", """
+            DataFunction("cons", "(cons x coll)", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Prepends an element to the beginning of a collection", """
 <br /><code>(cons x coll)</code><br /><br />
 Prepends an element to the beginning of a collection.<br />
 <br />
@@ -387,7 +387,7 @@ Returns a function that always returns <b>x</b> and ignores any passed arguments
 Returns true if the value is present in the given collection, otherwise returns false.<br />
 <br />
 """),
-            DataFunction("contains?", "(contains? coll key)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if key is present in collection (checks keys/indices, not values).  Example:    (contains? [10 20 30] 1)    # => true", """
+            DataFunction("contains?", "(contains? coll key)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if key is present in collection (checks keys/indices, not values)", """
 <br /><code>(contains? coll key)</code><br /><br />
 Returns true if key is present in collection (checks keys/indices, not values).<br />
 <br />
@@ -423,7 +423,7 @@ Counts the number of elements in a sequence. Can be used on everything that impl
   See also: empty?, seq<br />
 <br />
 """),
-            DataFunction("csv-seq", "(csv-seq filename)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of rows from a CSV file.  Example:    (take 10 (csv-seq \"data.csv\"))    # => [[\"col1\" \"col2\"] [\"val1\" \"val2\"] ...]", """
+            DataFunction("csv-seq", "(csv-seq filename)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of rows from a CSV file", """
 <br /><code>(csv-seq filename)</code><br /><br />
 Returns a lazy sequence of rows from a CSV file.<br />
 <br />
@@ -545,7 +545,7 @@ Returns a lazy sequence with duplicated values removed in <b>coll</b>.<br />
 Evaluates the expressions in order and returns the value of the last expression. If no expression is given, nil is returned.<br />
 <br />
 """),
-            DataFunction("doall", "(doall coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Forces realization of a lazy sequence and returns it as a vector.  Example:    (doall (map println [1 2 3]))    # => [nil nil nil]", """
+            DataFunction("doall", "(doall coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Forces realization of a lazy sequence and returns it as a vector", """
 <br /><code>(doall coll)</code><br /><br />
 Forces realization of a lazy sequence and returns it as a vector.<br />
 <br />
@@ -558,7 +558,7 @@ Repeatedly executes body for side effects with bindings and modifiers as<br />
   provided by for. Returns nil.<br />
 <br />
 """),
-            DataFunction("dorun", "(dorun coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Forces realization of a lazy sequence for side effects, returns nil.  Example:    (dorun (map println [1 2 3]))    # => nil", """
+            DataFunction("dorun", "(dorun coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Forces realization of a lazy sequence for side effects, returns nil", """
 <br /><code>(dorun coll)</code><br /><br />
 Forces realization of a lazy sequence for side effects, returns nil.<br />
 <br />
@@ -617,7 +617,7 @@ Alias for <b>all?</b>.<br />
 Returns the most extreme value in <b>args</b> based on the binary <b>order</b> function.<br />
 <br />
 """),
-            DataFunction("false?", "(false? x)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Checks if value is exactly false (not just falsy).  Example:    (false? nil)    # => false", """
+            DataFunction("false?", "(false? x)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Checks if value is exactly false (not just falsy)", """
 <br /><code>(false? x)</code><br /><br />
 Checks if value is exactly false (not just falsy).<br />
 <br />
@@ -629,14 +629,14 @@ Checks if value is exactly false (not just falsy).<br />
 Same as <b>(first (first coll))</b>.<br />
 <br />
 """),
-            DataFunction("file-seq", "(file-seq path)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of all files and directories in a directory tree.  Example:    (filter |(php/str_ends_with $ \".phel\") (file-seq \"src/\"))    # => [\"src/file1.phel\" \"src/file2.phel\" ...]", """
+            DataFunction("file-seq", "(file-seq path)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of all files and directories in a directory tree", """
 <br /><code>(file-seq path)</code><br /><br />
 Returns a lazy sequence of all files and directories in a directory tree.<br />
 <br />
   <pre><code>(filter |(php/str_ends_with $ \".phel\") (file-seq \"src/\"))<br /># => [\"src/file1.phel\" \"src/file2.phel\" ...]</code></pre>
 <br />
 """),
-            DataFunction("filter", "(filter pred coll)", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Returns a lazy sequence of elements where predicate returns true.  Example:    (filter even? [1 2 3 4 5 6])    # => (2 4 6)", """
+            DataFunction("filter", "(filter pred coll)", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Returns a lazy sequence of elements where predicate returns true", """
 <br /><code>(filter pred coll)</code><br /><br />
 Returns a lazy sequence of elements where predicate returns true.<br />
 <br />
@@ -658,13 +658,13 @@ Returns the first item in <b>coll</b> where <b>(pred item)</b> evaluates to true
 Returns the index of the first item in <b>coll</b> where <b>(pred index item)</b> evaluates to true.<br />
 <br />
 """),
-            DataFunction("first", "", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Returns the first element of a sequence, or nil if empty.  Example:    (first [1 2 3])    # => 1", """
+            DataFunction("first", "", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Returns the first element of a sequence, or nil if empty", """
 Returns the first element of a sequence, or nil if empty.<br />
 <br />
   <pre><code>(first [1 2 3])<br /># => 1</code></pre>
 <br />
 """),
-            DataFunction("flatten", "(flatten coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Flattens nested sequential structure into a lazy sequence of all leaf values.  Example:    (flatten [[1 2] [3 [4 5]] 6])    # => (1 2 3 4 5 6)", """
+            DataFunction("flatten", "(flatten coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Flattens nested sequential structure into a lazy sequence of all leaf values", """
 <br /><code>(flatten coll)</code><br /><br />
 Flattens nested sequential structure into a lazy sequence of all leaf values.<br />
 <br />
@@ -716,7 +716,7 @@ Returns true if <b>x</b> is a function, false otherwise.<br />
 Generates a new unique symbol.<br />
 <br />
 """),
-            DataFunction("get", "(get ds k & [opt])", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Gets the value at key in a collection. Returns default if not found.  Example:    (get {:a 1} :a)    # => 1", """
+            DataFunction("get", "(get ds k & [opt])", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Gets the value at key in a collection. Returns default if not found", """
 <br /><code>(get ds k & [opt])</code><br /><br />
 Gets the value at key in a collection. Returns default if not found.<br />
 <br />
@@ -767,7 +767,7 @@ If test is true, evaluates then with binding-form bound to the value of test,<br
   if not, yields else<br />
 <br />
 """),
-            DataFunction("if-not", "(if-not test then & [else])", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates then if test is false, else otherwise.  Example:    (if-not (< 5 3) \"not less\" \"less\")    # => \"not less\"", """
+            DataFunction("if-not", "(if-not test then & [else])", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates then if test is false, else otherwise", """
 <br /><code>(if-not test then & [else])</code><br /><br />
 Evaluates then if test is false, else otherwise.<br />
 <br />
@@ -789,7 +789,7 @@ Returns true if <b>x</b> is indexed sequence, false otherwise.<br />
 Returns true if <b>x</b> is an integer number, false otherwise.<br />
 <br />
 """),
-            DataFunction("interleave", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Interleaves multiple collections. Returns a lazy sequence.  Returns elements by taking one from each collection in turn.  Pads with nil when collections have different lengths.  Works with infinite sequences.  Example: (interleave [1 2 3] [:a :b :c]) ; => (1 :a 2 :b 3 :c)", """
+            DataFunction("interleave", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Interleaves multiple collections. Returns a lazy sequence.  Returns elements by taking one from each collection in turn.  Pads with nil when collections have different lengths.  Works with infinite sequences", """
 Interleaves multiple collections. Returns a lazy sequence.<br />
 <br />
   Returns elements by taking one from each collection in turn.<br />
@@ -799,7 +799,7 @@ Interleaves multiple collections. Returns a lazy sequence.<br />
   Example: (interleave [1 2 3] [:a :b :c]) ; => (1 :a 2 :b 3 :c)<br />
 <br />
 """),
-            DataFunction("interpose", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns elements separated by a separator. Returns a lazy sequence.  Inserts `sep` between each element of the collection.  Works with infinite sequences.  Example: (interpose 0 [1 2 3]) ; => (1 0 2 0 3)", """
+            DataFunction("interpose", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns elements separated by a separator. Returns a lazy sequence.  Inserts `sep` between each element of the collection.  Works with infinite sequences", """
 Returns elements separated by a separator. Returns a lazy sequence.<br />
 <br />
   Inserts <b>sep</b> between each element of the collection.<br />
@@ -838,7 +838,7 @@ Takes a list of functions and returns a new function that is the juxtaposition o
   <b>((juxt a b c) x) => [(a x) (b x) (c x)]</b>.<br />
 <br />
 """),
-            DataFunction("keep", "(keep pred coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of non-nil results of applying function to elements.  Example:    (keep #(when (even? %) (* % %)) [1 2 3 4 5])    # => (4 16)", """
+            DataFunction("keep", "(keep pred coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of non-nil results of applying function to elements", """
 <br /><code>(keep pred coll)</code><br /><br />
 Returns a lazy sequence of non-nil results of applying function to elements.<br />
 <br />
@@ -850,7 +850,7 @@ Returns a lazy sequence of non-nil results of applying function to elements.<br 
 Returns a lazy sequence of non-nil results of <b>(pred i x)</b>.<br />
 <br />
 """),
-            DataFunction("keys", "(keys coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a sequence of all keys in a map.  Example:    (keys {:a 1 :b 2})    # => (:a :b)", """
+            DataFunction("keys", "(keys coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a sequence of all keys in a map", """
 <br /><code>(keys coll)</code><br /><br />
 Returns a sequence of all keys in a map.<br />
 <br />
@@ -877,14 +877,14 @@ Returns a vector of key-value pairs like <b>[k1 v1 k2 v2 k3 v3 ...]</b>.<br />
 Returns the last element of <b>coll</b> or nil if <b>coll</b> is empty or nil.<br />
 <br />
 """),
-            DataFunction("lazy-cat", "(lazy-cat & colls)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Concatenates collections into a lazy sequence (expands to concat).  Example:    (lazy-cat [1 2] [3 4])    # => (1 2 3 4)", """
+            DataFunction("lazy-cat", "(lazy-cat & colls)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Concatenates collections into a lazy sequence (expands to concat)", """
 <br /><code>(lazy-cat & colls)</code><br /><br />
 Concatenates collections into a lazy sequence (expands to concat).<br />
 <br />
   <pre><code>(lazy-cat [1 2] [3 4])<br /># => (1 2 3 4)</code></pre>
 <br />
 """),
-            DataFunction("lazy-seq", "(lazy-seq & body)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Creates a lazy sequence that evaluates the body only when accessed.  Example:    (defn my-range [n]      (when (> n 0)        (lazy-seq (cons n (my-range (dec n))))))", """
+            DataFunction("lazy-seq", "(lazy-seq & body)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Creates a lazy sequence that evaluates the body only when accessed", """
 <br /><code>(lazy-seq & body)</code><br /><br />
 Creates a lazy sequence that evaluates the body only when accessed.<br />
 <br />
@@ -896,7 +896,7 @@ Creates a lazy sequence that evaluates the body only when accessed.<br />
 Creates a new lexical context with assignments defined in bindings. Afterwards the list of expressions is evaluated and the value of the last expression is returned. If no expression is given nil is returned.<br />
 <br />
 """),
-            DataFunction("line-seq", "(line-seq filename)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of lines from a file.  Example:    (take 10 (line-seq \"large-file.txt\"))    # => [\"line1\" \"line2\" ...]", """
+            DataFunction("line-seq", "(line-seq filename)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of lines from a file", """
 <br /><code>(line-seq filename)</code><br /><br />
 Returns a lazy sequence of lines from a file.<br />
 <br />
@@ -956,7 +956,7 @@ Returns a lazy sequence of the result of applying <b>f</b> to all of the first i
   See also: filter, reduce, map-indexed, mapcat<br />
 <br />
 """),
-            DataFunction("map-indexed", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Maps a function over a collection with index. Returns a lazy sequence.  Applies `f` to each element in `xs`. `f` is a two-argument function where  the first argument is the index (0-based) and the second is the element itself.  Works with infinite sequences.  Example: (map-indexed vector [:a :b :c]) ; => ([0 :a] [1 :b] [2 :c])", """
+            DataFunction("map-indexed", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Maps a function over a collection with index. Returns a lazy sequence.  Applies `f` to each element in `xs`. `f` is a two-argument function where  the first argument is the index (0-based) and the second is the element itself.  Works with infinite sequences", """
 Maps a function over a collection with index. Returns a lazy sequence.<br />
 <br />
   Applies <b>f</b> to each element in <b>xs</b>. <b>f</b> is a two-argument function where<br />
@@ -966,7 +966,7 @@ Maps a function over a collection with index. Returns a lazy sequence.<br />
   Example: (map-indexed vector [:a :b :c]) ; => ([0 :a] [1 :b] [2 :c])<br />
 <br />
 """),
-            DataFunction("mapcat", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Maps a function over a collection and concatenates the results. Returns a lazy sequence.  Applies `f` to each element of the collection, where `f` should return a collection.  All resulting collections are concatenated into a single lazy sequence.  Works with infinite sequences.  Example: (mapcat reverse [[1 2] [3 4]]) ; => (2 1 4 3)", """
+            DataFunction("mapcat", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Maps a function over a collection and concatenates the results. Returns a lazy sequence.  Applies `f` to each element of the collection, where `f` should return a collection.  All resulting collections are concatenated into a single lazy sequence.  Works with infinite sequences", """
 Maps a function over a collection and concatenates the results. Returns a lazy sequence.<br />
 <br />
   Applies <b>f</b> to each element of the collection, where <b>f</b> should return a collection.<br />
@@ -1038,7 +1038,7 @@ Checks if <b>x</b> is not a number.<br />
 Checks if <b>x</b> is smaller than zero.<br />
 <br />
 """),
-            DataFunction("next", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns the sequence after the first element, or nil if empty.  Example:    (next [1 2 3])    # => [2 3]", """
+            DataFunction("next", "", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns the sequence after the first element, or nil if empty", """
 Returns the sequence after the first element, or nil if empty.<br />
 <br />
   <pre><code>(next [1 2 3])<br /># => [2 3]</code></pre>
@@ -1049,7 +1049,7 @@ Returns the sequence after the first element, or nil if empty.<br />
 Same as <b>(next (first coll))</b>.<br />
 <br />
 """),
-            DataFunction("nil?", "(nil? x)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if value is nil, false otherwise.  Example:    (nil? (get {:a 1} :b))    # => true", """
+            DataFunction("nil?", "(nil? x)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if value is nil, false otherwise", """
 <br /><code>(nil? x)</code><br /><br />
 Returns true if value is nil, false otherwise.<br />
 <br />
@@ -1061,7 +1061,7 @@ Returns true if value is nil, false otherwise.<br />
 Same as <b>(next (next coll))</b>.<br />
 <br />
 """),
-            DataFunction("not", "(not x)", PhelCompletionPriority.ARITHMETIC_FUNCTIONS, "core", "Returns true if value is falsy (nil or false), false otherwise.  Example:    (not nil)    # => true", """
+            DataFunction("not", "(not x)", PhelCompletionPriority.ARITHMETIC_FUNCTIONS, "core", "Returns true if value is falsy (nil or false), false otherwise", """
 <br /><code>(not x)</code><br /><br />
 Returns true if value is falsy (nil or false), false otherwise.<br />
 <br />
@@ -1110,7 +1110,7 @@ Checks if <b>x</b> is odd.<br />
 Checks if <b>x</b> is one.<br />
 <br />
 """),
-            DataFunction("or", "(or & args)", PhelCompletionPriority.MACROS, "core", "Evaluates expressions left to right, returning the first truthy value or the last value.  Example:    (or false nil 42 100)    # => 42", """
+            DataFunction("or", "(or & args)", PhelCompletionPriority.MACROS, "core", "Evaluates expressions left to right, returning the first truthy value or the last value", """
 <br /><code>(or & args)</code><br /><br />
 Evaluates expressions left to right, returning the first truthy value or the last value.<br />
 <br />
@@ -1129,14 +1129,14 @@ Takes a function <b>f</b> and fewer than normal arguments of <b>f</b> and return
   with <b>args</b> and the additional arguments.<br />
 <br />
 """),
-            DataFunction("partition", "(partition n coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Partitions collection into chunks of size n, dropping incomplete final partition.  Example:    (partition 3 [1 2 3 4 5 6 7])    # => ([1 2 3] [4 5 6])", """
+            DataFunction("partition", "(partition n coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Partitions collection into chunks of size n, dropping incomplete final partition", """
 <br /><code>(partition n coll)</code><br /><br />
 Partitions collection into chunks of size n, dropping incomplete final partition.<br />
 <br />
   <pre><code>(partition 3 [1 2 3 4 5 6 7])<br /># => ([1 2 3] [4 5 6])</code></pre>
 <br />
 """),
-            DataFunction("partition-all", "(partition-all n coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Partitions collection into chunks of size n, including incomplete final partition.  Example:    (partition-all 3 [1 2 3 4 5 6 7])    # => ([1 2 3] [4 5 6] [7])", """
+            DataFunction("partition-all", "(partition-all n coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Partitions collection into chunks of size n, including incomplete final partition", """
 <br /><code>(partition-all n coll)</code><br /><br />
 Partitions collection into chunks of size n, including incomplete final partition.<br />
 <br />
@@ -1268,7 +1268,7 @@ Returns a random number between 0 and <b>n</b>.<br />
 Returns a random item from xs.<br />
 <br />
 """),
-            DataFunction("range", "(range a & rest)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Creates a lazy sequence of numbers from start to end (exclusive).  Example:    (range 5)    # => (0 1 2 3 4)", """
+            DataFunction("range", "(range a & rest)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Creates a lazy sequence of numbers from start to end (exclusive)", """
 <br /><code>(range a & rest)</code><br /><br />
 Creates a lazy sequence of numbers from start to end (exclusive).<br />
 <br />
@@ -1280,7 +1280,7 @@ Creates a lazy sequence of numbers from start to end (exclusive).<br />
 Returns a sequence of successive matches of pattern in string.<br />
 <br />
 """),
-            DataFunction("read-file-lazy", "(read-file-lazy filename)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of byte chunks from a file.  Example:    (take 5 (read-file-lazy \"large-file.bin\" 1024))    # => [\"chunk1\" \"chunk2\" ...]", """
+            DataFunction("read-file-lazy", "(read-file-lazy filename)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a lazy sequence of byte chunks from a file", """
 <br /><code>(read-file-lazy filename)</code><br /><br />
 Returns a lazy sequence of byte chunks from a file.<br />
 <br />
@@ -1292,7 +1292,7 @@ Returns a lazy sequence of byte chunks from a file.<br />
 Reads the first phel expression from the string s.<br />
 <br />
 """),
-            DataFunction("realized?", "(realized? coll)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if a lazy sequence has been realized, false otherwise.  Example:    (realized? (take 5 (iterate inc 1)))    # => false", """
+            DataFunction("realized?", "(realized? coll)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if a lazy sequence has been realized, false otherwise", """
 <br /><code>(realized? coll)</code><br /><br />
 Returns true if a lazy sequence has been realized, false otherwise.<br />
 <br />
@@ -1304,7 +1304,7 @@ Returns true if a lazy sequence has been realized, false otherwise.<br />
 Internally recur is implemented as a PHP while loop and therefore prevents the Maximum function nesting level errors.<br />
 <br />
 """),
-            DataFunction("reduce", "(reduce f & args)", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Reduces collection to a single value by repeatedly applying function to accumulator and elements.  Example:    (reduce + [1 2 3 4])    # => 10", """
+            DataFunction("reduce", "(reduce f & args)", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Reduces collection to a single value by repeatedly applying function to accumulator and elements", """
 <br /><code>(reduce f & args)</code><br /><br />
 Reduces collection to a single value by repeatedly applying function to accumulator and elements.<br />
 <br />
@@ -1328,7 +1328,7 @@ Returns a vector of length n with values produced by repeatedly calling f.<br />
   With one argument returns an infinite lazy sequence of calls to f.<br />
 <br />
 """),
-            DataFunction("rest", "(rest coll)", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Returns the sequence after the first element, or empty sequence if none.  Example:    (rest [1 2 3])    # => [2 3]", """
+            DataFunction("rest", "(rest coll)", PhelCompletionPriority.COLLECTION_FUNCTIONS, "core", "Returns the sequence after the first element, or empty sequence if none", """
 <br /><code>(rest coll)</code><br /><br />
 Returns the sequence after the first element, or empty sequence if none.<br />
 <br />
@@ -1340,7 +1340,7 @@ Returns the sequence after the first element, or empty sequence if none.<br />
 Reverses the order of the elements in the given sequence.<br />
 <br />
 """),
-            DataFunction("second", "(second coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns the second element of a sequence, or nil if not present.  Example:    (second [1 2 3])    # => 2", """
+            DataFunction("second", "(second coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns the second element of a sequence, or nil if not present", """
 <br /><code>(second coll)</code><br /><br />
 Returns the second element of a sequence, or nil if not present.<br />
 <br />
@@ -1352,7 +1352,7 @@ Returns the second element of a sequence, or nil if not present.<br />
 Returns a new map including key value pairs from <b>m</b> selected with of keys <b>ks</b>.<br />
 <br />
 """),
-            DataFunction("set", "(set & xs)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Creates a new Set from the given arguments. Shortcut: #{}  Example:    (set 1 2 3)    # => #{1 2 3}", """
+            DataFunction("set", "(set & xs)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Creates a new Set from the given arguments. Shortcut: #{}", """
 <br /><code>(set & xs)</code><br /><br />
 Creates a new Set from the given arguments. Shortcut: #{}<br />
 <br />
@@ -1388,14 +1388,14 @@ Returns a random permutation of coll.<br />
 Extract a slice of <b>coll</b>.<br />
 <br />
 """),
-            DataFunction("slurp", "(slurp path & [opts])", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Reads entire file or URL into a string.  Example:    (slurp \"file.txt\")    # => \"file contents\"", """
+            DataFunction("slurp", "(slurp path & [opts])", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Reads entire file or URL into a string", """
 <br /><code>(slurp path & [opts])</code><br /><br />
 Reads entire file or URL into a string.<br />
 <br />
   <pre><code>(slurp \"file.txt\")<br /># => \"file contents\"</code></pre>
 <br />
 """),
-            DataFunction("some", "(some pred coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns the first truthy value of applying predicate to elements, or nil if none found.  Example:    (some #(when (> % 10) %) [5 15 8])    # => 15", """
+            DataFunction("some", "(some pred coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns the first truthy value of applying predicate to elements, or nil if none found", """
 <br /><code>(some pred coll)</code><br /><br />
 Returns the first truthy value of applying predicate to elements, or nil if none found.<br />
 <br />
@@ -1412,7 +1412,7 @@ Threads <b>x</b> through the forms like <b>-></b> but stops when a form returns 
 Threads <b>x</b> through the forms like <b>->></b> but stops when a form returns <b>nil</b>.<br />
 <br />
 """),
-            DataFunction("some?", "(some? pred coll)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if predicate is true for at least one element in collection, false otherwise.  Example:    (some? even? [1 3 5 6 7])    # => true", """
+            DataFunction("some?", "(some? pred coll)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Returns true if predicate is true for at least one element in collection, false otherwise", """
 <br /><code>(some? pred coll)</code><br /><br />
 Returns true if predicate is true for at least one element in collection, false otherwise.<br />
 <br />
@@ -1551,7 +1551,7 @@ Returns a vector of the nodes in the tree, via a depth-first walk.<br />
   root the root node of the tree.<br />
 <br />
 """),
-            DataFunction("true?", "(true? x)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Checks if value is exactly true (not just truthy).  Example:    (true? 1)    # => false", """
+            DataFunction("true?", "(true? x)", PhelCompletionPriority.PREDICATE_FUNCTIONS, "core", "Checks if value is exactly true (not just truthy)", """
 <br /><code>(true? x)</code><br /><br />
 Checks if value is exactly true (not just truthy).<br />
 <br />
@@ -1633,7 +1633,7 @@ Updates a value in a datastructure by applying <b>f</b> to the current element a
 Updates a value into a nested data structure.<br />
 <br />
 """),
-            DataFunction("values", "(values coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a sequence of all values in a map.  Example:    (values {:a 1 :b 2})    # => (1 2)", """
+            DataFunction("values", "(values coll)", PhelCompletionPriority.CORE_FUNCTIONS, "core", "Returns a sequence of all values in a map", """
 <br /><code>(values coll)</code><br /><br />
 Returns a sequence of all values in a map.<br />
 <br />
@@ -1660,7 +1660,7 @@ Creates a new vector. If no argument is provided, an empty vector is created.<br
 Returns true if <b>x</b> is a vector, false otherwise.<br />
 <br />
 """),
-            DataFunction("when", "(when test & body)", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates body if test is true, otherwise returns nil.  Example:    (when (> 10 5) \"greater\")    # => \"greater\"", """
+            DataFunction("when", "(when test & body)", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates body if test is true, otherwise returns nil", """
 <br /><code>(when test & body)</code><br /><br />
 Evaluates body if test is true, otherwise returns nil.<br />
 <br />
@@ -1672,7 +1672,7 @@ Evaluates body if test is true, otherwise returns nil.<br />
 When test is true, evaluates body with binding-form bound to the value of test<br />
 <br />
 """),
-            DataFunction("when-not", "(when-not test & body)", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates body if test is false, otherwise returns nil.  Example:    (when-not (empty? [1 2 3]) \"has items\")    # => \"has items\"", """
+            DataFunction("when-not", "(when-not test & body)", PhelCompletionPriority.CONTROL_FLOW, "core", "Evaluates body if test is false, otherwise returns nil", """
 <br /><code>(when-not test & body)</code><br /><br />
 Evaluates body if test is false, otherwise returns nil.<br />
 <br />
@@ -1705,42 +1705,42 @@ Returns a new map with the keys mapped to the corresponding values. Stops when t
 
     private fun registerDebugFunctions() {
         functions[Namespace.DEBUG] = listOf(
-            DataFunction("debug/dbg", "(dbg expr)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Evaluates an expression and prints it with its result.  Example:    (dbg (+ 1 2))    # Prints: (+ 1 2) => 3    # => 3", """
+            DataFunction("debug/dbg", "(dbg expr)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Evaluates an expression and prints it with its result", """
 <br /><code>(dbg expr)</code><br /><br />
 Evaluates an expression and prints it with its result.<br />
 <br />
   <pre><code>(dbg (+ 1 2))<br /># Prints: (+ 1 2) => 3<br /># => 3</code></pre>
 <br />
 """),
-            DataFunction("debug/dotrace", "(dotrace name f)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Wraps a function to print each call and result with indentation.  Example:    (def add (dotrace \"add\" +))    (add 2 3)    # Prints: TRACE t01: (add 2 3)    # Prints: TRACE t01: => 5", """
+            DataFunction("debug/dotrace", "(dotrace name f)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Wraps a function to print each call and result with indentation", """
 <br /><code>(dotrace name f)</code><br /><br />
 Wraps a function to print each call and result with indentation.<br />
 <br />
   <pre><code>(def add (dotrace \"add\" +))<br />(add 2 3)<br /># Prints: TRACE t01: (add 2 3)<br /># Prints: TRACE t01: => 5</code></pre>
 <br />
 """),
-            DataFunction("debug/reset-trace-state!", "(reset-trace-state! )", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Resets trace counters to initial values.  Example:    (reset-trace-state!)    # Trace IDs restart from 01", """
+            DataFunction("debug/reset-trace-state!", "(reset-trace-state! )", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Resets trace counters to initial values", """
 <br /><code>(reset-trace-state! )</code><br /><br />
 Resets trace counters to initial values.<br />
 <br />
   <pre><code>(reset-trace-state!)<br /># Trace IDs restart from 01</code></pre>
 <br />
 """),
-            DataFunction("debug/set-trace-id-padding!", "(set-trace-id-padding! estimated-id-padding)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Sets the number of digits for trace ID padding.  Example:    (set-trace-id-padding! 3)    # Uses 3 digits: 001, 002, etc", """
+            DataFunction("debug/set-trace-id-padding!", "(set-trace-id-padding! estimated-id-padding)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Sets the number of digits for trace ID padding", """
 <br /><code>(set-trace-id-padding! estimated-id-padding)</code><br /><br />
 Sets the number of digits for trace ID padding.<br />
 <br />
   <pre><code>(set-trace-id-padding! 3)<br /># Uses 3 digits: 001, 002, etc.</code></pre>
 <br />
 """),
-            DataFunction("debug/spy", "(spy expr)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Evaluates an expression and prints it with an optional label.  Example:    (spy (+ 1 2))    # Prints: SPY (+ 1 2) => 3    # => 3", """
+            DataFunction("debug/spy", "(spy expr)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Evaluates an expression and prints it with an optional label", """
 <br /><code>(spy expr)</code><br /><br />
 Evaluates an expression and prints it with an optional label.<br />
 <br />
   <pre><code>(spy (+ 1 2))<br /># Prints: SPY (+ 1 2) => 3<br /># => 3</code></pre>
 <br />
 """),
-            DataFunction("debug/tap", "(tap value)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Prints a value and returns it unchanged. Useful in pipelines.  Example:    (-> 5 (tap) (* 2))    # Prints: TAP => 5    # => 10", """
+            DataFunction("debug/tap", "(tap value)", PhelCompletionPriority.DEBUG_FUNCTIONS, "debug", "Prints a value and returns it unchanged. Useful in pipelines", """
 <br /><code>(tap value)</code><br /><br />
 Prints a value and returns it unchanged. Useful in pipelines.<br />
 <br />
@@ -1752,21 +1752,21 @@ Prints a value and returns it unchanged. Useful in pipelines.<br />
 
     private fun registerHtmlFunctions() {
         functions[Namespace.HTML] = listOf(
-            DataFunction("html/doctype", "(doctype type)", PhelCompletionPriority.HTML_FUNCTIONS, "html", "Returns an HTML doctype declaration.  Example:    (doctype :html5)    # => \"<!DOCTYPE html>\n\"", """
+            DataFunction("html/doctype", "(doctype type)", PhelCompletionPriority.HTML_FUNCTIONS, "html", "Returns an HTML doctype declaration", """
 <br /><code>(doctype type)</code><br /><br />
 Returns an HTML doctype declaration.<br />
 <br />
   <pre><code>(doctype :html5)<br /># => \"<!DOCTYPE html>\n\"</code></pre>
 <br />
 """),
-            DataFunction("html/escape-html", "(escape-html s)", PhelCompletionPriority.HTML_FUNCTIONS, "html", "Escapes HTML special characters to prevent XSS.  Example:    (escape-html \"<div>\")    # => \"&lt;div&gt;\"", """
+            DataFunction("html/escape-html", "(escape-html s)", PhelCompletionPriority.HTML_FUNCTIONS, "html", "Escapes HTML special characters to prevent XSS", """
 <br /><code>(escape-html s)</code><br /><br />
 Escapes HTML special characters to prevent XSS.<br />
 <br />
   <pre><code>(escape-html \"<div>\")<br /># => \"&lt;div&gt;\"</code></pre>
 <br />
 """),
-            DataFunction("html/html", "(html & content)", PhelCompletionPriority.HTML_FUNCTIONS, "html", "Compiles Phel vectors to HTML strings.  Example:    (html [:div \"Hello\"])    # => \"<div>Hello</div>\"", """
+            DataFunction("html/html", "(html & content)", PhelCompletionPriority.HTML_FUNCTIONS, "html", "Compiles Phel vectors to HTML strings", """
 <br /><code>(html & content)</code><br /><br />
 Compiles Phel vectors to HTML strings.<br />
 <br />
@@ -1796,21 +1796,21 @@ Checks if <b>x</b> is an instance of the raw-string struct.<br />
 <br />
 <br />
 """),
-            DataFunction("http/emit-response", "(emit-response response)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Emits the response by sending headers and outputting the body.  Example:    (emit-response (response-from-string \"Hello World\"))    # => nil", """
+            DataFunction("http/emit-response", "(emit-response response)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Emits the response by sending headers and outputting the body", """
 <br /><code>(emit-response response)</code><br /><br />
 Emits the response by sending headers and outputting the body.<br />
 <br />
   <pre><code>(emit-response (response-from-string \"Hello World\"))<br /># => nil</code></pre>
 <br />
 """),
-            DataFunction("http/files-from-globals", "(files-from-globals & [files])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts the files from `'${'$'}_'FILES` and normalizes them to a map of \"uploaded-file\".  Example:    (files-from-globals)    # => {:avatar (uploaded-file \"/tmp/phpYzdqkD\" 1024 0 \"photo.jpg\" \"image/jpeg\")}", """
+            DataFunction("http/files-from-globals", "(files-from-globals & [files])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts the files from `'${'$'}_'FILES` and normalizes them to a map of \"uploaded-file\"", """
 <br /><code>(files-from-globals & [files])</code><br /><br />
 Extracts the files from <b>'${'$'}_'FILES</b> and normalizes them to a map of \"uploaded-file\".<br />
 <br />
   <pre><code>(files-from-globals)<br /># => <code>{:avatar (uploaded-file \"/tmp/phpYzdqkD\" 1024 0 \"photo.jpg\" \"image/jpeg\")}</code></code></pre>
 <br />
 """),
-            DataFunction("http/headers-from-server", "(headers-from-server & [server])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts all headers from the `${'$'}_SERVER` variable.  Example:    (headers-from-server)    # => {:host \"example.com\" :content-type \"application/json\"}", """
+            DataFunction("http/headers-from-server", "(headers-from-server & [server])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts all headers from the `${'$'}_SERVER` variable", """
 <br /><code>(headers-from-server & [server])</code><br /><br />
 Extracts all headers from the <b>${'$'}_SERVER</b> variable.<br />
 <br />
@@ -1822,21 +1822,21 @@ Extracts all headers from the <b>${'$'}_SERVER</b> variable.<br />
 Creates a new request struct.<br />
 <br />
 """),
-            DataFunction("http/request-from-globals", "(request-from-globals )", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts a request from `'${'$'}_'SERVER`, `'${'$'}_'GET`, `'${'$'}_'POST`, `'${'$'}_'COOKIE` and `'${'$'}_'FILES`.  Example:    (request-from-globals)    # => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})", """
+            DataFunction("http/request-from-globals", "(request-from-globals )", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts a request from `'${'$'}_'SERVER`, `'${'$'}_'GET`, `'${'$'}_'POST`, `'${'$'}_'COOKIE` and `'${'$'}_'FILES`", """
 <br /><code>(request-from-globals )</code><br /><br />
 Extracts a request from <b>'${'$'}_'SERVER</b>, <b>'${'$'}_'GET</b>, <b>'${'$'}_'POST</b>, <b>'${'$'}_'COOKIE</b> and <b>'${'$'}_'FILES</b>.<br />
 <br />
   <pre><code>(request-from-globals)<br /># => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})</code></pre>
 <br />
 """),
-            DataFunction("http/request-from-globals-args", "(request-from-globals-args server get-parameter post-parameter cookies files)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts a request from args.  Example:    (request-from-globals-args php/'${'$'}_'SERVER php/'${'$'}_'GET php/'${'$'}_'POST php/'${'$'}_'COOKIE php/'${'$'}_'FILES)    # => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})", """
+            DataFunction("http/request-from-globals-args", "(request-from-globals-args server get-parameter post-parameter cookies files)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts a request from args", """
 <br /><code>(request-from-globals-args server get-parameter post-parameter cookies files)</code><br /><br />
 Extracts a request from args.<br />
 <br />
   <pre><code>(request-from-globals-args php/'${'$'}_'SERVER php/'${'$'}_'GET php/'${'$'}_'POST php/'${'$'}_'COOKIE php/'${'$'}_'FILES)<br /># => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})</code></pre>
 <br />
 """),
-            DataFunction("http/request-from-map", "(request-from-map {:method method, :version version, :uri uri, :headers headers, :parsed-body parsed-body, :query-params query-params, :cookie-params cookie-params, :server-params server-params, :uploaded-files uploaded-files, :attributes attributes})", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a request struct from a map with optional keys :method, :uri, :headers, etc.  Example:    (request-from-map {:method \"POST\" :uri \"https://api.example.com/users\"})    # => (request \"POST\" (uri ...) {} nil {} {} {} [] \"1.1\" {})", """
+            DataFunction("http/request-from-map", "(request-from-map {:method method, :version version, :uri uri, :headers headers, :parsed-body parsed-body, :query-params query-params, :cookie-params cookie-params, :server-params server-params, :uploaded-files uploaded-files, :attributes attributes})", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a request struct from a map with optional keys :method, :uri, :headers, etc", """
 <br /><code>(request-from-map <code>{:method method, :version version, :uri uri, :headers headers, :parsed-body parsed-body, :query-params query-params, :cookie-params cookie-params, :server-params server-params, :uploaded-files uploaded-files, :attributes attributes}</code>)</code><br /><br />
 Creates a request struct from a map with optional keys :method, :uri, :headers, etc.<br />
 <br />
@@ -1853,14 +1853,14 @@ Checks if <b>x</b> is an instance of the request struct.<br />
 Creates a new response struct.<br />
 <br />
 """),
-            DataFunction("http/response-from-map", "(response-from-map {:status status, :headers headers, :body body, :version version, :reason reason})", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason.  Example:    (response-from-map {:status 200 :body \"Hello World\"})    # => (response 200 {} \"Hello World\" \"1.1\" \"OK\")", """
+            DataFunction("http/response-from-map", "(response-from-map {:status status, :headers headers, :body body, :version version, :reason reason})", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason", """
 <br /><code>(response-from-map <code>{:status status, :headers headers, :body body, :version version, :reason reason}</code>)</code><br /><br />
 Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason.<br />
 <br />
   <pre><code>(response-from-map <code>{:status 200 :body \"Hello World\"}</code>)<br /># => (response 200 {} \"Hello World\" \"1.1\" \"OK\")</code></pre>
 <br />
 """),
-            DataFunction("http/response-from-string", "(response-from-string s)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Create a response from a string.  Example:    (response-from-string \"Hello World\")    # => (response 200 {} \"Hello World\" \"1.1\" \"OK\")", """
+            DataFunction("http/response-from-string", "(response-from-string s)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Create a response from a string", """
 <br /><code>(response-from-string s)</code><br /><br />
 Create a response from a string.<br />
 <br />
@@ -1887,14 +1887,14 @@ Checks if <b>x</b> is an instance of the uploaded-file struct.<br />
 Creates a new uri struct.<br />
 <br />
 """),
-            DataFunction("http/uri-from-globals", "(uri-from-globals & [server])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts the URI from the `${'$'}_SERVER` variable.  Example:    (uri-from-globals)    # => (uri \"https\" nil \"example.com\" 443 \"/path\" \"foo=bar\" nil)", """
+            DataFunction("http/uri-from-globals", "(uri-from-globals & [server])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts the URI from the `${'$'}_SERVER` variable", """
 <br /><code>(uri-from-globals & [server])</code><br /><br />
 Extracts the URI from the <b>${'$'}_SERVER</b> variable.<br />
 <br />
   <pre><code>(uri-from-globals)<br /># => (uri \"https\" nil \"example.com\" 443 \"/path\" \"foo=bar\" nil)</code></pre>
 <br />
 """),
-            DataFunction("http/uri-from-string", "(uri-from-string url)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Create a uri struct from a string.  Example:    (uri-from-string \"https://example.com/path?foo=bar\")    # => (uri \"https\" nil \"example.com\" nil \"/path\" \"foo=bar\" nil)", """
+            DataFunction("http/uri-from-string", "(uri-from-string url)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Create a uri struct from a string", """
 <br /><code>(uri-from-string url)</code><br /><br />
 Create a uri struct from a string.<br />
 <br />
@@ -1911,35 +1911,35 @@ Checks if <b>x</b> is an instance of the uri struct.<br />
 
     private fun registerJsonFunctions() {
         functions[Namespace.JSON] = listOf(
-            DataFunction("json/decode", "(decode json & [{:flags flags, :depth depth}])", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Decodes a JSON string to a Phel value.  Example:    (decode \"{\"name\":\"Alice\"}\")    # => {:name \"Alice\"}", """
+            DataFunction("json/decode", "(decode json & [{:flags flags, :depth depth}])", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Decodes a JSON string to a Phel value", """
 <br /><code>(decode json & [<code>{:flags flags, :depth depth}</code>])</code><br /><br />
 Decodes a JSON string to a Phel value.<br />
 <br />
   <pre><code>(decode \"{\\"name\\":\\"Alice\\"}\")<br /># => <code>{:name \"Alice\"}</code></code></pre>
 <br />
 """),
-            DataFunction("json/decode-value", "(decode-value x)", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Converts a JSON value to Phel format.  Example:    (decode-value [1 2 3])    # => [1 2 3]", """
+            DataFunction("json/decode-value", "(decode-value x)", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Converts a JSON value to Phel format", """
 <br /><code>(decode-value x)</code><br /><br />
 Converts a JSON value to Phel format.<br />
 <br />
   <pre><code>(decode-value [1 2 3])<br /># => [1 2 3]</code></pre>
 <br />
 """),
-            DataFunction("json/encode", "(encode value & [{:flags flags, :depth depth}])", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Encodes a Phel value to a JSON string.  Example:    (encode {:name \"Alice\"})    # => \"{\"name\":\"Alice\"}\"", """
+            DataFunction("json/encode", "(encode value & [{:flags flags, :depth depth}])", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Encodes a Phel value to a JSON string", """
 <br /><code>(encode value & [<code>{:flags flags, :depth depth}</code>])</code><br /><br />
 Encodes a Phel value to a JSON string.<br />
 <br />
   <pre><code>(encode <code>{:name \"Alice\"}</code>)<br /># => \"{\\"name\\":\\"Alice\\"}\"</code></pre>
 <br />
 """),
-            DataFunction("json/encode-value", "(encode-value x)", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Converts a Phel value to JSON-compatible format.  Example:    (encode-value :name)    # => \"name\"", """
+            DataFunction("json/encode-value", "(encode-value x)", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Converts a Phel value to JSON-compatible format", """
 <br /><code>(encode-value x)</code><br /><br />
 Converts a Phel value to JSON-compatible format.<br />
 <br />
   <pre><code>(encode-value :name)<br /># => \"name\"</code></pre>
 <br />
 """),
-            DataFunction("json/valid-key?", "(valid-key? v)", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Checks if a value can be used as a JSON key.  Example:    (valid-key? :name)    # => true", """
+            DataFunction("json/valid-key?", "(valid-key? v)", PhelCompletionPriority.JSON_FUNCTIONS, "json", "Checks if a value can be used as a JSON key", """
 <br /><code>(valid-key? v)</code><br /><br />
 Checks if a value can be used as a JSON key.<br />
 <br />
@@ -2133,7 +2133,7 @@ Wraps an existing function to track calls while preserving original behavior.<br
     (calls spied)    # => [[5]]<br />
 <br />
 """),
-            DataFunction("mock/with-mock-wrapper", "(with-mock-wrapper bindings & body)", PhelCompletionPriority.MOCK_FUNCTIONS, "mock", "Like with-mocks but for wrapped mocks (interop scenarios).  Automatically resets the underlying mock even when wrapped in an adapter function.  Usage:    (with-mock-wrapper [fn-symbol underlying-mock wrapper-fn]      body...)  Example:    (let [mock-http (mock {:status 200})]      (with-mock-wrapper [symfony-service mock-http                          (fn [args] (mock-http (adapt-args args)))]        (symfony-service {:key \"value\"})        (is (called-once? mock-http))))      # mock-http is automatically reset here  Multiple wrappers:    (with-mock-wrapper [service-a mock-a (fn [x] (mock-a (inc x)))                        service-b mock-b (fn [y] (mock-b (dec y)))]      ...)", """
+            DataFunction("mock/with-mock-wrapper", "(with-mock-wrapper bindings & body)", PhelCompletionPriority.MOCK_FUNCTIONS, "mock", "Like with-mocks but for wrapped mocks (interop scenarios).  Automatically resets the underlying mock even when wrapped in an adapter function.  Usage:    (with-mock-wrapper [fn-symbol underlying-mock wrapper-fn]      body...)", """
 <br /><code>(with-mock-wrapper bindings & body)</code><br /><br />
 Like with-mocks but for wrapped mocks (interop scenarios).<br />
   Automatically resets the underlying mock even when wrapped in an adapter function.<br />
@@ -2245,56 +2245,56 @@ Use <b>php/oset</b> to set a value to a class/object property.<br />
 <br />
 <br />
 """),
-            DataFunction("repl/compile-str", "(compile-str s)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Compiles a Phel expression string to PHP code.  Example:    (compile-str \"(+ 1 2)\")    # => \"(1 + 2)\"", """
+            DataFunction("repl/compile-str", "(compile-str s)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Compiles a Phel expression string to PHP code", """
 <br /><code>(compile-str s)</code><br /><br />
 Compiles a Phel expression string to PHP code.<br />
 <br />
   <pre><code>(compile-str \"(+ 1 2)\")<br /># => \"(1 + 2)\"</code></pre>
 <br />
 """),
-            DataFunction("repl/doc", "(doc sym)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints the documentation for the given symbol.  Example:    (doc map)    # Prints: \"Applies function f to each element...\"", """
+            DataFunction("repl/doc", "(doc sym)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints the documentation for the given symbol", """
 <br /><code>(doc sym)</code><br /><br />
 Prints the documentation for the given symbol.<br />
 <br />
   <pre><code>(doc map)<br /># Prints: \"Applies function f to each element...\"</code></pre>
 <br />
 """),
-            DataFunction("repl/loaded-namespaces", "(loaded-namespaces )", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Returns all namespaces currently loaded in the REPL.  Example:    (loaded-namespaces)    # => [\"phel\\core\" \"phel\\repl\"]", """
+            DataFunction("repl/loaded-namespaces", "(loaded-namespaces )", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Returns all namespaces currently loaded in the REPL", """
 <br /><code>(loaded-namespaces )</code><br /><br />
 Returns all namespaces currently loaded in the REPL.<br />
 <br />
   <pre><code>(loaded-namespaces)<br /># => [\"phel\core\" \"phel\repl\"]</code></pre>
 <br />
 """),
-            DataFunction("repl/print-colorful", "(print-colorful & xs)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints arguments with colored output.  Example:    (print-colorful [1 2 3])    # Prints: [1 2 3] (with color)", """
+            DataFunction("repl/print-colorful", "(print-colorful & xs)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints arguments with colored output", """
 <br /><code>(print-colorful & xs)</code><br /><br />
 Prints arguments with colored output.<br />
 <br />
   <pre><code>(print-colorful [1 2 3])<br /># Prints: [1 2 3] (with color)</code></pre>
 <br />
 """),
-            DataFunction("repl/println-colorful", "(println-colorful & xs)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints arguments with colored output followed by a newline.  Example:    (println-colorful [1 2 3])    # Prints: [1 2 3] (with color)", """
+            DataFunction("repl/println-colorful", "(println-colorful & xs)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints arguments with colored output followed by a newline", """
 <br /><code>(println-colorful & xs)</code><br /><br />
 Prints arguments with colored output followed by a newline.<br />
 <br />
   <pre><code>(println-colorful [1 2 3])<br /># Prints: [1 2 3]<br /> (with color)</code></pre>
 <br />
 """),
-            DataFunction("repl/require", "(require sym & args)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Requires a Phel module into the environment.  Example:    (require phel\\http :as http :refer [request])    # => phel\\http", """
+            DataFunction("repl/require", "(require sym & args)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Requires a Phel module into the environment", """
 <br /><code>(require sym & args)</code><br /><br />
 Requires a Phel module into the environment.<br />
 <br />
   <pre><code>(require phel\http :as http :refer [request])<br /># => phel\http</code></pre>
 <br />
 """),
-            DataFunction("repl/resolve", "(resolve sym)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved.  Example:    (resolve 'map)    # => phel\\core/map", """
+            DataFunction("repl/resolve", "(resolve sym)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved", """
 <br /><code>(resolve sym)</code><br /><br />
 Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved.<br />
 <br />
   <pre><code>(resolve 'map)<br /># => phel\core/map</code></pre>
 <br />
 """),
-            DataFunction("repl/use", "(use sym & args)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Adds a use statement to the environment.  Example:    (use DateTime :as DT)    # => DateTime", """
+            DataFunction("repl/use", "(use sym & args)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Adds a use statement to the environment", """
 <br /><code>(use sym & args)</code><br /><br />
 Adds a use statement to the environment.<br />
 <br />
@@ -2311,7 +2311,7 @@ Adds a use statement to the environment.<br />
 True if s is nil, empty, or contains only whitespace.<br />
 <br />
 """),
-            DataFunction("str/capitalize", "(capitalize s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Converts first character to upper-case and all other characters to lower-case.  Example:    (capitalize \"hELLO wORLD\")    # => \"Hello world\"", """
+            DataFunction("str/capitalize", "(capitalize s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Converts first character to upper-case and all other characters to lower-case", """
 <br /><code>(capitalize s)</code><br /><br />
 Converts first character to upper-case and all other characters to lower-case.<br />
 <br />
@@ -2328,7 +2328,7 @@ True if s contains substr.<br />
 True if s ends with substr.<br />
 <br />
 """),
-            DataFunction("str/escape", "(escape s cmap)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a new string with each character escaped according to cmap.  Example:    (escape \"hello\" {\"h\" \"H\" \"o\" \"O\"})    # => \"HellO\"", """
+            DataFunction("str/escape", "(escape s cmap)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a new string with each character escaped according to cmap", """
 <br /><code>(escape s cmap)</code><br /><br />
 Returns a new string with each character escaped according to cmap.<br />
 <br />
@@ -2340,91 +2340,91 @@ Returns a new string with each character escaped according to cmap.<br />
 True if s includes substr.<br />
 <br />
 """),
-            DataFunction("str/index-of", "(index-of s value & [from-index])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns the index of value in s, or nil if not found.  Example:    (index-of \"hello world\" \"world\")    # => 6", """
+            DataFunction("str/index-of", "(index-of s value & [from-index])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns the index of value in s, or nil if not found", """
 <br /><code>(index-of s value & [from-index])</code><br /><br />
 Returns the index of value in s, or nil if not found.<br />
 <br />
   <pre><code>(index-of \"hello world\" \"world\")<br /># => 6</code></pre>
 <br />
 """),
-            DataFunction("str/join", "(join separator & [coll])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string of all elements in coll, separated by an optional separator.  Example:    (join \", \" [\"apple\" \"banana\" \"cherry\"])    # => \"apple, banana, cherry\"", """
+            DataFunction("str/join", "(join separator & [coll])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string of all elements in coll, separated by an optional separator", """
 <br /><code>(join separator & [coll])</code><br /><br />
 Returns a string of all elements in coll, separated by an optional separator.<br />
 <br />
   <pre><code>(join \", \" [\"apple\" \"banana\" \"cherry\"])<br /># => \"apple, banana, cherry\"</code></pre>
 <br />
 """),
-            DataFunction("str/last-index-of", "(last-index-of s value & [from-index])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns the last index of value in s, or nil if not found.  Example:    (last-index-of \"hello world world\" \"world\")    # => 12", """
+            DataFunction("str/last-index-of", "(last-index-of s value & [from-index])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns the last index of value in s, or nil if not found", """
 <br /><code>(last-index-of s value & [from-index])</code><br /><br />
 Returns the last index of value in s, or nil if not found.<br />
 <br />
   <pre><code>(last-index-of \"hello world world\" \"world\")<br /># => 12</code></pre>
 <br />
 """),
-            DataFunction("str/lower-case", "(lower-case s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Converts string to all lower-case.  Example:    (lower-case \"HELLO World\")    # => \"hello world\"", """
+            DataFunction("str/lower-case", "(lower-case s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Converts string to all lower-case", """
 <br /><code>(lower-case s)</code><br /><br />
 Converts string to all lower-case.<br />
 <br />
   <pre><code>(lower-case \"HELLO World\")<br /># => \"hello world\"</code></pre>
 <br />
 """),
-            DataFunction("str/pad-both", "(pad-both s len & [pad-str])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string padded on both sides to length len.  Example:    (pad-both \"hello\" 11)    # => \"   hello   \"", """
+            DataFunction("str/pad-both", "(pad-both s len & [pad-str])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string padded on both sides to length len", """
 <br /><code>(pad-both s len & [pad-str])</code><br /><br />
 Returns a string padded on both sides to length len.<br />
 <br />
   <pre><code>(pad-both \"hello\" 11)<br /># => \"   hello   \"</code></pre>
 <br />
 """),
-            DataFunction("str/pad-left", "(pad-left s len & [pad-str])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string padded on the left side to length len.  Example:    (pad-left \"hello\" 10)    # => \"     hello\"", """
+            DataFunction("str/pad-left", "(pad-left s len & [pad-str])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string padded on the left side to length len", """
 <br /><code>(pad-left s len & [pad-str])</code><br /><br />
 Returns a string padded on the left side to length len.<br />
 <br />
   <pre><code>(pad-left \"hello\" 10)<br /># => \"     hello\"</code></pre>
 <br />
 """),
-            DataFunction("str/pad-right", "(pad-right s len & [pad-str])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string padded on the right side to length len.  Example:    (pad-right \"hello\" 10)    # => \"hello     \"", """
+            DataFunction("str/pad-right", "(pad-right s len & [pad-str])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string padded on the right side to length len", """
 <br /><code>(pad-right s len & [pad-str])</code><br /><br />
 Returns a string padded on the right side to length len.<br />
 <br />
   <pre><code>(pad-right \"hello\" 10)<br /># => \"hello     \"</code></pre>
 <br />
 """),
-            DataFunction("str/re-quote-replacement", "(re-quote-replacement replacement)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Escapes special characters in a replacement string for literal use.  Example:    (re-quote-replacement \"$1.00\")    # => \"\$1.00\"", """
+            DataFunction("str/re-quote-replacement", "(re-quote-replacement replacement)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Escapes special characters in a replacement string for literal use", """
 <br /><code>(re-quote-replacement replacement)</code><br /><br />
 Escapes special characters in a replacement string for literal use.<br />
 <br />
   <pre><code>(re-quote-replacement \"$1.00\")<br /># => \"\$1.00\"</code></pre>
 <br />
 """),
-            DataFunction("str/repeat", "(repeat s n)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string containing n copies of s.  Example:    (repeat \"ha\" 3)    # => \"hahaha\"", """
+            DataFunction("str/repeat", "(repeat s n)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns a string containing n copies of s", """
 <br /><code>(repeat s n)</code><br /><br />
 Returns a string containing n copies of s.<br />
 <br />
   <pre><code>(repeat \"ha\" 3)<br /># => \"hahaha\"</code></pre>
 <br />
 """),
-            DataFunction("str/replace", "(replace s match replacement)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Replaces all instances of match with replacement in s.  Example:    (replace \"hello world\" \"world\" \"there\")    # => \"hello there\"", """
+            DataFunction("str/replace", "(replace s match replacement)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Replaces all instances of match with replacement in s", """
 <br /><code>(replace s match replacement)</code><br /><br />
 Replaces all instances of match with replacement in s.<br />
 <br />
   <pre><code>(replace \"hello world\" \"world\" \"there\")<br /># => \"hello there\"</code></pre>
 <br />
 """),
-            DataFunction("str/replace-first", "(replace-first s match replacement)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Replaces the first instance of match with replacement in s.  Example:    (replace-first \"hello world world\" \"world\" \"there\")    # => \"hello there world\"", """
+            DataFunction("str/replace-first", "(replace-first s match replacement)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Replaces the first instance of match with replacement in s", """
 <br /><code>(replace-first s match replacement)</code><br /><br />
 Replaces the first instance of match with replacement in s.<br />
 <br />
   <pre><code>(replace-first \\"hello world world\\" \\"world\\" \\"there\\")<br /># => \\"hello there world\\"</code></pre>
 <br />
 """),
-            DataFunction("str/reverse", "(reverse s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns s with its characters reversed.  Example:    (reverse \"hello\")    # => \"olleh\"", """
+            DataFunction("str/reverse", "(reverse s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns s with its characters reversed", """
 <br /><code>(reverse s)</code><br /><br />
 Returns s with its characters reversed.<br />
 <br />
   <pre><code>(reverse \"hello\")<br /># => \"olleh\"</code></pre>
 <br />
 """),
-            DataFunction("str/split", "(split s re & [limit])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Splits string on a regular expression, returning a vector of parts.  Example:    (split \"hello world foo bar\" #\"\\s+\")    # => [\"hello\" \"world\" \"foo\" \"bar\"]", """
+            DataFunction("str/split", "(split s re & [limit])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Splits string on a regular expression, returning a vector of parts", """
 <br /><code>(split s re & [limit])</code><br /><br />
 Splits string on a regular expression, returning a vector of parts.<br />
 <br />
@@ -2441,7 +2441,7 @@ Splits s on \n or \r\n. Trailing empty lines are not returned.<br />
 True if s starts with substr.<br />
 <br />
 """),
-            DataFunction("str/subs", "(subs s start & [end])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns the substring of s from start (inclusive) to end (exclusive).  Example:    (subs \"hello world\" 0 5)    # => \"hello\"", """
+            DataFunction("str/subs", "(subs s start & [end])", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Returns the substring of s from start (inclusive) to end (exclusive)", """
 <br /><code>(subs s start & [end])</code><br /><br />
 Returns the substring of s from start (inclusive) to end (exclusive).<br />
 <br />
@@ -2453,7 +2453,7 @@ Returns the substring of s from start (inclusive) to end (exclusive).<br />
 Removes whitespace from both ends of string.<br />
 <br />
 """),
-            DataFunction("str/trim-newline", "(trim-newline s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Removes all trailing newline or return characters from string.  Example:    (trim-newline \"hello\n\n\")    # => \"hello\"", """
+            DataFunction("str/trim-newline", "(trim-newline s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Removes all trailing newline or return characters from string", """
 <br /><code>(trim-newline s)</code><br /><br />
 Removes all trailing newline or return characters from string.<br />
 <br />
@@ -2470,7 +2470,7 @@ Removes whitespace from the left side of string.<br />
 Removes whitespace from the right side of string.<br />
 <br />
 """),
-            DataFunction("str/upper-case", "(upper-case s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Converts string to all upper-case.  Example:    (upper-case \"hello World\")    # => \"HELLO WORLD\"", """
+            DataFunction("str/upper-case", "(upper-case s)", PhelCompletionPriority.STRING_FUNCTIONS, "str", "Converts string to all upper-case", """
 <br /><code>(upper-case s)</code><br /><br />
 Converts string to all upper-case.<br />
 <br />
@@ -2482,42 +2482,42 @@ Converts string to all upper-case.<br />
 
     private fun registerTestFunctions() {
         functions[Namespace.TEST] = listOf(
-            DataFunction("test/deftest", "(deftest test-name & body)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Defines a test function.  Example:    (deftest test-add      (is (= 4 (+ 2 2))))", """
+            DataFunction("test/deftest", "(deftest test-name & body)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Defines a test function", """
 <br /><code>(deftest test-name & body)</code><br /><br />
 Defines a test function.<br />
 <br />
   <pre><code>(deftest test-add<br />  (is (= 4 (+ 2 2))))</code></pre>
 <br />
 """),
-            DataFunction("test/is", "(is form & [message])", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Asserts that an expression is true.  Example:    (is (= 4 (+ 2 2)))    # Passes if equal", """
+            DataFunction("test/is", "(is form & [message])", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Asserts that an expression is true", """
 <br /><code>(is form & [message])</code><br /><br />
 Asserts that an expression is true.<br />
 <br />
   <pre><code>(is (= 4 (+ 2 2)))<br /># Passes if equal</code></pre>
 <br />
 """),
-            DataFunction("test/print-summary", "(print-summary )", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Prints test results summary.  Example:    (print-summary)    # Prints: Passed: 10, Failed: 2", """
+            DataFunction("test/print-summary", "(print-summary )", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Prints test results summary", """
 <br /><code>(print-summary )</code><br /><br />
 Prints test results summary.<br />
 <br />
   <pre><code>(print-summary)<br /># Prints: Passed: 10, Failed: 2</code></pre>
 <br />
 """),
-            DataFunction("test/report", "(report data)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Records test results and prints status indicators.  Example:    (report {:state :pass})    # Prints: ", """
+            DataFunction("test/report", "(report data)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Records test results and prints status indicators", """
 <br /><code>(report data)</code><br /><br />
 Records test results and prints status indicators.<br />
 <br />
   <pre><code>(report <code>{:state :pass}</code>)<br /># Prints: .</code></pre>
 <br />
 """),
-            DataFunction("test/run-tests", "(run-tests options & namespaces)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Runs all tests in the given namespaces.  Example:    (run-tests {} 'my-app	est)    # Runs all tests", """
+            DataFunction("test/run-tests", "(run-tests options & namespaces)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Runs all tests in the given namespaces", """
 <br /><code>(run-tests options & namespaces)</code><br /><br />
 Runs all tests in the given namespaces.<br />
 <br />
   <pre><code>(run-tests {} 'my-app	est)<br /># Runs all tests</code></pre>
 <br />
 """),
-            DataFunction("test/successful?", "(successful? )", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Checks if all tests passed.  Example:    (successful?)    # => true", """
+            DataFunction("test/successful?", "(successful? )", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Checks if all tests passed", """
 <br /><code>(successful? )</code><br /><br />
 Checks if all tests passed.<br />
 <br />
