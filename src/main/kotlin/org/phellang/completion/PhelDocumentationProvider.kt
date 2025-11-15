@@ -1,4 +1,4 @@
-package org.phellang.completion.infrastructure
+package org.phellang.completion
 
 import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.psi.PsiElement

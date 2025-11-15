@@ -12,7 +12,6 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
             val document = editor.document
             val caretOffset = context.startOffset
 
-            // Find the start of the current symbol
             var symbolStart = caretOffset
             val text = document.charsSequence
 
@@ -26,11 +25,9 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
                 symbolStart--
             }
 
-            // Replace the entire symbol with the completion
             val symbolEnd = context.tailOffset
             document.replaceString(symbolStart, symbolEnd, item.lookupString)
 
-            // Position cursor after the inserted text
             editor.caretModel.moveToOffset(symbolStart + item.lookupString.length)
         }
     }
