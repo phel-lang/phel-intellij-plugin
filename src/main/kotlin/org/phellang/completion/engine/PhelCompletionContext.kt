@@ -89,17 +89,15 @@ class PhelCompletionContext(
         }
 
         val firstForm = forms[0]
-        if (firstForm is PhelSymbol || firstForm is PhelAccess) {
-            val formType = firstForm.text
-            if (PhelSymbolAnalyzer.isSymbolType(formType, PhelCompletionPriority.SPECIAL_FORMS)) {
-                if (forms.size >= 2) {
-                    val nameForm = forms[1]
-                    return isElementPartOfForm(element, nameForm)
-                }
-            }
-        }
+        if (firstForm !is PhelSymbol && firstForm !is PhelAccess) return false
 
-        return false
+        val formType = firstForm.text
+        if (!PhelSymbolAnalyzer.isSymbolType(formType, PhelCompletionPriority.SPECIAL_FORMS)) return false
+
+        if (forms.size < 2) return false
+
+        val nameForm = forms[1]
+        return isElementPartOfForm(element, nameForm)
     }
 
     private fun isInParameterDefinitionPosition(): Boolean {

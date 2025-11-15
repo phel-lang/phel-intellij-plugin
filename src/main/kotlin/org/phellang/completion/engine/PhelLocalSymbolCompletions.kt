@@ -88,24 +88,22 @@ object PhelLocalSymbolCompletions {
                         val functionType = firstChild.text
 
                         if (PhelSymbolAnalyzer.isSymbolType(functionType, PhelCompletionPriority.SPECIAL_FORMS)) {
-                            val paramVec = findParameterVectorInFunction(current)
-                            if (paramVec != null) {
-                                // Extract parameters from the vector
-                                val paramChildren = paramVec.children
-                                for (paramChild in paramChildren) {
-                                    if (paramChild is PhelSymbol || paramChild is PhelAccessImpl) {
-                                        val paramName = paramChild.text
-                                        if (paramName != null && paramName.isNotEmpty()) {
-                                            addSymbolCompletion(
-                                                result,
-                                                paramName,
-                                                "Function Parameter",
-                                                PARAMETER_ICON,
-                                                addedSymbols
-                                            )
-                                        }
-                                    }
-                                }
+                            val paramVec = findParameterVectorInFunction(current) ?: break
+                            // Extract parameters from the vector
+                            val paramChildren = paramVec.children
+                            for (paramChild in paramChildren) {
+                                if (paramChild !is PhelSymbol && paramChild !is PhelAccessImpl) continue
+
+                                val paramName = paramChild.text
+                                if (paramName == null || !paramName.isNotEmpty()) continue
+
+                                addSymbolCompletion(
+                                    result,
+                                    paramName,
+                                    "Function Parameter",
+                                    PARAMETER_ICON,
+                                    addedSymbols
+                                )
                             }
                             break // Found the function, stop looking
                         }
@@ -142,19 +140,19 @@ object PhelLocalSymbolCompletions {
                                     val bindingChildren = bindingElement.children
                                     for (i in bindingChildren.indices step 2) {
                                         val bindingChild = bindingChildren[i]
-                                        if (bindingChild is PhelSymbol || bindingChild is PhelAccessImpl) {
-                                            val bindingName = bindingChild.text
-                                            if (bindingName != null && bindingName.isNotEmpty()) {
-                                                val typeText = when (bindingType) {
-                                                    "let" -> "Let Binding"
-                                                    "loop" -> "Loop Binding"
-                                                    else -> "Local Variable"
-                                                }
-                                                addSymbolCompletion(
-                                                    result, bindingName, typeText, VARIABLE_ICON, addedSymbols
-                                                )
-                                            }
+                                        if (bindingChild !is PhelSymbol && bindingChild !is PhelAccessImpl) continue
+
+                                        val bindingName = bindingChild.text
+                                        if (bindingName == null || !bindingName.isNotEmpty()) continue
+
+                                        val typeText = when (bindingType) {
+                                            "let" -> "Let Binding"
+                                            "loop" -> "Loop Binding"
+                                            else -> "Local Variable"
                                         }
+                                        addSymbolCompletion(
+                                            result, bindingName, typeText, VARIABLE_ICON, addedSymbols
+                                        )
                                     }
                                 }
                             }
@@ -232,52 +230,50 @@ object PhelLocalSymbolCompletions {
         for (child in file.children) {
             if (definitionCount >= maxDefinitionsPerFile) break
 
-            if (child is PhelList) {
-                val children: Array<PsiElement> = child.children
-                if (children.size >= 2) {
-                    val firstElement = children[0]
+            if (child !is PhelList) continue
+            val children: Array<PsiElement> = child.children
+            if (children.size < 2) continue
+            val firstElement = children[0]
 
-                    if (firstElement is PhelSymbol) {
-                        val publicAccessibleDefinitions = arrayOf(
-                            "def",
-                            "defn",
-                            "defmacro",
-                            "defexception",
-                            "defexception*",
-                            "definterface",
-                            "definterface*",
-                            "defstruct",
-                            "defstruct*",
-                            "macroexpand",
-                            "macroexpand-1"
-                        )
-                        val defType = firstElement.text
-                        if (publicAccessibleDefinitions.contains(defType)) {
-                            val nameElement = children[1]
-                            if (nameElement is PhelSymbol) {
-                                val symbolName = nameElement.text
-                                val displayType = when (defType) {
-                                    "def" -> "Global Variable"
-                                    "defn" -> "Public Function"
-                                    "defmacro" -> "Public Macro"
-                                    "defexception", "defexception*" -> "Public Exception"
-                                    "definterface", "definterface*" -> "Public Interface"
-                                    "defstruct", "defstruct*" -> "Public Struct"
-                                    "macroexpand", "macroexpand-1" -> "Public Macro"
-                                    else -> "Public Definition"
-                                }
+            if (firstElement !is PhelSymbol) continue
 
-                                // Add file context
-                                val fileName = file.name.replace(".phel", "")
-                                val typeWithContext = "$displayType ($fileName)"
+            val publicAccessibleDefinitions = arrayOf(
+                "def",
+                "defn",
+                "defmacro",
+                "defexception",
+                "defexception*",
+                "definterface",
+                "definterface*",
+                "defstruct",
+                "defstruct*",
+                "macroexpand",
+                "macroexpand-1"
+            )
+            val defType = firstElement.text
+            if (!publicAccessibleDefinitions.contains(defType)) continue
 
-                                addSymbolCompletion(result, symbolName, typeWithContext, METHOD_ICON, addedSymbols)
-                                definitionCount++
-                            }
-                        }
-                    }
-                }
+            val nameElement = children[1]
+            if (nameElement !is PhelSymbol) continue
+
+            val symbolName = nameElement.text
+            val displayType = when (defType) {
+                "def" -> "Global Variable"
+                "defn" -> "Public Function"
+                "defmacro" -> "Public Macro"
+                "defexception", "defexception*" -> "Public Exception"
+                "definterface", "definterface*" -> "Public Interface"
+                "defstruct", "defstruct*" -> "Public Struct"
+                "macroexpand", "macroexpand-1" -> "Public Macro"
+                else -> "Public Definition"
             }
+
+            // Add file context
+            val fileName = file.name.replace(".phel", "")
+            val typeWithContext = "$displayType ($fileName)"
+
+            addSymbolCompletion(result, symbolName, typeWithContext, METHOD_ICON, addedSymbols)
+            definitionCount++
         }
     }
 
@@ -288,60 +284,59 @@ object PhelLocalSymbolCompletions {
 
         // Iterate through all top-level forms in the current file
         for (child in file.children) {
-            if (child is PhelList) {
-                val children: Array<PsiElement> = child.children
+            if (child !is PhelList) continue
+            val children: Array<PsiElement> = child.children
 
-                // Look for definition forms: (defn name ...), (def name ...), etc.
-                if (children.size < 2) continue
+            // Look for definition forms: (defn name ...), (def name ...), etc.
+            if (children.size < 2) continue
 
-                val firstElement = children[0]
+            val firstElement = children[0]
 
-                if (firstElement !is PhelSymbol && firstElement !is PhelAccessImpl) continue
+            if (firstElement !is PhelSymbol && firstElement !is PhelAccessImpl) continue
 
-                val defType = firstElement.text
-                val localDefinitionTypes = arrayOf(
-                    "def",
-                    "defn",
-                    "defn-",
-                    "defmacro",
-                    "defmacro-",
-                    "defexception",
-                    "defexception*",
-                    "definterface",
-                    "definterface*",
-                    "defstruct",
-                    "defstruct*"
-                )
+            val defType = firstElement.text
+            val localDefinitionTypes = arrayOf(
+                "def",
+                "defn",
+                "defn-",
+                "defmacro",
+                "defmacro-",
+                "defexception",
+                "defexception*",
+                "definterface",
+                "definterface*",
+                "defstruct",
+                "defstruct*"
+            )
 
-                if (!localDefinitionTypes.contains(defType)) continue
+            if (!localDefinitionTypes.contains(defType)) continue
 
-                val nameElement = children[1]
-                if (nameElement !is PhelSymbol && nameElement !is PhelAccessImpl) continue
+            val nameElement = children[1]
+            if (nameElement !is PhelSymbol && nameElement !is PhelAccessImpl) continue
 
-                val symbolName = nameElement.text
-                // Use the highest priority for local function definitions
-                val priority = when (defType) {
-                    "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
-                    else -> PhelCompletionPriority.PROJECT_SYMBOLS
-                }
-
-                val displayType = when (defType) {
-                    "def" -> "Local Variable"
-                    "defn", "defn-" -> "Local Function"
-                    "defmacro", "defmacro-" -> "Local Macro"
-                    "defexception", "defexception*" -> "Local Exception"
-                    "definterface", "definterface*" -> "Local Interface"
-                    "defstruct", "defstruct*" -> "Local Struct"
-                    else -> "Local Definition"
-                }
-
-                if (addedSymbols.contains(symbolName) || symbolName.trim().isEmpty()) continue
-
-                addedSymbols.add(symbolName)
-                PhelCompletionUtils.addRankedCompletion(
-                    result, symbolName, "", displayType, priority
-                )
+            val symbolName = nameElement.text
+            // Use the highest priority for local function definitions
+            val priority = when (defType) {
+                "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
+                else -> PhelCompletionPriority.PROJECT_SYMBOLS
             }
+
+            val displayType = when (defType) {
+                "def" -> "Local Variable"
+                "defn", "defn-" -> "Local Function"
+                "defmacro", "defmacro-" -> "Local Macro"
+                "defexception", "defexception*" -> "Local Exception"
+                "definterface", "definterface*" -> "Local Interface"
+                "defstruct", "defstruct*" -> "Local Struct"
+                else -> "Local Definition"
+            }
+
+            if (addedSymbols.contains(symbolName) || symbolName.trim().isEmpty()) continue
+
+            addedSymbols.add(symbolName)
+            PhelCompletionUtils.addRankedCompletion(
+                result, symbolName, "", displayType, priority
+            )
         }
     }
 
@@ -384,7 +379,7 @@ object PhelLocalSymbolCompletions {
             is PhelAccessImpl -> firstChild.text
             else -> return null
         }
-        
+
         return when (functionType) {
             "fn" -> {
                 // For (fn [params] ...), parameter vector is at index 1
@@ -392,6 +387,7 @@ object PhelLocalSymbolCompletions {
                     children[1] as PhelVec
                 } else null
             }
+
             "defn", "defn-", "defmacro", "defmacro-" -> {
                 // For defn forms, find the first vector after the function name
                 // Skip docstring and metadata: (defn name "doc" {:meta} [params] ...)
@@ -402,6 +398,7 @@ object PhelLocalSymbolCompletions {
                 }
                 null
             }
+
             else -> null
         }
     }
