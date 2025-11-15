@@ -1,10 +1,11 @@
 package org.phellang.integration.completion
 
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.phellang.completion.PhelCompletionContributor
 import org.phellang.completion.engine.PhelMainCompletionProvider
-import org.junit.jupiter.api.Assertions.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 class PhelCompletionWorkflowTest {
 
@@ -64,7 +65,7 @@ class PhelCompletionWorkflowTest {
 
     @Test
     fun `completion workflow should be thread-safe`() {
-        val components = mutableListOf<Pair<PhelCompletionContributor, PhelMainCompletionProvider>>()
+        val components = ConcurrentLinkedQueue<Pair<PhelCompletionContributor, PhelMainCompletionProvider>>()
         val threads = mutableListOf<Thread>()
 
         repeat(3) {
@@ -136,7 +137,7 @@ class PhelCompletionWorkflowTest {
 
     @Test
     fun `completion workflow should handle concurrent access`() {
-        val results = mutableListOf<Boolean>()
+        val results = ConcurrentLinkedQueue<Boolean>()
         val threads = mutableListOf<Thread>()
 
         repeat(5) {
