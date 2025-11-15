@@ -1,10 +1,10 @@
 package org.phellang.unit.syntax.classification
 
 import com.intellij.psi.TokenType
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.EnumSource
 import org.phellang.language.psi.PhelTypes
 import org.phellang.syntax.classification.PhelTokenClassifier
 import org.phellang.syntax.classification.PhelTokenClassifier.TokenCategory
@@ -56,6 +56,7 @@ class PhelTokenClassifierTest {
         // Parentheses
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.PAREN1))
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.PAREN2))
+        assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.FN_SHORT))
 
         // Brackets
         assertEquals(TokenCategory.BRACKETS, PhelTokenClassifier.classifyToken(PhelTypes.BRACKET1))
@@ -64,6 +65,7 @@ class PhelTokenClassifierTest {
         // Braces
         assertEquals(TokenCategory.BRACES, PhelTokenClassifier.classifyToken(PhelTypes.BRACE1))
         assertEquals(TokenCategory.BRACES, PhelTokenClassifier.classifyToken(PhelTypes.BRACE2))
+        assertEquals(TokenCategory.BRACES, PhelTokenClassifier.classifyToken(PhelTypes.HASH_BRACE))
     }
 
     @Test
@@ -206,5 +208,20 @@ class PhelTokenClassifierTest {
         assertFalse(PhelTokenClassifier.isComma(testToken))
         assertFalse(PhelTokenClassifier.isSymbol(testToken))
         assertFalse(PhelTokenClassifier.isBadCharacter(testToken))
+    }
+
+    @Test
+    fun `set and short function openers should have dedicated check methods`() {
+        // Compound tokens have semantic check methods
+        assertTrue(PhelTokenClassifier.isSetOpener(PhelTypes.HASH_BRACE), "isSetOpener should recognize #{")
+        assertTrue(PhelTokenClassifier.isShortFnOpener(PhelTypes.FN_SHORT), "isShortFnOpener should recognize |(")
+        
+        // But they classify as their visual equivalents for styling
+        assertEquals(TokenCategory.BRACES, PhelTokenClassifier.classifyToken(PhelTypes.HASH_BRACE))
+        assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.FN_SHORT))
+        
+        // And they're NOT regular delimiters
+        assertFalse(PhelTokenClassifier.isBraces(PhelTypes.HASH_BRACE), "#{ is a set opener, not a regular brace")
+        assertFalse(PhelTokenClassifier.isParentheses(PhelTypes.FN_SHORT), "|( is a short fn opener, not a regular paren")
     }
 }

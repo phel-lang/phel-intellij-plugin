@@ -11,6 +11,7 @@
   <li><strong>Intelligent Code Completion</strong> - Context-aware suggestions for functions, macros, and symbols</li>
   <li><strong>Template Completions</strong> - Smart templates for common constructs (def, defn, let, if, when, fn)</li>
   <li><strong>Namespace Support</strong> - Auto-completion for namespace functions (str/, json/, core/, etc.)</li>
+  <li><strong>Documentation on Hover</strong> - Quick documentation and function signatures with Ctrl/Cmd hover</li>
   <li><strong>Form Comment Highlighting</strong> - Full support for #_ form comments with stacking (#_#_)</li>
   <li><strong>Syntax Highlighting</strong> - Semantic highlighting for keywords, symbols, comments, and special forms</li>
   <li><strong>Smart Editing</strong> - Auto-insertion of parentheses, bracket matching, and quote handling</li>

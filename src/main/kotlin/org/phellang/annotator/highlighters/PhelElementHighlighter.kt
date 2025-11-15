@@ -20,10 +20,4 @@ object PhelElementHighlighter {
             PhelAnnotationUtils.createAnnotation(holder, shortFn, SHORT_FUNCTION)
         }
     }
-
-    fun annotateSet(set: PhelSet, holder: AnnotationHolder) {
-        if (PhelAnnotationUtils.shouldAnnotate(set)) {
-            PhelAnnotationUtils.createAnnotation(holder, set, COLLECTION_TYPE)
-        }
-    }
 }
