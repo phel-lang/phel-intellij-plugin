@@ -23,13 +23,19 @@ class PhelBracePairProviderTest {
     fun `getBracePairs should return all supported pairs`() {
         val pairs = provider.getBracePairs()
         
-        assertEquals(3, pairs.size)
+        assertEquals(5, pairs.size)
         
         // Check parentheses
         val parenPair = pairs.find { it.leftBraceType == PhelTypes.PAREN1 }
         assertNotNull(parenPair)
         assertEquals(PhelTypes.PAREN2, parenPair!!.rightBraceType)
         assertFalse(parenPair.isStructural)
+        
+        // Check short function |(
+        val shortFnPair = pairs.find { it.leftBraceType == PhelTypes.FN_SHORT }
+        assertNotNull(shortFnPair)
+        assertEquals(PhelTypes.PAREN2, shortFnPair!!.rightBraceType)
+        assertFalse(shortFnPair.isStructural)
         
         // Check brackets
         val bracketPair = pairs.find { it.leftBraceType == PhelTypes.BRACKET1 }
@@ -42,6 +48,12 @@ class PhelBracePairProviderTest {
         assertNotNull(bracePair)
         assertEquals(PhelTypes.BRACE2, bracePair!!.rightBraceType)
         assertFalse(bracePair.isStructural)
+        
+        // Check set literal #{
+        val setPair = pairs.find { it.leftBraceType == PhelTypes.HASH_BRACE }
+        assertNotNull(setPair)
+        assertEquals(PhelTypes.BRACE2, setPair!!.rightBraceType)
+        assertFalse(setPair.isStructural)
     }
 
     @ParameterizedTest
@@ -52,7 +64,13 @@ class PhelBracePairProviderTest {
 
     @Test
     fun `opening brace sets should be disjoint`() {
-        val openingBraces = setOf(PhelTypes.PAREN1, PhelTypes.BRACKET1, PhelTypes.BRACE1)
+        val openingBraces = setOf(
+            PhelTypes.PAREN1, 
+            PhelTypes.FN_SHORT, 
+            PhelTypes.BRACKET1, 
+            PhelTypes.BRACE1, 
+            PhelTypes.HASH_BRACE
+        )
 
         openingBraces.forEach { opening ->
             assertFalse(provider.isClosingBrace(opening), "Opening brace $opening should not be identified as closing")
