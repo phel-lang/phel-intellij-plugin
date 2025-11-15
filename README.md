@@ -64,9 +64,14 @@ Test your changes by running the plugin in a separate IDE instance:
 
 - **PhelLexer** (`.flex`) - Tokenizes Phel source code
 - **PhelParser** (`.bnf`) - Parses tokens into PSI tree
+- **PhelFileType** - Registers `.phel` file type with IntelliJ
 - **PhelCompletionContributor** - Provides code completion
+- **PhelDocumentationProvider** - Hover documentation and quick info
 - **PhelAnnotator** - Semantic highlighting and error detection
 - **PhelSyntaxHighlighter** - Basic syntax coloring
+- **PhelFoldingBuilder** - Code folding support
+- **PhelTypedHandler** - Smart character insertion
+- **PhelBraceMatcher** - Bracket matching
 
 ## Contributing
 
