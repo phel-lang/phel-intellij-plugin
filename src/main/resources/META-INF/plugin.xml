@@ -58,7 +58,7 @@
                 implementationClass="org.phellang.completion.PhelCompletionContributor"/>
         <lang.documentationProvider
                 language="Phel"
-                implementationClass="org.phellang.completion.infrastructure.PhelDocumentationProvider"/>
+                implementationClass="org.phellang.completion.PhelDocumentationProvider"/>
         <lang.commenter
                 language="Phel"
                 implementationClass="org.phellang.editor.PhelCommenter"/>
