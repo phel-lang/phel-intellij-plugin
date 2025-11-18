@@ -3,13 +3,13 @@ package org.phellang.completion.data
 enum class Namespace {
     BASE64,
     CORE,
+    DEBUG,
     HTML,
     HTTP,
     JSON,
     MOCK,
-    PHP,
+    PHP_INTEROP,
     REPL,
-    STR,
+    STRING,
     TEST,
-    DEBUG,
 }

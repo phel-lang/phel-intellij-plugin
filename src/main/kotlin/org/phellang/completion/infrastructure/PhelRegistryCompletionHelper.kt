@@ -13,7 +13,7 @@ object PhelRegistryCompletionHelper {
 
     @JvmStatic
     fun addStringFunctions(result: CompletionResultSet) {
-        addNamespaceFunctions(result, Namespace.STR)
+        addNamespaceFunctions(result, Namespace.STRING)
     }
 
     @JvmStatic
@@ -53,7 +53,7 @@ object PhelRegistryCompletionHelper {
 
     @JvmStatic
     fun addPhpInteropFunctions(result: CompletionResultSet) {
-        addNamespaceFunctions(result, Namespace.PHP)
+        addNamespaceFunctions(result, Namespace.PHP_INTEROP)
     }
 
     @JvmStatic
