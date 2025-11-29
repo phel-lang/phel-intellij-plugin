@@ -20,6 +20,32 @@ Phel is a functional programming language that transpiles to PHP. It is a dialec
 3. Search for "**Phel**"
 4. Click **Install** and restart the IDE
 
+## Features
+
+- **Syntax Highlighting** - Full lexer-based syntax highlighting for Phel code
+- **Code Completion** - Intelligent completion for core functions, namespaces, and symbols
+- **Documentation Popups** - Hover over functions to see detailed documentation with examples
+- **Bracket Matching** - Automatic matching and highlighting of parentheses, brackets, and braces
+- **Code Folding** - Collapse/expand code blocks for better navigation
+- **Smart Typing** - Auto-completion of brackets and quotes
+- **Semantic Analysis** - Error detection and semantic highlighting
+- **File Templates** - Quick creation of new Phel files with proper structure
+
+### Built-in Function Registry
+
+The plugin includes a comprehensive registry of **350+ Phel functions** across all core namespaces:
+
+- `phel\base64` - Base64 encoding/decoding utilities
+- `phel\core` - Core language functions (258+ functions)
+- `phel\debug` - Debugging and tracing tools
+- `phel\html` - HTML generation helpers
+- `phel\http` - HTTP request/response handling
+- `phel\json` - JSON encoding/decoding
+- `phel\mock` - Testing and mocking utilities
+- `phel\repl` - REPL-specific functions
+- `phel\str` - String manipulation functions
+- `phel\test` - Testing framework functions
+
 ## Usage
 
 ### Getting Started
@@ -27,13 +53,14 @@ Phel is a functional programming language that transpiles to PHP. It is a dialec
 1. Create or open a `.phel` file
 2. The plugin will automatically activate and provide syntax highlighting
 3. Start typing to see intelligent code completions
+4. Hover over any function to see detailed documentation
 
 ## Development
 
 ### Building from Source
 
 ```bash
-git clone https://github.com/phel-lang/intellij-phel-support.git
+git clone git@github.com:phel-lang/phel-intellij-plugin.git
 cd intellij-phel-support
 ./gradlew buildPlugin
 ```
@@ -55,23 +82,65 @@ Test your changes by running the plugin in a separate IDE instance:
 
 ### Project Structure
 
-- `src/main/java/org/phellang/` - Main plugin source code
-- `src/main/resources/META-INF/plugin.xml` - Plugin configuration
-- `src/main/java/org/phellang/language/` - Lexer and parser definitions
-- `src/main/java/org/phellang/completion/` - Code completion providers
+```txt
+src/
+├── main/
+│   ├── kotlin/org/phellang/          # Main plugin source (Kotlin)
+│   │   ├── actions/                  # Contextual menu actions
+│   │   ├── annotator/                # Semantic highlighting
+│   │   ├── completion/               # Code completion & documentation
+│   │   └── ...
+│   ├── gen/                          # Generated parser code
+│   └── resources/
+│       └── META-INF/plugin.xml       # Plugin configuration
+└── test/kotlin/org/phellang/         # Test suite
+```
 
 ### Key Components
 
-- **PhelLexer** (`.flex`) - Tokenizes Phel source code
-- **PhelParser** (`.bnf`) - Parses tokens into PSI tree
-- **PhelFileType** - Registers `.phel` file type with IntelliJ
-- **PhelCompletionContributor** - Provides code completion
-- **PhelDocumentationProvider** - Hover documentation and quick info
+#### Language Support
+
+- **PhelLexer** (`.flex`) - Tokenizes Phel source code into tokens
+- **PhelParser** (`.bnf`) - Parses tokens into PSI (Program Structure Interface) tree
+- **PhelFileType** - Registers `.phel` file type with IntelliJ platform
+- **PhelSyntaxHighlighter** - Provides syntax coloring for keywords, strings, numbers, etc.
+
+#### Code Intelligence
+
+- **PhelCompletionContributor** - Intelligent code completion for functions and symbols
+- **PhelFunctionRegistry** - Central registry of 350+ Phel functions with full documentation
+- **PhelDocumentationProvider** - Hover documentation with examples and deprecation info
 - **PhelAnnotator** - Semantic highlighting and error detection
-- **PhelSyntaxHighlighter** - Basic syntax coloring
-- **PhelFoldingBuilder** - Code folding support
-- **PhelTypedHandler** - Smart character insertion
-- **PhelBraceMatcher** - Bracket matching
+
+#### Editor Features
+
+- **PhelFoldingBuilder** - Code folding for functions and data structures
+- **PhelTypedHandler** - Smart character insertion (auto-closing brackets, quotes)
+- **PhelBraceMatcher** - Bracket matching and highlighting
+- **PhelCommenter** - Comment/uncomment code blocks
+
+## Technical Details
+
+### Build & Test Commands
+
+Run the test suite:
+
+```bash
+./gradlew test
+```
+
+Build and verify:
+
+```bash
+./gradlew build
+```
+
+## Resources
+
+- **Phel Language**: [phel-lang.org](https://phel-lang.org/)
+- **Phel API Documentation**: [phel-lang.org/documentation/api/](https://phel-lang.org/documentation/api/)
+- **Plugin Page**: [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/28459-phel-lang)
+- **GitHub Repository**: [github.com/phel-lang/intellij-phel-support](https://github.com/phel-lang/intellij-phel-support)
 
 ## Contributing
 
