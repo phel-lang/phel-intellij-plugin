@@ -3,46 +3,94 @@ package org.phellang.completion.data
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 internal fun registerTestFunctions(): List<DataFunction> = listOf(
-    DataFunction("test/deftest", "(deftest test-name & body)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Defines a test function", """
-<br /><code>(deftest test-name & body)</code><br /><br />
-Defines a test function.<br />
-<br />
-  <pre><code>(deftest test-add<br />  (is (= 4 (+ 2 2))))</code></pre>
-<br />
-"""),
-    DataFunction("test/is", "(is form & [message])", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Asserts that an expression is true", """
-<br /><code>(is form & [message])</code><br /><br />
-Asserts that an expression is true.<br />
-<br />
-  <pre><code>(is (= 4 (+ 2 2)))<br /># Passes if equal</code></pre>
-<br />
-"""),
-    DataFunction("test/print-summary", "(print-summary )", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Prints test results summary", """
-<br /><code>(print-summary )</code><br /><br />
-Prints test results summary.<br />
-<br />
-  <pre><code>(print-summary)<br /># Prints: Passed: 10, Failed: 2</code></pre>
-<br />
-"""),
-    DataFunction("test/report", "(report data)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Records test results and prints status indicators", """
-<br /><code>(report data)</code><br /><br />
-Records test results and prints status indicators.<br />
-<br />
-  <pre><code>(report <code>{:state :pass}</code>)<br /># Prints: .</code></pre>
-<br />
-"""),
-    DataFunction("test/run-tests", "(run-tests options & namespaces)", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Runs all tests in the given namespaces", """
-<br /><code>(run-tests options & namespaces)</code><br /><br />
-Runs all tests in the given namespaces.<br />
-<br />
-  <pre><code>(run-tests {} 'my-app	est)<br /># Runs all tests</code></pre>
-<br />
-"""),
-    DataFunction("test/successful?", "(successful? )", PhelCompletionPriority.TEST_FUNCTIONS, "test", "Checks if all tests passed", """
-<br /><code>(successful? )</code><br /><br />
-Checks if all tests passed.<br />
-<br />
-  <pre><code>(successful?)<br /># => true</code></pre>
-<br />
-"""),
+    DataFunction(
+        namespace = "test",
+        name = "test/deftest",
+        doc = """Defines a test function.""",
+        signature = "(deftest test-name & body)",
+        description = """Defines a test function""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L203",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(deftest test-add)",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.TEST_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "test",
+        name = "test/is",
+        doc = """Asserts that an expression is true.""",
+        signature = "(is form & [message])",
+        description = """Asserts that an expression is true""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L186",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(is (= 4 (+ 2 2)))",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.TEST_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "test",
+        name = "test/print-summary",
+        doc = """Prints test results summary.""",
+        signature = "(print-summary )",
+        description = """Prints test results summary""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L294",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(print-summary)",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.TEST_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "test",
+        name = "test/report",
+        doc = """Records test results and prints status indicators.""",
+        signature = "(report data)",
+        description = """Records test results and prints status indicators""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L33",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(report {:state :pass})",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.TEST_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "test",
+        name = "test/run-tests",
+        doc = """Runs all tests in the given namespaces.""",
+        signature = "(run-tests options & namespaces)",
+        description = """Runs all tests in the given namespaces""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L331",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(run-tests {} 'my-app	est)",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.TEST_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "test",
+        name = "test/successful?",
+        doc = """Checks if all tests passed.""",
+        signature = "(successful? )",
+        description = """Checks if all tests passed""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L341",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(successful?) # => true",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+    ),
 )

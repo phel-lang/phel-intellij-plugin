@@ -3,122 +3,304 @@ package org.phellang.completion.data
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 internal fun registerHttpFunctions(): List<DataFunction> = listOf(
-    DataFunction("http/create-response-from-map", "", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "", """
-<br />
-<br />
-"""),
-    DataFunction("http/create-response-from-string", "", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "", """
-<br />
-<br />
-"""),
-    DataFunction("http/emit-response", "(emit-response response)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Emits the response by sending headers and outputting the body", """
-<br /><code>(emit-response response)</code><br /><br />
-Emits the response by sending headers and outputting the body.<br />
-<br />
-  <pre><code>(emit-response (response-from-string \"Hello World\"))<br /># => nil</code></pre>
-<br />
-"""),
-    DataFunction("http/files-from-globals", "(files-from-globals & [files])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts the files from `'${'$'}_'FILES` and normalizes them to a map of \"uploaded-file\"", """
-<br /><code>(files-from-globals & [files])</code><br /><br />
-Extracts the files from <b>'${'$'}_'FILES</b> and normalizes them to a map of \"uploaded-file\".<br />
-<br />
-  <pre><code>(files-from-globals)<br /># => <code>{:avatar (uploaded-file \"/tmp/phpYzdqkD\" 1024 0 \"photo.jpg\" \"image/jpeg\")}</code></code></pre>
-<br />
-"""),
-    DataFunction("http/headers-from-server", "(headers-from-server & [server])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts all headers from the `${'$'}_SERVER` variable", """
-<br /><code>(headers-from-server & [server])</code><br /><br />
-Extracts all headers from the <b>${'$'}_SERVER</b> variable.<br />
-<br />
-  <pre><code>(headers-from-server)<br /># => <code>{:host \"example.com\" :content-type \"application/json\"}</code></code></pre>
-<br />
-"""),
-    DataFunction("http/request", "(request method uri headers parsed-body query-params cookie-params server-params uploaded-files version attributes)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a new request struct", """
-<br /><code>(request method uri headers parsed-body query-params cookie-params server-params uploaded-files version attributes)</code><br /><br />
-Creates a new request struct.<br />
-<br />
-"""),
-    DataFunction("http/request-from-globals", "(request-from-globals )", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts a request from `'${'$'}_'SERVER`, `'${'$'}_'GET`, `'${'$'}_'POST`, `'${'$'}_'COOKIE` and `'${'$'}_'FILES`", """
-<br /><code>(request-from-globals )</code><br /><br />
-Extracts a request from <b>'${'$'}_'SERVER</b>, <b>'${'$'}_'GET</b>, <b>'${'$'}_'POST</b>, <b>'${'$'}_'COOKIE</b> and <b>'${'$'}_'FILES</b>.<br />
-<br />
-  <pre><code>(request-from-globals)<br /># => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})</code></pre>
-<br />
-"""),
-    DataFunction("http/request-from-globals-args", "(request-from-globals-args server get-parameter post-parameter cookies files)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts a request from args", """
-<br /><code>(request-from-globals-args server get-parameter post-parameter cookies files)</code><br /><br />
-Extracts a request from args.<br />
-<br />
-  <pre><code>(request-from-globals-args php/'${'$'}_'SERVER php/'${'$'}_'GET php/'${'$'}_'POST php/'${'$'}_'COOKIE php/'${'$'}_'FILES)<br /># => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})</code></pre>
-<br />
-"""),
-    DataFunction("http/request-from-map", "(request-from-map {:method method, :version version, :uri uri, :headers headers, :parsed-body parsed-body, :query-params query-params, :cookie-params cookie-params, :server-params server-params, :uploaded-files uploaded-files, :attributes attributes})", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a request struct from a map with optional keys :method, :uri, :headers, etc", """
-<br /><code>(request-from-map <code>{:method method, :version version, :uri uri, :headers headers, :parsed-body parsed-body, :query-params query-params, :cookie-params cookie-params, :server-params server-params, :uploaded-files uploaded-files, :attributes attributes}</code>)</code><br /><br />
-Creates a request struct from a map with optional keys :method, :uri, :headers, etc.<br />
-<br />
-  <pre><code>(request-from-map <code>{:method \"POST\" :uri \"https://api.example.com/users\"}</code>)<br /># => (request \"POST\" (uri ...) {} nil {} {} {} [] \"1.1\" {})</code></pre>
-<br />
-"""),
-    DataFunction("http/request?", "(request? x)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Checks if `x` is an instance of the request struct", """
-<br /><code>(request? x)</code><br /><br />
-Checks if <b>x</b> is an instance of the request struct.<br />
-<br />
-"""),
-    DataFunction("http/response", "(response status headers body version reason)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a new response struct", """
-<br /><code>(response status headers body version reason)</code><br /><br />
-Creates a new response struct.<br />
-<br />
-"""),
-    DataFunction("http/response-from-map", "(response-from-map {:status status, :headers headers, :body body, :version version, :reason reason})", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason", """
-<br /><code>(response-from-map <code>{:status status, :headers headers, :body body, :version version, :reason reason}</code>)</code><br /><br />
-Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason.<br />
-<br />
-  <pre><code>(response-from-map <code>{:status 200 :body \"Hello World\"}</code>)<br /># => (response 200 {} \"Hello World\" \"1.1\" \"OK\")</code></pre>
-<br />
-"""),
-    DataFunction("http/response-from-string", "(response-from-string s)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Create a response from a string", """
-<br /><code>(response-from-string s)</code><br /><br />
-Create a response from a string.<br />
-<br />
-  <pre><code>(response-from-string \"Hello World\")<br /># => (response 200 {} \"Hello World\" \"1.1\" \"OK\")</code></pre>
-<br />
-"""),
-    DataFunction("http/response?", "(response? x)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Checks if `x` is an instance of the response struct", """
-<br /><code>(response? x)</code><br /><br />
-Checks if <b>x</b> is an instance of the response struct.<br />
-<br />
-"""),
-    DataFunction("http/uploaded-file", "(uploaded-file tmp-file size error-status client-filename client-media-type)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a new uploaded-file struct", """
-<br /><code>(uploaded-file tmp-file size error-status client-filename client-media-type)</code><br /><br />
-Creates a new uploaded-file struct.<br />
-<br />
-"""),
-    DataFunction("http/uploaded-file?", "(uploaded-file? x)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Checks if `x` is an instance of the uploaded-file struct", """
-<br /><code>(uploaded-file? x)</code><br /><br />
-Checks if <b>x</b> is an instance of the uploaded-file struct.<br />
-<br />
-"""),
-    DataFunction("http/uri", "(uri scheme userinfo host port path query fragment)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Creates a new uri struct", """
-<br /><code>(uri scheme userinfo host port path query fragment)</code><br /><br />
-Creates a new uri struct.<br />
-<br />
-"""),
-    DataFunction("http/uri-from-globals", "(uri-from-globals & [server])", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Extracts the URI from the `${'$'}_SERVER` variable", """
-<br /><code>(uri-from-globals & [server])</code><br /><br />
-Extracts the URI from the <b>${'$'}_SERVER</b> variable.<br />
-<br />
-  <pre><code>(uri-from-globals)<br /># => (uri \"https\" nil \"example.com\" 443 \"/path\" \"foo=bar\" nil)</code></pre>
-<br />
-"""),
-    DataFunction("http/uri-from-string", "(uri-from-string url)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Create a uri struct from a string", """
-<br /><code>(uri-from-string url)</code><br /><br />
-Create a uri struct from a string.<br />
-<br />
-  <pre><code>(uri-from-string \"https://example.com/path?foo=bar\")<br /># => (uri \"https\" nil \"example.com\" nil \"/path\" \"foo=bar\" nil)</code></pre>
-<br />
-"""),
-    DataFunction("http/uri?", "(uri? x)", PhelCompletionPriority.HTTP_FUNCTIONS, "http", "Checks if `x` is an instance of the uri struct", """
-<br /><code>(uri? x)</code><br /><br />
-Checks if <b>x</b> is an instance of the uri struct.<br />
-<br />
-"""),
+    DataFunction(
+        namespace = "http",
+        name = "http/create-response-from-map",
+        doc = """""",
+        signature = "",
+        description = """""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L345",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/create-response-from-string",
+        doc = """""",
+        signature = "",
+        description = """""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L353",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/emit-response",
+        doc = """Emits the response by sending headers and outputting the body.""",
+        signature = "(emit-response response)",
+        description = """Emits the response by sending headers and outputting the body""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L394",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(emit-response (response-from-string \"Hello World\")) ; => nil",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/files-from-globals",
+        doc = """Extracts the files from <b>${'$'}_FILES</b> and normalizes them to a map of "uploaded-file".""",
+        signature = "(files-from-globals & [files])",
+        description = """Extracts the files from ${'$'}_FILES and normalizes them to a map of \"uploaded-file\"""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L145",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(files-from-globals) ; => {:avatar (uploaded-file \"/tmp/phpYzdqkD\" 1024 0 \"photo.jpg\" \"image/jpeg\")}",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/headers-from-server",
+        doc = """Extracts all headers from the <b>${'$'}_SERVER</b> variable.""",
+        signature = "(headers-from-server & [server])",
+        description = """Extracts all headers from the ${'$'}_SERVER variable""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L155",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(headers-from-server) ; => {:host \"example.com\" :content-type \"application/json\"}",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/request",
+        doc = """Creates a new request struct.""",
+        signature = "(request method uri headers parsed-body query-params cookie-params server-params uploaded-files version attributes)",
+        description = """Creates a new request struct""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L180",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/request-from-globals",
+        doc = """Extracts a request from <b>${'$'}_SERVER</b>, <b>${'$'}_GET</b>, <b>${'$'}_POST</b>, <b>${'$'}_COOKIE</b> and <b>${'$'}_FILES</b>.""",
+        signature = "(request-from-globals )",
+        description = """Extracts a request from ${'$'}_SERVER, ${'$'}_GET, ${'$'}_POST, ${'$'}_COOKIE and ${'$'}_FILES""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L230",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(request-from-globals) ; => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/request-from-globals-args",
+        doc = """Extracts a request from args.""",
+        signature = "(request-from-globals-args server get-parameter post-parameter cookies files)",
+        description = """Extracts a request from args""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L207",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(request-from-globals-args php/${'$'}_SERVER php/${'$'}_GET php/${'$'}_POST php/${'$'}_COOKIE php/${'$'}_FILES) ; => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/request-from-map",
+        doc = """Creates a request struct from a map with optional keys :method, :uri, :headers, etc.""",
+        signature = "(request-from-map {:method method, :version version, :uri uri, :headers headers, :parsed-body parsed-body, :query-params query-params, :cookie-params cookie-params, :server-params server-params, :uploaded-files uploaded-files, :attributes attributes})",
+        description = """Creates a request struct from a map with optional keys :method, :uri, :headers, etc""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L236",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(request-from-map {:method \"POST\" :uri \"https://api.example.com/users\"}) ; => (request \"POST\" (uri ...) {} nil {} {} {} [] \"1.1\" {})",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/request?",
+        doc = """Checks if <b>x</b> is an instance of the request struct.""",
+        signature = "(request? x)",
+        description = """Checks if x is an instance of the request struct""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L180",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/response",
+        doc = """Creates a new response struct.""",
+        signature = "(response status headers body version reason)",
+        description = """Creates a new response struct""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L269",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/response-from-map",
+        doc = """Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason.""",
+        signature = "(response-from-map {:status status, :headers headers, :body body, :version version, :reason reason})",
+        description = """Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L334",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(response-from-map {:status 200 :body \"Hello World\"}) ; => (response 200 {} \"Hello World\" \"1.1\" \"OK\")",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/response-from-string",
+        doc = """Create a response from a string.""",
+        signature = "(response-from-string s)",
+        description = """Create a response from a string""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L347",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(response-from-string \"Hello World\") ; => (response 200 {} \"Hello World\" \"1.1\" \"OK\")",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/response?",
+        doc = """Checks if <b>x</b> is an instance of the response struct.""",
+        signature = "(response? x)",
+        description = """Checks if x is an instance of the response struct""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L269",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/uploaded-file",
+        doc = """Creates a new uploaded-file struct.""",
+        signature = "(uploaded-file tmp-file size error-status client-filename client-media-type)",
+        description = """Creates a new uploaded-file struct""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L105",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/uploaded-file?",
+        doc = """Checks if <b>x</b> is an instance of the uploaded-file struct.""",
+        signature = "(uploaded-file? x)",
+        description = """Checks if x is an instance of the uploaded-file struct""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L105",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/uri",
+        doc = """Creates a new uri struct.""",
+        signature = "(uri scheme userinfo host port path query fragment)",
+        description = """Creates a new uri struct""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L9",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/uri-from-globals",
+        doc = """Extracts the URI from the <b>${'$'}_SERVER</b> variable.""",
+        signature = "(uri-from-globals & [server])",
+        description = """Extracts the URI from the ${'$'}_SERVER variable""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L53",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(uri-from-globals) ; => (uri \"https\" nil \"example.com\" 443 \"/path\" \"foo=bar\" nil)",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/uri-from-string",
+        doc = """Create a uri struct from a string.""",
+        signature = "(uri-from-string url)",
+        description = """Create a uri struct from a string""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L77",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(uri-from-string \"https://example.com/path?foo=bar\") ; => (uri \"https\" nil \"example.com\" nil \"/path\" \"foo=bar\" nil)",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "http",
+        name = "http/uri?",
+        doc = """Checks if <b>x</b> is an instance of the uri struct.""",
+        signature = "(uri? x)",
+        description = """Checks if x is an instance of the uri struct""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L9",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+    ),
 )

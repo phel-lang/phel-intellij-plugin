@@ -14,7 +14,7 @@ object PhelApiDocumentation {
         val elements = PhelFunctionRegistry.getAllFunctions()
 
         for (element in elements) {
-            functionDocs[element.name] = "<h3>${element.name}</h3>${element.descriptionHtml}"
+            functionDocs[element.name] = "<h3>${element.name}</h3>${element.toHtmlDocumentation()}"
         }
     }
 }
