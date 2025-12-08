@@ -145,12 +145,13 @@ tasks {
             ides {
                 create("IC", "2024.2.5")
                 create("IC", "2024.3.1")
+                create("IC", "2025.3")
             }
         }
 
         patchPluginXml {
             sinceBuild.set("242")
-            untilBuild.set("252.*")
+            untilBuild.set("253.*")
         }
 
         signPlugin {
