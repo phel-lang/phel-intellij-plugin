@@ -3,64 +3,139 @@ package org.phellang.completion.data
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 internal fun registerReplFunctions(): List<DataFunction> = listOf(
-    DataFunction("repl/build-facade", "", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "", """
-<br />
-<br />
-"""),
-    DataFunction("repl/compile-str", "(compile-str s)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Compiles a Phel expression string to PHP code", """
-<br /><code>(compile-str s)</code><br /><br />
-Compiles a Phel expression string to PHP code.<br />
-<br />
-  <pre><code>(compile-str \"(+ 1 2)\")<br /># => \"(1 + 2)\"</code></pre>
-<br />
-"""),
-    DataFunction("repl/doc", "(doc sym)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints the documentation for the given symbol", """
-<br /><code>(doc sym)</code><br /><br />
-Prints the documentation for the given symbol.<br />
-<br />
-  <pre><code>(doc map)<br /># Prints: \"Applies function f to each element...\"</code></pre>
-<br />
-"""),
-    DataFunction("repl/loaded-namespaces", "(loaded-namespaces )", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Returns all namespaces currently loaded in the REPL", """
-<br /><code>(loaded-namespaces )</code><br /><br />
-Returns all namespaces currently loaded in the REPL.<br />
-<br />
-  <pre><code>(loaded-namespaces)<br /># => [\"phel\core\" \"phel\repl\"]</code></pre>
-<br />
-"""),
-    DataFunction("repl/print-colorful", "(print-colorful & xs)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints arguments with colored output", """
-<br /><code>(print-colorful & xs)</code><br /><br />
-Prints arguments with colored output.<br />
-<br />
-  <pre><code>(print-colorful [1 2 3])<br /># Prints: [1 2 3] (with color)</code></pre>
-<br />
-"""),
-    DataFunction("repl/println-colorful", "(println-colorful & xs)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Prints arguments with colored output followed by a newline", """
-<br /><code>(println-colorful & xs)</code><br /><br />
-Prints arguments with colored output followed by a newline.<br />
-<br />
-  <pre><code>(println-colorful [1 2 3])<br /># Prints: [1 2 3]<br /> (with color)</code></pre>
-<br />
-"""),
-    DataFunction("repl/require", "(require sym & args)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Requires a Phel module into the environment", """
-<br /><code>(require sym & args)</code><br /><br />
-Requires a Phel module into the environment.<br />
-<br />
-  <pre><code>(require phel\http :as http :refer [request])<br /># => phel\http</code></pre>
-<br />
-"""),
-    DataFunction("repl/resolve", "(resolve sym)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved", """
-<br /><code>(resolve sym)</code><br /><br />
-Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved.<br />
-<br />
-  <pre><code>(resolve 'map)<br /># => phel\core/map</code></pre>
-<br />
-"""),
-    DataFunction("repl/use", "(use sym & args)", PhelCompletionPriority.REPL_FUNCTIONS, "repl", "Adds a use statement to the environment", """
-<br /><code>(use sym & args)</code><br /><br />
-Adds a use statement to the environment.<br />
-<br />
-  <pre><code>(use DateTime :as DT)<br /># => DateTime</code></pre>
-<br />
-"""),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/build-facade",
+        doc = """""",
+        signature = "",
+        description = """""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L11",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = null,
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/compile-str",
+        doc = """Compiles a Phel expression string to PHP code.""",
+        signature = "(compile-str s)",
+        description = """Compiles a Phel expression string to PHP code""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L135",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(compile-str \"(+ 1 2)\") ; => \"(1 + 2)\"",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/doc",
+        doc = """Prints the documentation for the given symbol.""",
+        signature = "(doc sym)",
+        description = """Prints the documentation for the given symbol""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L53",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(doc map)",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/loaded-namespaces",
+        doc = """Returns all namespaces currently loaded in the REPL.""",
+        signature = "(loaded-namespaces )",
+        description = """Returns all namespaces currently loaded in the REPL""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L18",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(loaded-namespaces) ; => [\"phel\\core\" \"phel\\repl\"]",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/print-colorful",
+        doc = """Prints arguments with colored output.""",
+        signature = "(print-colorful & xs)",
+        description = """Prints arguments with colored output""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L120",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(print-colorful [1 2 3])",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/println-colorful",
+        doc = """Prints arguments with colored output followed by a newline.""",
+        signature = "(println-colorful & xs)",
+        description = """Prints arguments with colored output followed by a newline""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L127",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(println-colorful [1 2 3])",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/require",
+        doc = """Requires a Phel module into the environment.""",
+        signature = "(require sym & args)",
+        description = """Requires a Phel module into the environment""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L83",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(require phel\\http :as http :refer [request]) ; => phel\\http",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/resolve",
+        doc = """Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved.""",
+        signature = "(resolve sym)",
+        description = """Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L33",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(resolve 'map) ; => phel\\core/map",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
+    DataFunction(
+        namespace = "repl",
+        name = "repl/use",
+        doc = """Adds a use statement to the environment.""",
+        signature = "(use sym & args)",
+        description = """Adds a use statement to the environment""",
+        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L97",
+        docUrl = "",
+        meta = FunctionMeta(
+            example = "(use DateTime :as DT) ; => DateTime",
+            deprecatedVersion = null,
+            supersededBy = null,
+        ),
+        priority = PhelCompletionPriority.REPL_FUNCTIONS,
+    ),
 )
