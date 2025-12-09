@@ -2,7 +2,7 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 group = "org.phellang"
-version = "0.2.1"
+version = "0.2.2"
 
 plugins {
     id("java")
@@ -47,7 +47,7 @@ sourceSets {
 // Configure IntelliJ Platform Dependencies
 dependencies {
     intellijPlatform {
-        intellijIdea("2024.2.5") {
+        intellijIdea("2024.3.1") {
             type.set(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity)
         }
         bundledPlugin("com.intellij.java")
@@ -56,10 +56,11 @@ dependencies {
         zipSigner()
     }
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.10.1")
     testImplementation("org.mockito:mockito-core:5.20.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.20.0")
 }
@@ -125,14 +126,26 @@ tasks {
         }
         testLogging {
             events("passed", "skipped", "failed")
+            showStandardStreams = false
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
         }
+
+        // Increase memory for tests
+        minHeapSize = "512m"
+        maxHeapSize = "2048m"
 
         systemProperty("idea.log.debug.categories", "")
         systemProperty("idea.suppress.layout.warnings", "true")
-
+        systemProperty("idea.is.unit.test", "true")
+        systemProperty("idea.force.use.core.classloader", "true")
+        
+        // Disable CDS archive for tests to avoid classloader conflicts
         jvmArgs(
             "-Didea.log.debug.categories=",
-            "-Didea.suppress.layout.warnings=true"
+            "-Didea.suppress.layout.warnings=true",
+            "-Didea.is.unit.test=true",
+            "-Didea.force.use.core.classloader=true",
+            "-Xshare:off"  // Disable CDS to avoid classloader conflicts
         )
     }
 
@@ -145,7 +158,8 @@ tasks {
             ides {
                 create("IC", "2024.2.5")
                 create("IC", "2024.3.1")
-                create("IC", "2025.3")
+                // 2025.3 not yet available in Maven repos (announced but not published)
+                // create("IC", "2025.3")
             }
         }
 
