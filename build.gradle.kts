@@ -60,7 +60,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.10.1")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.1")
     testImplementation("org.mockito:mockito-core:5.20.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.20.0")
 }
