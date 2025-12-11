@@ -2,1598 +2,1814 @@ package org.phellang.completion.data
 
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 
-internal fun registerCoreFunctions(): List<DataFunction> = listOf(
-    DataFunction(
+internal fun registerCoreFunctions(): List<PhelFunction> = listOf(
+    PhelFunction(
         namespace = "core",
         name = "%",
-        doc = """Return the remainder of <b>dividend</b> / <b>divisor</b>.""",
         signature = "(% dividend divisor)",
-        description = """Return the remainder of dividend / divisor""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2425",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Return the remainder of dividend / divisor",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Return the remainder of <b>dividend</b> / <b>divisor</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2425",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "*",
-        doc = """Returns the product of all elements in <b>xs</b>. All elements in <b>xs</b> must be numbers. If <b>xs</b> is empty, return 1.""",
         signature = "(* & xs)",
-        description = """Returns the product of all elements in xs. All elements in xs must benumbers. If xs is empty, return 1""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2399",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the product of all elements in xs. All elements in xs must benumbers. If xs is empty, return 1",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the product of all elements in <b>xs</b>. All elements in <b>xs</b> must be numbers. If <b>xs</b> is empty, return 1.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2399",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "**",
-        doc = """Return <b>a</b> to the power of <b>x</b>.""",
         signature = "(** a x)",
-        description = """Return a to the power of x""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2432",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Return a to the power of x",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Return <b>a</b> to the power of <b>x</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2432",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "*build-mode*",
-        doc = """Set to true when a file is being built/compiled, false otherwise.""",
         signature = "",
-        description = """Set to true when a file is being built/compiled, false otherwise""",
-        githubUrl = "",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Set to true when a file is being built/compiled, false otherwise",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Set to true when a file is being built/compiled, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "*file*",
-        doc = """Returns the path of the current source file.""",
         signature = "*file*",
-        description = """Returns the path of the current source file""",
-        githubUrl = "",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the path of the current source file",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Returns the path of the current source file.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "*ns*",
-        doc = """Returns the namespace in the current scope.""",
         signature = "*ns*",
-        description = """Returns the namespace in the current scope""",
-        githubUrl = "",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the namespace in the current scope",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Returns the namespace in the current scope.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "+",
-        doc = """Returns the sum of all elements in <b>xs</b>. All elements <b>xs</b> must be numbers. If <b>xs</b> is empty, return 0.""",
         signature = "(+ & xs)",
-        description = """Returns the sum of all elements in xs. All elements xs must be numbers.  If xs is empty, return 0""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2375",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the sum of all elements in xs. All elements xs must be numbers.  If xs is empty, return 0",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the sum of all elements in <b>xs</b>. All elements <b>xs</b> must be numbers. If <b>xs</b> is empty, return 0.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2375",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "-",
-        doc = """Returns the difference of all elements in <b>xs</b>. If <b>xs</b> is empty, return 0. If <b>xs</b> has one element, return the negative value of that element.""",
         signature = "(- & xs)",
-        description = """Returns the difference of all elements in xs. If xs is empty, return 0. If xs  has one element, return the negative value of that element""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2386",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the difference of all elements in xs. If xs is empty, return 0. If xs  has one element, return the negative value of that element",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the difference of all elements in <b>xs</b>. If <b>xs</b> is empty, return 0. If <b>xs</b> has one element, return the negative value of that element.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2386",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "->",
-        doc = """Threads the expr through the forms. Inserts <b>x</b> as the second item in the first form, making a list of it if it is not a list already. If there are more forms, insert the first form as the second item in the second form, etc.""",
         signature = "(-> x & forms)",
-        description = """Threads the expr through the forms. Inserts x as the second item  in the first form, making a list of it if it is not a list already.  If there are more forms, insert the first form as the second item in  the second form, etc""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2718",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Threads the expr through the forms. Inserts x as the second item  in the first form, making a list of it if it is not a list already.  If there are more forms, insert the first form as the second item in  the second form, etc",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Threads the expr through the forms. Inserts <b>x</b> as the second item in the first form, making a list of it if it is not a list already. If there are more forms, insert the first form as the second item in the second form, etc.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2718",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "->>",
-        doc = """Threads the expr through the forms. Inserts <b>x</b> as the last item in the first form, making a list of it if it is not a list already. If there are more forms, insert the first form as the last item in the second form, etc.""",
         signature = "(->> x & forms)",
-        description = """Threads the expr through the forms. Inserts x as the  last item in the first form, making a list of it if it is not a  list already. If there are more forms, insert the first form as the  last item in the second form, etc""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2734",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Threads the expr through the forms. Inserts x as the  last item in the first form, making a list of it if it is not a  list already. If there are more forms, insert the first form as the  last item in the second form, etc",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Threads the expr through the forms. Inserts <b>x</b> as the last item in the first form, making a list of it if it is not a list already. If there are more forms, insert the first form as the last item in the second form, etc.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2734",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "/",
-        doc = """Returns the nominator divided by all the denominators. If <b>xs</b> is empty, returns 1. If <b>xs</b> has one value, returns the reciprocal of x.""",
         signature = "(/ & xs)",
-        description = """Returns the nominator divided by all the denominators. If xs is empty,returns 1. If xs has one value, returns the reciprocal of x""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2412",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the nominator divided by all the denominators. If xs is empty,returns 1. If xs has one value, returns the reciprocal of x",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the nominator divided by all the denominators. If <b>xs</b> is empty, returns 1. If <b>xs</b> has one value, returns the reciprocal of x.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2412",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "<",
-        doc = """Checks if each argument is strictly less than the following argument.""",
         signature = "(< a & more)",
-        description = """Checks if each argument is strictly less than the following argument""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L563",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(< 1 2 3 4) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if each argument is strictly less than the following argument",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if each argument is strictly less than the following argument.""",
+            example = "(< 1 2 3 4) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L563",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "<=",
-        doc = """Checks if each argument is less than or equal to the following argument. Returns a boolean.""",
         signature = "(<= a & more)",
-        description = """Checks if each argument is less than or equal to the following argument. Returns a boolean""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L576",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if each argument is less than or equal to the following argument. Returns a boolean",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if each argument is less than or equal to the following argument. Returns a boolean.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L576",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "<=>",
-        doc = """Alias for the spaceship PHP operator in ascending order. Returns an int.""",
         signature = "(<=> a b)",
-        description = """Alias for the spaceship PHP operator in ascending order. Returns an int""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L613",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Alias for the spaceship PHP operator in ascending order. Returns an int",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Alias for the spaceship PHP operator in ascending order. Returns an int.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L613",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "=",
-        doc = """Checks if all values are equal (value equality, not identity).""",
         signature = "(= a & more)",
-        description = """Checks if all values are equal (value equality, not identity)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L538",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(= [1 2 3] [1 2 3]) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if all values are equal (value equality, not identity)",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if all values are equal (value equality, not identity).""",
+            example = "(= [1 2 3] [1 2 3]) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L538",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = ">",
-        doc = """Checks if each argument is strictly greater than the following argument.""",
         signature = "(> a & more)",
-        description = """Checks if each argument is strictly greater than the following argument""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L588",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(> 4 3 2 1) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if each argument is strictly greater than the following argument",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if each argument is strictly greater than the following argument.""",
+            example = "(> 4 3 2 1) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L588",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = ">=",
-        doc = """Checks if each argument is greater than or equal to the following argument. Returns a boolean.""",
         signature = "(>= a & more)",
-        description = """Checks if each argument is greater than or equal to the following argument. Returns a boolean""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L601",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if each argument is greater than or equal to the following argument. Returns a boolean",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if each argument is greater than or equal to the following argument. Returns a boolean.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L601",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = ">=<",
-        doc = """Alias for the spaceship PHP operator in descending order. Returns an int.""",
         signature = "(>=< a b)",
-        description = """Alias for the spaceship PHP operator in descending order. Returns an int""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L619",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Alias for the spaceship PHP operator in descending order. Returns an int",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Alias for the spaceship PHP operator in descending order. Returns an int.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L619",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "NAN",
-        doc = """Constant for Not a Number (NAN) values.""",
         signature = "",
-        description = """Constant for Not a Number (NAN) values""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2371",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Constant for Not a Number (NAN) values",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Constant for Not a Number (NAN) values.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2371",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "all?",
-        doc = """Returns true if predicate is true for every element in collection, false otherwise.""",
         signature = "(all? pred coll)",
-        description = """Returns true if predicate is true for every element in collection, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L625",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(all? even? [2 4 6 8]) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if predicate is true for every element in collection, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if predicate is true for every element in collection, false otherwise.""",
+            example = "(all? even? [2 4 6 8]) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L625",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "and",
-        doc = """Evaluates expressions left to right, returning the first falsy value or the last value.""",
         signature = "(and & args)",
-        description = """Evaluates expressions left to right, returning the first falsy value or the last value""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L512",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(and true 1 \"hello\") ; => \"hello\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates expressions left to right, returning the first falsy value or the last value",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Evaluates expressions left to right, returning the first falsy value or the last value.""",
+            example = "(and true 1 \"hello\") ; => \"hello\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L512",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "apply",
-        doc = """Calls the function with the given arguments. The last argument must be a list of values, which are passed as separate arguments, rather than a single list. Apply returns the result of the calling function.""",
         signature = "(apply f expr*)",
-        description = """Calls the function with the given arguments. The last argument must be a list of values, which are passed as separate arguments, rather than a single list. Apply returns the result of the calling function""",
-        githubUrl = "",
-        docUrl = "/documentation/functions-and-recursion/#apply-functions",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Calls the function with the given arguments. The last argument must be a list of values, which are passed as separate arguments, rather than a single list. Apply returns the result of the calling function",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Calls the function with the given arguments. The last argument must be a list of values, which are passed as separate arguments, rather than a single list. Apply returns the result of the calling function.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/functions-and-recursion/#apply-functions",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "argv",
-        doc = """Vector of arguments passed to the script.""",
         signature = "",
-        description = """Vector of arguments passed to the script""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L141",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Vector of arguments passed to the script",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Vector of arguments passed to the script.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L141",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "as->",
-        doc = """Binds <b>name</b> to <b>expr</b>, evaluates the first form in the lexical context of that binding, then binds name to that result, repeating for each successive form, returning the result of the last form.""",
         signature = "(as-> expr name & forms)",
-        description = """Binds name to expr, evaluates the first form in the lexical context  of that binding, then binds name to that result, repeating for each  successive form, returning the result of the last form""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2798",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Binds name to expr, evaluates the first form in the lexical context  of that binding, then binds name to that result, repeating for each  successive form, returning the result of the last form",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Binds <b>name</b> to <b>expr</b>, evaluates the first form in the lexical context of that binding, then binds name to that result, repeating for each successive form, returning the result of the last form.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2798",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "assoc",
-        doc = """Associates a value with a key in a collection.""",
         signature = "(assoc ds key value)",
-        description = """Associates a value with a key in a collection""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L992",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(assoc {:a 1} :b 2) ; => {:a 1 :b 2}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Associates a value with a key in a collection",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Associates a value with a key in a collection.""",
+            example = "(assoc {:a 1} :b 2) ; => {:a 1 :b 2}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L992",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "assoc-in",
-        doc = """
+        signature = "(assoc-in ds [k & ks] v)",
+        completion = CompletionInfo(
+            tailText = "Associates a value in a nested data structure at the given path.  Creates intermediate maps if they don't exist",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Associates a value in a nested data structure at the given path.
 <br /></br />
 Creates intermediate maps if they don't exist.
 """,
-        signature = "(assoc-in ds [k & ks] v)",
-        description = """Associates a value in a nested data structure at the given path.  Creates intermediate maps if they don't exist""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1403",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(assoc-in {:a {:b 1}} [:a :c] 2) ; => {:a {:b 1 :c 2}}",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1403",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "associative?",
-        doc = """
+        signature = "(associative? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is an associative data structure, false otherwise.  Associative data structures include hash maps, structs, and associative PHP arrays",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns true if <b>x</b> is an associative data structure, false otherwise.
 <br /></br />
 Associative data structures include hash maps, structs, and associative PHP arrays.
 """,
-        signature = "(associative? x)",
-        description = """Returns true if x is an associative data structure, false otherwise.  Associative data structures include hash maps, structs, and associative PHP arrays""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L908",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(associative? {:a 1}) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L908",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "binding",
-        doc = """Temporary redefines definitions while executing the body. The value will be reset after the body was executed.""",
         signature = "(binding bindings & body)",
-        description = """Temporary redefines definitions while executing the body.  The value will be reset after the body was executed""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2838",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Temporary redefines definitions while executing the body.  The value will be reset after the body was executed",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Temporary redefines definitions while executing the body. The value will be reset after the body was executed.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2838",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-and",
-        doc = """Bitwise and.""",
         signature = "(bit-and x y & args)",
-        description = """Bitwise and""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2302",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Bitwise and",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Bitwise and.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2302",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-clear",
-        doc = """Clear bit an index <b>n</b>.""",
         signature = "(bit-clear x n)",
-        description = """Clear bit an index n""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2352",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Clear bit an index n",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Clear bit an index <b>n</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2352",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-flip",
-        doc = """Flip bit at index <b>n</b>.""",
         signature = "(bit-flip x n)",
-        description = """Flip bit at index n""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2357",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Flip bit at index n",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Flip bit at index <b>n</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2357",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-not",
-        doc = """Bitwise complement.""",
         signature = "(bit-not x)",
-        description = """Bitwise complement""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2326",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Bitwise complement",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Bitwise complement.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2326",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-or",
-        doc = """Bitwise or.""",
         signature = "(bit-or x y & args)",
-        description = """Bitwise or""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2310",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Bitwise or",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Bitwise or.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2310",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-set",
-        doc = """Set bit an index <b>n</b>.""",
         signature = "(bit-set x n)",
-        description = """Set bit an index n""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2347",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Set bit an index n",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Set bit an index <b>n</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2347",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-shift-left",
-        doc = """Bitwise shift left.""",
         signature = "(bit-shift-left x n)",
-        description = """Bitwise shift left""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2333",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Bitwise shift left",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Bitwise shift left.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2333",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-shift-right",
-        doc = """Bitwise shift right.""",
         signature = "(bit-shift-right x n)",
-        description = """Bitwise shift right""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2340",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Bitwise shift right",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Bitwise shift right.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2340",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-test",
-        doc = """Test bit at index <b>n</b>.""",
         signature = "(bit-test x n)",
-        description = """Test bit at index n""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2362",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Test bit at index n",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Test bit at index <b>n</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2362",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "bit-xor",
-        doc = """Bitwise xor.""",
         signature = "(bit-xor x y & args)",
-        description = """Bitwise xor""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2318",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Bitwise xor",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Bitwise xor.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2318",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "boolean?",
-        doc = """Returns true if <b>x</b> is a boolean, false otherwise.""",
         signature = "(boolean? x)",
-        description = """Returns true if x is a boolean, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L824",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a boolean, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a boolean, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L824",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "butlast",
-        doc = """Returns all but the last item in <b>coll</b>.""",
         signature = "(butlast coll)",
-        description = """Returns all but the last item in coll""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1492",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(butlast [1 2 3 4]) ; => [1 2 3]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns all but the last item in coll",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns all but the last item in <b>coll</b>.""",
+            example = "(butlast [1 2 3 4]) ; => [1 2 3]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1492",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "case",
-        doc = """Evaluates expression and matches it against constant test values, returning the associated result.""",
         signature = "(case e & pairs)",
-        description = """Evaluates expression and matches it against constant test values, returning the associated result""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L485",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(case x 1 \"one\" 2 \"two\" \"other\") ; => \"one\" (when x is 1)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates expression and matches it against constant test values, returning the associated result",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Evaluates expression and matches it against constant test values, returning the associated result.""",
+            example = "(case x 1 \"one\" 2 \"two\" \"other\") ; => \"one\" (when x is 1)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L485",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "catch",
-        doc = """Handle exceptions thrown in a <b>try</b> block by matching on the provided exception type. The caught exception is bound to <b>exception-name</b> while evaluating the expressions.""",
         signature = "(catch exception-type exception-name expr*)",
-        description = """Handle exceptions thrown in a try block by matching on the provided exception type. The caught exception is bound to exception-name while evaluating the expressions""",
-        githubUrl = "",
-        docUrl = "/documentation/control-flow/#try-catch-and-finally",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Handle exceptions thrown in a try block by matching on the provided exception type. The caught exception is bound to exception-name while evaluating the expressions",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Handle exceptions thrown in a <b>try</b> block by matching on the provided exception type. The caught exception is bound to <b>exception-name</b> while evaluating the expressions.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/control-flow/#try-catch-and-finally",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "coerce-in",
-        doc = """Returns <b>v</b> if it is in the range, or <b>min</b> if <b>v</b> is less than <b>min</b>, or <b>max</b> if <b>v</b> is greater than <b>max</b>.""",
         signature = "(coerce-in v min max)",
-        description = """Returns v if it is in the range, or min if v is less than min, or max if v is greater than max""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2518",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns v if it is in the range, or min if v is less than min, or max if v is greater than max",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns <b>v</b> if it is in the range, or <b>min</b> if <b>v</b> is less than <b>min</b>, or <b>max</b> if <b>v</b> is greater than <b>max</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2518",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "comment",
-        doc = """Ignores the body of the comment.""",
         signature = "(comment &)",
-        description = """Ignores the body of the comment""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L285",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Ignores the body of the comment",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Ignores the body of the comment.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L285",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "comp",
-        doc = """Takes a list of functions and returns a function that is the composition of those functions.""",
         signature = "(comp & fs)",
-        description = """Takes a list of functions and returns a function that is the composition of those functions""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2175",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Takes a list of functions and returns a function that is the composition of those functions",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Takes a list of functions and returns a function that is the composition of those functions.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2175",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "compact",
-        doc = """Returns a lazy sequence with specified values removed from <b>coll</b>. If no values are specified, removes nil values by default.""",
         signature = "(compact coll & values)",
-        description = """Returns a lazy sequence with specified values removed from coll.  If no values are specified, removes nil values by default""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2072",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(compact [1 nil 2 nil 3]) ; => (1 2 3)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence with specified values removed from coll.  If no values are specified, removes nil values by default",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence with specified values removed from <b>coll</b>. If no values are specified, removes nil values by default.""",
+            example = "(compact [1 nil 2 nil 3]) ; => (1 2 3)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2072",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "compare",
-        doc = """Wrapper for PHP's spaceship operator (<b>php/<=></b>). Returns an integer less than, equal to, or greater than zero when <b>x</b> is less than, equal to, or greater than <b>y</b>, respectively.""",
         signature = "(compare x y)",
-        description = """Wrapper for PHP's spaceship operator (php/<=>).  Returns an integer less than, equal to, or greater than zero  when x is less than, equal to, or greater than y, respectively""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L715",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Wrapper for PHP's spaceship operator (php/<=>).  Returns an integer less than, equal to, or greater than zero  when x is less than, equal to, or greater than y, respectively",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Wrapper for PHP's spaceship operator (<b>php/<=></b>). Returns an integer less than, equal to, or greater than zero when <b>x</b> is less than, equal to, or greater than <b>y</b>, respectively.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L715",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "compile",
-        doc = """Returns the compiled PHP code string for the given form.""",
         signature = "(compile form)",
-        description = """Returns the compiled PHP code string for the given form""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2957",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the compiled PHP code string for the given form",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the compiled PHP code string for the given form.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2957",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "complement",
-        doc = """Returns a function that takes the same arguments as <b>f</b> and returns the opposite truth value.""",
         signature = "(complement f)",
-        description = """Returns a function that takes the same arguments as f and returns the opposite truth value""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2184",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a function that takes the same arguments as f and returns the opposite truth value",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a function that takes the same arguments as <b>f</b> and returns the opposite truth value.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2184",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "concat",
-        doc = """Concatenates multiple collections into a lazy sequence.""",
         signature = "(concat & colls)",
-        description = """Concatenates multiple collections into a lazy sequence""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1863",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(concat [1 2] [3 4]) ; => (1 2 3 4)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Concatenates multiple collections into a lazy sequence",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Concatenates multiple collections into a lazy sequence.""",
+            example = "(concat [1 2] [3 4]) ; => (1 2 3 4)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1863",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "cond",
-        doc = """Evaluates test/expression pairs, returning the first matching expression.""",
         signature = "(cond & pairs)",
-        description = """Evaluates test/expression pairs, returning the first matching expression""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L471",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(cond (< x 0) \"negative\" (> x 0) \"positive\" \"zero\") ; => \"negative\", \"positive\", or \"zero\" depending on x",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates test/expression pairs, returning the first matching expression",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Evaluates test/expression pairs, returning the first matching expression.""",
+            example = "(cond (< x 0) \"negative\" (> x 0) \"positive\" \"zero\") ; => \"negative\", \"positive\", or \"zero\" depending on x",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L471",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "conj",
-        doc = """Returns a new collection with values added. Appends to vectors/sets, prepends to lists.""",
         signature = "(conj coll x)",
-        description = """Returns a new collection with values added. Appends to vectors/sets, prepends to lists""",
-        githubUrl = "",
-        docUrl = "/documentation/data-structures/#adding-elements-with-conj",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a new collection with values added. Appends to vectors/sets, prepends to lists",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a new collection with values added. Appends to vectors/sets, prepends to lists.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/data-structures/#adding-elements-with-conj",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "cons",
-        doc = """Prepends an element to the beginning of a collection.""",
         signature = "(cons x coll)",
-        description = """Prepends an element to the beginning of a collection""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L383",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(cons 0 [1 2 3]) ; => [0 1 2 3]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Prepends an element to the beginning of a collection",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Prepends an element to the beginning of a collection.""",
+            example = "(cons 0 [1 2 3]) ; => [0 1 2 3]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L383",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "constantly",
-        doc = """Returns a function that always returns <b>x</b> and ignores any passed arguments.""",
         signature = "(constantly x)",
-        description = """Returns a function that always returns x and ignores any passed arguments""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2170",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a function that always returns x and ignores any passed arguments",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a function that always returns <b>x</b> and ignores any passed arguments.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2170",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "contains-value?",
-        doc = """Returns true if the value is present in the given collection, otherwise returns false.""",
         signature = "(contains-value? coll val)",
-        description = """Returns true if the value is present in the given collection, otherwise returns false""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1770",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(contains-value? {:a 1 :b 2} 2) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if the value is present in the given collection, otherwise returns false",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if the value is present in the given collection, otherwise returns false.""",
+            example = "(contains-value? {:a 1 :b 2} 2) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1770",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "contains?",
-        doc = """Returns true if key is present in collection (checks keys/indices, not values).""",
         signature = "(contains? coll key)",
-        description = """Returns true if key is present in collection (checks keys/indices, not values)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L705",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(contains? [10 20 30] 1) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if key is present in collection (checks keys/indices, not values)",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if key is present in collection (checks keys/indices, not values).""",
+            example = "(contains? [10 20 30] 1) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L705",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "count",
-        doc = """
+        signature = "(count coll)",
+        completion = CompletionInfo(
+            tailText = "Counts the number of elements in a sequence. Can be used on everything that implements the PHP Countable interface.  Works with lists, vectors, hash-maps, sets, strings, and PHP arrays.  Returns 0 for nil",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Counts the number of elements in a sequence. Can be used on everything that implements the PHP Countable interface.
 <br /></br />
 Works with lists, vectors, hash-maps, sets, strings, and PHP arrays. Returns 0 for nil.
 """,
-        signature = "(count coll)",
-        description = """Counts the number of elements in a sequence. Can be used on everything that implements the PHP Countable interface.  Works with lists, vectors, hash-maps, sets, strings, and PHP arrays.  Returns 0 for nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L431",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(count [1 2 3]) ; => 3",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L431",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "csv-seq",
-        doc = """Returns a lazy sequence of rows from a CSV file.""",
         signature = "(csv-seq filename)",
-        description = """Returns a lazy sequence of rows from a CSV file""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2697",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(take 10 (csv-seq \"data.csv\")) ; => [[\"col1\" \"col2\"] [\"val1\" \"val2\"] ...]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of rows from a CSV file",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence of rows from a CSV file.""",
+            example = "(take 10 (csv-seq \"data.csv\")) ; => [[\"col1\" \"col2\"] [\"val1\" \"val2\"] ...]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2697",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "cycle",
-        doc = """Returns an infinite lazy sequence that cycles through the elements of collection.""",
         signature = "(cycle coll)",
-        description = """Returns an infinite lazy sequence that cycles through the elements of collection""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1854",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(take 7 (cycle [1 2 3])) ; => (1 2 3 1 2 3 1)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns an infinite lazy sequence that cycles through the elements of collection",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns an infinite lazy sequence that cycles through the elements of collection.""",
+            example = "(take 7 (cycle [1 2 3])) ; => (1 2 3 1 2 3 1)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1854",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "dec",
-        doc = """Decrements <b>x</b> by one.""",
         signature = "(dec x)",
-        description = """Decrements x by one""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2446",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Decrements x by one",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Decrements <b>x</b> by one.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2446",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "declare",
-        doc = """Declare a global symbol before it is defined.""",
         signature = "",
-        description = """Declare a global symbol before it is defined""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L134",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Declare a global symbol before it is defined",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Declare a global symbol before it is defined.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L134",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "dedupe",
-        doc = """Returns a lazy sequence with consecutive duplicate values removed in <b>coll</b>.""",
         signature = "(dedupe coll)",
-        description = """Returns a lazy sequence with consecutive duplicate values removed in coll""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2062",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(dedupe [1 1 2 2 2 3 1 1]) ; => (1 2 3 1)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence with consecutive duplicate values removed in coll",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence with consecutive duplicate values removed in <b>coll</b>.""",
+            example = "(dedupe [1 1 2 2 2 3 1 1]) ; => (1 2 3 1)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2062",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "deep-merge",
-        doc = """Recursively merges data structures.""",
         signature = "(deep-merge & args)",
-        description = """Recursively merges data structures""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2279",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Recursively merges data structures",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Recursively merges data structures.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2279",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "def",
-        doc = """This special form binds a value to a global symbol.""",
         signature = "(def name meta? value)",
-        description = """This special form binds a value to a global symbol""",
-        githubUrl = "",
-        docUrl = "/documentation/global-and-local-bindings/#definition-def",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "This special form binds a value to a global symbol",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """This special form binds a value to a global symbol.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/global-and-local-bindings/#definition-def",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "def-",
-        doc = """Define a private value that will not be exported.""",
         signature = "",
-        description = """Define a private value that will not be exported""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L241",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Define a private value that will not be exported",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Define a private value that will not be exported.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L241",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "defexception",
-        doc = """Define a new exception.""",
         signature = "(defexception name)",
-        description = """Define a new exception""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L273",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Define a new exception",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Define a new exception.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L273",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "defexception*",
-        doc = """""",
         signature = "(defexception name)",
-        description = """Defines a new exception""",
-        githubUrl = "",
-        docUrl = "/documentation/exceptions",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Defines a new exception",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/exceptions",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "definterface",
-        doc = """Defines an interface.""",
         signature = "(definterface name & fns)",
-        description = """Defines an interface""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2861",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Defines an interface",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Defines an interface.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2861",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "definterface*",
-        doc = """An interface in Phel defines an abstract set of functions. It is directly mapped to a PHP interface. An interface can be defined by using the definterface macro.""",
         signature = "(definterface name & fns)",
-        description = """An interface in Phel defines an abstract set of functions. It is directly mapped to a PHP interface. An interface can be defined by using the definterface macro""",
-        githubUrl = "",
-        docUrl = "/documentation/interfaces/#defining-interfaces",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "An interface in Phel defines an abstract set of functions. It is directly mapped to a PHP interface. An interface can be defined by using the definterface macro",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """An interface in Phel defines an abstract set of functions. It is directly mapped to a PHP interface. An interface can be defined by using the definterface macro.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/interfaces/#defining-interfaces",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "defmacro",
-        doc = """Define a macro.""",
         signature = "",
-        description = """Define a macro""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L246",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Define a macro",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Define a macro.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L246",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "defmacro-",
-        doc = """Define a private macro that will not be exported.""",
         signature = "(defmacro- name & fdecl)",
-        description = """Define a private macro that will not be exported""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L256",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Define a private macro that will not be exported",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Define a private macro that will not be exported.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L256",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "defn",
-        doc = """Define a new global function.""",
         signature = "",
-        description = """Define a new global function""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L236",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Define a new global function",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Define a new global function.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L236",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "defn-",
-        doc = """Define a private function that will not be exported.""",
         signature = "(defn- name & fdecl)",
-        description = """Define a private function that will not be exported""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L251",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Define a private function that will not be exported",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Define a private function that will not be exported.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L251",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "defstruct",
-        doc = """Define a new struct.""",
         signature = "(defstruct name keys & implementations)",
-        description = """Define a new struct""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L261",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Define a new struct",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Define a new struct.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L261",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "defstruct*",
-        doc = """A Struct is a special kind of Map. It only supports a predefined number of keys and is associated to a global name. The Struct not only defines itself but also a predicate function.""",
         signature = "(defstruct my-struct [a b c])",
-        description = """A Struct is a special kind of Map. It only supports a predefined number of keys and is associated to a global name. The Struct not only defines itself but also a predicate function""",
-        githubUrl = "",
-        docUrl = "/documentation/data-structures/#structs",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "A Struct is a special kind of Map. It only supports a predefined number of keys and is associated to a global name. The Struct not only defines itself but also a predicate function",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """A Struct is a special kind of Map. It only supports a predefined number of keys and is associated to a global name. The Struct not only defines itself but also a predicate function.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/data-structures/#structs",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "deref",
-        doc = """Returns the current value inside the variable.""",
         signature = "(deref variable)",
-        description = """Returns the current value inside the variable""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1071",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(def x (var 42))",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the current value inside the variable",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the current value inside the variable.""",
+            example = "(def x (var 42))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1071",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "difference",
-        doc = """Difference between multiple sets into a new one.""",
         signature = "(difference set & sets)",
-        description = """Difference between multiple sets into a new one""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2151",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Difference between multiple sets into a new one",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Difference between multiple sets into a new one.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2151",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "dissoc",
-        doc = """Dissociates <b>key</b> from the datastructure <b>ds</b>. Returns <b>ds</b> without <b>key</b>.""",
         signature = "(dissoc ds key)",
-        description = """Dissociates key from the datastructure ds. Returns ds without key""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1019",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(dissoc {:a 1 :b 2} :b) ; => {:a 1}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Dissociates key from the datastructure ds. Returns ds without key",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Dissociates <b>key</b> from the datastructure <b>ds</b>. Returns <b>ds</b> without <b>key</b>.""",
+            example = "(dissoc {:a 1 :b 2} :b) ; => {:a 1}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1019",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "dissoc-in",
-        doc = """Dissociates a value from a nested data structure at the given path.""",
         signature = "(dissoc-in ds [k & ks])",
-        description = """Dissociates a value from a nested data structure at the given path""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1440",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(dissoc-in {:a {:b 1 :c 2}} [:a :b]) ; => {:a {:c 2}}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Dissociates a value from a nested data structure at the given path",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Dissociates a value from a nested data structure at the given path.""",
+            example = "(dissoc-in {:a {:b 1 :c 2}} [:a :b]) ; => {:a {:c 2}}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1440",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "distinct",
-        doc = """Returns a lazy sequence with duplicated values removed in <b>coll</b>.""",
         signature = "(distinct coll)",
-        description = """Returns a lazy sequence with duplicated values removed in coll""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1606",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(distinct [1 2 1 3 2 4 3]) ; => (1 2 3 4)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence with duplicated values removed in coll",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence with duplicated values removed in <b>coll</b>.""",
+            example = "(distinct [1 2 1 3 2 4 3]) ; => (1 2 3 4)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1606",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "do",
-        doc = """Evaluates the expressions in order and returns the value of the last expression. If no expression is given, nil is returned.""",
         signature = "(do expr*)",
-        description = """Evaluates the expressions in order and returns the value of the last expression. If no expression is given, nil is returned""",
-        githubUrl = "",
-        docUrl = "/documentation/control-flow/#statements-do",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates the expressions in order and returns the value of the last expression. If no expression is given, nil is returned",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Evaluates the expressions in order and returns the value of the last expression. If no expression is given, nil is returned.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/control-flow/#statements-do",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "doall",
-        doc = """Forces realization of a lazy sequence and returns it as a vector.""",
         signature = "(doall coll)",
-        description = """Forces realization of a lazy sequence and returns it as a vector""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1943",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(doall (map println [1 2 3])) ; => [nil nil nil]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Forces realization of a lazy sequence and returns it as a vector",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Forces realization of a lazy sequence and returns it as a vector.""",
+            example = "(doall (map println [1 2 3])) ; => [nil nil nil]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1943",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "dofor",
-        doc = """Repeatedly executes body for side effects with bindings and modifiers as provided by for. Returns nil.""",
         signature = "(dofor head & body)",
-        description = """Repeatedly executes body for side effects with bindings and modifiers as  provided by for. Returns nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1202",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Repeatedly executes body for side effects with bindings and modifiers as  provided by for. Returns nil",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Repeatedly executes body for side effects with bindings and modifiers as provided by for. Returns nil.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1202",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "dorun",
-        doc = """Forces realization of a lazy sequence for side effects, returns nil.""",
         signature = "(dorun coll)",
-        description = """Forces realization of a lazy sequence for side effects, returns nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1954",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(dorun (map println [1 2 3])) ; => nil",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Forces realization of a lazy sequence for side effects, returns nil",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Forces realization of a lazy sequence for side effects, returns nil.""",
+            example = "(dorun (map println [1 2 3])) ; => nil",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1954",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "doseq",
-        doc = """Alias for <b>dofor</b>.""",
         signature = "(doseq seq-exprs & body)",
-        description = """Alias for dofor""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1208",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Alias for dofor",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Alias for <b>dofor</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1208",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "doto",
-        doc = """Evaluates x then calls all of the methods and functions with the value of x supplied at the front of the given arguments. The forms are evaluated in order. Returns x.""",
         signature = "(doto x & forms)",
-        description = """Evaluates x then calls all of the methods and functions with the  value of x supplied at the front of the given arguments. The forms  are evaluated in order. Returns x""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2808",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates x then calls all of the methods and functions with the  value of x supplied at the front of the given arguments. The forms  are evaluated in order. Returns x",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Evaluates x then calls all of the methods and functions with the value of x supplied at the front of the given arguments. The forms are evaluated in order. Returns x.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2808",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "drop",
-        doc = """Drops the first <b>n</b> elements of <b>coll</b>. Returns a lazy sequence.""",
         signature = "(drop n coll)",
-        description = """Drops the first n elements of coll. Returns a lazy sequence""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1461",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(drop 2 [1 2 3 4 5]) ; => (3 4 5)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Drops the first n elements of coll. Returns a lazy sequence",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Drops the first <b>n</b> elements of <b>coll</b>. Returns a lazy sequence.""",
+            example = "(drop 2 [1 2 3 4 5]) ; => (3 4 5)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1461",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "drop-last",
-        doc = """Drops the last <b>n</b> elements of <b>coll</b>.""",
         signature = "(drop-last n coll)",
-        description = """Drops the last n elements of coll""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1474",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(drop-last 2 [1 2 3 4 5]) ; => [1 2 3]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Drops the last n elements of coll",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Drops the last <b>n</b> elements of <b>coll</b>.""",
+            example = "(drop-last 2 [1 2 3 4 5]) ; => [1 2 3]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1474",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "drop-while",
-        doc = """Drops all elements at the front of <b>coll</b> where <b>(pred x)</b> is true. Returns a lazy sequence.""",
         signature = "(drop-while pred coll)",
-        description = """Drops all elements at the front of coll where (pred x) is true. Returns a lazy sequence""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1499",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(drop-while |(< % 5) [1 2 3 4 5 6 3 2 1]) ; => (5 6 3 2 1)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Drops all elements at the front of coll where (pred x) is true. Returns a lazy sequence",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Drops all elements at the front of <b>coll</b> where <b>(pred x)</b> is true. Returns a lazy sequence.""",
+            example = "(drop-while |(< % 5) [1 2 3 4 5 6 3 2 1]) ; => (5 6 3 2 1)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1499",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "empty?",
-        doc = """Returns true if x would be 0, "" or empty collection, false otherwise.""",
         signature = "(empty? x)",
-        description = """Returns true if x would be 0, \"\" or empty collection, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L844",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x would be 0, \"\" or empty collection, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if x would be 0, "" or empty collection, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L844",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "eval",
-        doc = """Evaluates a form and return the evaluated results.""",
         signature = "(eval form)",
-        description = """Evaluates a form and return the evaluated results""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2951",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates a form and return the evaluated results",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Evaluates a form and return the evaluated results.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2951",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "even?",
-        doc = """Checks if <b>x</b> is even.""",
         signature = "(even? x)",
-        description = """Checks if x is even""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2453",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if x is even",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if <b>x</b> is even.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2453",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "every?",
-        doc = """Alias for <b>all?</b>.""",
         signature = "(every? pred coll)",
-        description = """Alias for all?""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L634",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Alias for all?",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Alias for <b>all?</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L634",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "extreme",
-        doc = """Returns the most extreme value in <b>args</b> based on the binary <b>order</b> function.""",
         signature = "(extreme order args)",
-        description = """Returns the most extreme value in args based on the binary order function""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2503",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the most extreme value in args based on the binary order function",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the most extreme value in <b>args</b> based on the binary <b>order</b> function.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2503",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "false?",
-        doc = """Checks if value is exactly false (not just falsy).""",
         signature = "(false? x)",
-        description = """Checks if value is exactly false (not just falsy)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L687",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(false? nil) ; => false",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if value is exactly false (not just falsy)",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if value is exactly false (not just falsy).""",
+            example = "(false? nil) ; => false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L687",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "ffirst",
-        doc = """Same as <b>(first (first coll))</b>.""",
         signature = "(ffirst coll)",
-        description = """Same as (first (first coll))""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L398",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Same as (first (first coll))",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Same as <b>(first (first coll))</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L398",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "file-seq",
-        doc = """Returns a lazy sequence of all files and directories in a directory tree.""",
         signature = "(file-seq path)",
-        description = """Returns a lazy sequence of all files and directories in a directory tree""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2671",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(filter |(php/str_ends_with $ \".phel\") (file-seq \"src/\")) ; => [\"src/file1.phel\" \"src/file2.phel\" ...]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of all files and directories in a directory tree",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence of all files and directories in a directory tree.""",
+            example = "(filter |(php/str_ends_with $ \".phel\") (file-seq \"src/\")) ; => [\"src/file1.phel\" \"src/file2.phel\" ...]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2671",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "filter",
-        doc = """Returns a lazy sequence of elements where predicate returns true.""",
         signature = "(filter pred coll)",
-        description = """Returns a lazy sequence of elements where predicate returns true""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1553",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(filter even? [1 2 3 4 5 6]) ; => (2 4 6)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of elements where predicate returns true",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence of elements where predicate returns true.""",
+            example = "(filter even? [1 2 3 4 5 6]) ; => (2 4 6)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1553",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "finally",
-        doc = """Evaluate expressions after the try body and all matching catches have completed. The finally block runs regardless of whether an exception was thrown.""",
         signature = "(finally expr*)",
-        description = """Evaluate expressions after the try body and all matching catches have completed. The finally block runs regardless of whether an exception was thrown""",
-        githubUrl = "",
-        docUrl = "/documentation/control-flow/#try-catch-and-finally",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluate expressions after the try body and all matching catches have completed. The finally block runs regardless of whether an exception was thrown",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Evaluate expressions after the try body and all matching catches have completed. The finally block runs regardless of whether an exception was thrown.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/control-flow/#try-catch-and-finally",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "find",
-        doc = """Returns the first item in <b>coll</b> where <b>(pred item)</b> evaluates to true.""",
         signature = "(find pred coll)",
-        description = """Returns the first item in coll where (pred item) evaluates to true""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1581",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(find |(> % 5) [1 2 3 6 7 8]) ; => 6",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the first item in coll where (pred item) evaluates to true",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the first item in <b>coll</b> where <b>(pred item)</b> evaluates to true.""",
+            example = "(find |(> % 5) [1 2 3 6 7 8]) ; => 6",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1581",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "find-index",
-        doc = """Returns the index of the first item in <b>coll</b> where <b>(pred item)</b> evaluates to true.""",
         signature = "(find-index pred coll)",
-        description = """Returns the index of the first item in coll where (pred item) evaluates to true""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1593",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(find-index |(> % 5) [1 2 3 6 7 8]) ; => 3",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the index of the first item in coll where (pred item) evaluates to true",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the index of the first item in <b>coll</b> where <b>(pred item)</b> evaluates to true.""",
+            example = "(find-index |(> % 5) [1 2 3 6 7 8]) ; => 3",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1593",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "first",
-        doc = """Returns the first element of a sequence, or nil if empty.""",
         signature = "",
-        description = """Returns the first element of a sequence, or nil if empty""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L95",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(first [1 2 3]) ; => 1",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the first element of a sequence, or nil if empty",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the first element of a sequence, or nil if empty.""",
+            example = "(first [1 2 3]) ; => 1",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L95",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "flatten",
-        doc = """Flattens nested sequential structure into a lazy sequence of all leaf values.""",
         signature = "(flatten coll)",
-        description = """Flattens nested sequential structure into a lazy sequence of all leaf values""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2243",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(flatten [[1 2] [3 [4 5]] 6]) ; => (1 2 3 4 5 6)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Flattens nested sequential structure into a lazy sequence of all leaf values",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Flattens nested sequential structure into a lazy sequence of all leaf values.""",
+            example = "(flatten [[1 2] [3 [4 5]] 6]) ; => (1 2 3 4 5 6)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2243",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "float?",
-        doc = """Returns true if <b>x</b> is float point number, false otherwise.""",
         signature = "(float? x)",
-        description = """Returns true if x is float point number, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L769",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is float point number, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is float point number, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L769",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "fn",
-        doc = """Defines a function. A function consists of a list of parameters and a list of expression. The value of the last expression is returned as the result of the function. All other expression are only evaluated for side effects. If no expression is given, the function returns nil.""",
         signature = "(fn [params*] expr*)",
-        description = """Defines a function. A function consists of a list of parameters and a list of expression. The value of the last expression is returned as the result of the function. All other expression are only evaluated for side effects. If no expression is given, the function returns nil""",
-        githubUrl = "",
-        docUrl = "/documentation/functions-and-recursion/#anonymous-function-fn",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Defines a function. A function consists of a list of parameters and a list of expression. The value of the last expression is returned as the result of the function. All other expression are only evaluated for side effects. If no expression is given, the function returns nil",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Defines a function. A function consists of a list of parameters and a list of expression. The value of the last expression is returned as the result of the function. All other expression are only evaluated for side effects. If no expression is given, the function returns nil.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/functions-and-recursion/#anonymous-function-fn",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "for",
-        doc = """
+        signature = "(for head & body)",
+        completion = CompletionInfo(
+            tailText = "List comprehension. The head of the loop is a vector that contains a sequence of bindings modifiers and options. A binding is a sequence of three values binding :verb expr",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 List comprehension. The head of the loop is a vector that contains a sequence of bindings modifiers and options. A binding is a sequence of three values <b>binding :verb expr</b>. Where <b>binding</b> is a binding as in let and <b>:verb</b> is one of the following keywords:
 <ul>
 <li><b>:range</b> loop over a range by using the range function.</li>
@@ -1612,2715 +1828,3074 @@ Finally, additional options can be set:
 <li><b>:reduce [accumulator initial-value]</b> Instead of returning a list, it reduces the values into <b>accumulator</b>. Initially <b>accumulator</b> is bound to <b>initial-value</b>.</li>
 </ul>
 """,
-        signature = "(for head & body)",
-        description = """List comprehension. The head of the loop is a vector that contains a  sequence of bindings modifiers and options. A binding is a sequence of three  values binding :verb expr. Where binding is a binding as  in let and :verb is one of the following keywords:  * :range loop over a range by using the range function.  * :in loops over all values of a collection (including strings).  * :keys loops over all keys/indexes of a collection.  * :pairs loops over all key-value pairs of a collection.  After each loop binding, additional modifiers can be applied. Modifiers  have the form :modifier argument. The following modifiers are supported:  * :while breaks the loop if the expression is falsy.  * :let defines additional bindings.  * :when only evaluates the loop body if the condition is true.  Finally, additional options can be set:  * :reduce [accumulator initial-value] Instead of returning a list,     it reduces the values into accumulator. Initially accumulator     is bound to initial-value""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1162",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(for [x :in [1 2 3]] (* x 2)) ; => [2 4 6]",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1162",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "foreach",
-        doc = """The foreach special form can be used to iterate over all kind of PHP datastructures. The return value of foreach is always nil. The loop special form should be preferred of the foreach special form whenever possible.""",
         signature = "(foreach [key value valueExpr] expr*)",
-        description = """The foreach special form can be used to iterate over all kind of PHP datastructures. The return value of foreach is always nil. The loop special form should be preferred of the foreach special form whenever possible""",
-        githubUrl = "",
-        docUrl = "/documentation/control-flow/#foreach",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "The foreach special form can be used to iterate over all kind of PHP datastructures. The return value of foreach is always nil. The loop special form should be preferred of the foreach special form whenever possible",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """The foreach special form can be used to iterate over all kind of PHP datastructures. The return value of foreach is always nil. The loop special form should be preferred of the foreach special form whenever possible.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/control-flow/#foreach",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "format",
-        doc = """Returns a formatted string. See PHP's <a href=\"https://www.php.net/manual/en/function.sprintf.php\">sprintf</a> for more information.""",
         signature = "(format fmt & xs)",
-        description = """Returns a formatted string. See PHP's  for more information""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2592",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a formatted string. See PHP's sprintf for more information",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a formatted string. See PHP's <a href=\"https://www.php.net/manual/en/function.sprintf.php\">sprintf</a> for more information.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2592",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "frequencies",
-        doc = """
+        signature = "(frequencies coll)",
+        completion = CompletionInfo(
+            tailText = "Returns a map from distinct items in coll to the number of times they appear.  Works with vectors, lists, sets, and strings",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a map from distinct items in <b>coll</b> to the number of times they appear.
 <br /></br />
 Works with vectors, lists, sets, and strings.
 """,
-        signature = "(frequencies coll)",
-        description = """Returns a map from distinct items in coll to the number of times they appear.  Works with vectors, lists, sets, and strings""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1658",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(frequencies [:a :b :a :c :b :a]) ; => {:a 3 :b 2 :c 1}",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1658",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "full-name",
-        doc = """Return the namespace and name string of a string, keyword or symbol.""",
         signature = "(full-name x)",
-        description = """Return the namespace and name string of a string, keyword or symbol""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2937",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Return the namespace and name string of a string, keyword or symbol",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Return the namespace and name string of a string, keyword or symbol.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2937",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "function?",
-        doc = """Returns true if <b>x</b> is a function, false otherwise.""",
         signature = "(function? x)",
-        description = """Returns true if x is a function, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L799",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a function, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a function, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L799",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "gensym",
-        doc = """Generates a new unique symbol.""",
         signature = "(gensym )",
-        description = """Generates a new unique symbol""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L300",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Generates a new unique symbol",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Generates a new unique symbol.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L300",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "get",
-        doc = """Gets the value at key in a collection. Returns default if not found.""",
         signature = "(get ds k & [opt])",
-        description = """Gets the value at key in a collection. Returns default if not found""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L962",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(get {:a 1} :a) ; => 1",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Gets the value at key in a collection. Returns default if not found",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Gets the value at key in a collection. Returns default if not found.""",
+            example = "(get {:a 1} :a) ; => 1",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L962",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "get-in",
-        doc = """
+        signature = "(get-in ds ks & [opt])",
+        completion = CompletionInfo(
+            tailText = "Accesses a value in a nested data structure via a sequence of keys.  Returns opt (default nil) if the path doesn't exist",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Accesses a value in a nested data structure via a sequence of keys.
 <br /></br />
 Returns <b>opt</b> (default nil) if the path doesn't exist.
 """,
-        signature = "(get-in ds ks & [opt])",
-        description = """Accesses a value in a nested data structure via a sequence of keys.  Returns opt (default nil) if the path doesn't exist""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1393",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(get-in {:a {:b {:c 42}}} [:a :b :c]) ; => 42",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1393",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "group-by",
-        doc = """Returns a map of the elements of coll keyed by the result of <b>f</b> on each element.""",
         signature = "(group-by f coll)",
-        description = """Returns a map of the elements of coll keyed by the result of f on each element""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1972",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(group-by count [\"a\" \"bb\" \"c\" \"ddd\" \"ee\"]) ; => {1 [\"a\" \"c\"] 2 [\"bb\" \"ee\"] 3 [\"ddd\"]}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a map of the elements of coll keyed by the result of f on each element",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a map of the elements of coll keyed by the result of <b>f</b> on each element.""",
+            example = "(group-by count [\"a\" \"bb\" \"c\" \"ddd\" \"ee\"]) ; => {1 [\"a\" \"c\"] 2 [\"bb\" \"ee\"] 3 [\"ddd\"]}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1972",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "hash-map",
-        doc = """Creates a new hash map. If no argument is provided, an empty hash map is created. The number of parameters must be even.""",
         signature = "(hash-map & xs) # {& xs}",
-        description = """Creates a new hash map. If no argument is provided, an empty hash map is created. The number of parameters must be even""",
-        githubUrl = "",
-        docUrl = "/documentation/data-structures/#maps",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a new hash map. If no argument is provided, an empty hash map is created. The number of parameters must be even",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a new hash map. If no argument is provided, an empty hash map is created. The number of parameters must be even.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/data-structures/#maps",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "hash-map?",
-        doc = """Returns true if <b>x</b> is a hash map, false otherwise.""",
         signature = "(hash-map? x)",
-        description = """Returns true if x is a hash map, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L809",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a hash map, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a hash map, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L809",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "id",
-        doc = """Checks if all values are identical. Same as <b>a === b</b> in PHP.""",
         signature = "(id a & more)",
-        description = """Checks if all values are identical. Same as a === b in PHP""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L528",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if all values are identical. Same as a === b in PHP",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Checks if all values are identical. Same as <b>a === b</b> in PHP.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L528",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "identity",
-        doc = """Returns its argument.""",
         signature = "(identity x)",
-        description = """Returns its argument""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2165",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns its argument",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns its argument.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2165",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "if",
-        doc = """
+        signature = "(if test then else?)",
+        completion = CompletionInfo(
+            tailText = "A control flow structure. First evaluates test. If test evaluates to true, only the then form is evaluated and the result is returned. If test evaluates to false only the else form is evaluated and the result is returned. If no else form is given, nil will be returned",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 A control flow structure. First evaluates test. If test evaluates to true, only the then form is evaluated and the result is returned. If test evaluates to false only the else form is evaluated and the result is returned. If no else form is given, nil will be returned.
 <br /></br />
 The test evaluates to false if its value is false or equal to nil. Every other value evaluates to true. In sense of PHP this means (test != null && test !== false).
 """,
-        signature = "(if test then else?)",
-        description = """A control flow structure. First evaluates test. If test evaluates to true, only the then form is evaluated and the result is returned. If test evaluates to false only the else form is evaluated and the result is returned. If no else form is given, nil will be returned""",
-        githubUrl = "",
-        docUrl = "/documentation/control-flow/#if",
-        meta = FunctionMeta(
             example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/control-flow/#if",
+            ),
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "if-let",
-        doc = """If test is true, evaluates then with binding-form bound to the value of test, if not, yields else""",
         signature = "(if-let bindings then & [else])",
-        description = """If test is true, evaluates then with binding-form bound to the value of test,  if not, yields else""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2879",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "If test is true, evaluates then with binding-form bound to the value of test,  if not, yields else",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """If test is true, evaluates then with binding-form bound to the value of test, if not, yields else""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2879",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "if-not",
-        doc = """Evaluates then if test is false, else otherwise.""",
         signature = "(if-not test then & [else])",
-        description = """Evaluates then if test is false, else otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L453",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(if-not (< 5 3) \"not less\" \"less\") ; => \"not less\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates then if test is false, else otherwise",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Evaluates then if test is false, else otherwise.""",
+            example = "(if-not (< 5 3) \"not less\" \"less\") ; => \"not less\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L453",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "inc",
-        doc = """Increments <b>x</b> by one.""",
         signature = "(inc x)",
-        description = """Increments x by one""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2439",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Increments x by one",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Increments <b>x</b> by one.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2439",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "indexed?",
-        doc = """
+        signature = "(indexed? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is an indexed sequence, false otherwise.  Indexed sequences include lists, vectors, and indexed PHP arrays",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns true if <b>x</b> is an indexed sequence, false otherwise.
 <br /></br />
 Indexed sequences include lists, vectors, and indexed PHP arrays.
 """,
-        signature = "(indexed? x)",
-        description = """Returns true if x is an indexed sequence, false otherwise.  Indexed sequences include lists, vectors, and indexed PHP arrays""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L896",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(indexed? [1 2 3]) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L896",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "int?",
-        doc = """Returns true if <b>x</b> is an integer number, false otherwise.""",
         signature = "(int? x)",
-        description = """Returns true if x is an integer number, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L774",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is an integer number, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is an integer number, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L774",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "interleave",
-        doc = """
+        signature = "(interleave & colls)",
+        completion = CompletionInfo(
+            tailText = "Interleaves multiple collections. Returns a lazy sequence.  Returns elements by taking one from each collection in turn.  Pads with nil when collections have different lengths.  Works with infinite sequences",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Interleaves multiple collections. Returns a lazy sequence.
 <br /></br />
 Returns elements by taking one from each collection in turn. Pads with nil when collections have different lengths. Works with infinite sequences.
 """,
-        signature = "(interleave & colls)",
-        description = """Interleaves multiple collections. Returns a lazy sequence.  Returns elements by taking one from each collection in turn.  Pads with nil when collections have different lengths.  Works with infinite sequences""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1925",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(interleave [1 2 3] [:a :b :c]) ; => (1 :a 2 :b 3 :c)",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1925",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "interpose",
-        doc = """
+        signature = "(interpose sep coll)",
+        completion = CompletionInfo(
+            tailText = "Returns elements separated by a separator. Returns a lazy sequence.  Inserts sep between each element of the collection.  Works with infinite sequences",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns elements separated by a separator. Returns a lazy sequence.
 <br /></br />
 Inserts <b>sep</b> between each element of the collection. Works with infinite sequences.
 """,
-        signature = "(interpose sep coll)",
-        description = """Returns elements separated by a separator. Returns a lazy sequence.  Inserts sep between each element of the collection.  Works with infinite sequences""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1893",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(interpose 0 [1 2 3]) ; => (1 0 2 0 3)",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1893",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "intersection",
-        doc = """Intersect multiple sets into a new one.""",
         signature = "(intersection set & sets)",
-        description = """Intersect multiple sets into a new one""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2132",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Intersect multiple sets into a new one",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Intersect multiple sets into a new one.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2132",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "into",
-        doc = """
+        signature = "(into to & rest)",
+        completion = CompletionInfo(
+            tailText = "Returns to with all elements of from added.  When from is associative, it is treated as a sequence of key-value pairs.  Supports persistent and transient collections",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns <b>to</b> with all elements of <b>from</b> added.
 <br /></br />
 When <b>from</b> is associative, it is treated as a sequence of key-value pairs. Supports persistent and transient collections.
 """,
-        signature = "(into to & rest)",
-        description = """Returns to with all elements of from added.  When from is associative, it is treated as a sequence of key-value pairs.  Supports persistent and transient collections""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1272",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(into [] '(1 2 3)) ; => [1 2 3]",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1272",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "invert",
-        doc = """
+        signature = "(invert map)",
+        completion = CompletionInfo(
+            tailText = "Returns a new map where the keys and values are swapped.  If map has duplicated values, some keys will be ignored",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a new map where the keys and values are swapped.
 <br /></br />
 If map has duplicated values, some keys will be ignored.
 """,
-        signature = "(invert map)",
-        description = """Returns a new map where the keys and values are swapped.  If map has duplicated values, some keys will be ignored""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2028",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(invert {:a 1 :b 2 :c 3}) ; => {1 :a 2 :b 3 :c}",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2028",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "iterate",
-        doc = """Returns an infinite lazy sequence of x, (f x), (f (f x)), and so on.""",
         signature = "(iterate f x)",
-        description = """Returns an infinite lazy sequence of x, (f x), (f (f x)), and so on""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1847",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(take 5 (iterate inc 0)) ; => (0 1 2 3 4)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns an infinite lazy sequence of x, (f x), (f (f x)), and so on",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns an infinite lazy sequence of x, (f x), (f (f x)), and so on.""",
+            example = "(take 5 (iterate inc 0)) ; => (0 1 2 3 4)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1847",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "juxt",
-        doc = """Takes a list of functions and returns a new function that is the juxtaposition of those functions. <b>((juxt a b c) x) => [(a x) (b x) (c x)]</b>.""",
         signature = "(juxt & fs)",
-        description = """Takes a list of functions and returns a new function that is the juxtaposition of those functions.  ((juxt a b c) x) => [(a x) (b x) (c x)]""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2189",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Takes a list of functions and returns a new function that is the juxtaposition of those functions.  ((juxt a b c) x) => [(a x) (b x) (c x)]",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Takes a list of functions and returns a new function that is the juxtaposition of those functions. <b>((juxt a b c) x) => [(a x) (b x) (c x)]</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2189",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "keep",
-        doc = """Returns a lazy sequence of non-nil results of applying function to elements.""",
         signature = "(keep pred coll)",
-        description = """Returns a lazy sequence of non-nil results of applying function to elements""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1562",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(keep |(when (even? %) (* % %)) [1 2 3 4 5]) ; => (4 16)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of non-nil results of applying function to elements",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence of non-nil results of applying function to elements.""",
+            example = "(keep |(when (even? %) (* % %)) [1 2 3 4 5]) ; => (4 16)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1562",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "keep-indexed",
-        doc = """Returns a lazy sequence of non-nil results of <b>(pred i x)</b>.""",
         signature = "(keep-indexed pred coll)",
-        description = """Returns a lazy sequence of non-nil results of (pred i x)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1571",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(keep-indexed |(when (even? %1) %2) [\"a\" \"b\" \"c\" \"d\"]) ; => (\"a\" \"c\")",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of non-nil results of (pred i x)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence of non-nil results of <b>(pred i x)</b>.""",
+            example = "(keep-indexed |(when (even? %1) %2) [\"a\" \"b\" \"c\" \"d\"]) ; => (\"a\" \"c\")",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1571",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "keys",
-        doc = """Returns a sequence of all keys in a map.""",
         signature = "(keys coll)",
-        description = """Returns a sequence of all keys in a map""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1670",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(keys {:a 1 :b 2}) ; => (:a :b)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a sequence of all keys in a map",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a sequence of all keys in a map.""",
+            example = "(keys {:a 1 :b 2}) ; => (:a :b)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1670",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "keyword",
-        doc = """Creates a new Keyword from a given string.""",
         signature = "(keyword x)",
-        description = """Creates a new Keyword from a given string""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L344",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(keyword \"name\") ; => :name",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a new Keyword from a given string",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a new Keyword from a given string.""",
+            example = "(keyword \"name\") ; => :name",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L344",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "keyword?",
-        doc = """Returns true if <b>x</b> is a keyword, false otherwise.""",
         signature = "(keyword? x)",
-        description = """Returns true if x is a keyword, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L789",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a keyword, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a keyword, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L789",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "kvs",
-        doc = """Returns a vector of key-value pairs like <b>[k1 v1 k2 v2 k3 v3 ...]</b>.""",
         signature = "(kvs coll)",
-        description = """Returns a vector of key-value pairs like [k1 v1 k2 v2 k3 v3 ...]""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1692",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(kvs {:a 1 :b 2}) ; => [:a 1 :b 2]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a vector of key-value pairs like [k1 v1 k2 v2 k3 v3 ...]",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a vector of key-value pairs like <b>[k1 v1 k2 v2 k3 v3 ...]</b>.""",
+            example = "(kvs {:a 1 :b 2}) ; => [:a 1 :b 2]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1692",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "last",
-        doc = """Returns the last element of <b>coll</b> or nil if <b>coll</b> is empty or nil.""",
         signature = "(last coll)",
-        description = """Returns the last element of coll or nil if coll is empty or nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1483",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(last [1 2 3]) ; => 3",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the last element of coll or nil if coll is empty or nil",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the last element of <b>coll</b> or nil if <b>coll</b> is empty or nil.""",
+            example = "(last [1 2 3]) ; => 3",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1483",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "lazy-cat",
-        doc = """Concatenates collections into a lazy sequence (expands to concat).""",
         signature = "(lazy-cat & colls)",
-        description = """Concatenates collections into a lazy sequence (expands to concat)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1841",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(lazy-cat [1 2] [3 4]) ; => (1 2 3 4)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Concatenates collections into a lazy sequence (expands to concat)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Concatenates collections into a lazy sequence (expands to concat).""",
+            example = "(lazy-cat [1 2] [3 4]) ; => (1 2 3 4)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1841",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "lazy-seq",
-        doc = """Creates a lazy sequence that evaluates the body only when accessed.""",
         signature = "(lazy-seq & body)",
-        description = """Creates a lazy sequence that evaluates the body only when accessed""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1832",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(lazy-seq (cons 1 (lazy-seq nil))) ; => (1)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a lazy sequence that evaluates the body only when accessed",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a lazy sequence that evaluates the body only when accessed.""",
+            example = "(lazy-seq (cons 1 (lazy-seq nil))) ; => (1)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1832",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "let",
-        doc = """Creates a new lexical context with assignments defined in bindings. Afterwards the list of expressions is evaluated and the value of the last expression is returned. If no expression is given nil is returned.""",
         signature = "(let [bindings*] expr*)",
-        description = """Creates a new lexical context with assignments defined in bindings. Afterwards the list of expressions is evaluated and the value of the last expression is returned. If no expression is given nil is returned""",
-        githubUrl = "",
-        docUrl = "/documentation/global-and-local-bindings/#local-bindings-let",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a new lexical context with assignments defined in bindings. Afterwards the list of expressions is evaluated and the value of the last expression is returned. If no expression is given nil is returned",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Creates a new lexical context with assignments defined in bindings. Afterwards the list of expressions is evaluated and the value of the last expression is returned. If no expression is given nil is returned.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/global-and-local-bindings/#local-bindings-let",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "line-seq",
-        doc = """Returns a lazy sequence of lines from a file.""",
         signature = "(line-seq filename)",
-        description = """Returns a lazy sequence of lines from a file""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2659",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(take 10 (line-seq \"large-file.txt\")) ; => [\"line1\" \"line2\" ...]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of lines from a file",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence of lines from a file.""",
+            example = "(take 10 (line-seq \"large-file.txt\")) ; => [\"line1\" \"line2\" ...]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2659",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "list",
-        doc = """Creates a new list. If no argument is provided, an empty list is created.""",
         signature = "(list & xs) # '(& xs)",
-        description = """Creates a new list. If no argument is provided, an empty list is created""",
-        githubUrl = "",
-        docUrl = "/documentation/data-structures/#lists",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a new list. If no argument is provided, an empty list is created",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a new list. If no argument is provided, an empty list is created.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/data-structures/#lists",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "list?",
-        doc = """Returns true if <b>x</b> is a list, false otherwise.""",
         signature = "(list? x)",
-        description = """Returns true if x is a list, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L819",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a list, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a list, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L819",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "loop",
-        doc = """Creates a new lexical context with variables defined in bindings and defines a recursion point at the top of the loop.""",
         signature = "(loop [bindings*] expr*)",
-        description = """Creates a new lexical context with variables defined in bindings and defines a recursion point at the top of the loop""",
-        githubUrl = "",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a new lexical context with variables defined in bindings and defines a recursion point at the top of the loop",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Creates a new lexical context with variables defined in bindings and defines a recursion point at the top of the loop.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "macroexpand",
-        doc = """Recursively expands the given form until it is no longer a macro call.""",
         signature = "(macroexpand form)",
-        description = """Recursively expands the given form until it is no longer a macro call""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3000",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Recursively expands the given form until it is no longer a macro call",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Recursively expands the given form until it is no longer a macro call.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3000",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "macroexpand-1",
-        doc = """Expands the given form once if it is a macro call.""",
         signature = "(macroexpand-1 form)",
-        description = """Expands the given form once if it is a macro call""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2976",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Expands the given form once if it is a macro call",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Expands the given form once if it is a macro call.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2976",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "map",
-        doc = """
+        signature = "(map f & colls)",
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of the result of applying f to all of the first items in each coll,   followed by applying f to all the second items in each coll until anyone of the colls is exhausted.  When given a single collection, applies the function to each element.  With multiple collections, applies the function to corresponding elements from each collection,  stopping when the shortest collection is exhausted",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a lazy sequence of the result of applying <b>f</b> to all of the first items in each coll, followed by applying <b>f</b> to all the second items in each coll until anyone of the colls is exhausted.
 <br /></br />
 When given a single collection, applies the function to each element. With multiple collections, applies the function to corresponding elements from each collection, stopping when the shortest collection is exhausted.
 """,
-        signature = "(map f & colls)",
-        description = """Returns a lazy sequence of the result of applying f to all of the first items in each coll,   followed by applying f to all the second items in each coll until anyone of the colls is exhausted.  When given a single collection, applies the function to each element.  With multiple collections, applies the function to corresponding elements from each collection,  stopping when the shortest collection is exhausted""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1217",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(map inc [1 2 3]) ; => (2 3 4)",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1217",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "map-indexed",
-        doc = """
+        signature = "(map-indexed f coll)",
+        completion = CompletionInfo(
+            tailText = "Maps a function over a collection with index. Returns a lazy sequence.  Applies f to each element in xs. f is a two-argument function where  the first argument is the index (0-based) and the second is the element itself.  Works with infinite sequences",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Maps a function over a collection with index. Returns a lazy sequence.
 <br /></br />
 Applies <b>f</b> to each element in <b>xs</b>. <b>f</b> is a two-argument function where the first argument is the index (0-based) and the second is the element itself. Works with infinite sequences.
 """,
-        signature = "(map-indexed f coll)",
-        description = """Maps a function over a collection with index. Returns a lazy sequence.  Applies f to each element in xs. f is a two-argument function where  the first argument is the index (0-based) and the second is the element itself.  Works with infinite sequences""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1908",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(map-indexed vector [:a :b :c]) ; => ([0 :a] [1 :b] [2 :c])",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1908",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "mapcat",
-        doc = """
+        signature = "(mapcat f coll)",
+        completion = CompletionInfo(
+            tailText = "Maps a function over a collection and concatenates the results. Returns a lazy sequence.  Applies f to each element of the collection, where f should return a collection.  All resulting collections are concatenated into a single lazy sequence.  Works with infinite sequences",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Maps a function over a collection and concatenates the results. Returns a lazy sequence.
 <br /></br />
 Applies <b>f</b> to each element of the collection, where <b>f</b> should return a collection. All resulting collections are concatenated into a single lazy sequence. Works with infinite sequences.
 """,
-        signature = "(mapcat f coll)",
-        description = """Maps a function over a collection and concatenates the results. Returns a lazy sequence.  Applies f to each element of the collection, where f should return a collection.  All resulting collections are concatenated into a single lazy sequence.  Works with infinite sequences""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1877",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(mapcat reverse [[1 2] [3 4]]) ; => (2 1 4 3)",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1877",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "max",
-        doc = """Returns the numeric maximum of all numbers.""",
         signature = "(max & numbers)",
-        description = """Returns the numeric maximum of all numbers""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2513",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the numeric maximum of all numbers",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the numeric maximum of all numbers.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2513",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "mean",
-        doc = """Returns the mean of <b>xs</b>.""",
         signature = "(mean xs)",
-        description = """Returns the mean of xs""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2530",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the mean of xs",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the mean of <b>xs</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2530",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "median",
-        doc = """Returns the median of <b>xs</b>.""",
         signature = "(median xs)",
-        description = """Returns the median of xs""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2535",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the median of xs",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the median of <b>xs</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2535",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "memoize",
-        doc = """Returns a memoized version of the function <b>f</b>. The memoized function caches the return value for each set of arguments.""",
         signature = "(memoize f)",
-        description = """Returns a memoized version of the function f. The memoized function  caches the return value for each set of arguments""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2206",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a memoized version of the function f. The memoized function  caches the return value for each set of arguments",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Returns a memoized version of the function <b>f</b>. The memoized function caches the return value for each set of arguments.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2206",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "merge",
-        doc = """
+        signature = "(merge & maps)",
+        completion = CompletionInfo(
+            tailText = "Merges multiple maps into one new map.  If a key appears in more than one collection, later values replace previous ones",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Merges multiple maps into one new map.
 <br /></br />
 If a key appears in more than one collection, later values replace previous ones.
 """,
-        signature = "(merge & maps)",
-        description = """Merges multiple maps into one new map.  If a key appears in more than one collection, later values replace previous ones""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2006",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(merge {:a 1 :b 2} {:b 3 :c 4}) ; => {:a 1 :b 3 :c 4}",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2006",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "merge-with",
-        doc = """Merges multiple maps into one new map. If a key appears in more than one collection, the result of <b>(f current-val next-val)</b> is used.""",
         signature = "(merge-with f & hash-maps)",
-        description = """Merges multiple maps into one new map. If a key appears in more than one   collection, the result of (f current-val next-val) is used""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2258",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Merges multiple maps into one new map. If a key appears in more than one   collection, the result of (f current-val next-val) is used",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Merges multiple maps into one new map. If a key appears in more than one collection, the result of <b>(f current-val next-val)</b> is used.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2258",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "meta",
-        doc = """Gets the metadata of the given object or definition.""",
         signature = "",
-        description = """Gets the metadata of the given object or definition""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L158",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Gets the metadata of the given object or definition",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Gets the metadata of the given object or definition.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L158",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "min",
-        doc = """Returns the numeric minimum of all numbers.""",
         signature = "(min & numbers)",
-        description = """Returns the numeric minimum of all numbers""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2508",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the numeric minimum of all numbers",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the numeric minimum of all numbers.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2508",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "name",
-        doc = """Returns the name string of a string, keyword or symbol.""",
         signature = "(name x)",
-        description = """Returns the name string of a string, keyword or symbol""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2927",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the name string of a string, keyword or symbol",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the name string of a string, keyword or symbol.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2927",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "namespace",
-        doc = """Return the namespace string of a symbol or keyword. Nil if not present.""",
         signature = "(namespace x)",
-        description = """Return the namespace string of a symbol or keyword. Nil if not present""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2932",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Return the namespace string of a symbol or keyword. Nil if not present",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Return the namespace string of a symbol or keyword. Nil if not present.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2932",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "nan?",
-        doc = """Checks if <b>x</b> is not a number.""",
         signature = "(nan? x)",
-        description = """Checks if x is not a number""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2483",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if x is not a number",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if <b>x</b> is not a number.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2483",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "neg?",
-        doc = """Checks if <b>x</b> is smaller than zero.""",
         signature = "(neg? x)",
-        description = """Checks if x is smaller than zero""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2478",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if x is smaller than zero",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if <b>x</b> is smaller than zero.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2478",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "next",
-        doc = """Returns the sequence after the first element, or nil if empty.""",
         signature = "",
-        description = """Returns the sequence after the first element, or nil if empty""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L74",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(next [1 2 3]) ; => [2 3]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the sequence after the first element, or nil if empty",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the sequence after the first element, or nil if empty.""",
+            example = "(next [1 2 3]) ; => [2 3]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L74",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "nfirst",
-        doc = """Same as <b>(next (first coll))</b>.""",
         signature = "(nfirst coll)",
-        description = """Same as (next (first coll))""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L421",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Same as (next (first coll))",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Same as <b>(next (first coll))</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L421",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "nil?",
-        doc = """Returns true if value is nil, false otherwise.""",
         signature = "(nil? x)",
-        description = """Returns true if value is nil, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L693",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(nil? (get {:a 1} :b)) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if value is nil, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if value is nil, false otherwise.""",
+            example = "(nil? (get {:a 1} :b)) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L693",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "nnext",
-        doc = """Same as <b>(next (next coll))</b>.""",
         signature = "(nnext coll)",
-        description = """Same as (next (next coll))""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L426",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Same as (next (next coll))",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Same as <b>(next (next coll))</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L426",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "not",
-        doc = """Returns true if value is falsy (nil or false), false otherwise.""",
         signature = "(not x)",
-        description = """Returns true if value is falsy (nil or false), false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L549",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(not nil) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if value is falsy (nil or false), false otherwise",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if value is falsy (nil or false), false otherwise.""",
+            example = "(not nil) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L549",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "not-any?",
-        doc = """Returns true if <b>(pred x)</b> is logical false for every <b>x</b> in <b>coll</b> or if <b>coll</b> is empty. Otherwise returns false.""",
         signature = "(not-any? pred coll)",
-        description = """Returns true if (pred x) is logical false for every x in coll   or if coll is empty. Otherwise returns false""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L659",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if (pred x) is logical false for every x in coll   or if coll is empty. Otherwise returns false",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>(pred x)</b> is logical false for every <b>x</b> in <b>coll</b> or if <b>coll</b> is empty. Otherwise returns false.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L659",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "not-empty",
-        doc = """Returns <b>coll</b> if it contains elements, otherwise nil.""",
         signature = "(not-empty coll)",
-        description = """Returns coll if it contains elements, otherwise nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L853",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns coll if it contains elements, otherwise nil",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns <b>coll</b> if it contains elements, otherwise nil.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L853",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "not-every?",
-        doc = """Returns false if <b>(pred x)</b> is logical true for every <b>x</b> in collection <b>coll</b> or if <b>coll</b> is empty. Otherwise returns true.""",
         signature = "(not-every? pred coll)",
-        description = """Returns false if (pred x) is logical true for every x in collection coll   or if coll is empty. Otherwise returns true""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L639",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns false if (pred x) is logical true for every x in collection coll   or if coll is empty. Otherwise returns true",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns false if <b>(pred x)</b> is logical true for every <b>x</b> in collection <b>coll</b> or if <b>coll</b> is empty. Otherwise returns true.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L639",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "not=",
-        doc = """Checks if all values are unequal. Same as <b>a != b</b> in PHP.""",
         signature = "(not= a & more)",
-        description = """Checks if all values are unequal. Same as a != b in PHP""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L555",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if all values are unequal. Same as a != b in PHP",
+            priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if all values are unequal. Same as <b>a != b</b> in PHP.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L555",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "ns",
-        doc = """Defines the namespace for the current file and adds imports to the environment. Imports can either be uses or requires. The keyword <b>:use</b> is used to import PHP classes, the keyword <b>:require</b> is used to import Phel modules and the keyword <b>:require-file</b> is used to load php files.""",
         signature = "(ns name imports*)",
-        description = """Defines the namespace for the current file and adds imports to the environment. Imports can either be uses or requires. The keyword :use is used to import PHP classes, the keyword :require is used to import Phel modules and the keyword :require-file is used to load php files""",
-        githubUrl = "",
-        docUrl = "/documentation/namespaces/#namespace-ns",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Defines the namespace for the current file and adds imports to the environment. Imports can either be uses or requires. The keyword :use is used to import PHP classes, the keyword :require is used to import Phel modules and the keyword :require-file is used to load php files",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Defines the namespace for the current file and adds imports to the environment. Imports can either be uses or requires. The keyword <b>:use</b> is used to import PHP classes, the keyword <b>:require</b> is used to import Phel modules and the keyword <b>:require-file</b> is used to load php files.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/namespaces/#namespace-ns",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "number?",
-        doc = """Returns true if <b>x</b> is a number, false otherwise.""",
         signature = "(number? x)",
-        description = """Returns true if x is a number, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L779",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a number, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a number, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L779",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "odd?",
-        doc = """Checks if <b>x</b> is odd.""",
         signature = "(odd? x)",
-        description = """Checks if x is odd""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2458",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if x is odd",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if <b>x</b> is odd.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2458",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "one?",
-        doc = """Checks if <b>x</b> is one.""",
         signature = "(one? x)",
-        description = """Checks if x is one""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2468",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if x is one",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if <b>x</b> is one.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2468",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "or",
-        doc = """Evaluates expressions left to right, returning the first truthy value or the last value.""",
         signature = "(or & args)",
-        description = """Evaluates expressions left to right, returning the first truthy value or the last value""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L501",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(or false nil 42 100) ; => 42",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates expressions left to right, returning the first truthy value or the last value",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Evaluates expressions left to right, returning the first truthy value or the last value.""",
+            example = "(or false nil 42 100) ; => 42",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L501",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "pairs",
-        doc = """Gets the pairs of an associative data structure.""",
         signature = "(pairs coll)",
-        description = """Gets the pairs of an associative data structure""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1684",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(pairs {:a 1 :b 2}) ; => ([:a 1] [:b 2])",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Gets the pairs of an associative data structure",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Gets the pairs of an associative data structure.""",
+            example = "(pairs {:a 1 :b 2}) ; => ([:a 1] [:b 2])",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1684",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "partial",
-        doc = """Takes a function <b>f</b> and fewer than normal arguments of <b>f</b> and returns a function that a variable number of additional arguments. When call <b>f</b> will be called with <b>args</b> and the additional arguments.""",
         signature = "(partial f & args)",
-        description = """Takes a function f and fewer than normal arguments of f and returns a function  that a variable number of additional arguments. When call f will be called  with args and the additional arguments""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2199",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Takes a function f and fewer than normal arguments of f and returns a function  that a variable number of additional arguments. When call f will be called  with args and the additional arguments",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Takes a function <b>f</b> and fewer than normal arguments of <b>f</b> and returns a function that a variable number of additional arguments. When call <b>f</b> will be called with <b>args</b> and the additional arguments.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2199",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "partition",
-        doc = """Partitions collection into chunks of size n, dropping incomplete final partition.""",
         signature = "(partition n coll)",
-        description = """Partitions collection into chunks of size n, dropping incomplete final partition""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2085",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(partition 3 [1 2 3 4 5 6 7]) ; => ([1 2 3] [4 5 6])",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Partitions collection into chunks of size n, dropping incomplete final partition",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Partitions collection into chunks of size n, dropping incomplete final partition.""",
+            example = "(partition 3 [1 2 3 4 5 6 7]) ; => ([1 2 3] [4 5 6])",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2085",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "partition-all",
-        doc = """Partitions collection into chunks of size n, including incomplete final partition.""",
         signature = "(partition-all n coll)",
-        description = """Partitions collection into chunks of size n, including incomplete final partition""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2097",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(partition-all 3 [1 2 3 4 5 6 7]) ; => ([1 2 3] [4 5 6] [7])",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Partitions collection into chunks of size n, including incomplete final partition",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Partitions collection into chunks of size n, including incomplete final partition.""",
+            example = "(partition-all 3 [1 2 3 4 5 6 7]) ; => ([1 2 3] [4 5 6] [7])",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2097",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "partition-by",
-        doc = """Returns a lazy sequence of partitions. Applies <b>f</b> to each value in <b>coll</b>, splitting them each time the return value changes.""",
         signature = "(partition-by f coll)",
-        description = """Returns a lazy sequence of partitions. Applies f to each value in coll, splitting them each time the return value changes""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2052",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(partition-by |(< % 3) [1 2 3 4 5 1 2]) ; => [[1 2] [3 4 5] [1 2]]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of partitions. Applies f to each value in coll, splitting them each time the return value changes",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence of partitions. Applies <b>f</b> to each value in <b>coll</b>, splitting them each time the return value changes.""",
+            example = "(partition-by |(< % 3) [1 2 3 4 5 1 2]) ; => [[1 2] [3 4 5] [1 2]]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2052",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "peek",
-        doc = """Returns the last element of a sequence.""",
         signature = "(peek coll)",
-        description = """Returns the last element of a sequence""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L929",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(peek [1 2 3]) ; => 3",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the last element of a sequence",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the last element of a sequence.""",
+            example = "(peek [1 2 3]) ; => 3",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L929",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "persistent",
-        doc = """Converts a transient collection back to a persistent collection.""",
         signature = "(persistent coll)",
-        description = """Converts a transient collection back to a persistent collection""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L327",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(def t (transient {}))",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Converts a transient collection back to a persistent collection",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Converts a transient collection back to a persistent collection.""",
+            example = "(def t (transient {}))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L327",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "phel->php",
-        doc = """Recursively converts a Phel data structure to a PHP array.""",
         signature = "(phel->php x)",
-        description = """Recursively converts a Phel data structure to a PHP array""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1716",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(phel->php {:a [1 2 3] :b {:c 4}}) ; => (PHP array [\"a\" => [1, 2, 3], \"b\" => [\"c\" => 4]])",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Recursively converts a Phel data structure to a PHP array",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Recursively converts a Phel data structure to a PHP array.""",
+            example = "(phel->php {:a [1 2 3] :b {:c 4}}) ; => (PHP array [\"a\" => [1, 2, 3], \"b\" => [\"c\" => 4]])",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1716",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "php->phel",
-        doc = """
+        signature = "(php->phel x)",
+        completion = CompletionInfo(
+            tailText = "Recursively converts a PHP array to Phel data structures.  Indexed PHP arrays become vectors, associative PHP arrays become maps",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Recursively converts a PHP array to Phel data structures.
 <br /></br />
 Indexed PHP arrays become vectors, associative PHP arrays become maps.
 """,
-        signature = "(php->phel x)",
-        description = """Recursively converts a PHP array to Phel data structures.  Indexed PHP arrays become vectors, associative PHP arrays become maps""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1748",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(php->phel (php-associative-array \"a\" 1 \"b\" 2)) ; => {\"a\" 1 \"b\" 2}",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1748",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "php-array-to-map",
-        doc = """Converts a PHP Array to a Phel map.""",
         signature = "(php-array-to-map arr)",
-        description = """Converts a PHP Array to a Phel map""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1705",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(php-array-to-map (php-associative-array \"a\" 1 \"b\" 2)) ; => {\"a\" 1 \"b\" 2}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Converts a PHP Array to a Phel map",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Converts a PHP Array to a Phel map.""",
+            example = "(php-array-to-map (php-associative-array \"a\" 1 \"b\" 2)) ; => {\"a\" 1 \"b\" 2}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1705",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "php-array?",
-        doc = """Returns true if <b>x</b> is a PHP Array, false otherwise.""",
         signature = "(php-array? x)",
-        description = """Returns true if x is a PHP Array, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L829",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a PHP Array, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a PHP Array, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L829",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "php-associative-array",
-        doc = """
+        signature = "(php-associative-array & xs)",
+        completion = CompletionInfo(
+            tailText = "Creates a PHP associative array from key-value pairs.  Arguments:    Key-value pairs (must be even number of arguments)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Creates a PHP associative array from key-value pairs.
 <br /></br />
 Arguments: Key-value pairs (must be even number of arguments)
 """,
-        signature = "(php-associative-array & xs)",
-        description = """Creates a PHP associative array from key-value pairs.  Arguments:    Key-value pairs (must be even number of arguments)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L356",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(php-associative-array \"name\" \"Alice\" \"age\" 30) ; => (PHP array [\"name\" => \"Alice\", \"age\" => 30])",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L356",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "php-indexed-array",
-        doc = """Creates a PHP indexed array from the given values.""",
         signature = "(php-indexed-array & xs)",
-        description = """Creates a PHP indexed array from the given values""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L350",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(php-indexed-array 1 2 3) ; => (PHP array [1, 2, 3])",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a PHP indexed array from the given values",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a PHP indexed array from the given values.""",
+            example = "(php-indexed-array 1 2 3) ; => (PHP array [1, 2, 3])",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L350",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "php-object?",
-        doc = """Returns true if <b>x</b> is a PHP object, false otherwise.""",
         signature = "(php-object? x)",
-        description = """Returns true if x is a PHP object, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L839",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a PHP object, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a PHP object, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L839",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "php-resource?",
-        doc = """Returns true if <b>x</b> is a PHP resource, false otherwise.""",
         signature = "(php-resource? x)",
-        description = """Returns true if x is a PHP resource, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L834",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a PHP resource, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a PHP resource, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L834",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "pop",
-        doc = """Removes the last element of the array <b>coll</b>. If the array is empty returns nil.""",
         signature = "(pop coll)",
-        description = """Removes the last element of the array coll. If the array is empty returns nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L945",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Removes the last element of the array coll. If the array is empty returns nil",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Removes the last element of the array <b>coll</b>. If the array is empty returns nil.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L945",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "pos?",
-        doc = """Checks if <b>x</b> is greater than zero.""",
         signature = "(pos? x)",
-        description = """Checks if x is greater than zero""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2473",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if x is greater than zero",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if <b>x</b> is greater than zero.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2473",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "print",
-        doc = """Prints the given values to the default output stream. Returns nil.""",
         signature = "(print & xs)",
-        description = """Prints the given values to the default output stream. Returns nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2579",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Prints the given values to the default output stream. Returns nil",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Prints the given values to the default output stream. Returns nil.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2579",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "print-str",
-        doc = """Same as print. But instead of writing it to an output stream, the resulting string is returned.""",
         signature = "(print-str & xs)",
-        description = """Same as print. But instead of writing it to an output stream, the resulting string is returned""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2564",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Same as print. But instead of writing it to an output stream, the resulting string is returned",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Same as print. But instead of writing it to an output stream, the resulting string is returned.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2564",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "printf",
-        doc = """Output a formatted string. See PHP's <a href=\"https://www.php.net/manual/en/function.printf.php\">printf</a> for more information.""",
         signature = "(printf fmt & xs)",
-        description = """Output a formatted string. See PHP's  for more information""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2597",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Output a formatted string. See PHP's  for more information",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Output a formatted string. See PHP's <a href=\"https://www.php.net/manual/en/function.printf.php\">printf</a> for more information.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2597",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "println",
-        doc = """Same as print followed by a newline.""",
         signature = "(println & xs)",
-        description = """Same as print followed by a newline""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2585",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Same as print followed by a newline",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Same as print followed by a newline.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2585",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "push",
-        doc = """
+        signature = "(push coll x)",
+        completion = CompletionInfo(
+            tailText = "Inserts x at the end of the sequence coll.  Deprecated: Use conj instead for Clojure compatibility",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Inserts <b>x</b> at the end of the sequence <b>coll</b>.
 <br /></br />
 Deprecated: Use <b>conj</b> instead for Clojure compatibility.
 """,
-        signature = "(push coll x)",
-        description = """Inserts x at the end of the sequence coll.  Deprecated: Use conj instead for Clojure compatibility""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L936",
-        docUrl = "",
-        meta = FunctionMeta(
             example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L936",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "put",
-        doc = """
+        signature = "(put ds key value)",
+        completion = CompletionInfo(
+            tailText = "Puts value mapped to key on the datastructure ds. Returns ds.  Deprecated: Use assoc instead",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Puts <b>value</b> mapped to <b>key</b> on the datastructure <b>ds</b>. Returns <b>ds</b>.
 <br /></br />
 Deprecated: Use <b>assoc</b> instead.
 """,
-        signature = "(put ds key value)",
-        description = """Puts value mapped to key on the datastructure ds. Returns ds.  Deprecated: Use assoc instead""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1010",
-        docUrl = "",
-        meta = FunctionMeta(
             example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1010",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "put-in",
-        doc = """
+        signature = "(put-in ds ks v)",
+        completion = CompletionInfo(
+            tailText = "Puts a value into a nested data structure.  Deprecated: Use assoc-in instead",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Puts a value into a nested data structure.
 <br /></br />
 Deprecated: Use <b>assoc-in</b> instead.
 """,
-        signature = "(put-in ds ks v)",
-        description = """Puts a value into a nested data structure.  Deprecated: Use assoc-in instead""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1414",
-        docUrl = "",
-        meta = FunctionMeta(
             example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1414",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "quote",
-        doc = """""",
         signature = "(NAME_QUOTE)",
-        description = """NAME_QUOTE description""",
-        githubUrl = "",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "NAME_QUOTE description",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "rand",
-        doc = """Returns a random number between 0 and 1.""",
         signature = "(rand )",
-        description = """Returns a random number between 0 and 1""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2488",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a random number between 0 and 1",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a random number between 0 and 1.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2488",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "rand-int",
-        doc = """Returns a random number between 0 and <b>n</b>.""",
         signature = "(rand-int n)",
-        description = """Returns a random number between 0 and n""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2493",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a random number between 0 and n",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a random number between 0 and <b>n</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2493",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "rand-nth",
-        doc = """Returns a random item from xs.""",
         signature = "(rand-nth xs)",
-        description = """Returns a random item from xs""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2498",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a random item from xs",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a random item from xs.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2498",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "range",
-        doc = """Creates a lazy sequence of numbers from start to end (exclusive).""",
         signature = "(range a & rest)",
-        description = """Creates a lazy sequence of numbers from start to end (exclusive)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1103",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(range 5) ; => (0 1 2 3 4)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a lazy sequence of numbers from start to end (exclusive)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a lazy sequence of numbers from start to end (exclusive).""",
+            example = "(range 5) ; => (0 1 2 3 4)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1103",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "re-seq",
-        doc = """Returns a sequence of successive matches of pattern in string.""",
         signature = "(re-seq re s)",
-        description = """Returns a sequence of successive matches of pattern in string""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2826",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a sequence of successive matches of pattern in string",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a sequence of successive matches of pattern in string.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2826",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "read-file-lazy",
-        doc = """Returns a lazy sequence of byte chunks from a file.""",
         signature = "(read-file-lazy filename)",
-        description = """Returns a lazy sequence of byte chunks from a file""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2683",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(take 5 (read-file-lazy \"large-file.bin\" 1024)) ; => [\"chunk1\" \"chunk2\" ...]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a lazy sequence of byte chunks from a file",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a lazy sequence of byte chunks from a file.""",
+            example = "(take 5 (read-file-lazy \"large-file.bin\" 1024)) ; => [\"chunk1\" \"chunk2\" ...]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2683",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "read-string",
-        doc = """Reads the first phel expression from the string s.""",
         signature = "(read-string s)",
-        description = """Reads the first phel expression from the string s""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2942",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Reads the first phel expression from the string s",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Reads the first phel expression from the string s.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2942",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "realized?",
-        doc = """Returns true if a lazy sequence has been realized, false otherwise.""",
         signature = "(realized? coll)",
-        description = """Returns true if a lazy sequence has been realized, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1964",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(realized? (take 5 (iterate inc 1))) ; => false",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if a lazy sequence has been realized, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if a lazy sequence has been realized, false otherwise.""",
+            example = "(realized? (take 5 (iterate inc 1))) ; => false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1964",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "recur",
-        doc = """Internally recur is implemented as a PHP while loop and therefore prevents the Maximum function nesting level errors.""",
         signature = "(recur expr*)",
-        description = """Internally recur is implemented as a PHP while loop and therefore prevents the Maximum function nesting level errors""",
-        githubUrl = "",
-        docUrl = "/documentation/global-and-local-bindings/#local-bindings-let",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Internally recur is implemented as a PHP while loop and therefore prevents the Maximum function nesting level errors",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Internally recur is implemented as a PHP while loop and therefore prevents the Maximum function nesting level errors.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/global-and-local-bindings/#local-bindings-let",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "reduce",
-        doc = """Reduces collection to a single value by repeatedly applying function to accumulator and elements.""",
         signature = "(reduce f & args)",
-        description = """Reduces collection to a single value by repeatedly applying function to accumulator and elements""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1257",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(reduce + [1 2 3 4]) ; => 10",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Reduces collection to a single value by repeatedly applying function to accumulator and elements",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Reduces collection to a single value by repeatedly applying function to accumulator and elements.""",
+            example = "(reduce + [1 2 3 4]) ; => 10",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1257",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "remove",
-        doc = """Removes up to <b>n</b> elements from array <b>coll</b> starting at index <b>offset</b>.""",
         signature = "(remove coll offset & [n])",
-        description = """Removes up to n elements from array coll starting at index offset""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L953",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(remove my-array 1 2)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Removes up to n elements from array coll starting at index offset",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Removes up to <b>n</b> elements from array <b>coll</b> starting at index <b>offset</b>.""",
+            example = "(remove my-array 1 2)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L953",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "repeat",
-        doc = """
+        signature = "(repeat a & rest)",
+        completion = CompletionInfo(
+            tailText = "Returns a vector of length n where every element is x.  With one argument returns an infinite lazy sequence of x",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a vector of length n where every element is x.
 <br /></br />
 With one argument returns an infinite lazy sequence of x.
 """,
-        signature = "(repeat a & rest)",
-        description = """Returns a vector of length n where every element is x.  With one argument returns an infinite lazy sequence of x""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1806",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(repeat 3 :a) ; => [:a :a :a]",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1806",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "repeatedly",
-        doc = """
+        signature = "(repeatedly a & rest)",
+        completion = CompletionInfo(
+            tailText = "Returns a vector of length n with values produced by repeatedly calling f.  With one argument returns an infinite lazy sequence of calls to f",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a vector of length n with values produced by repeatedly calling f.
 <br /></br />
 With one argument returns an infinite lazy sequence of calls to f.
 """,
-        signature = "(repeatedly a & rest)",
-        description = """Returns a vector of length n with values produced by repeatedly calling f.  With one argument returns an infinite lazy sequence of calls to f""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1818",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(repeatedly 3 rand) ; => [0.234 0.892 0.456] (random values)",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1818",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "rest",
-        doc = """Returns the sequence after the first element, or empty sequence if none.""",
         signature = "(rest coll)",
-        description = """Returns the sequence after the first element, or empty sequence if none""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L409",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(rest [1 2 3]) ; => [2 3]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the sequence after the first element, or empty sequence if none",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the sequence after the first element, or empty sequence if none.""",
+            example = "(rest [1 2 3]) ; => [2 3]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L409",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "reverse",
-        doc = """Reverses the order of the elements in the given sequence.""",
         signature = "(reverse coll)",
-        description = """Reverses the order of the elements in the given sequence""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1617",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(reverse [1 2 3 4]) ; => [4 3 2 1]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Reverses the order of the elements in the given sequence",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Reverses the order of the elements in the given sequence.""",
+            example = "(reverse [1 2 3 4]) ; => [4 3 2 1]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1617",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "second",
-        doc = """Returns the second element of a sequence, or nil if not present.""",
         signature = "(second coll)",
-        description = """Returns the second element of a sequence, or nil if not present""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L403",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(second [1 2 3]) ; => 2",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the second element of a sequence, or nil if not present",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the second element of a sequence, or nil if not present.""",
+            example = "(second [1 2 3]) ; => 2",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L403",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "select-keys",
-        doc = """Returns a new map including key value pairs from <b>m</b> selected with keys <b>ks</b>.""",
         signature = "(select-keys m ks)",
-        description = """Returns a new map including key value pairs from m selected with keys ks""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2017",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(select-keys {:a 1 :b 2 :c 3} [:a :c]) ; => {:a 1 :c 3}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a new map including key value pairs from m selected with keys ks",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a new map including key value pairs from <b>m</b> selected with keys <b>ks</b>.""",
+            example = "(select-keys {:a 1 :b 2 :c 3} [:a :c]) ; => {:a 1 :c 3}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2017",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "seq",
-        doc = """
+        signature = "(seq coll)",
+        completion = CompletionInfo(
+            tailText = "Returns a seq on the collection. Strings are converted to a vector of characters.  Collections are unchanged. Returns nil if coll is empty or nil.  This function is useful for explicitly converting strings to sequences of characters,  enabling sequence operations like map, filter, and frequencies",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a seq on the collection. Strings are converted to a vector of characters. Collections are unchanged. Returns nil if coll is empty or nil.
 <br /></br />
 This function is useful for explicitly converting strings to sequences of characters, enabling sequence operations like map, filter, and frequencies.
 """,
-        signature = "(seq coll)",
-        description = """Returns a seq on the collection. Strings are converted to a vector of characters.  Collections are unchanged. Returns nil if coll is empty or nil.  This function is useful for explicitly converting strings to sequences of characters,  enabling sequence operations like map, filter, and frequencies""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L860",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(seq \"hello\") ; => [\"h\" \"e\" \"l\" \"l\" \"o\"]",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L860",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "set",
-        doc = """Creates a new Set from the given arguments. Shortcut: #{}""",
         signature = "(set & xs)",
-        description = """Creates a new Set from the given arguments. Shortcut: #{}""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L338",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(set 1 2 3) ; => #{1 2 3}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a new Set from the given arguments. Shortcut: #{}",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a new Set from the given arguments. Shortcut: #{}""",
+            example = "(set 1 2 3) ; => #{1 2 3}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L338",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "set!",
-        doc = """Sets a new value to the given variable.""",
         signature = "(set! variable value)",
-        description = """Sets a new value to the given variable""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1064",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(def x (var 10))",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Sets a new value to the given variable",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Sets a new value to the given variable.""",
+            example = "(def x (var 10))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1064",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "set-meta!",
-        doc = """Sets the metadata to a given object.""",
         signature = "",
-        description = """Sets the metadata to a given object""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L181",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Sets the metadata to a given object",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Sets the metadata to a given object.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L181",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "set-var",
-        doc = """Variables provide a way to manage mutable state. Each variable contains a single value. To create a variable use the var function.""",
         signature = "(var value)",
-        description = """Variables provide a way to manage mutable state. Each variable contains a single value. To create a variable use the var function""",
-        githubUrl = "",
-        docUrl = "/documentation/global-and-local-bindings/#variables",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Variables provide a way to manage mutable state. Each variable contains a single value. To create a variable use the var function",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Variables provide a way to manage mutable state. Each variable contains a single value. To create a variable use the var function.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/global-and-local-bindings/#variables",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "set?",
-        doc = """Returns true if <b>x</b> is a set, false otherwise.""",
         signature = "(set? x)",
-        description = """Returns true if x is a set, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L920",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a set, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a set, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L920",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "shuffle",
-        doc = """Returns a random permutation of coll.""",
         signature = "(shuffle coll)",
-        description = """Returns a random permutation of coll""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1798",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(shuffle [1 2 3 4 5]) ; => [3 1 5 2 4] (random order)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a random permutation of coll",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a random permutation of coll.""",
+            example = "(shuffle [1 2 3 4 5]) ; => [3 1 5 2 4] (random order)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1798",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "slice",
-        doc = """Extracts a slice of <b>coll</b> starting at <b>offset</b> with optional <b>length</b>.""",
         signature = "(slice coll & [offset & [length]])",
-        description = """Extracts a slice of coll starting at offset with optional length""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1384",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(slice [1 2 3 4 5] 1 3) ; => [2 3 4]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Extracts a slice of coll starting at offset with optional length",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Extracts a slice of <b>coll</b> starting at <b>offset</b> with optional <b>length</b>.""",
+            example = "(slice [1 2 3 4 5] 1 3) ; => [2 3 4]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1384",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "slurp",
-        doc = """Reads entire file or URL into a string.""",
         signature = "(slurp path & [opts])",
-        description = """Reads entire file or URL into a string""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2616",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(slurp \"file.txt\") ; => \"file contents\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Reads entire file or URL into a string",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Reads entire file or URL into a string.""",
+            example = "(slurp \"file.txt\") ; => \"file contents\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2616",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "some",
-        doc = """Returns the first truthy value of applying predicate to elements, or nil if none found.""",
         signature = "(some pred coll)",
-        description = """Returns the first truthy value of applying predicate to elements, or nil if none found""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L665",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(some |(when (> % 10) %) [5 15 8]) ; => 15",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the first truthy value of applying predicate to elements, or nil if none found",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the first truthy value of applying predicate to elements, or nil if none found.""",
+            example = "(some |(when (> % 10) %) [5 15 8]) ; => 15",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L665",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "some->",
-        doc = """Threads <b>x</b> through the forms like <b>-></b> but stops when a form returns <b>nil</b>.""",
         signature = "(some-> x & forms)",
-        description = """Threads x through the forms like -> but stops when a form returns nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2750",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Threads x through the forms like -> but stops when a form returns nil",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Threads <b>x</b> through the forms like <b>-></b> but stops when a form returns <b>nil</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2750",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "some->>",
-        doc = """Threads <b>x</b> through the forms like <b>->></b> but stops when a form returns <b>nil</b>.""",
         signature = "(some->> x & forms)",
-        description = """Threads x through the forms like ->> but stops when a form returns nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2774",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Threads x through the forms like ->> but stops when a form returns nil",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Threads <b>x</b> through the forms like <b>->></b> but stops when a form returns <b>nil</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2774",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "some?",
-        doc = """Returns true if predicate is true for at least one element in collection, false otherwise.""",
         signature = "(some? pred coll)",
-        description = """Returns true if predicate is true for at least one element in collection, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L649",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(some? even? [1 3 5 6 7]) ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if predicate is true for at least one element in collection, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if predicate is true for at least one element in collection, false otherwise.""",
+            example = "(some? even? [1 3 5 6 7]) ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L649",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "sort",
-        doc = """Returns a sorted vector. If no comparator is supplied compare is used.""",
         signature = "(sort coll & [comp])",
-        description = """Returns a sorted vector. If no comparator is supplied compare is used""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1777",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(sort [3 1 4 1 5 9 2 6]) ; => [1 1 2 3 4 5 6 9]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a sorted vector. If no comparator is supplied compare is used",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a sorted vector. If no comparator is supplied compare is used.""",
+            example = "(sort [3 1 4 1 5 9 2 6]) ; => [1 1 2 3 4 5 6 9]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1777",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "sort-by",
-        doc = """
+        signature = "(sort-by keyfn coll & [comp])",
+        completion = CompletionInfo(
+            tailText = "Returns a sorted vector where the sort order is determined by comparing (keyfn item).  If no comparator is supplied compare is used",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a sorted vector where the sort order is determined by comparing <b>(keyfn item)</b>.
 <br /></br />
 If no comparator is supplied compare is used.
 """,
-        signature = "(sort-by keyfn coll & [comp])",
-        description = """Returns a sorted vector where the sort order is determined by comparing (keyfn item).  If no comparator is supplied compare is used""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1786",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(sort-by count [\"aaa\" \"c\" \"bb\"]) ; => [\"c\" \"bb\" \"aaa\"]",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1786",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "spit",
-        doc = """Writes data to file, returning number of bytest that were written or <b>nil</b> on failure. Accepts <b>opts</b> map for overriding default PHP file_put_contents arguments, as example to append to file use <code>{:flags php/FILE_APPEND}</code>. See PHP's <a href=\"https://www.php.net/manual/en/function.file-put-contents.php\">file_put_contents</a> for more information.""",
         signature = "(spit filename data & [opts])",
-        description = """Writes data to file, returning number of bytest that were written or nil  on failure. Accepts opts map for overriding default PHP file_put_contents  arguments, as example to append to file use {:flags php/FILE_APPEND}.  See PHP's  for more information""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2644",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Writes data to file, returning number of bytest that were written or nil  on failure. Accepts opts map for overriding default PHP file_put_contents  arguments, as example to append to file use {:flags php/FILE_APPEND}.  See PHP's  for more information",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Writes data to file, returning number of bytest that were written or <b>nil</b> on failure. Accepts <b>opts</b> map for overriding default PHP file_put_contents arguments, as example to append to file use <code>{:flags php/FILE_APPEND}</code>. See PHP's <a href=\"https://www.php.net/manual/en/function.file-put-contents.php\">file_put_contents</a> for more information.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2644",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "split-at",
-        doc = """Returns a vector of <b>[(take n coll) (drop n coll)]</b>.""",
         signature = "(split-at n coll)",
-        description = """Returns a vector of [(take n coll) (drop n coll)]""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2038",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(split-at 2 [1 2 3 4 5]) ; => [[1 2] [3 4 5]]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a vector of [(take n coll) (drop n coll)]",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a vector of <b>[(take n coll) (drop n coll)]</b>.""",
+            example = "(split-at 2 [1 2 3 4 5]) ; => [[1 2] [3 4 5]]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2038",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "split-with",
-        doc = """Returns a vector of <b>[(take-while pred coll) (drop-while pred coll)]</b>.""",
         signature = "(split-with f coll)",
-        description = """Returns a vector of [(take-while pred coll) (drop-while pred coll)]""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2045",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(split-with |(< % 4) [1 2 3 4 5 6]) ; => [[1 2 3] [4 5 6]]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a vector of [(take-while pred coll) (drop-while pred coll)]",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a vector of <b>[(take-while pred coll) (drop-while pred coll)]</b>.""",
+            example = "(split-with |(< % 4) [1 2 3 4 5 6]) ; => [[1 2 3] [4 5 6]]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2045",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "str",
-        doc = """Creates a string by concatenating values together. If no arguments are provided an empty string is returned. Nil and false are represented as an empty string. True is represented as 1. Otherwise, it tries to call <b>__toString</b>. This is PHP equivalent to <b>${'$'}args[0] . ${'$'}args[1] . ${'$'}args[2] ...</b>.""",
         signature = "(str & args)",
-        description = """Creates a string by concatenating values together. If no arguments areprovided an empty string is returned. Nil and false are represented as an emptystring. True is represented as 1. Otherwise, it tries to call __toString.This is PHP equivalent to ${'$'}args[0] . ${'$'}args[1] . ${'$'}args[2] ...""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L305",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a string by concatenating values together. If no arguments areprovided an empty string is returned. Nil and false are represented as an emptystring. True is represented as 1. Otherwise, it tries to call __toString.This is PHP equivalent to ${'$'}args[0] . ${'$'}args[1] . ${'$'}args[2] ...",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a string by concatenating values together. If no arguments are provided an empty string is returned. Nil and false are represented as an empty string. True is represented as 1. Otherwise, it tries to call <b>__toString</b>. This is PHP equivalent to <b>${'$'}args[0] . ${'$'}args[1] . ${'$'}args[2] ...</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L305",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "str-contains?",
-        doc = """Returns true if str contains s.""",
         signature = "(str-contains? str s)",
-        description = """Returns true if str contains s""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L699",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if str contains s",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if str contains s.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L699",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "string?",
-        doc = """Returns true if <b>x</b> is a string, false otherwise.""",
         signature = "(string? x)",
-        description = """Returns true if x is a string, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L784",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a string, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a string, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L784",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "struct?",
-        doc = """Returns true if <b>x</b> is a struct, false otherwise.""",
         signature = "(struct? x)",
-        description = """Returns true if x is a struct, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L804",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a struct, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a struct, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L804",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "sum",
-        doc = """Returns the sum of all elements is <b>xs</b>.""",
         signature = "(sum xs)",
-        description = """Returns the sum of all elements is xs""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2525",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the sum of all elements is xs",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the sum of all elements is <b>xs</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2525",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "swap!",
-        doc = """
+        signature = "(swap! variable f & args)",
+        completion = CompletionInfo(
+            tailText = "Atomically swaps the value of the variable to (apply f current-value args).  Returns the new value after the swap",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Atomically swaps the value of the variable to <b>(apply f current-value args)</b>.
 <br /></br />
 Returns the new value after the swap.
 """,
-        signature = "(swap! variable f & args)",
-        description = """Atomically swaps the value of the variable to (apply f current-value args).  Returns the new value after the swap""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1078",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(def counter (var 0))",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1078",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "symbol",
-        doc = """
+        signature = "(symbol name-or-ns & [name])",
+        completion = CompletionInfo(
+            tailText = "Returns a new symbol for given string with optional namespace.  With one argument, creates a symbol without namespace.  With two arguments, creates a symbol in the given namespace",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a new symbol for given string with optional namespace.
 <br /></br />
 With one argument, creates a symbol without namespace. With two arguments, creates a symbol in the given namespace.
 """,
-        signature = "(symbol name-or-ns & [name])",
-        description = """Returns a new symbol for given string with optional namespace.  With one argument, creates a symbol without namespace.  With two arguments, creates a symbol in the given namespace""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L289",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(symbol \"foo\") ; => foo",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L289",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "symbol?",
-        doc = """Returns true if <b>x</b> is a symbol, false otherwise.""",
         signature = "(symbol? x)",
-        description = """Returns true if x is a symbol, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L794",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a symbol, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a symbol, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L794",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "symmetric-difference",
-        doc = """Symmetric difference between multiple sets into a new one.""",
         signature = "(symmetric-difference set & sets)",
-        description = """Symmetric difference between multiple sets into a new one""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2156",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Symmetric difference between multiple sets into a new one",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Symmetric difference between multiple sets into a new one.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2156",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "take",
-        doc = """
+        signature = "(take n coll)",
+        completion = CompletionInfo(
+            tailText = "Takes the first n elements of coll.  Note: Metadata preservation works with inline calls but may be lost when binding  to variables. Use inline calls or force realization with doall if metadata needed.  See local/investigate-metadata-binding-issue.md for details",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Takes the first <b>n</b> elements of <b>coll</b>.
 <br /></br />
-Note: Metadata preservation works with inline calls but may be lost when binding to variables. Use inline calls or force realization with doall if metadata needed. See local/investigate-metadata-binding-issue.md for details.
+Note: Metadata preservation works with inline calls but may be lost when binding to variables. Use inline calls or force realization with doall if metadata needed.
 """,
-        signature = "(take n coll)",
-        description = """Takes the first n elements of coll.  Note: Metadata preservation works with inline calls but may be lost when binding  to variables. Use inline calls or force realization with doall if metadata needed.  See local/investigate-metadata-binding-issue.md for details""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1509",
-        docUrl = "",
-        meta = FunctionMeta(
             example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1509",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "take-last",
-        doc = """Takes the last <b>n</b> elements of <b>coll</b>.""",
         signature = "(take-last n coll)",
-        description = """Takes the last n elements of coll""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1524",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(take-last 3 [1 2 3 4 5]) ; => [3 4 5]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Takes the last n elements of coll",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Takes the last <b>n</b> elements of <b>coll</b>.""",
+            example = "(take-last 3 [1 2 3 4 5]) ; => [3 4 5]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1524",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "take-nth",
-        doc = """Returns every nth item in <b>coll</b>. Returns a lazy sequence.""",
         signature = "(take-nth n coll)",
-        description = """Returns every nth item in coll. Returns a lazy sequence""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1541",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(take-nth 2 [0 1 2 3 4 5 6 7 8]) ; => (0 2 4 6 8)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns every nth item in coll. Returns a lazy sequence",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns every nth item in <b>coll</b>. Returns a lazy sequence.""",
+            example = "(take-nth 2 [0 1 2 3 4 5 6 7 8]) ; => (0 2 4 6 8)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1541",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "take-while",
-        doc = """Takes all elements at the front of <b>coll</b> where <b>(pred x)</b> is true. Returns a lazy sequence.""",
         signature = "(take-while pred coll)",
-        description = """Takes all elements at the front of coll where (pred x) is true. Returns a lazy sequence""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1531",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(take-while |(< % 5) [1 2 3 4 5 6 3 2 1]) ; => (1 2 3 4)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Takes all elements at the front of coll where (pred x) is true. Returns a lazy sequence",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Takes all elements at the front of <b>coll</b> where <b>(pred x)</b> is true. Returns a lazy sequence.""",
+            example = "(take-while |(< % 5) [1 2 3 4 5 6 3 2 1]) ; => (1 2 3 4)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1531",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "throw",
-        doc = """Throw an exception. See <a href=\"/documentation/control-flow/#try-catch-and-finally\">try-catch</a>.""",
         signature = "(throw exception)",
-        description = """Throw an exception""",
-        githubUrl = "",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Throw an exception",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Throw an exception. See <a href=\"/documentation/control-flow/#try-catch-and-finally\">try-catch</a>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "time",
-        doc = """Evaluates expr and prints the time it took. Returns the value of expr.""",
         signature = "(time expr)",
-        description = """Evaluates expr and prints the time it took. Returns the value of expr""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2919",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates expr and prints the time it took. Returns the value of expr",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Evaluates expr and prints the time it took. Returns the value of expr.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2919",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "to-php-array",
-        doc = """Creates a PHP Array from a sequential data structure.""",
         signature = "",
-        description = """Creates a PHP Array from a sequential data structure""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L200",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a PHP Array from a sequential data structure",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a PHP Array from a sequential data structure.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L200",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "transient",
-        doc = """
+        signature = "(transient coll)",
+        completion = CompletionInfo(
+            tailText = "Converts a persistent collection to a transient collection for efficient updates.  Transient collections provide faster performance for multiple sequential updates.  Use persistent to convert back",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Converts a persistent collection to a transient collection for efficient updates.
 <br /></br />
 Transient collections provide faster performance for multiple sequential updates. Use <b>persistent</b> to convert back.
 """,
-        signature = "(transient coll)",
-        description = """Converts a persistent collection to a transient collection for efficient updates.  Transient collections provide faster performance for multiple sequential updates.  Use persistent to convert back""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L317",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(def t (transient []))",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L317",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "tree-seq",
-        doc = """Returns a vector of the nodes in the tree, via a depth-first walk. branch? is a function with one argument that returns true if the given node has children. children must be a function with one argument that returns the children of the node. root the root node of the tree.""",
         signature = "(tree-seq branch? children root)",
-        description = """Returns a vector of the nodes in the tree, via a depth-first walk.  branch? is a function with one argument that returns true if the given node  has children.  children must be a function with one argument that returns the children of the node.  root the root node of the tree""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2223",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a vector of the nodes in the tree, via a depth-first walk.  branch? is a function with one argument that returns true if the given node  has children.  children must be a function with one argument that returns the children of the node.  root the root node of the tree",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a vector of the nodes in the tree, via a depth-first walk. branch? is a function with one argument that returns true if the given node has children. children must be a function with one argument that returns the children of the node. root the root node of the tree.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2223",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "true?",
-        doc = """Checks if value is exactly true (not just truthy).""",
         signature = "(true? x)",
-        description = """Checks if value is exactly true (not just truthy)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L676",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(true? 1) ; => false",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if value is exactly true (not just truthy)",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if value is exactly true (not just truthy).""",
+            example = "(true? 1) ; => false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L676",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "truthy?",
-        doc = """Checks if <b>x</b> is truthy. Same as <b>x == true</b> in PHP.""",
         signature = "(truthy? x)",
-        description = """Checks if x is truthy. Same as x == true in PHP""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L682",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if x is truthy. Same as x == true in PHP",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if <b>x</b> is truthy. Same as <b>x == true</b> in PHP.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L682",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "try",
-        doc = """All expressions are evaluated and if no exception is thrown the value of the last expression is returned. If an exception occurs and a matching catch-clause is provided, its expression is evaluated and the value is returned. If no matching catch-clause can be found the exception is propagated out of the function. Before returning normally or abnormally the optionally finally-clause is evaluated.""",
         signature = "(try expr* catch-clause* finally-clause?)",
-        description = """All expressions are evaluated and if no exception is thrown the value of the last expression is returned. If an exception occurs and a matching catch-clause is provided, its expression is evaluated and the value is returned. If no matching catch-clause can be found the exception is propagated out of the function. Before returning normally or abnormally the optionally finally-clause is evaluated""",
-        githubUrl = "",
-        docUrl = "/documentation/control-flow/#try-catch-and-finally",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "All expressions are evaluated and if no exception is thrown the value of the last expression is returned. If an exception occurs and a matching catch-clause is provided, its expression is evaluated and the value is returned. If no matching catch-clause can be found the exception is propagated out of the function. Before returning normally or abnormally the optionally finally-clause is evaluated",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """All expressions are evaluated and if no exception is thrown the value of the last expression is returned. If an exception occurs and a matching catch-clause is provided, its expression is evaluated and the value is returned. If no matching catch-clause can be found the exception is propagated out of the function. Before returning normally or abnormally the optionally finally-clause is evaluated.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/control-flow/#try-catch-and-finally",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "type",
-        doc = """
+        signature = "(type x)",
+        completion = CompletionInfo(
+            tailText = "Returns the type of x. The following types can be returned:* :vector* :list* :struct* :hash-map* :set* :keyword* :symbol* :var* :int* :float* :string* :nil* :boolean* :function* :php/array* :php/resource* :php/object* :unknown",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns the type of <b>x</b>. The following types can be returned:
 <br /></br />
-* <b>:vector</b> * <b>:list</b> * <b>:struct</b> * <b>:hash-map</b> * <b>:set</b> * <b>:keyword</b> * <b>:symbol</b> * <b>:var</b> * <b>:int</b> * <b>:float</b> * <b>:string</b> * <b>:nil</b> * <b>:boolean</b> * <b>:function</b> * <b>:php/array</b> * <b>:php/resource</b> * <b>:php/object</b> * <b>:unknown</b>
+<ul>
+<li><b>:vector</b></li>
+<li><b>:list</b></li>
+<li><b>:struct</b></li>
+<li><b>:hash</b>-map</li>
+<li><b>:set</b></li>
+<li><b>:keyword</b></li>
+<li><b>:symbol</b></li>
+<li><b>:var</b></li>
+<li><b>:int</b></li>
+<li><b>:float</b></li>
+<li><b>:string</b></li>
+<li><b>:nil</b></li>
+<li><b>:boolean</b></li>
+<li><b>:function</b></li>
+<li><b>:php</b>/array</li>
+<li><b>:php</b>/resource</li>
+<li><b>:php</b>/object</li>
+<li><b>:unknown</b></li>
+</ul>
 """,
-        signature = "(type x)",
-        description = """Returns the type of x. The following types can be returned:* :vector* :list* :struct* :hash-map* :set* :keyword* :symbol* :var* :int* :float* :string* :nil* :boolean* :function* :php/array* :php/resource* :php/object* :unknown""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L727",
-        docUrl = "",
-        meta = FunctionMeta(
             example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L727",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "union",
-        doc = """Union multiple sets into a new one.""",
         signature = "(union & sets)",
-        description = """Union multiple sets into a new one""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2113",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Union multiple sets into a new one",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Union multiple sets into a new one.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2113",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "unquote",
-        doc = """Values that should be evaluated in a macro are marked with the unquote function (shorthand <b>,</b>).""",
         signature = "(unquote my-sym)",
-        description = """Values that should be evaluated in a macro are marked with the unquote function (shorthand ,)""",
-        githubUrl = "",
-        docUrl = "/documentation/macros/#quasiquote",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Values that should be evaluated in a macro are marked with the unquote function (shorthand ,)",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
+        documentation = DocumentationInfo(
+            summary = """Values that should be evaluated in a macro are marked with the unquote function (shorthand <b>,</b>).""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/macros/#quasiquote",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "unquote-splicing",
-        doc = """Values that should be evaluated in a macro are marked with the unquote function (shorthand <b>,@</b>).""",
         signature = "(unquote-splicing my-sym)",
-        description = """Values that should be evaluated in a macro are marked with the unquote function (shorthand ,@)""",
-        githubUrl = "",
-        docUrl = "/documentation/macros/#quasiquote",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Values that should be evaluated in a macro are marked with the unquote function (shorthand ,@)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Values that should be evaluated in a macro are marked with the unquote function (shorthand <b>,@</b>).""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/macros/#quasiquote",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "unset",
-        doc = """
+        signature = "(unset ds key)",
+        completion = CompletionInfo(
+            tailText = "Returns ds without key.  Deprecated: Use dissoc instead",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns <b>ds</b> without <b>key</b>.
 <br /></br />
 Deprecated: Use <b>dissoc</b> instead.
 """,
-        signature = "(unset ds key)",
-        description = """Returns ds without key.  Deprecated: Use dissoc instead""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1037",
-        docUrl = "",
-        meta = FunctionMeta(
             example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1037",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "unset-in",
-        doc = """
+        signature = "(unset-in ds ks)",
+        completion = CompletionInfo(
+            tailText = "Removes a value from a nested data structure.  Deprecated: Use dissoc-in instead",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Removes a value from a nested data structure.
 <br /></br />
 Deprecated: Use <b>dissoc-in</b> instead.
 """,
-        signature = "(unset-in ds ks)",
-        description = """Removes a value from a nested data structure.  Deprecated: Use dissoc-in instead""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1452",
-        docUrl = "",
-        meta = FunctionMeta(
             example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1452",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "update",
-        doc = """Updates a value in a datastructure by applying <b>f</b> to the current value.""",
         signature = "(update ds k f & args)",
-        description = """Updates a value in a datastructure by applying f to the current value""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1423",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(update {:count 5} :count inc) ; => {:count 6}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Updates a value in a datastructure by applying f to the current value",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Updates a value in a datastructure by applying <b>f</b> to the current value.""",
+            example = "(update {:count 5} :count inc) ; => {:count 6}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1423",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "update-in",
-        doc = """Updates a value in a nested data structure by applying <b>f</b> to the value at path.""",
         signature = "(update-in ds [k & ks] f & args)",
-        description = """Updates a value in a nested data structure by applying f to the value at path""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1430",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(update-in {:a {:b 5}} [:a :b] inc) ; => {:a {:b 6}}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Updates a value in a nested data structure by applying f to the value at path",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Updates a value in a nested data structure by applying <b>f</b> to the value at path.""",
+            example = "(update-in {:a {:b 5}} [:a :b] inc) ; => {:a {:b 6}}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1430",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "values",
-        doc = """Returns a sequence of all values in a map.""",
         signature = "(values coll)",
-        description = """Returns a sequence of all values in a map""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1677",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(values {:a 1 :b 2}) ; => (1 2)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a sequence of all values in a map",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a sequence of all values in a map.""",
+            example = "(values {:a 1 :b 2}) ; => (1 2)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1677",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "var",
-        doc = """
+        signature = "(var value)",
+        completion = CompletionInfo(
+            tailText = "Creates a new variable with the given value.  Variables provide mutable state that can be updated with set! and swap!",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Creates a new variable with the given value.
 <br /></br />
 Variables provide mutable state that can be updated with <b>set!</b> and <b>swap!</b>.
 """,
-        signature = "(var value)",
-        description = """Creates a new variable with the given value.  Variables provide mutable state that can be updated with set! and swap!""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1050",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(def counter (var 0))",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1050",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.SPECIAL_FORMS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "var?",
-        doc = """Checks if the given value is a variable.""",
         signature = "(var? x)",
-        description = """Checks if the given value is a variable""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1059",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if the given value is a variable",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if the given value is a variable.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1059",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "vector",
-        doc = """Creates a new vector. If no argument is provided, an empty vector is created.""",
         signature = "(vector & xs) # [& xs]",
-        description = """Creates a new vector. If no argument is provided, an empty vector is created""",
-        githubUrl = "",
-        docUrl = "/documentation/data-structures/#vectors",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a new vector. If no argument is provided, an empty vector is created",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a new vector. If no argument is provided, an empty vector is created.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/data-structures/#vectors",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "vector?",
-        doc = """Returns true if <b>x</b> is a vector, false otherwise.""",
         signature = "(vector? x)",
-        description = """Returns true if x is a vector, false otherwise""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L814",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a vector, false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns true if <b>x</b> is a vector, false otherwise.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L814",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "when",
-        doc = """Evaluates body if test is true, otherwise returns nil.""",
         signature = "(when test & body)",
-        description = """Evaluates body if test is true, otherwise returns nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L459",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(when (> 10 5) \"greater\") ; => \"greater\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates body if test is true, otherwise returns nil",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Evaluates body if test is true, otherwise returns nil.""",
+            example = "(when (> 10 5) \"greater\") ; => \"greater\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L459",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "when-let",
-        doc = """When test is true, evaluates body with binding-form bound to the value of test""",
         signature = "(when-let bindings & body)",
-        description = """When test is true, evaluates body with binding-form bound to the value of test""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2900",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "When test is true, evaluates body with binding-form bound to the value of test",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """When test is true, evaluates body with binding-form bound to the value of test""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2900",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "when-not",
-        doc = """Evaluates body if test is false, otherwise returns nil.""",
         signature = "(when-not test & body)",
-        description = """Evaluates body if test is false, otherwise returns nil""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L465",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(when-not (empty? [1 2 3]) \"has items\") ; => \"has items\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates body if test is false, otherwise returns nil",
+            priority = PhelCompletionPriority.CONTROL_FLOW,
         ),
-        priority = PhelCompletionPriority.CONTROL_FLOW,
+        documentation = DocumentationInfo(
+            summary = """Evaluates body if test is false, otherwise returns nil.""",
+            example = "(when-not (empty? [1 2 3]) \"has items\") ; => \"has items\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L465",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "with-output-buffer",
-        doc = """Everything that is printed inside the body will be stored in a buffer. The result of the buffer is returned.""",
         signature = "(with-output-buffer & body)",
-        description = """Everything that is printed inside the body will be stored in a buffer.   The result of the buffer is returned""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2552",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Everything that is printed inside the body will be stored in a buffer.   The result of the buffer is returned",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Everything that is printed inside the body will be stored in a buffer. The result of the buffer is returned.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2552",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "zero?",
-        doc = """Checks if <b>x</b> is zero.""",
         signature = "(zero? x)",
-        description = """Checks if x is zero""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2463",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Checks if x is zero",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Checks if <b>x</b> is zero.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2463",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "zipcoll",
-        doc = """Creates a map from two sequential data structures. Returns a new map.""",
         signature = "(zipcoll a b)",
-        description = """Creates a map from two sequential data structures. Returns a new map""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1985",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(zipcoll [:a :b :c] [1 2 3]) ; => {:a 1 :b 2 :c 3}",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Creates a map from two sequential data structures. Returns a new map",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Creates a map from two sequential data structures. Returns a new map.""",
+            example = "(zipcoll [:a :b :c] [1 2 3]) ; => {:a 1 :b 2 :c 3}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1985",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "core",
         name = "zipmap",
-        doc = """
+        signature = "(zipmap keys vals)",
+        completion = CompletionInfo(
+            tailText = "Returns a new map with the keys mapped to the corresponding values.  Stops when the shorter of keys or vals is exhausted",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a new map with the keys mapped to the corresponding values.
 <br /></br />
 Stops when the shorter of <b>keys</b> or <b>vals</b> is exhausted.
 """,
-        signature = "(zipmap keys vals)",
-        description = """Returns a new map with the keys mapped to the corresponding values.  Stops when the shorter of keys or vals is exhausted""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1992",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(zipmap [:a :b :c] [1 2 3]) ; => {:a 1 :b 2 :c 3}",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1992",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.CORE_FUNCTIONS,
     ),
 )

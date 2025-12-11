@@ -68,8 +68,8 @@ object PhelRegistryCompletionHelper {
                 result,
                 function.name,
                 function.signature,
-                function.description,
-                function.priority
+                function.completion.tailText,
+                function.completion.priority
             )
         }
     }

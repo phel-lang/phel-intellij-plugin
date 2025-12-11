@@ -2,429 +2,485 @@ package org.phellang.completion.data
 
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 
-internal fun registerStringFunctions(): List<DataFunction> = listOf(
-    DataFunction(
+internal fun registerStringFunctions(): List<PhelFunction> = listOf(
+    PhelFunction(
         namespace = "str",
         name = "str/blank?",
-        doc = """True if s is nil, empty, or contains only whitespace.""",
         signature = "(blank? s)",
-        description = """True if s is nil, empty, or contains only whitespace""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L136",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(blank? \"   \") ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "True if s is nil, empty, or contains only whitespace",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """True if s is nil, empty, or contains only whitespace.""",
+            example = "(blank? \"   \") ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L136",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/capitalize",
-        doc = """Converts first character to upper-case and all other characters to lower-case.""",
         signature = "(capitalize s)",
-        description = """Converts first character to upper-case and all other characters to lower-case""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L97",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(capitalize \"hELLO wORLD\") ; => \"Hello world\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Converts first character to upper-case and all other characters to lower-case",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Converts first character to upper-case and all other characters to lower-case.""",
+            example = "(capitalize \"hELLO wORLD\") ; => \"Hello world\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L97",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/chars",
-        doc = """
+        signature = "(chars s)",
+        completion = CompletionInfo(
+            tailText = "Returns a vector of characters from string s.  This is a convenience function for converting strings to character sequences.  Properly handles multibyte UTF-8 characters",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
 Returns a vector of characters from string s.
 <br /></br />
 This is a convenience function for converting strings to character sequences. Properly handles multibyte UTF-8 characters.
 """,
-        signature = "(chars s)",
-        description = """Returns a vector of characters from string s.  This is a convenience function for converting strings to character sequences.  Properly handles multibyte UTF-8 characters""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L11",
-        docUrl = "",
-        meta = FunctionMeta(
             example = "(chars \"hello\") ; => [\"h\" \"e\" \"l\" \"l\" \"o\"]",
-            deprecatedVersion = null,
-            supersededBy = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L11",
+                docs = "",
+            ),
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/contains?",
-        doc = """True if s contains substr.""",
         signature = "(contains? s substr)",
-        description = """True if s contains substr""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L161",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(contains? \"hello world\" \"lo wo\") ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "True if s contains substr",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """True if s contains substr.""",
+            example = "(contains? \"hello world\" \"lo wo\") ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L161",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/ends-with?",
-        doc = """True if s ends with substr.""",
         signature = "(ends-with? s substr)",
-        description = """True if s ends with substr""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L155",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(ends-with? \"hello world\" \"world\") ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "True if s ends with substr",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """True if s ends with substr.""",
+            example = "(ends-with? \"hello world\" \"world\") ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L155",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/escape",
-        doc = """Returns a new string with each character escaped according to cmap.""",
         signature = "(escape s cmap)",
-        description = """Returns a new string with each character escaped according to cmap""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L179",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(escape \"hello\" {\"h\" \"H\" \"o\" \"O\"}) ; => \"HellO\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a new string with each character escaped according to cmap",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a new string with each character escaped according to cmap.""",
+            example = "(escape \"hello\" {\"h\" \"H\" \"o\" \"O\"}) ; => \"HellO\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L179",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/includes?",
-        doc = """True if s includes substr.""",
         signature = "(includes? s substr)",
-        description = """True if s includes substr""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L167",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(includes? \"hello world\" \"world\") ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "True if s includes substr",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """True if s includes substr.""",
+            example = "(includes? \"hello world\" \"world\") ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L167",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/index-of",
-        doc = """Returns the index of value in s, or nil if not found.""",
         signature = "(index-of s value & [from-index])",
-        description = """Returns the index of value in s, or nil if not found""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L191",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(index-of \"hello world\" \"world\") ; => 6",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the index of value in s, or nil if not found",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the index of value in s, or nil if not found.""",
+            example = "(index-of \"hello world\" \"world\") ; => 6",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L191",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/join",
-        doc = """Returns a string of all elements in coll, separated by an optional separator.""",
         signature = "(join separator & [coll])",
-        description = """Returns a string of all elements in coll, separated by an optional separator""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L21",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(join \", \" [\"apple\" \"banana\" \"cherry\"]) ; => \"apple, banana, cherry\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a string of all elements in coll, separated by an optional separator",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a string of all elements in coll, separated by an optional separator.""",
+            example = "(join \", \" [\"apple\" \"banana\" \"cherry\"]) ; => \"apple, banana, cherry\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L21",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/last-index-of",
-        doc = """Returns the last index of value in s, or nil if not found.""",
         signature = "(last-index-of s value & [from-index])",
-        description = """Returns the last index of value in s, or nil if not found""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L206",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(last-index-of \"hello world world\" \"world\") ; => 12",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the last index of value in s, or nil if not found",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the last index of value in s, or nil if not found.""",
+            example = "(last-index-of \"hello world world\" \"world\") ; => 12",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L206",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/lower-case",
-        doc = """Converts string to all lower-case.""",
         signature = "(lower-case s)",
-        description = """Converts string to all lower-case""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L106",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(lower-case \"HELLO World\") ; => \"hello world\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Converts string to all lower-case",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Converts string to all lower-case.""",
+            example = "(lower-case \"HELLO World\") ; => \"hello world\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L106",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/pad-both",
-        doc = """Returns a string padded on both sides to length len.""",
         signature = "(pad-both s len & [pad-str])",
-        description = """Returns a string padded on both sides to length len""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L245",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(pad-both \"hello\" 11) ; => \"   hello   \"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a string padded on both sides to length len",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a string padded on both sides to length len.""",
+            example = "(pad-both \"hello\" 11) ; => \"   hello   \"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L245",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/pad-left",
-        doc = """Returns a string padded on the left side to length len.""",
         signature = "(pad-left s len & [pad-str])",
-        description = """Returns a string padded on the left side to length len""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L233",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(pad-left \"hello\" 10) ; => \"     hello\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a string padded on the left side to length len",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a string padded on the left side to length len.""",
+            example = "(pad-left \"hello\" 10) ; => \"     hello\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L233",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/pad-right",
-        doc = """Returns a string padded on the right side to length len.""",
         signature = "(pad-right s len & [pad-str])",
-        description = """Returns a string padded on the right side to length len""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L239",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(pad-right \"hello\" 10) ; => \"hello     \"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a string padded on the right side to length len",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a string padded on the right side to length len.""",
+            example = "(pad-right \"hello\" 10) ; => \"hello     \"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L239",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/re-quote-replacement",
-        doc = """Escapes special characters in a replacement string for literal use.""",
         signature = "(re-quote-replacement replacement)",
-        description = """Escapes special characters in a replacement string for literal use""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L173",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(re-quote-replacement \"$1.00\") ; => \"\$1.00\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Escapes special characters in a replacement string for literal use",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Escapes special characters in a replacement string for literal use.""",
+            example = "(re-quote-replacement \"$1.00\") ; => \"\$1.00\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L173",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/repeat",
-        doc = """Returns a string containing n copies of s.""",
         signature = "(repeat s n)",
-        description = """Returns a string containing n copies of s""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L45",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(repeat \"ha\" 3) ; => \"hahaha\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns a string containing n copies of s",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns a string containing n copies of s.""",
+            example = "(repeat \"ha\" 3) ; => \"hahaha\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L45",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/replace",
-        doc = """Replaces all instances of match with replacement in s.""",
         signature = "(replace s match replacement)",
-        description = """Replaces all instances of match with replacement in s""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L51",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(replace \"hello world\" \"world\" \"there\") ; => \"hello there\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Replaces all instances of match with replacement in s",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Replaces all instances of match with replacement in s.""",
+            example = "(replace \"hello world\" \"world\" \"there\") ; => \"hello there\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L51",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/replace-first",
-        doc = """Replaces the first instance of match with replacement in s.""",
         signature = "(replace-first s match replacement)",
-        description = """Replaces the first instance of match with replacement in s""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L68",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(replace-first \"hello world world\" \"world\" \"there\") ; => \"hello there world\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Replaces the first instance of match with replacement in s",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Replaces the first instance of match with replacement in s.""",
+            example = "(replace-first \"hello world world\" \"world\" \"there\") ; => \"hello there world\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L68",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/reverse",
-        doc = """Returns s with its characters reversed.""",
         signature = "(reverse s)",
-        description = """Returns s with its characters reversed""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L38",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(reverse \"hello\") ; => \"olleh\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns s with its characters reversed",
+            priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns s with its characters reversed.""",
+            example = "(reverse \"hello\") ; => \"olleh\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L38",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/split",
-        doc = """Splits string on a regular expression, returning a vector of parts.""",
         signature = "(split s re & [limit])",
-        description = """Splits string on a regular expression, returning a vector of parts""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L5",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(split \"hello world foo bar\" #\"\\s+\") ; => [\"hello\" \"world\" \"foo\" \"bar\"]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Splits string on a regular expression, returning a vector of parts",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Splits string on a regular expression, returning a vector of parts.""",
+            example = "(split \"hello world foo bar\" #\"\\s+\") ; => [\"hello\" \"world\" \"foo\" \"bar\"]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L5",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/split-lines",
-        doc = """Splits s on \n or \r\n. Trailing empty lines are not returned.""",
         signature = "(split-lines s)",
-        description = """Splits s on \\n or \\r\\n. Trailing empty lines are not returned""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L227",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(split-lines \"hello\nworld\ntest\") ; => [\"hello\" \"world\" \"test\"]",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Splits s on \\n or \\r\\n. Trailing empty lines are not returned",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Splits s on \n or \r\n. Trailing empty lines are not returned.""",
+            example = "(split-lines \"hello\nworld\ntest\") ; => [\"hello\" \"world\" \"test\"]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L227",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/starts-with?",
-        doc = """True if s starts with substr.""",
         signature = "(starts-with? s substr)",
-        description = """True if s starts with substr""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L149",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(starts-with? \"hello world\" \"hello\") ; => true",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "True if s starts with substr",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """True if s starts with substr.""",
+            example = "(starts-with? \"hello world\" \"hello\") ; => true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L149",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/subs",
-        doc = """Returns the substring of s from start (inclusive) to end (exclusive).""",
         signature = "(subs s start & [end])",
-        description = """Returns the substring of s from start (inclusive) to end (exclusive)""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L28",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(subs \"hello world\" 0 5) ; => \"hello\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Returns the substring of s from start (inclusive) to end (exclusive)",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Returns the substring of s from start (inclusive) to end (exclusive).""",
+            example = "(subs \"hello world\" 0 5) ; => \"hello\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L28",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/trim",
-        doc = """Removes whitespace from both ends of string.""",
         signature = "(trim s)",
-        description = """Removes whitespace from both ends of string""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L118",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(trim \"  hello  \") ; => \"hello\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Removes whitespace from both ends of string",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Removes whitespace from both ends of string.""",
+            example = "(trim \"  hello  \") ; => \"hello\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L118",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/trim-newline",
-        doc = """Removes all trailing newline or return characters from string.""",
         signature = "(trim-newline s)",
-        description = """Removes all trailing newline or return characters from string""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L85",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(trim-newline \"hello\n\n\") ; => \"hello\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Removes all trailing newline or return characters from string",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Removes all trailing newline or return characters from string.""",
+            example = "(trim-newline \"hello\n\n\") ; => \"hello\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L85",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/triml",
-        doc = """Removes whitespace from the left side of string.""",
         signature = "(triml s)",
-        description = """Removes whitespace from the left side of string""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L124",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(triml \"  hello  \") ; => \"hello  \"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Removes whitespace from the left side of string",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Removes whitespace from the left side of string.""",
+            example = "(triml \"  hello  \") ; => \"hello  \"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L124",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/trimr",
-        doc = """Removes whitespace from the right side of string.""",
         signature = "(trimr s)",
-        description = """Removes whitespace from the right side of string""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L130",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(trimr \"  hello  \") ; => \"  hello\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Removes whitespace from the right side of string",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Removes whitespace from the right side of string.""",
+            example = "(trimr \"  hello  \") ; => \"  hello\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L130",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "str",
         name = "str/upper-case",
-        doc = """Converts string to all upper-case.""",
         signature = "(upper-case s)",
-        description = """Converts string to all upper-case""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L112",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(upper-case \"hello World\") ; => \"HELLO WORLD\"",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Converts string to all upper-case",
+            priority = PhelCompletionPriority.STRING_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.STRING_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Converts string to all upper-case.""",
+            example = "(upper-case \"hello World\") ; => \"HELLO WORLD\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/str.phel#L112",
+                docs = "",
+            ),
+        ),
     ),
 )
