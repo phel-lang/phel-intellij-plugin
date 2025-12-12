@@ -1,63 +1,30 @@
 package org.phellang.documentation.resolvers
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.completion.documentation.PhelApiDocumentation
 import org.phellang.completion.documentation.PhelBasicDocumentation
+import org.phellang.core.psi.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelSymbol
 
 class PhelSymbolDocumentationResolver {
 
     fun resolveDocumentation(element: PsiElement?, originalElement: PsiElement?): String? {
-        val elementToClassify = extractSymbolElement(element, originalElement) ?: return null
+        val symbol = PhelPsiUtils.findTopmostSymbol(originalElement)
+            ?: PhelPsiUtils.findTopmostSymbol(element)
+            ?: return null
 
-        if (elementToClassify !is PhelSymbol) {
-            return null
-        }
-
-        val symbolName = elementToClassify.text
+        val symbolName = symbol.text
         if (symbolName.isNullOrEmpty()) {
             return null
         }
 
         val content = when {
-            isLocalSymbol(elementToClassify) -> generateLocalSymbolDoc(elementToClassify, symbolName)
-            else -> resolveApiDocumentation(elementToClassify, symbolName)
+            isLocalSymbol(symbol) -> generateLocalSymbolDoc(symbol, symbolName)
+            else -> resolveApiDocumentation(symbol, symbolName)
         }
 
         return formatAsHtml(content)
-    }
-
-    /**
-     * Extracts the topmost PhelSymbol element from the hover position.
-     * 
-     * For qualified symbols like `json/decode`, the PSI structure has nested PhelSymbol elements:
-     * - The full `json/decode` is a PhelSymbol
-     * - The `json` part (symbol_plain) is also a PhelSymbol
-     * - The `/decode` part (symbol_nsq) is also a PhelSymbol
-     * 
-     * We need to find the topmost PhelSymbol to get the full qualified name.
-     */
-    private fun extractSymbolElement(element: PsiElement?, originalElement: PsiElement?): PsiElement? {
-        val startElement = originalElement ?: element ?: return null
-        
-        // Find the first PhelSymbol
-        var symbol: PhelSymbol? = when (startElement) {
-            is PhelSymbol -> startElement
-            else -> PsiTreeUtil.getParentOfType(startElement, PhelSymbol::class.java)
-        }
-        
-        // Traverse up to find the topmost PhelSymbol
-        while (symbol != null) {
-            val parentSymbol = PsiTreeUtil.getParentOfType(symbol, PhelSymbol::class.java)
-            if (parentSymbol == null) {
-                break
-            }
-            symbol = parentSymbol
-        }
-        
-        return symbol
     }
 
     private fun isLocalSymbol(symbol: PhelSymbol): Boolean {
