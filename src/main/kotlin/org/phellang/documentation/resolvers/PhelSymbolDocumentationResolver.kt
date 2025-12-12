@@ -1,43 +1,30 @@
 package org.phellang.documentation.resolvers
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.completion.documentation.PhelApiDocumentation
 import org.phellang.completion.documentation.PhelBasicDocumentation
+import org.phellang.core.psi.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelSymbol
 
 class PhelSymbolDocumentationResolver {
 
     fun resolveDocumentation(element: PsiElement?, originalElement: PsiElement?): String? {
-        val elementToClassify = extractSymbolElement(element, originalElement) ?: return null
+        val symbol = PhelPsiUtils.findTopmostSymbol(originalElement)
+            ?: PhelPsiUtils.findTopmostSymbol(element)
+            ?: return null
 
-        if (elementToClassify !is PhelSymbol) {
-            return null
-        }
-
-        val symbolName = elementToClassify.text
+        val symbolName = symbol.text
         if (symbolName.isNullOrEmpty()) {
             return null
         }
 
         val content = when {
-            isLocalSymbol(elementToClassify) -> generateLocalSymbolDoc(elementToClassify, symbolName)
-            else -> resolveApiDocumentation(elementToClassify, symbolName)
+            isLocalSymbol(symbol) -> generateLocalSymbolDoc(symbol, symbolName)
+            else -> resolveApiDocumentation(symbol, symbolName)
         }
 
         return formatAsHtml(content)
-    }
-
-    private fun extractSymbolElement(element: PsiElement?, originalElement: PsiElement?): PsiElement? {
-        return when {
-            originalElement is PhelSymbol -> originalElement
-            originalElement != null -> {
-                PsiTreeUtil.getParentOfType(originalElement, PhelSymbol::class.java) ?: element
-            }
-
-            else -> element
-        }
     }
 
     private fun isLocalSymbol(symbol: PhelSymbol): Boolean {

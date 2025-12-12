@@ -6,9 +6,6 @@ import org.phellang.language.infrastructure.PhelLanguage
 import org.phellang.completion.engine.PhelMainCompletionProvider
 import org.phellang.language.psi.PhelTypes
 
-/**
- * Main completion contributor for Phel language using the new modular architecture
- */
 class PhelCompletionContributor : CompletionContributor() {
 
     init {

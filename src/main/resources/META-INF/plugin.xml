@@ -57,6 +57,8 @@
         <completion.contributor
                 language="Phel"
                 implementationClass="org.phellang.completion.PhelCompletionContributor"/>
+        <lookup.charFilter
+                implementation="org.phellang.completion.PhelCompletionCharFilter"/>
         <lang.documentationProvider
                 language="Phel"
                 implementationClass="org.phellang.documentation.PhelDocumentationProvider"/>

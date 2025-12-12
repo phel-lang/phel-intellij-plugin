@@ -1,10 +1,35 @@
 package org.phellang.core.psi
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
 
 object PhelPsiUtils {
+
+    private val INTEGER_REGEX = Regex("[+-]?[0-9]+")
+    private val FLOAT_REGEX = Regex("[+-]?[0-9]+\\.[0-9]*([eE][+-]?[0-9]+)?")
+    private val HEX_NUM_REGEX = Regex("[+-]?0x[\\da-fA-F_]+")
+    private val BIN_NUM_REGEX = Regex("[+-]?0b[01_]+")
+    private val OCT_NUM_REGEX = Regex("[+-]?0o[0-7_]+")
+
+    @JvmStatic
+    fun findTopmostSymbol(element: PsiElement?): PhelSymbol? {
+        if (element == null) return null
+
+        var symbol: PhelSymbol? = when (element) {
+            is PhelSymbol -> element
+            else -> PsiTreeUtil.getParentOfType(element, PhelSymbol::class.java)
+        }
+
+        // Traverse up to find the topmost PhelSymbol
+        while (symbol != null) {
+            val parentSymbol = PsiTreeUtil.getParentOfType(symbol, PhelSymbol::class.java) ?: break
+            symbol = parentSymbol
+        }
+
+        return symbol
+    }
 
     @JvmStatic
     fun getName(symbol: PhelSymbol): String? {
@@ -88,29 +113,29 @@ object PhelPsiUtils {
 
     @JvmStatic
     fun getLiteralType(literal: PhelLiteral): String {
-        return PhelErrorHandler.safeOperation({
+        return PhelErrorHandler.safeOperation {
             val text = literal.text ?: return@safeOperation "unknown"
-            
+
             when {
                 text == "true" || text == "false" -> "boolean"
                 text == "nil" -> "nil"
                 text == "NAN" -> "nan"
                 text.startsWith("\"") && text.endsWith("\"") -> "string"
                 text.startsWith("\\") -> "char"
-                text.matches(Regex("[+-]?[0-9]+")) -> "integer"
-                text.matches(Regex("[+-]?[0-9]+\\.[0-9]*([eE][+-]?[0-9]+)?")) -> "float"
-                text.matches(Regex("[+-]?0x[\\da-fA-F_]+")) -> "hexnum"
-                text.matches(Regex("[+-]?0b[01_]+")) -> "binnum"
-                text.matches(Regex("[+-]?0o[0-7_]+")) -> "octnum"
+                text.matches(INTEGER_REGEX) -> "integer"
+                text.matches(FLOAT_REGEX) -> "float"
+                text.matches(HEX_NUM_REGEX) -> "hexnum"
+                text.matches(BIN_NUM_REGEX) -> "binnum"
+                text.matches(OCT_NUM_REGEX) -> "octnum"
                 else -> "unknown"
             }
-        }) ?: "unknown"
+        } ?: "unknown"
     }
 
     @JvmStatic
     fun getLiteralText(literal: PhelLiteral): String {
-        return PhelErrorHandler.safeOperation({
+        return PhelErrorHandler.safeOperation {
             literal.text ?: ""
-        }) ?: ""
+        } ?: ""
     }
 }
