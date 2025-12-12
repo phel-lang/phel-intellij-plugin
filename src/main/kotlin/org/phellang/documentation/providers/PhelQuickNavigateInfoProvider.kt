@@ -2,14 +2,14 @@ package org.phellang.documentation.providers
 
 import com.intellij.psi.PsiElement
 import org.phellang.completion.data.PhelFunctionRegistry
-import org.phellang.language.psi.PhelSymbol
+import org.phellang.core.psi.PhelPsiUtils
 
 class PhelQuickNavigateInfoProvider {
 
     fun getQuickNavigateInfo(element: PsiElement?): String? {
-        if (element !is PhelSymbol) return null
+        val symbol = PhelPsiUtils.findTopmostSymbol(element) ?: return null
 
-        val symbolName = element.text
+        val symbolName = symbol.text
         if (symbolName.isNullOrEmpty()) return null
 
         val signature = getSignature(symbolName)

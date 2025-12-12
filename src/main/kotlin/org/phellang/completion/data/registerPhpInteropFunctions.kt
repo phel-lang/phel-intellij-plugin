@@ -2,185 +2,209 @@ package org.phellang.completion.data
 
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 
-internal fun registerPhpInteropFunctions(): List<DataFunction> = listOf(
-    DataFunction(
+internal fun registerPhpInteropFunctions(): List<PhelFunction> = listOf(
+    PhelFunction(
         namespace = "php",
         name = "php/->",
-        doc = """Access to an object property or result of chained calls.""",
         signature = "(php/-> object call*)",
-        description = """Access to an object property or result of chained calls""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#php-set-object-properties",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Access to an object property or result of chained calls",
+            priority = PhelCompletionPriority.MACROS,
         ),
-        priority = PhelCompletionPriority.MACROS,
+        documentation = DocumentationInfo(
+            summary = """Access to an object property or result of chained calls.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#php-set-object-properties",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/::",
-        doc = """Calls a static method or property from a PHP class. Both methodname and property must be symbols and cannot be an evaluated value.""",
         signature = "(php/:: class call*)",
-        description = """Calls a static method or property from a PHP class. Both methodname and property must be symbols and cannot be an evaluated value""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#php-static-method-and-property-call",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Calls a static method or property from a PHP class. Both methodname and property must be symbols and cannot be an evaluated value",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Calls a static method or property from a PHP class. Both methodname and property must be symbols and cannot be an evaluated value.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#php-static-method-and-property-call",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/aget",
-        doc = """Equivalent to PHP's <b>arr[index] ?? null</b>.""",
         signature = "(php/aget arr index)",
-        description = """Equivalent to PHP's arr[index] ?? null""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#get-php-array-value",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Equivalent to PHP's arr[index] ?? null",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Equivalent to PHP's <b>arr[index] ?? null</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#get-php-array-value",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/aget-in",
-        doc = """Equivalent to PHP's <b>arr[k1][k2][k...] ?? null</b>.""",
         signature = "(php/aget-in arr ks)",
-        description = """Equivalent to PHP's arr[k1][k2][k...] ?? null""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#get-php-array-value",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Equivalent to PHP's arr[k1][k2][k...] ?? null",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Equivalent to PHP's <b>arr[k1][k2][k...] ?? null</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#get-php-array-value",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/apush",
-        doc = """Equivalent to PHP's <b>arr[] = value</b>.""",
         signature = "(php/apush arr value)",
-        description = """Equivalent to PHP's arr[] = value""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#append-php-array-value",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Equivalent to PHP's arr[] = value",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Equivalent to PHP's <b>arr[] = value</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#append-php-array-value",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/apush-in",
-        doc = """Equivalent to PHP's <b>arr[k1][k2][k...][] = value</b>.""",
         signature = "(php/apush-in arr ks value)",
-        description = """Equivalent to PHP's arr[k1][k2][k...][] = value""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#append-php-array-value",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Equivalent to PHP's arr[k1][k2][k...][] = value",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Equivalent to PHP's <b>arr[k1][k2][k...][] = value</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#append-php-array-value",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/aset",
-        doc = """Equivalent to PHP's <b>arr[index] = value</b>.""",
         signature = "(php/aset arr index value)",
-        description = """Equivalent to PHP's arr[index] = value""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#set-php-array-value",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Equivalent to PHP's arr[index] = value",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Equivalent to PHP's <b>arr[index] = value</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#set-php-array-value",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/aset-in",
-        doc = """Equivalent to PHP's <b>arr[k1][k2][k...] = value</b>.""",
         signature = "(php/aset-in arr ks value)",
-        description = """Equivalent to PHP's arr[k1][k2][k...] = value""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#set-php-array-value",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Equivalent to PHP's arr[k1][k2][k...] = value",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Equivalent to PHP's <b>arr[k1][k2][k...] = value</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#set-php-array-value",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/aunset",
-        doc = """Equivalent to PHP's <b>unset(arr[index])</b>.""",
         signature = "(php/aunset arr index)",
-        description = """Equivalent to PHP's unset(arr[index])""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#unset-php-array-value",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Equivalent to PHP's unset(arr[index])",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Equivalent to PHP's <b>unset(arr[index])</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#unset-php-array-value",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/aunset-in",
-        doc = """Equivalent to PHP's <b>unset(arr[k1][k2][k...])</b>.""",
         signature = "(php/aunset-in arr ks)",
-        description = """Equivalent to PHP's unset(arr[k1][k2][k...])""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#unset-php-array-value",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Equivalent to PHP's unset(arr[k1][k2][k...])",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Equivalent to PHP's <b>unset(arr[k1][k2][k...])</b>.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#unset-php-array-value",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/new",
-        doc = """Evaluates expr and creates a new PHP class using the arguments. The instance of the class is returned.""",
         signature = "(php/new expr args*)",
-        description = """Evaluates expr and creates a new PHP class using the arguments. The instance of the class is returned""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#php-class-instantiation",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates expr and creates a new PHP class using the arguments. The instance of the class is returned",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Evaluates expr and creates a new PHP class using the arguments. The instance of the class is returned.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#php-class-instantiation",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "php",
         name = "php/oset",
-        doc = """Use <b>php/oset</b> to set a value to a class/object property.""",
         signature = "(php/oset (php/-> object prop) val)",
-        description = """Use php/oset to set a value to a class/object property""",
-        githubUrl = "",
-        docUrl = "/documentation/php-interop/#php-set-object-properties",
-        meta = FunctionMeta(
-            example = null,
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Use php/oset to set a value to a class/object property",
+            priority = PhelCompletionPriority.PHP_INTEROP,
         ),
-        priority = PhelCompletionPriority.PHP_INTEROP,
+        documentation = DocumentationInfo(
+            summary = """Use <b>php/oset</b> to set a value to a class/object property.""",
+            example = null,
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#php-set-object-properties",
+            ),
+        ),
     ),
 )

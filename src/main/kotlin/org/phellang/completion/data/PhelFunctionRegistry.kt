@@ -7,7 +7,7 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
  */
 object PhelFunctionRegistry {
 
-    private val functions = mutableMapOf<Namespace, List<DataFunction>>()
+    private val functions = mutableMapOf<Namespace, List<PhelFunction>>()
 
     init {
         functions[Namespace.BASE64] = registerBase64Functions()
@@ -23,19 +23,19 @@ object PhelFunctionRegistry {
         functions[Namespace.TEST] = registerTestFunctions()
     }
 
-    fun getFunctions(namespace: Namespace): List<DataFunction> {
+    fun getFunctions(namespace: Namespace): List<PhelFunction> {
         return functions[namespace] ?: emptyList()
     }
 
-    fun getFunctions(priority: PhelCompletionPriority): List<DataFunction> {
-        return functions.values.flatten().filter { it.priority == priority }
+    fun getFunctions(priority: PhelCompletionPriority): List<PhelFunction> {
+        return functions.values.flatten().filter { it.completion.priority == priority }
     }
 
-    fun getFunction(name: String): DataFunction? {
+    fun getFunction(name: String): PhelFunction? {
         return functions.values.flatten().find { it.name == name }
     }
 
-    fun getAllFunctions(): List<DataFunction> {
+    fun getAllFunctions(): List<PhelFunction> {
         return functions.values.flatten()
     }
 }

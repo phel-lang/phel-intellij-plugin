@@ -2,95 +2,107 @@ package org.phellang.completion.data
 
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 
-internal fun registerDebugFunctions(): List<DataFunction> = listOf(
-    DataFunction(
+internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
+    PhelFunction(
         namespace = "debug",
         name = "debug/dbg",
-        doc = """Evaluates an expression and prints it with its result.""",
         signature = "(dbg expr)",
-        description = """Evaluates an expression and prints it with its result""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L46",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(dbg (+ 1 2))",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates an expression and prints it with its result",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Evaluates an expression and prints it with its result.""",
+            example = "(dbg (+ 1 2))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L46",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "debug",
         name = "debug/dotrace",
-        doc = """Wraps a function to print each call and result with indentation.""",
         signature = "(dotrace name f)",
-        description = """Wraps a function to print each call and result with indentation""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L18",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(def add (dotrace \"add\" +))",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Wraps a function to print each call and result with indentation",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Wraps a function to print each call and result with indentation.""",
+            example = "(def add (dotrace \"add\" +))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L18",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "debug",
         name = "debug/reset-trace-state!",
-        doc = """Resets trace counters to initial values.""",
         signature = "(reset-trace-state! )",
-        description = """Resets trace counters to initial values""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L37",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(reset-trace-state!)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Resets trace counters to initial values",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Resets trace counters to initial values.""",
+            example = "(reset-trace-state!)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L37",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "debug",
         name = "debug/set-trace-id-padding!",
-        doc = """Sets the number of digits for trace ID padding.""",
         signature = "(set-trace-id-padding! estimated-id-padding)",
-        description = """Sets the number of digits for trace ID padding""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L9",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(set-trace-id-padding! 3)",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Sets the number of digits for trace ID padding",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Sets the number of digits for trace ID padding.""",
+            example = "(set-trace-id-padding! 3)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L9",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "debug",
         name = "debug/spy",
-        doc = """Evaluates an expression and prints it with an optional label.""",
         signature = "(spy expr)",
-        description = """Evaluates an expression and prints it with an optional label""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L55",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(spy (+ 1 2))",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Evaluates an expression and prints it with an optional label",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Evaluates an expression and prints it with an optional label.""",
+            example = "(spy (+ 1 2))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L55",
+                docs = "",
+            ),
+        ),
     ),
-    DataFunction(
+    PhelFunction(
         namespace = "debug",
         name = "debug/tap",
-        doc = """Prints a value and returns it unchanged. Useful in pipelines.""",
         signature = "(tap value)",
-        description = """Prints a value and returns it unchanged. Useful in pipelines""",
-        githubUrl = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L71",
-        docUrl = "",
-        meta = FunctionMeta(
-            example = "(-> 5 (tap) (* 2))",
-            deprecatedVersion = null,
-            supersededBy = null,
+        completion = CompletionInfo(
+            tailText = "Prints a value and returns it unchanged. Useful in pipelines",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
-        priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        documentation = DocumentationInfo(
+            summary = """Prints a value and returns it unchanged. Useful in pipelines.""",
+            example = "(-> 5 (tap) (* 2))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L71",
+                docs = "",
+            ),
+        ),
     ),
 )
