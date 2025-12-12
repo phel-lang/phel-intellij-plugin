@@ -11,8 +11,8 @@ class PhelCompletionCharFilterTest {
     private val charFilter = PhelCompletionCharFilter()
 
     @Test
-    fun `slash should be recognized as phel identifier character for namespaced symbols`() {
-        val identifierChars = listOf('/', '-', '_', '?', '!', '*', '+', '<', '>', '=', '&', '%', '$')
+    fun `special characters should be recognized as phel identifier characters`() {
+        val identifierChars = listOf('/', ':', '-', '_', '?', '!', '*', '+', '<', '>', '=', '&', '%', '$')
 
         for (c in identifierChars) {
             assertTrue(charFilter.isPhelIdentifierChar(c), "Character '$c' should be a valid Phel identifier character")
@@ -46,7 +46,7 @@ class PhelCompletionCharFilterTest {
         )
 
         for (fn in namespacedFunctions) {
-            val allCharsValid = fn.all { charFilter.isPhelIdentifierChar(it) || it == ':' }
+            val allCharsValid = fn.all { charFilter.isPhelIdentifierChar(it) }
             assertTrue(allCharsValid, "All characters in '$fn' should be valid")
         }
     }

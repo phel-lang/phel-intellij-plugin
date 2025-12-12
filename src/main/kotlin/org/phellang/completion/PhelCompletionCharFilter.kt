@@ -34,6 +34,7 @@ class PhelCompletionCharFilter : CharFilter() {
                 c == '&' ||
                 c == '%' ||
                 c == '$' ||
-                c == '/'
+                c == '/' ||
+                c == ':'
     }
 }
