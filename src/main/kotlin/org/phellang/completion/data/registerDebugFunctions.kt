@@ -9,10 +9,10 @@ internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
         signature = "(dbg expr)",
         completion = CompletionInfo(
             tailText = "Evaluates an expression and prints it with its result",
-            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+            priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
-            summary = """Evaluates an expression and prints it with its result.""",
+            summary = "Evaluates an expression and prints it with its result.",
             example = "(dbg (+ 1 2))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L46",
@@ -29,7 +29,7 @@ internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Wraps a function to print each call and result with indentation.""",
+            summary = "Wraps a function to print each call and result with indentation.",
             example = "(def add (dotrace \"add\" +))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L18",
@@ -40,13 +40,13 @@ internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "debug",
         name = "debug/reset-trace-state!",
-        signature = "(reset-trace-state! )",
+        signature = "(reset-trace-state!)",
         completion = CompletionInfo(
             tailText = "Resets trace counters to initial values",
             priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Resets trace counters to initial values.""",
+            summary = "Resets trace counters to initial values.",
             example = "(reset-trace-state!)",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L37",
@@ -63,7 +63,7 @@ internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Sets the number of digits for trace ID padding.""",
+            summary = "Sets the number of digits for trace ID padding.",
             example = "(set-trace-id-padding! 3)",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L9",
@@ -77,10 +77,10 @@ internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
         signature = "(spy expr)",
         completion = CompletionInfo(
             tailText = "Evaluates an expression and prints it with an optional label",
-            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+            priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
-            summary = """Evaluates an expression and prints it with an optional label.""",
+            summary = "Evaluates an expression and prints it with an optional label.",
             example = "(spy (+ 1 2))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L55",
@@ -93,16 +93,16 @@ internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
         name = "debug/tap",
         signature = "(tap value)",
         completion = CompletionInfo(
-            tailText = "Prints a value and returns it unchanged. Useful in pipelines",
+            tailText = "Prints a value and returns it unchanged",
             priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Prints a value and returns it unchanged. Useful in pipelines.""",
-            example = "(-> 5 (tap) (* 2))",
+            summary = "Prints a value and returns it unchanged. Useful in pipelines.",
+            example = "(-&gt; 5 (tap) (* 2))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L71",
                 docs = "",
             ),
         ),
-    ),
+    )
 )

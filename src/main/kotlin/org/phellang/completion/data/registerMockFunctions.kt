@@ -12,7 +12,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns the number of times the mock was called.""",
+            summary = "Returns the number of times the mock was called.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L106",
@@ -29,7 +29,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns true if the mock was called exactly once.""",
+            summary = "Returns true if the mock was called exactly once.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L125",
@@ -46,7 +46,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns true if the mock was called exactly n times.""",
+            summary = "Returns true if the mock was called exactly n times.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L131",
@@ -63,7 +63,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns true if the mock was called with the exact arguments.""",
+            summary = "Returns true if the mock was called with the exact arguments.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L118",
@@ -80,7 +80,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns true if the mock was called at least once.""",
+            summary = "Returns true if the mock was called at least once.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L112",
@@ -97,7 +97,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns a list of all argument lists the mock was called with.""",
+            summary = "Returns a list of all argument lists the mock was called with.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L97",
@@ -108,13 +108,16 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "mock",
         name = "mock/clear-all-mocks!",
-        signature = "(clear-all-mocks! )",
+        signature = "(clear-all-mocks!)",
         completion = CompletionInfo(
-            tailText = "Clears the entire mock registry.  Useful for cleanup between test suites in long-running processes",
+            tailText = "Clears the entire mock registry",
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Clears the entire mock registry. Useful for cleanup between test suites in long-running processes.""",
+            summary = """
+Clears the entire mock registry.<br />
+  Useful for cleanup between test suites in long-running processes.
+""",
             example = "(clear-all-mocks!) ; All mocks removed from registry",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L168",
@@ -131,7 +134,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns the arguments from the first call.""",
+            summary = "Returns the arguments from the first call.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L149",
@@ -148,7 +151,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns the arguments from the most recent call.""",
+            summary = "Returns the arguments from the most recent call.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L143",
@@ -165,7 +168,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a mock function that returns a fixed value and tracks all calls.""",
+            summary = "Creates a mock function that returns a fixed value and tracks all calls.",
             example = "(def my-mock (mock :return-value))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L29",
@@ -182,7 +185,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a mock function with custom behavior that tracks all calls.""",
+            summary = "Creates a mock function with custom behavior that tracks all calls.",
             example = "(def my-mock (mock-fn (fn [x] (* x 2))))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L40",
@@ -195,11 +198,14 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
         name = "mock/mock-returning",
         signature = "(mock-returning values)",
         completion = CompletionInfo(
-            tailText = "Creates a mock that returns different values for consecutive calls.  After exhausting values, returns the last value",
+            tailText = "Creates a mock that returns different values for consecutive calls",
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a mock that returns different values for consecutive calls. After exhausting values, returns the last value.""",
+            summary = """
+Creates a mock that returns different values for consecutive calls.<br />
+  After exhausting values, returns the last value.
+""",
             example = "(def my-mock (mock-returning [1 2 3]))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L57",
@@ -216,7 +222,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a mock that throws an exception when called.""",
+            summary = "Creates a mock that throws an exception when called.",
             example = "(def my-mock (mock-throwing (php/new \\RuntimeException \"API unavailable\")))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L77",
@@ -233,7 +239,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns true if the function is a mock.""",
+            summary = "Returns true if the function is a mock.",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L92",
@@ -250,7 +256,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns true if the mock was never called.""",
+            summary = "Returns true if the mock was never called.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L137",
@@ -263,11 +269,14 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
         name = "mock/reset-mock!",
         signature = "(reset-mock! mock-fn)",
         completion = CompletionInfo(
-            tailText = "Resets the call history of a mock without removing it from the registry.  The mock can continue to be used and track new calls",
+            tailText = "Resets the call history of a mock without removing it from the registry",
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Resets the call history of a mock without removing it from the registry. The mock can continue to be used and track new calls.""",
+            summary = """
+Resets the call history of a mock without removing it from the registry.<br />
+  The mock can continue to be used and track new calls.
+""",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L155",
@@ -284,7 +293,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Wraps an existing function to track calls while preserving original behavior.""",
+            summary = "Wraps an existing function to track calls while preserving original behavior.",
             example = "(def original-fn (fn [x] (* x 2)))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/mock.phel#L51",
@@ -297,24 +306,17 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
         name = "mock/with-mock-wrapper",
         signature = "(with-mock-wrapper bindings & body)",
         completion = CompletionInfo(
-            tailText = "Like with-mocks but for wrapped mocks (interop scenarios). Automatically resets the underlying mock even when wrapped in an adapter function",
-            priority = PhelCompletionPriority.MOCK_FUNCTIONS,
+            tailText = "Like with-mocks but for wrapped mocks (interop scenarios)",
+            priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Like with-mocks but for wrapped mocks (interop scenarios). Automatically resets the underlying mock even when wrapped in an adapter function.
-<br /></br />
-Usage:
-<br /><pre><code>
-(with-mock-wrapper [fn-symbol underlying-mock wrapper-fn]
-  body...)
-</code></pre><br />
-Multiple wrappers: 
-<br /><pre><code>
-(with-mock-wrapper [service-a mock-a (fn [x] (mock-a (inc x)))
-  service-b mock-b (fn [y] (mock-b (dec y)))]
-  ...)
-</code></pre>
+Like with-mocks but for wrapped mocks (interop scenarios).<br />
+  Automatically resets the underlying mock even when wrapped in an adapter function.<br /><br />
+Usage:<br />
+    ___CODE_BLOCK_0_<strong><br /><br />
+Multiple wrappers:<br />
+    </strong>_CODE_BLOCK_1___
 """,
             example = "(with-mock-wrapper [http mock-http identity] (http \"test\"))",
             links = DocumentationLinks(
@@ -328,31 +330,20 @@ Multiple wrappers:
         name = "mock/with-mocks",
         signature = "(with-mocks bindings & body)",
         completion = CompletionInfo(
-            tailText = "Temporarily replaces functions with mocks using binding. Automatically resets mocks after the body executes",
-            priority = PhelCompletionPriority.MOCK_FUNCTIONS,
+            tailText = "Temporarily replaces functions with mocks using binding",
+            priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Temporarily replaces functions with mocks using binding. Automatically resets mocks after the body executes.
-<br />
-Works with inline mock creation:
-<pre><code>
-(with-mocks [http-get (mock {:status 200})]
-  (http-get)
-  # Mock is automatically reset after this block)
-</code></pre><br />
-Also works with pre-defined mocks:
-<pre><code>
-(let [my-mock (mock :result)]
-  (with-mocks [some-fn my-mock]
-  (some-fn)))
-</code></pre><br />
-If you need to wrap the mock in a function (e.g., to adapt arguments), you'll need to manually reset: 
-<pre><code>
-(with-mocks [some-fn (fn [& args] (my-mock (transform args)))]
-  (some-fn)
-  (reset-mock! my-mock))
-</code></pre>
+Temporarily replaces functions with mocks using binding.<br />
+  Automatically resets mocks after the body executes.<br /><br />
+Works with inline mock creation:<br />
+    ___CODE_BLOCK_0_<strong><br /><br />
+Also works with pre-defined mocks:<br />
+    </strong>_CODE_BLOCK_1_<strong><br /><br />
+If you need to wrap the mock in a function (e.g., to adapt arguments),<br />
+  you'll need to manually reset:<br />
+    </strong>_CODE_BLOCK_2___
 """,
             example = null,
             links = DocumentationLinks(
@@ -360,5 +351,5 @@ If you need to wrap the mock in a function (e.g., to adapt arguments), you'll ne
                 docs = "",
             ),
         ),
-    ),
+    )
 )

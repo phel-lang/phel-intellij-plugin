@@ -8,12 +8,14 @@ internal fun registerBase64Functions(): List<PhelFunction> = listOf(
         name = "base64/decode",
         signature = "(decode s & [strict?])",
         completion = CompletionInfo(
-            tailText = "Decodes a Base64 string. Optional strict? flag validates characters",
+            tailText = "Decodes a Base64 string",
             priority = PhelCompletionPriority.BASE64_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Decodes a Base64 string. Optional <b>strict?</b> flag validates characters.""",
-            example = "(decode \"SGVsbG8=\") ; => \"Hello\"",
+            summary = """
+Decodes a Base64 string. Optional <code>strict?</code> flag validates characters.
+""",
+            example = "(decode \"SGVsbG8=\") ; =&gt; \"Hello\"",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/base64.phel#L10",
                 docs = "",
@@ -25,12 +27,12 @@ internal fun registerBase64Functions(): List<PhelFunction> = listOf(
         name = "base64/decode-url",
         signature = "(decode-url s & [strict?])",
         completion = CompletionInfo(
-            tailText = "Decodes a URL-safe Base64 string. Adds padding automatically",
+            tailText = "Decodes a URL-safe Base64 string",
             priority = PhelCompletionPriority.BASE64_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Decodes a URL-safe Base64 string. Adds padding automatically.""",
-            example = "(decode-url \"SGVsbG8\") ; => \"Hello\"",
+            summary = "Decodes a URL-safe Base64 string. Adds padding automatically.",
+            example = "(decode-url \"SGVsbG8\") ; =&gt; \"Hello\"",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/base64.phel#L25",
                 docs = "",
@@ -46,8 +48,8 @@ internal fun registerBase64Functions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.BASE64_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Encodes a string to Base64.""",
-            example = "(encode \"Hello\") ; => \"SGVsbG8=\"",
+            summary = "Encodes a string to Base64.",
+            example = "(encode \"Hello\") ; =&gt; \"SGVsbG8=\"",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/base64.phel#L4",
                 docs = "",
@@ -63,12 +65,12 @@ internal fun registerBase64Functions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.BASE64_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Encodes a string to URL-safe Base64 (no padding).""",
-            example = "(encode-url \"Hello\") ; => \"SGVsbG8\"",
+            summary = "Encodes a string to URL-safe Base64 (no padding).",
+            example = "(encode-url \"Hello\") ; =&gt; \"SGVsbG8\"",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/base64.phel#L16",
                 docs = "",
             ),
         ),
-    ),
+    )
 )

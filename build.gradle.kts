@@ -63,6 +63,7 @@ dependencies {
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.1")
     testImplementation("org.mockito:mockito-core:5.21.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.21.0")
+    implementation("com.google.code.gson:gson:2.11.0")
 }
 
 configurations.all {
@@ -101,6 +102,18 @@ val generatePhelParser = tasks.register<GenerateParserTask>("generatePhelParser"
         "-Dfile.encoding=UTF-8",
         "-Djava.awt.headless=true"
     )
+}
+
+// Task to update PhelFunctionRegistry from the official Phel API
+val updatePhelRegistry = tasks.register<JavaExec>("updatePhelRegistry") {
+    group = "tools"
+    description = "Fetches Phel API from phel-lang.org and regenerates PhelFunctionRegistry files"
+    mainClass.set("org.phellang.tools.ApiGeneratorKt")
+    classpath = sourceSets["main"].runtimeClasspath
+    workingDir = projectDir
+
+    // Ensure the project is compiled first
+    dependsOn("classes")
 }
 
 tasks {
