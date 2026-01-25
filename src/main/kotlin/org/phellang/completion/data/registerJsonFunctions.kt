@@ -12,8 +12,8 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.JSON_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Decodes a JSON string to a Phel value.""",
-            example = "(decode \"{\\\"name\\\":\\\"Alice\\\"}\") ; => {:name \"Alice\"}",
+            summary = "Decodes a JSON string to a Phel value.",
+            example = "(decode \"{\\\"name\\\":\\\"Alice\\\"}\") ; =&gt; {:name \"Alice\"}",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/json.phel#L55",
                 docs = "",
@@ -29,8 +29,8 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.JSON_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Converts a JSON value to Phel format.""",
-            example = "(decode-value [1 2 3]) ; => [1 2 3]",
+            summary = "Converts a JSON value to Phel format.",
+            example = "(decode-value [1 2 3]) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/json.phel#L43",
                 docs = "",
@@ -46,8 +46,8 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.JSON_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Encodes a Phel value to a JSON string.""",
-            example = "(encode {:name \"Alice\"}) ; => \"{\\\"name\\\":\\\"Alice\\\"}\"",
+            summary = "Encodes a Phel value to a JSON string.",
+            example = "(encode {:name \"Alice\"}) ; =&gt; \"{\\\"name\\\":\\\"Alice\\\"}\"",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/json.phel#L31",
                 docs = "",
@@ -63,8 +63,8 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.JSON_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Converts a Phel value to JSON-compatible format.""",
-            example = "(encode-value :name) ; => \"name\"",
+            summary = "Converts a Phel value to JSON-compatible format.",
+            example = "(encode-value :name) ; =&gt; \"name\"",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/json.phel#L20",
                 docs = "",
@@ -80,12 +80,12 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Checks if a value can be used as a JSON key.""",
-            example = "(valid-key? :name) ; => true",
+            summary = "Checks if a value can be used as a JSON key.",
+            example = "(valid-key? :name) ; =&gt; true",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/json.phel#L4",
                 docs = "",
             ),
         ),
-    ),
+    )
 )

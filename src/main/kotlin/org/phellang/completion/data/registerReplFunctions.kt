@@ -12,7 +12,7 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.REPL_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """""",
+            summary = "",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L11",
@@ -29,8 +29,8 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.REPL_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Compiles a Phel expression string to PHP code.""",
-            example = "(compile-str \"(+ 1 2)\") ; => \"(1 + 2)\"",
+            summary = "Compiles a Phel expression string to PHP code.",
+            example = "(compile-str \"(+ 1 2)\") ; =&gt; \"(1 + 2)\"",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L135",
                 docs = "",
@@ -43,10 +43,10 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
         signature = "(doc sym)",
         completion = CompletionInfo(
             tailText = "Prints the documentation for the given symbol",
-            priority = PhelCompletionPriority.REPL_FUNCTIONS,
+            priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
-            summary = """Prints the documentation for the given symbol.""",
+            summary = "Prints the documentation for the given symbol.",
             example = "(doc map)",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L53",
@@ -57,14 +57,14 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "repl",
         name = "repl/loaded-namespaces",
-        signature = "(loaded-namespaces )",
+        signature = "(loaded-namespaces)",
         completion = CompletionInfo(
             tailText = "Returns all namespaces currently loaded in the REPL",
             priority = PhelCompletionPriority.REPL_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Returns all namespaces currently loaded in the REPL.""",
-            example = "(loaded-namespaces) ; => [\"phel\\core\" \"phel\repl\"]",
+            summary = "Returns all namespaces currently loaded in the REPL.",
+            example = "(loaded-namespaces) ; =&gt; [\"phel\\core\" \"phel\\repl\"]",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L18",
                 docs = "",
@@ -80,7 +80,7 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.REPL_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Prints arguments with colored output.""",
+            summary = "Prints arguments with colored output.",
             example = "(print-colorful [1 2 3])",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L120",
@@ -97,7 +97,7 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.REPL_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Prints arguments with colored output followed by a newline.""",
+            summary = "Prints arguments with colored output followed by a newline.",
             example = "(println-colorful [1 2 3])",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L127",
@@ -111,11 +111,11 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
         signature = "(require sym & args)",
         completion = CompletionInfo(
             tailText = "Requires a Phel module into the environment",
-            priority = PhelCompletionPriority.REPL_FUNCTIONS,
+            priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
-            summary = """Requires a Phel module into the environment.""",
-            example = "(require phel\\http :as http :refer [request]) ; => phel\\http",
+            summary = "Requires a Phel module into the environment.",
+            example = "(require phel\\http :as http :refer [request]) ; =&gt; phel\\http",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L83",
                 docs = "",
@@ -127,12 +127,14 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
         name = "repl/resolve",
         signature = "(resolve sym)",
         completion = CompletionInfo(
-            tailText = "Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved",
+            tailText = "Resolves the given symbol in the current environment and returns a resolved Symbol with the absol...",
             priority = PhelCompletionPriority.REPL_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved.""",
-            example = "(resolve 'map) ; => phel\\core/map",
+            summary = """
+Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved.
+""",
+            example = "(resolve 'map) ; =&gt; phel\\core/map",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L33",
                 docs = "",
@@ -145,15 +147,15 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
         signature = "(use sym & args)",
         completion = CompletionInfo(
             tailText = "Adds a use statement to the environment",
-            priority = PhelCompletionPriority.REPL_FUNCTIONS,
+            priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
-            summary = """Adds a use statement to the environment.""",
-            example = "(use DateTime :as DT) ; => DateTime",
+            summary = "Adds a use statement to the environment.",
+            example = "(use DateTime :as DT) ; =&gt; DateTime",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L97",
                 docs = "",
             ),
         ),
-    ),
+    )
 )
