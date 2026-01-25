@@ -8,6 +8,22 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 object PhelFunctionRegistry {
 
     private val functions = mutableMapOf<Namespace, List<PhelFunction>>()
+    
+    // Cache of deprecated function names for fast lookup
+    private val deprecatedFunctionNames: Set<String> by lazy {
+        functions.values.flatten()
+            .filter { it.isDeprecated }
+            .flatMap { func ->
+                // Store both full name and short name for flexible lookup
+                val shortName = func.name.substringAfter("/")
+                if (shortName != func.name) {
+                    listOf(func.name, shortName)
+                } else {
+                    listOf(func.name)
+                }
+            }
+            .toSet()
+    }
 
     init {
         functions[Namespace.BASE64] = registerBase64Functions()
@@ -37,5 +53,16 @@ object PhelFunctionRegistry {
 
     fun getAllFunctions(): List<PhelFunction> {
         return functions.values.flatten()
+    }
+
+    fun isDeprecated(functionName: String): Boolean {
+        // Check exact match first
+        if (functionName in deprecatedFunctionNames) {
+            return true
+        }
+        
+        // If the input has a namespace prefix (e.g., "core/put"), try short name
+        val shortName = functionName.substringAfter("/")
+        return shortName in deprecatedFunctionNames
     }
 }

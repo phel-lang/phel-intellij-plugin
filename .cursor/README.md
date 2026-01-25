@@ -48,7 +48,6 @@ The `.cursor/mcp.json` should look like this:
 - **Scoping**: appliesTo ensures rules apply only to relevant files (`*.phel`, `*.java`, `*.kt`, `build.gradle.kts`, etc.)
 - **Best Practice**: Do not duplicate documentation inline; reference phel-docs.md and fetch pages with Playwright MCP
 
-
 ## Master Template Prompt
 
 Use this template for any Phel-related task in Cursor:

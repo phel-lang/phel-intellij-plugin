@@ -1,6 +1,7 @@
 package org.phellang.annotator.infrastructure
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
+import com.intellij.openapi.editor.colors.CodeInsightColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 
 object PhelAnnotationConstants {
@@ -79,6 +80,13 @@ object PhelAnnotationConstants {
     val VARIADIC_PARAMETER: TextAttributesKey by lazy {
         TextAttributesKey.createTextAttributesKey(
             "PHEL_VARIADIC_PARAMETER", DefaultLanguageHighlighterColors.STATIC_FIELD
+        )
+    }
+
+    /** Deprecated symbols (strikethrough) */
+    val DEPRECATED_SYMBOL: TextAttributesKey by lazy {
+        TextAttributesKey.createTextAttributesKey(
+            "PHEL_DEPRECATED_SYMBOL", CodeInsightColors.DEPRECATED_ATTRIBUTES
         )
     }
 }
