@@ -314,9 +314,16 @@ Resets the call history of a mock without removing it from the registry.<br />
 Like with-mocks but for wrapped mocks (interop scenarios).<br />
   Automatically resets the underlying mock even when wrapped in an adapter function.<br /><br />
 Usage:<br />
-    ___CODE_BLOCK_0_<strong><br /><br />
+    <pre><code>
+    (with-mock-wrapper [fn-symbol underlying-mock wrapper-fn]
+      body...)
+</code></pre><br /><br />
 Multiple wrappers:<br />
-    </strong>_CODE_BLOCK_1___
+    <pre><code>
+    (with-mock-wrapper [service-a mock-a (fn [x] (mock-a (inc x)))
+                        service-b mock-b (fn [y] (mock-b (dec y)))]
+      ...)
+</code></pre>
 """,
             example = "(with-mock-wrapper [http mock-http identity] (http \"test\"))",
             links = DocumentationLinks(
@@ -338,12 +345,24 @@ Multiple wrappers:<br />
 Temporarily replaces functions with mocks using binding.<br />
   Automatically resets mocks after the body executes.<br /><br />
 Works with inline mock creation:<br />
-    ___CODE_BLOCK_0_<strong><br /><br />
+    <pre><code>
+    (with-mocks [http-get (mock {:status 200})]
+      (http-get)
+      # Mock is automatically reset after this block)
+</code></pre><br /><br />
 Also works with pre-defined mocks:<br />
-    </strong>_CODE_BLOCK_1_<strong><br /><br />
+    <pre><code>
+    (let [my-mock (mock :result)]
+      (with-mocks [some-fn my-mock]
+        (some-fn)))
+</code></pre><br /><br />
 If you need to wrap the mock in a function (e.g., to adapt arguments),<br />
   you'll need to manually reset:<br />
-    </strong>_CODE_BLOCK_2___
+    <pre><code>
+    (with-mocks [some-fn (fn [& args] (my-mock (transform args)))]
+      (some-fn)
+      (reset-mock! my-mock))
+</code></pre>
 """,
             example = null,
             links = DocumentationLinks(

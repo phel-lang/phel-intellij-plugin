@@ -254,7 +254,7 @@ object PriorityRules {
      * Determines the appropriate completion priority for a function.
      *
      * Priority is determined in this order:
-     * 1. Deprecated functions get lowest priority
+     * 1. Deprecated functions get the lowest priority
      * 2. Macros get MACROS priority
      * 3. Pattern-based detection (arithmetic, special forms, control flow, etc.)
      * 4. Namespace-based fallback
