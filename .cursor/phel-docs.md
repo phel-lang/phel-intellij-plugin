@@ -9,9 +9,14 @@ priority: high
 
 Always use the Playwright MCP server to load the full content of these pages when context is needed. Do not summarize them from search results.
 
+### API Reference
+
+The complete API is available in JSON format: https://phel-lang.org/api.json
+
+This JSON is used by the API generator tool (`./gradlew updatePhelRegistry`) to automatically update the plugin's function registry. The tool fetches this JSON and regenerates all `register*Functions.kt` files in `src/main/kotlin/org/phellang/completion/data/`.
+
 ### Core Docs
 
-- [API](https://phel-lang.org/documentation/api/)
 - [Getting Started](https://raw.githubusercontent.com/phel-lang/phel-lang.org/master/content/documentation/getting-started.md)
 - [Basic Types](https://raw.githubusercontent.com/phel-lang/phel-lang.org/master/content/documentation/basic-types.md)
 - [Arithmetic](https://raw.githubusercontent.com/phel-lang/phel-lang.org/master/content/documentation/arithmetic.md)
@@ -26,6 +31,9 @@ Always use the Playwright MCP server to load the full content of these pages whe
 - [Interfaces](https://raw.githubusercontent.com/phel-lang/phel-lang.org/master/content/documentation/interfaces.md)
 - [PHP Interop](https://raw.githubusercontent.com/phel-lang/phel-lang.org/master/content/documentation/php-interop.md)
 - [Debug](https://raw.githubusercontent.com/phel-lang/phel-lang.org/refs/heads/master/content/documentation/debug.md)
+- [Phel Debug Helpers](https://raw.githubusercontent.com/phel-lang/phel-lang.org/refs/heads/master/content/documentation/debug/phel-helpers.md)
+- [PHP Debugging Tools](https://raw.githubusercontent.com/phel-lang/phel-lang.org/refs/heads/master/content/documentation/debug/php-tools.md)
+- [XDebug Setup](https://raw.githubusercontent.com/phel-lang/phel-lang.org/refs/heads/master/content/documentation/debug/xdebug-setup.md)
 
 ### Advanced
 

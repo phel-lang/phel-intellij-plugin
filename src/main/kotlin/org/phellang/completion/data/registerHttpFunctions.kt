@@ -9,11 +9,12 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
         signature = "",
         completion = CompletionInfo(
             tailText = "",
-            priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """""",
+            summary = "",
             example = null,
+            deprecation = DeprecationInfo(version = "Use response-from-map"),
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L345",
                 docs = "",
@@ -26,11 +27,12 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
         signature = "",
         completion = CompletionInfo(
             tailText = "",
-            priority = PhelCompletionPriority.HTTP_FUNCTIONS,
+            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """""",
+            summary = "",
             example = null,
+            deprecation = DeprecationInfo(version = "Use response-from-string"),
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L353",
                 docs = "",
@@ -46,8 +48,8 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Emits the response by sending headers and outputting the body.""",
-            example = "(emit-response (response-from-string \"Hello World\")) ; => nil",
+            summary = "Emits the response by sending headers and outputting the body.",
+            example = "(emit-response (response-from-string \"Hello World\")) ; =&gt; nil",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L394",
                 docs = "",
@@ -59,12 +61,14 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
         name = "http/files-from-globals",
         signature = "(files-from-globals & [files])",
         completion = CompletionInfo(
-            tailText = "Extracts the files from ${'$'}_FILES and normalizes them to a map of \"uploaded-file\"",
+            tailText = "Extracts the files from \$_FILES and normalizes them to a map of \"uploaded-file\"",
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Extracts the files from <b>${'$'}_FILES</b> and normalizes them to a map of "uploaded-file".""",
-            example = "(files-from-globals) ; => {:avatar (uploaded-file \"/tmp/phpYzdqkD\" 1024 0 \"photo.jpg\" \"image/jpeg\")}",
+            summary = """
+Extracts the files from <code>${'$'}_FILES</code> and normalizes them to a map of "uploaded-file".
+""",
+            example = "(files-from-globals) ; =&gt; {:avatar (uploaded-file \"/tmp/phpYzdqkD\" 1024 0 \"photo.jpg\" \"image/jpeg\")}",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L145",
                 docs = "",
@@ -76,12 +80,14 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
         name = "http/headers-from-server",
         signature = "(headers-from-server & [server])",
         completion = CompletionInfo(
-            tailText = "Extracts all headers from the <b>${'$'}_SERVER</b> variable",
+            tailText = "Extracts all headers from the \$_SERVER variable",
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Extracts all headers from the <b>${'$'}_SERVER</b> variable.""",
-            example = "(headers-from-server) ; => {:host \"example.com\" :content-type \"application/json\"}",
+            summary = """
+Extracts all headers from the <code>${'$'}_SERVER</code> variable.
+""",
+            example = "(headers-from-server) ; =&gt; {:host \"example.com\" :content-type \"application/json\"}",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L155",
                 docs = "",
@@ -97,7 +103,7 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a new request struct.""",
+            summary = "Creates a new request struct.",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L180",
@@ -108,14 +114,16 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "http",
         name = "http/request-from-globals",
-        signature = "(request-from-globals )",
+        signature = "(request-from-globals)",
         completion = CompletionInfo(
-            tailText = "Extracts a request from ${'$'}_SERVER, ${'$'}_GET, ${'$'}_POST, ${'$'}_COOKIE and ${'$'}_FILES",
+            tailText = "Extracts a request from \$_SERVER, \$_GET, \$_POST, \$_COOKIE and \$_FILES",
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Extracts a request from <b>${'$'}_SERVER</b>, <b>${'$'}_GET</b>, <b>${'$'}_POST</b>, <b>${'$'}_COOKIE</b> and <b>${'$'}_FILES</b>.""",
-            example = "(request-from-globals) ; => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
+            summary = """
+Extracts a request from <code>${'$'}_SERVER</code>, <code>${'$'}_GET</code>, <code>${'$'}_POST</code>, <code>${'$'}_COOKIE</code> and <code>${'$'}_FILES</code>.
+""",
+            example = "(request-from-globals) ; =&gt; (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L230",
                 docs = "",
@@ -131,8 +139,8 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Extracts a request from args.""",
-            example = "(request-from-globals-args php/${'$'}_SERVER php/${'$'}_GET php/${'$'}_POST php/${'$'}_COOKIE php/${'$'}_FILES) ; => (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
+            summary = "Extracts a request from args.",
+            example = "(request-from-globals-args php/\$_SERVER php/\$_GET php/\$_POST php/\$_COOKIE php/\$_FILES) ; =&gt; (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L207",
                 docs = "",
@@ -148,8 +156,10 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a request struct from a map with optional keys :method, :uri, :headers, etc.""",
-            example = "(request-from-map {:method \"POST\" :uri \"https://api.example.com/users\"}) ; => (request \"POST\" (uri ...) {} nil {} {} {} [] \"1.1\" {})",
+            summary = """
+Creates a request struct from a map with optional keys :method, :uri, :headers, etc.
+""",
+            example = "(request-from-map {:method \"POST\" :uri \"https://api.example.com/users\"}) ; =&gt; (request \"POST\" (uri ...) {} nil {} {} {} [] \"1.1\" {})",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L236",
                 docs = "",
@@ -165,7 +175,9 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Checks if <b>x</b> is an instance of the request struct.""",
+            summary = """
+Checks if <code>x</code> is an instance of the request struct.
+""",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L180",
@@ -182,7 +194,7 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a new response struct.""",
+            summary = "Creates a new response struct.",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L269",
@@ -195,12 +207,14 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
         name = "http/response-from-map",
         signature = "(response-from-map {:status status, :headers headers, :body body, :version version, :reason reason})",
         completion = CompletionInfo(
-            tailText = "Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason",
+            tailText = "Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :...",
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason.""",
-            example = "(response-from-map {:status 200 :body \"Hello World\"}) ; => (response 200 {} \"Hello World\" \"1.1\" \"OK\")",
+            summary = """
+Creates a response struct from a map with optional keys :status, :headers, :body, :version, and :reason.
+""",
+            example = "(response-from-map {:status 200 :body \"Hello World\"}) ; =&gt; (response 200 {} \"Hello World\" \"1.1\" \"OK\")",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L334",
                 docs = "",
@@ -216,8 +230,8 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Create a response from a string.""",
-            example = "(response-from-string \"Hello World\") ; => (response 200 {} \"Hello World\" \"1.1\" \"OK\")",
+            summary = "Create a response from a string.",
+            example = "(response-from-string \"Hello World\") ; =&gt; (response 200 {} \"Hello World\" \"1.1\" \"OK\")",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L347",
                 docs = "",
@@ -233,7 +247,9 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Checks if <b>x</b> is an instance of the response struct.""",
+            summary = """
+Checks if <code>x</code> is an instance of the response struct.
+""",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L269",
@@ -250,7 +266,7 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a new uploaded-file struct.""",
+            summary = "Creates a new uploaded-file struct.",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L105",
@@ -267,7 +283,9 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Checks if <b>x</b> is an instance of the uploaded-file struct.""",
+            summary = """
+Checks if <code>x</code> is an instance of the uploaded-file struct.
+""",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L105",
@@ -284,7 +302,7 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Creates a new uri struct.""",
+            summary = "Creates a new uri struct.",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L9",
@@ -297,12 +315,14 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
         name = "http/uri-from-globals",
         signature = "(uri-from-globals & [server])",
         completion = CompletionInfo(
-            tailText = "Extracts the URI from the ${'$'}_SERVER variable",
+            tailText = "Extracts the URI from the \$_SERVER variable",
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Extracts the URI from the <b>${'$'}_SERVER</b> variable.""",
-            example = "(uri-from-globals) ; => (uri \"https\" nil \"example.com\" 443 \"/path\" \"foo=bar\" nil)",
+            summary = """
+Extracts the URI from the <code>${'$'}_SERVER</code> variable.
+""",
+            example = "(uri-from-globals) ; =&gt; (uri \"https\" nil \"example.com\" 443 \"/path\" \"foo=bar\" nil)",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L53",
                 docs = "",
@@ -318,8 +338,8 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.HTTP_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Create a uri struct from a string.""",
-            example = "(uri-from-string \"https://example.com/path?foo=bar\") ; => (uri \"https\" nil \"example.com\" nil \"/path\" \"foo=bar\" nil)",
+            summary = "Create a uri struct from a string.",
+            example = "(uri-from-string \"https://example.com/path?foo=bar\") ; =&gt; (uri \"https\" nil \"example.com\" nil \"/path\" \"foo=bar\" nil)",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L77",
                 docs = "",
@@ -335,12 +355,14 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """Checks if <b>x</b> is an instance of the uri struct.""",
+            summary = """
+Checks if <code>x</code> is an instance of the uri struct.
+""",
             example = null,
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/http.phel#L9",
                 docs = "",
             ),
         ),
-    ),
+    )
 )
