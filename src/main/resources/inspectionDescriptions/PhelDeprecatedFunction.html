@@ -1,0 +1,27 @@
+<html>
+<body>
+<p>Reports usage of deprecated Phel functions.</p>
+
+<p>When a Phel function has been deprecated, this inspection highlights its usage and suggests
+replacing it with the recommended alternative.</p>
+
+<h3>Features:</h3>
+<ul>
+    <li>Detects deprecated functions from the Phel standard library</li>
+    <li>Shows deprecation version and replacement suggestion in the warning message</li>
+    <li>Provides a quick-fix to automatically replace deprecated functions</li>
+    <li>Automatically adds required namespace imports when the replacement is from a different namespace</li>
+</ul>
+
+<h3>Example:</h3>
+<pre><code>
+;; Before (deprecated)
+(str-contains? "hello" "ell")
+
+;; After (using quick-fix)
+(str/contains? "hello" "ell")
+</code></pre>
+
+<p>The quick-fix will also add <code>(:require phel\str)</code> to your namespace declaration if needed.</p>
+</body>
+</html>

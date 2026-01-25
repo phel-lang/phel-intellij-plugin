@@ -82,6 +82,14 @@
         <enterHandlerDelegate
                 implementation="org.phellang.editor.PhelEnterHandlerDelegate"/>
         <internalFileTemplate name="Phel File.phel"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelDeprecatedFunction"
+                displayName="Deprecated function usage"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="org.phellang.inspection.deprecated.PhelDeprecatedFunctionInspection"/>
     </extensions>
 
     <actions>

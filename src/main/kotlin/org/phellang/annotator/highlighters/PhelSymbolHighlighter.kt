@@ -1,6 +1,7 @@
 package org.phellang.annotator.highlighters
 
 import com.intellij.lang.annotation.AnnotationHolder
+import org.phellang.annotator.infrastructure.PhelAnnotationConstants.DEPRECATED_SYMBOL
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_PARAMETER
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_CALL
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_NAME
@@ -8,6 +9,7 @@ import org.phellang.annotator.infrastructure.PhelAnnotationConstants.NAMESPACE_S
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.PHP_INTEROP
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.REGULAR_SYMBOL
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.VARIADIC_PARAMETER
+import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.completion.infrastructure.PhelCompletionPriority
@@ -18,6 +20,12 @@ object PhelSymbolHighlighter {
 
     fun annotateSymbol(symbol: PhelSymbol, text: String, holder: AnnotationHolder) {
         if (!PhelAnnotationUtils.isValidText(text)) return
+
+        // Check for deprecated functions first - applies strikethrough
+        if (PhelFunctionRegistry.isDeprecated(text)) {
+            PhelAnnotationUtils.createAnnotation(holder, symbol, DEPRECATED_SYMBOL)
+            return
+        }
 
         // Variadic parameter marker (&) - check before other parameter checks
         if (text == "&") {

@@ -34,13 +34,6 @@ data class DocumentationInfo(
             append(code)
             append("</code></pre>")
         }
-
-        deprecation?.let { info ->
-            append("<br /><b>Deprecated since ${info.version}:</b> ")
-            info.replacement?.let { replacement ->
-                append("Use <code>$replacement</code> instead.")
-            } ?: append("This function is deprecated.")
-        }
         append("<br />")
     }
 }
@@ -63,5 +56,8 @@ data class PhelFunction(
     val completion: CompletionInfo,
     val documentation: DocumentationInfo,
 ) {
+    val isDeprecated: Boolean
+        get() = documentation.deprecation != null
+
     fun toHtmlDocumentation(): String = documentation.toHtml(signature)
 }
