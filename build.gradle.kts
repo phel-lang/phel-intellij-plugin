@@ -2,7 +2,7 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 group = "org.phellang"
-version = "0.2.3"
+version = "0.2.4"
 
 plugins {
     id("java")
@@ -12,7 +12,7 @@ plugins {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "8.14"
+    gradleVersion = "9.3.0"
 }
 
 System.setProperty("org.gradle.internal.deprecation.disable", "true")
@@ -47,7 +47,7 @@ sourceSets {
 // Configure IntelliJ Platform Dependencies
 dependencies {
     intellijPlatform {
-        intellijIdea("2024.3.1") {
+        intellijIdea("2025.1") {
             type.set(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity)
         }
         bundledPlugin("com.intellij.java")
@@ -56,13 +56,14 @@ dependencies {
         zipSigner()
     }
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.1")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.2")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.2")
     testImplementation("org.mockito:mockito-core:5.21.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.21.0")
+    implementation("com.google.code.gson:gson:2.13.2")
 }
 
 configurations.all {
@@ -103,6 +104,18 @@ val generatePhelParser = tasks.register<GenerateParserTask>("generatePhelParser"
     )
 }
 
+// Task to update PhelFunctionRegistry from the official Phel API
+val updatePhelRegistry = tasks.register<JavaExec>("updatePhelRegistry") {
+    group = "tools"
+    description = "Fetches Phel API from phel-lang.org and regenerates PhelFunctionRegistry files"
+    mainClass.set("org.phellang.tools.ApiGeneratorKt")
+    classpath = sourceSets["main"].runtimeClasspath
+    workingDir = projectDir
+
+    // Ensure the project is compiled first
+    dependsOn("classes")
+}
+
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
@@ -114,8 +127,8 @@ tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         compilerOptions {
             jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-            languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
-            apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
+            languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
+            apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
         }
         dependsOn(generatePhelLexer, generatePhelParser)
     }
@@ -158,14 +171,13 @@ tasks {
             ides {
                 create("IC", "2024.2.5")
                 create("IC", "2024.3.1")
-                // 2025.3 not yet available in Maven repos (announced but not published)
-                // create("IC", "2025.3")
+                create("IC", "2025.1")
             }
         }
 
         patchPluginXml {
             sinceBuild.set("242")
-            untilBuild.set("253.*")
+            untilBuild.set("261.*")
         }
 
         signPlugin {

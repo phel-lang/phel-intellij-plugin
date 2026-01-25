@@ -14,11 +14,12 @@ priority: medium
 
 ## Gradle Tasks
 
+- `./gradlew runIde` → launch IDE with plugin for testing
 - `./gradlew generatePhelLexer` → regenerate lexer from `.flex` files
 - `./gradlew generatePhelParser` → regenerate parser from `.bnf` files
 - `./gradlew compileJava compileKotlin` → compile Java and Kotlin sources
-- `./gradlew runIde` → launch IDE with plugin for testing
 - `./gradlew build` → perform full build (may fail if IDE is running)
+- `./gradlew updatePhelRegistry` → fetch Phel API from https://phel-lang.org/api.json and regenerate all `register*Functions.kt` files
 
 > When implementing tests, reference official Phel docs (`phel-docs.md`) for language features and syntax.
 
