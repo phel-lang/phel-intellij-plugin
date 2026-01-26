@@ -3,6 +3,7 @@ package org.phellang.unit.documentation.resolvers
 import com.intellij.psi.PsiElement
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.phellang.documentation.resolvers.PhelSymbolDocumentationResolver
@@ -125,5 +126,83 @@ class PhelSymbolDocumentationResolverTest {
         assertEquals(resolver1.javaClass.name, resolver2.javaClass.name)
         assertEquals(resolver1.javaClass.packageName, resolver2.javaClass.packageName)
         assertEquals(resolver1.javaClass.simpleName, resolver2.javaClass.simpleName)
+    }
+
+    @Nested
+    inner class ApiDocumentationLookup {
+
+        @Test
+        fun `should return API documentation for known core functions`() {
+            val symbol = mock(PhelSymbol::class.java)
+            `when`(symbol.text).thenReturn("core/map")
+
+            val result = resolver.resolveDocumentation(symbol, symbol)
+
+            assertNotNull(result)
+            assertTrue(result!!.contains("core/map"))
+        }
+
+        @Test
+        fun `should return API documentation for known str functions`() {
+            val symbol = mock(PhelSymbol::class.java)
+            `when`(symbol.text).thenReturn("str/join")
+
+            val result = resolver.resolveDocumentation(symbol, symbol)
+
+            assertNotNull(result)
+            assertTrue(result!!.contains("str/join"))
+        }
+
+        @Test
+        fun `should return basic documentation for qualified symbol not in API`() {
+            val symbol = mock(PhelSymbol::class.java)
+            `when`(symbol.text).thenReturn("unknown/function")
+
+            val result = resolver.resolveDocumentation(symbol, symbol)
+
+            assertNotNull(result)
+            assertTrue(result!!.contains("unknown/function"))
+        }
+
+        @Test
+        fun `should handle symbol with qualifier that is not an alias`() {
+            // When the qualifier is already a namespace (not an alias), we should still find docs
+            val symbol = mock(PhelSymbol::class.java)
+            `when`(symbol.text).thenReturn("str/replace")
+
+            val result = resolver.resolveDocumentation(symbol, symbol)
+
+            assertNotNull(result)
+            assertTrue(result!!.contains("str/replace"))
+        }
+    }
+
+    @Nested
+    inner class AliasResolution {
+
+        @Test
+        fun `should fall back to basic documentation when alias cannot be resolved`() {
+            // When we have a qualified symbol with an unknown alias and no PSI file context
+            val symbol = mock(PhelSymbol::class.java)
+            `when`(symbol.text).thenReturn("s/replace")
+            `when`(symbol.containingFile).thenReturn(null)
+
+            val result = resolver.resolveDocumentation(symbol, symbol)
+
+            // Should still return basic documentation, not crash
+            assertNotNull(result)
+            assertTrue(result!!.contains("s/replace"))
+        }
+
+        @Test
+        fun `should handle symbol without qualifier gracefully`() {
+            val symbol = mock(PhelSymbol::class.java)
+            `when`(symbol.text).thenReturn("my-function")
+
+            val result = resolver.resolveDocumentation(symbol, symbol)
+
+            assertNotNull(result)
+            assertTrue(result!!.contains("my-function"))
+        }
     }
 }
