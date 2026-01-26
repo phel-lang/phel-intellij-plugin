@@ -58,4 +58,26 @@ class PhelNamespaceUtilsTest {
             assertFalse(PhelNamespaceUtils.isCoreNamespace("json"))
         }
     }
+
+    @Nested
+    inner class ShortNamespaceExtraction {
+
+        @Test
+        fun `substringAfterLast extracts short namespace from phel namespace`() {
+            assertEquals("str", "phel\\str".substringAfterLast("\\"))
+            assertEquals("http", "phel\\http".substringAfterLast("\\"))
+            assertEquals("json", "phel\\json".substringAfterLast("\\"))
+        }
+
+        @Test
+        fun `substringAfterLast handles namespace without prefix`() {
+            assertEquals("str", "str".substringAfterLast("\\"))
+            assertEquals("core", "core".substringAfterLast("\\"))
+        }
+
+        @Test
+        fun `substringAfterLast handles nested namespaces`() {
+            assertEquals("nested", "phel\\some\\deeply\\nested".substringAfterLast("\\"))
+        }
+    }
 }

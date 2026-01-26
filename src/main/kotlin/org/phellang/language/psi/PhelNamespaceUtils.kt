@@ -1,6 +1,5 @@
 package org.phellang.language.psi
 
-import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
 
@@ -20,12 +19,12 @@ object PhelNamespaceUtils {
             // Get child forms properly, skipping whitespace and parentheses
             val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
             if (forms.isNullOrEmpty()) return@firstOrNull false
-            
+
             // First form should be "ns" symbol
             // It could be the symbol itself OR contain a symbol (if wrapped)
             val firstForm = forms[0]
-            val firstSymbol = if (firstForm is PhelSymbol) firstForm 
-                              else PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
+            val firstSymbol = if (firstForm is PhelSymbol) firstForm
+            else PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
             firstSymbol?.text == "ns"
         }
     }
@@ -52,14 +51,66 @@ object PhelNamespaceUtils {
             // Get child forms properly, skipping whitespace and parentheses
             val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
             if (forms.isNullOrEmpty()) return@filter false
-            
+
             // First form should be the :require keyword
             // It could be the keyword itself OR contain a keyword (if wrapped)
             val firstForm = forms[0]
-            val firstKeyword = if (firstForm is PhelKeyword) firstForm
-                               else PsiTreeUtil.findChildOfType(firstForm, PhelKeyword::class.java)
+            val firstKeyword = firstForm as? PhelKeyword
+                ?: PsiTreeUtil.findChildOfType(firstForm, PhelKeyword::class.java)
             firstKeyword?.text == ":require"
         }
+    }
+
+    fun extractAliasMap(file: PhelFile): Map<String, String> {
+        val aliasMap = mutableMapOf<String, String>()
+
+        val nsDeclaration = findNamespaceDeclaration(file) ?: return aliasMap
+        val requireForms = findRequireForms(nsDeclaration)
+
+        for (requireForm in requireForms) {
+            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
+
+            // Skip the :require keyword (first form)
+            // Look for pattern: namespace :as alias
+            var i = 1
+            while (i < forms.size) {
+                val form = forms[i]
+
+                // Get the namespace symbol
+                val namespaceSymbol = if (form is PhelSymbol) form
+                else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+
+                if (namespaceSymbol != null) {
+                    val namespace = namespaceSymbol.text
+
+                    // Check if next form is :as keyword
+                    if (i + 1 < forms.size) {
+                        val nextForm = forms[i + 1]
+                        val asKeyword = nextForm as? PhelKeyword
+                            ?: PsiTreeUtil.findChildOfType(nextForm, PhelKeyword::class.java)
+
+                        if (asKeyword?.text == ":as" && i + 2 < forms.size) {
+                            // Get the alias symbol
+                            val aliasForm = forms[i + 2]
+                            val aliasSymbol = if (aliasForm is PhelSymbol) aliasForm
+                            else PsiTreeUtil.findChildOfType(aliasForm, PhelSymbol::class.java)
+
+                            if (aliasSymbol != null) {
+                                val alias = aliasSymbol.text
+                                // Extract short namespace (e.g., "phel\str" -> "str")
+                                val shortNamespace = namespace.substringAfterLast("\\")
+                                aliasMap[alias] = shortNamespace
+                                i += 3  // Skip namespace, :as, and alias
+                                continue
+                            }
+                        }
+                    }
+                }
+                i++
+            }
+        }
+
+        return aliasMap
     }
 
     /**
