@@ -80,4 +80,28 @@ class PhelNamespaceUtilsTest {
             assertEquals("nested", "phel\\some\\deeply\\nested".substringAfterLast("\\"))
         }
     }
+
+    @Nested
+    inner class NamespaceImportChecks {
+
+        @Test
+        fun `core namespace should be considered imported`() {
+            // Core namespace doesn't need explicit import
+            assertTrue(PhelNamespaceUtils.isCoreNamespace("core"))
+            assertTrue(PhelNamespaceUtils.isCoreNamespace(null))
+        }
+
+        @Test
+        fun `non-core namespaces should not be considered core`() {
+            assertFalse(PhelNamespaceUtils.isCoreNamespace("str"))
+            assertFalse(PhelNamespaceUtils.isCoreNamespace("json"))
+            assertFalse(PhelNamespaceUtils.isCoreNamespace("http"))
+        }
+
+        @Test
+        fun `toPhelNamespace should format namespace correctly`() {
+            assertEquals("phel\\str", PhelNamespaceUtils.toPhelNamespace("str"))
+            assertEquals("phel\\json", PhelNamespaceUtils.toPhelNamespace("json"))
+        }
+    }
 }
