@@ -4,16 +4,20 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
-import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.completion.handlers.*
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
 import org.phellang.core.utils.PhelErrorHandler
+import org.phellang.language.infrastructure.PhelIcons
+import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.files.PhelFile
 
 class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
 
     override fun addCompletions(
-        parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
+        parameters: CompletionParameters,
+        context: ProcessingContext,
+        result: CompletionResultSet
     ) {
         PhelErrorHandler.safeOperation {
             val element = parameters.position
@@ -82,18 +86,22 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
 
     private fun addGeneralCompletions(element: PsiElement, result: CompletionResultSet) {
         PhelErrorHandler.safeOperation {
+            // Extract alias map once for efficient lookup during completion
+            val psiFile = element.containingFile as? PhelFile
+            val aliasMap = psiFile?.let { PhelNamespaceUtils.extractAliasMap(it) } ?: emptyMap()
+
             PhelLocalSymbolCompletions.addLocalSymbols(result, element)
-            PhelRegistryCompletionHelper.addCoreFunctions(result)
-            PhelRegistryCompletionHelper.addStringFunctions(result)
-            PhelRegistryCompletionHelper.addJsonFunctions(result)
-            PhelRegistryCompletionHelper.addHtmlFunctions(result)
-            PhelRegistryCompletionHelper.addHttpFunctions(result)
-            PhelRegistryCompletionHelper.addDebugFunctions(result)
-            PhelRegistryCompletionHelper.addBase64Functions(result)
-            PhelRegistryCompletionHelper.addTestFunctions(result)
-            PhelRegistryCompletionHelper.addPhpInteropFunctions(result)
-            PhelRegistryCompletionHelper.addReplFunctions(result)
-            PhelRegistryCompletionHelper.addMockFunctions(result)
+            PhelRegistryCompletionHelper.addCoreFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addStringFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addJsonFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addHtmlFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addHttpFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addDebugFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addBase64Functions(result, aliasMap)
+            PhelRegistryCompletionHelper.addTestFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addPhpInteropFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addReplFunctions(result, aliasMap)
+            PhelRegistryCompletionHelper.addMockFunctions(result, aliasMap)
         }
     }
 }

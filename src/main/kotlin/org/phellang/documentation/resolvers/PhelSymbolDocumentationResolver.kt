@@ -30,9 +30,9 @@ class PhelSymbolDocumentationResolver {
     }
 
     private fun isLocalSymbol(symbol: PhelSymbol): Boolean {
-        return PhelSymbolAnalyzer.isParameterReference(symbol) ||
-                PhelSymbolAnalyzer.isFunctionParameter(symbol) ||
-                PhelSymbolAnalyzer.isLetBinding(symbol)
+        return PhelSymbolAnalyzer.isParameterReference(symbol)
+                || PhelSymbolAnalyzer.isFunctionParameter(symbol)
+                || PhelSymbolAnalyzer.isLetBinding(symbol)
     }
 
     private fun generateLocalSymbolDoc(symbol: PhelSymbol, symbolName: String): String {
@@ -41,42 +41,69 @@ class PhelSymbolDocumentationResolver {
     }
 
     private fun resolveApiDocumentation(symbol: PhelSymbol, symbolName: String): String {
-        val directDoc = PhelApiDocumentation.functionDocs[symbolName]
-        if (directDoc != null) {
-            return directDoc
-        }
-
-        // If the symbol has a qualifier (e.g., "s/replace"), try to resolve the alias
         val qualifier = PhelPsiUtils.getQualifier(symbol)
+
+        // For qualified symbols (e.g., "str/replace", "s/replace"), validate the qualifier
         if (qualifier != null) {
-            val resolvedName = resolveAliasedSymbolName(symbol, qualifier)
-            if (resolvedName != null && resolvedName != symbolName) {
-                val aliasedDoc = PhelApiDocumentation.functionDocs[resolvedName]
-                if (aliasedDoc != null) {
-                    return aliasedDoc
+            val file = symbol.containingFile as? PhelFile
+            if (file != null) {
+                val aliasMap = PhelNamespaceUtils.extractAliasMap(file)
+
+                // Check if qualifier is an alias (e.g., "s" -> "str")
+                val resolvedNamespace = aliasMap[qualifier]
+                if (resolvedNamespace != null) {
+                    // Qualifier is a valid alias, resolve to canonical name
+                    val functionName =
+                        PhelPsiUtils.getName(symbol) ?: return generateBasicDocumentation(symbol, symbolName)
+                    val canonicalName = "$resolvedNamespace/$functionName"
+                    val aliasedDoc = PhelApiDocumentation.functionDocs[canonicalName]
+                    if (aliasedDoc != null) {
+                        return aliasedDoc
+                    }
+                } else {
+                    // Qualifier is NOT an alias - check if it's a directly imported namespace
+                    if (!isNamespaceDirectlyImported(file, qualifier)) {
+                        // Namespace is not valid in this context (e.g., using "str" when imported as "s")
+                        return generateBasicDocumentation(symbol, symbolName)
+                    }
+                    // Namespace is directly imported, proceed with direct lookup
+                    val directDoc = PhelApiDocumentation.functionDocs[symbolName]
+                    if (directDoc != null) {
+                        return directDoc
+                    }
                 }
+            }
+        } else {
+            // Unqualified symbol (e.g., "map") - direct lookup
+            val directDoc = PhelApiDocumentation.functionDocs[symbolName]
+            if (directDoc != null) {
+                return directDoc
             }
         }
 
         return generateBasicDocumentation(symbol, symbolName)
     }
 
-    /**
-     * Resolves an aliased symbol name to its canonical form.
-     * e.g., "s/replace" -> "str/replace" when file has (:require phel\str :as s)
-     */
-    private fun resolveAliasedSymbolName(symbol: PhelSymbol, qualifier: String): String? {
-        val file = symbol.containingFile as? PhelFile ?: return null
+    private fun isNamespaceDirectlyImported(file: PhelFile, shortNamespace: String): Boolean {
+        // Core namespace is always available
+        if (PhelNamespaceUtils.isCoreNamespace(shortNamespace)) {
+            return true
+        }
+
+        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false
+        val phelNamespace = PhelNamespaceUtils.toPhelNamespace(shortNamespace)
+
+        // Check if namespace is required AND not aliased
         val aliasMap = PhelNamespaceUtils.extractAliasMap(file)
+        val hasAlias = aliasMap.values.contains(shortNamespace)
 
-        // Check if the qualifier is an alias
-        val resolvedNamespace = aliasMap[qualifier] ?: return null
+        // If the namespace has an alias, it's not directly imported
+        if (hasAlias) {
+            return false
+        }
 
-        // Get the function name part (after the slash)
-        val functionName = PhelPsiUtils.getName(symbol) ?: return null
-
-        // Construct the resolved symbol name
-        return "$resolvedNamespace/$functionName"
+        // Check if it's in the require list
+        return PhelNamespaceUtils.isNamespaceRequired(nsDeclaration, phelNamespace)
     }
 
     private fun generateBasicDocumentation(symbol: PhelSymbol, symbolName: String): String {

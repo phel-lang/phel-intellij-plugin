@@ -30,46 +30,33 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
             }
 
             val symbolEnd = context.tailOffset
-            val psiFile = context.file as? PhelFile
 
-            // Determine what text to insert (may use alias if available)
-            val textToInsert = resolveTextToInsert(psiFile, item.lookupString)
-            document.replaceString(symbolStart, symbolEnd, textToInsert)
-
-            editor.caretModel.moveToOffset(symbolStart + textToInsert.length)
+            // Insert the lookup string as-is (already aliased at suggestion time if applicable)
+            document.replaceString(symbolStart, symbolEnd, item.lookupString)
+            editor.caretModel.moveToOffset(symbolStart + item.lookupString.length)
 
             // Auto-import namespace if needed
+            val psiFile = context.file as? PhelFile
             autoImportNamespaceIfNeeded(context, psiFile, item.lookupString)
-        }
-    }
-
-    /**
-     * Resolves the text to insert, using an existing alias if available.
-     * e.g., "str/blank?" -> "s/blank?" if phel\str is imported as "s"
-     */
-    private fun resolveTextToInsert(psiFile: PhelFile?, lookupString: String): String {
-        if (psiFile == null) return lookupString
-
-        val namespace = PhelNamespaceUtils.extractNamespace(lookupString) ?: return lookupString
-        val functionName = lookupString.substringAfter("/")
-
-        // Check if there's an alias for this namespace
-        val alias = PhelNamespaceUtils.findAliasForNamespace(psiFile, namespace)
-        return if (alias != null) {
-            "$alias/$functionName"
-        } else {
-            lookupString
         }
     }
 
     private fun autoImportNamespaceIfNeeded(context: InsertionContext, psiFile: PhelFile?, lookupString: String) {
         if (psiFile == null) return
 
-        val namespace = PhelNamespaceUtils.extractNamespace(lookupString) ?: return
+        val qualifier = PhelNamespaceUtils.extractNamespace(lookupString) ?: return
 
-        if (!PhelNamespaceUtils.isNamespaceImportedOrAliased(psiFile, namespace)) {
+        // Check if the qualifier is an alias (meaning namespace is already imported)
+        val aliasMap = PhelNamespaceUtils.extractAliasMap(psiFile)
+        if (aliasMap.containsKey(qualifier)) {
+            // Qualifier is an alias, namespace is already imported
+            return
+        }
+
+        // Qualifier is a namespace name, check if it needs import
+        if (!PhelNamespaceUtils.isNamespaceImportedOrAliased(psiFile, qualifier)) {
             WriteCommandAction.runWriteCommandAction(context.project) {
-                PhelNamespaceImporter.ensureNamespaceImported(psiFile, namespace)
+                PhelNamespaceImporter.ensureNamespaceImported(psiFile, qualifier)
             }
         }
     }

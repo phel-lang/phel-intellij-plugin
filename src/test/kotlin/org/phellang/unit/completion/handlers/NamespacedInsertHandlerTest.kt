@@ -3,7 +3,6 @@ package org.phellang.unit.completion.handlers
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.phellang.completion.handlers.NamespacedInsertHandler
 import org.phellang.language.psi.PhelNamespaceUtils
 
@@ -42,72 +41,54 @@ class NamespacedInsertHandlerTest {
     }
 
     @Nested
-    inner class NamespaceExtractionLogic {
+    inner class AutoImportDecisionLogic {
 
         @Test
-        fun `extractNamespace should return namespace for qualified names`() {
-            assertEquals("str", PhelNamespaceUtils.extractNamespace("str/join"))
-            assertEquals("json", PhelNamespaceUtils.extractNamespace("json/encode"))
-            assertEquals("http", PhelNamespaceUtils.extractNamespace("http/request"))
+        fun `should skip import when qualifier is an alias`() {
+            // When suggestion is "s/join" and "s" is in aliasMap
+            val aliasMap = mapOf("s" to "str")
+            val lookupString = "s/join"
+            val qualifier = PhelNamespaceUtils.extractNamespace(lookupString)!!
+
+            // Check if qualifier is an alias
+            val isAlias = aliasMap.containsKey(qualifier)
+            assertTrue(isAlias, "Should recognize 's' as an alias")
+
+            // When qualifier is alias, no import needed
         }
 
         @Test
-        fun `extractNamespace should return null for unqualified names`() {
-            assertNull(PhelNamespaceUtils.extractNamespace("map"))
-            assertNull(PhelNamespaceUtils.extractNamespace("filter"))
+        fun `should check import when qualifier is canonical namespace`() {
+            // When suggestion is "str/join" and "str" is NOT in aliasMap keys
+            val aliasMap = mapOf("s" to "str")  // "s" is the key, not "str"
+            val lookupString = "str/join"
+            val qualifier = PhelNamespaceUtils.extractNamespace(lookupString)!!
+
+            // Check if qualifier is an alias
+            val isAlias = aliasMap.containsKey(qualifier)
+            assertFalse(isAlias, "Should NOT recognize 'str' as an alias (it's a namespace)")
+
+            // When qualifier is not alias, need to check if namespace is imported
         }
 
         @Test
-        fun `core namespace should not need import`() {
-            assertTrue(PhelNamespaceUtils.isCoreNamespace("core"))
-            assertTrue(PhelNamespaceUtils.isCoreNamespace(null))
+        fun `should handle empty alias map`() {
+            val aliasMap = emptyMap<String, String>()
+            val lookupString = "str/join"
+            val qualifier = PhelNamespaceUtils.extractNamespace(lookupString)!!
+
+            val isAlias = aliasMap.containsKey(qualifier)
+            assertFalse(isAlias, "Empty map has no aliases")
         }
 
         @Test
-        fun `non-core namespaces should need import`() {
-            assertFalse(PhelNamespaceUtils.isCoreNamespace("str"))
-            assertFalse(PhelNamespaceUtils.isCoreNamespace("json"))
-            assertFalse(PhelNamespaceUtils.isCoreNamespace("http"))
-        }
-    }
+        fun `should handle unqualified function names`() {
+            // Core functions like "map" have no namespace prefix
+            val lookupString = "map"
+            val qualifier = PhelNamespaceUtils.extractNamespace(lookupString)
 
-    @Nested
-    inner class AliasResolutionLogic {
-
-        @Test
-        fun `function name should be extractable from qualified name`() {
-            assertEquals("join", "str/join".substringAfter("/"))
-            assertEquals("blank?", "str/blank?".substringAfter("/"))
-            assertEquals("encode", "json/encode".substringAfter("/"))
-        }
-
-        @Test
-        fun `alias replacement should work correctly`() {
-            // Simulating what happens when alias "s" is found for namespace "str"
-            val lookupString = "str/blank?"
-            val namespace = PhelNamespaceUtils.extractNamespace(lookupString)
-            val functionName = lookupString.substringAfter("/")
-            val alias = "s"  // Simulated alias
-
-            assertEquals("str", namespace)
-            assertEquals("blank?", functionName)
-
-            val aliasedText = "$alias/$functionName"
-            assertEquals("s/blank?", aliasedText)
-        }
-
-        @Test
-        fun `should keep original name when no alias exists`() {
-            val lookupString = "json/encode"
-            val namespace = PhelNamespaceUtils.extractNamespace(lookupString)
-            val functionName = lookupString.substringAfter("/")
-
-            assertEquals("json", namespace)
-            assertEquals("encode", functionName)
-
-            // When no alias is found, keep original
-            val result = lookupString
-            assertEquals("json/encode", result)
+            assertNull(qualifier, "Unqualified names have no qualifier")
+            // No import needed for unqualified names (core functions)
         }
     }
 
