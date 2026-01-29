@@ -1,8 +1,6 @@
 package org.phellang.language.psi
 
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
 
 /**
@@ -37,52 +35,27 @@ object PhelNamespaceImporter {
 
     /**
      * Adds a require form to the namespace declaration.
+     * Always adds a new (:require ...) form to avoid breaking existing requires with aliases.
      */
     private fun addRequireToNamespace(project: Project, nsDeclaration: PhelList, namespace: String): Boolean {
         try {
-            val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
-            
-            if (requireForms.isEmpty()) {
-                // No existing require forms, add a new one
-                addFirstRequireForm(project, nsDeclaration, namespace)
-            } else {
-                // Add to existing require section
-                addToExistingRequire(project, requireForms.first(), namespace)
-            }
+            addNewRequireForm(project, nsDeclaration, namespace)
             return true
         } catch (e: Exception) {
             return false
         }
     }
 
-    private fun addFirstRequireForm(project: Project, nsDeclaration: PhelList, namespace: String) {
+    private fun addNewRequireForm(project: Project, nsDeclaration: PhelList, namespace: String) {
         // Create (:require phel\namespace)
         val requireForm = PhelPsiFactory.createList(project, "(:require $namespace)")
-        
+
         // Find insertion point (before closing paren)
         val closingParen = nsDeclaration.lastChild
-        
+
         // Add whitespace (newline + indentation), then require form
-        // Both are added before closing paren - order matters:
-        // 1. Add whitespace first -> (ns abc\def\n  )
-        // 2. Add require form -> (ns abc\def\n  (:require phel\str))
         val whitespace = PhelPsiFactory.createWhitespace(project, "\n  ")
         nsDeclaration.addBefore(whitespace, closingParen)
         nsDeclaration.addBefore(requireForm, closingParen)
-    }
-
-    private fun addToExistingRequire(project: Project, requireForm: PhelList, namespace: String) {
-        // Create a new require entry: phel\namespace
-        val namespaceSymbol = PhelPsiFactory.createSymbol(project, namespace)
-        
-        // Find a good insertion point (before closing paren)
-        val closingParen = requireForm.lastChild
-        
-        // Add newline and indentation
-        val whitespace = PhelPsiFactory.createWhitespace(project, "\n             ")
-        requireForm.addBefore(whitespace, closingParen)
-        
-        // Add the namespace
-        requireForm.addBefore(namespaceSymbol, closingParen)
     }
 }
