@@ -141,4 +141,40 @@ object PhelNamespaceUtils {
     fun isCoreNamespace(namespace: String?): Boolean {
         return namespace == null || namespace == "core"
     }
+
+    /**
+     * Checks if a namespace is imported either directly or via an alias.
+     * @param file The Phel file to check
+     * @param shortNamespace The short namespace name (e.g., "str", "http")
+     * @return true if the namespace is imported (directly or aliased)
+     */
+    fun isNamespaceImportedOrAliased(file: PhelFile, shortNamespace: String): Boolean {
+        if (isCoreNamespace(shortNamespace)) {
+            return true
+        }
+
+        val nsDeclaration = findNamespaceDeclaration(file) ?: return false
+        val phelNamespace = toPhelNamespace(shortNamespace)
+
+        // Check direct import
+        if (isNamespaceRequired(nsDeclaration, phelNamespace)) {
+            return true
+        }
+
+        // Check if imported via alias
+        val aliasMap = extractAliasMap(file)
+        return aliasMap.values.contains(shortNamespace)
+    }
+
+    /**
+     * Finds the alias for a namespace if one exists.
+     * @param file The Phel file to check
+     * @param shortNamespace The short namespace name (e.g., "str", "http")
+     * @return The alias if found (e.g., "s" for "str"), or null if no alias exists
+     */
+    fun findAliasForNamespace(file: PhelFile, shortNamespace: String): String? {
+        val aliasMap = extractAliasMap(file)
+        // Reverse lookup: find the alias (key) for this namespace (value)
+        return aliasMap.entries.find { it.value == shortNamespace }?.key
+    }
 }
