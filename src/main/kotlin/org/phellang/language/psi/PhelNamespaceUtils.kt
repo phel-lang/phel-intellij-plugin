@@ -3,15 +3,8 @@ package org.phellang.language.psi
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
 
-/**
- * Utilities for working with Phel namespace declarations.
- */
 object PhelNamespaceUtils {
 
-    /**
-     * Finds the namespace declaration (ns ...) in a Phel file.
-     * Returns the PhelList element representing the (ns ...) form.
-     */
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
         // (ns my-ns (:require ...) (:use ...))
         val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
@@ -29,11 +22,6 @@ object PhelNamespaceUtils {
         }
     }
 
-    /**
-     * Checks if a namespace is already required in the ns declaration.
-     * @param nsDeclaration The (ns ...) form
-     * @param namespace The namespace to check (e.g., "phel\\str")
-     */
     fun isNamespaceRequired(nsDeclaration: PhelList, namespace: String): Boolean {
         val requireForms = findRequireForms(nsDeclaration)
         return requireForms.any { requireForm ->
@@ -43,9 +31,6 @@ object PhelNamespaceUtils {
         }
     }
 
-    /**
-     * Finds all (:require ...) forms within the namespace declaration.
-     */
     fun findRequireForms(nsDeclaration: PhelList): List<PhelList> {
         return PsiTreeUtil.findChildrenOfType(nsDeclaration, PhelList::class.java).filter { list ->
             // Get child forms properly, skipping whitespace and parentheses
@@ -126,6 +111,29 @@ object PhelNamespaceUtils {
         }
     }
 
+    fun extractNamespaceFromDeclaration(nsDeclaration: PhelList): String? {
+        val forms = PsiTreeUtil.getChildrenOfType(nsDeclaration, PhelForm::class.java) ?: return null
+        if (forms.size < 2) return null
+
+        // Second form should be the namespace name
+        val namespaceSymbol = if (forms[1] is PhelSymbol) {
+            forms[1] as PhelSymbol
+        } else {
+            PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
+        }
+
+        return namespaceSymbol?.text
+    }
+
+    fun extractShortNamespaceFromDeclaration(nsDeclaration: PhelList): String? {
+        return extractNamespaceFromDeclaration(nsDeclaration)?.substringAfterLast("\\")
+    }
+
+    fun extractNamespaceFromFile(file: PhelFile): String? {
+        val nsDeclaration = findNamespaceDeclaration(file) ?: return null
+        return extractNamespaceFromDeclaration(nsDeclaration)
+    }
+
     /**
      * Converts namespace to Phel format.
      * e.g., "str" -> "phel\\str"
@@ -135,19 +143,10 @@ object PhelNamespaceUtils {
         return "phel\\$shortNamespace"
     }
 
-    /**
-     * Checks if a namespace is a core namespace (doesn't need explicit require).
-     */
     fun isCoreNamespace(namespace: String?): Boolean {
         return namespace == null || namespace == "core"
     }
 
-    /**
-     * Checks if a namespace is imported either directly or via an alias.
-     * @param file The Phel file to check
-     * @param shortNamespace The short namespace name (e.g., "str", "http")
-     * @return true if the namespace is imported (directly or aliased)
-     */
     fun isNamespaceImportedOrAliased(file: PhelFile, shortNamespace: String): Boolean {
         if (isCoreNamespace(shortNamespace)) {
             return true
@@ -164,17 +163,5 @@ object PhelNamespaceUtils {
         // Check if imported via alias
         val aliasMap = extractAliasMap(file)
         return aliasMap.values.contains(shortNamespace)
-    }
-
-    /**
-     * Finds the alias for a namespace if one exists.
-     * @param file The Phel file to check
-     * @param shortNamespace The short namespace name (e.g., "str", "http")
-     * @return The alias if found (e.g., "s" for "str"), or null if no alias exists
-     */
-    fun findAliasForNamespace(file: PhelFile, shortNamespace: String): String? {
-        val aliasMap = extractAliasMap(file)
-        // Reverse lookup: find the alias (key) for this namespace (value)
-        return aliasMap.entries.find { it.value == shortNamespace }?.key
     }
 }

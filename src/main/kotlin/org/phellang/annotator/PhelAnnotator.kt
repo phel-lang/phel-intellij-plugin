@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.COMMENTED_OUT_FORM
 import org.phellang.annotator.analyzers.PhelCommentAnalyzer
 import org.phellang.annotator.highlighters.PhelElementHighlighter
+import org.phellang.annotator.highlighters.PhelRequireHighlighter
 import org.phellang.annotator.highlighters.PhelSymbolHighlighter
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.language.psi.*
@@ -32,6 +33,11 @@ class PhelAnnotator : Annotator {
             is PhelSymbol -> {
                 val text = element.text
                 if (text != null) {
+                    // First check if this is a namespace in a (:require ...) form
+                    if (PhelRequireHighlighter.annotateRequireNamespace(element, holder)) {
+                        return  // Handled as require namespace
+                    }
+                    // Otherwise, apply regular symbol highlighting
                     PhelSymbolHighlighter.annotateSymbol(element, text, holder)
                 }
             }

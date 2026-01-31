@@ -3,19 +3,8 @@ package org.phellang.language.psi
 import com.intellij.openapi.project.Project
 import org.phellang.language.psi.files.PhelFile
 
-/**
- * Handles adding namespace imports to Phel files.
- */
 object PhelNamespaceImporter {
 
-    /**
-     * Ensures a namespace is imported in the file.
-     * If not already imported, adds (:require phel\namespace) to the ns declaration.
-     * 
-     * @param file The Phel file
-     * @param namespace The short namespace name (e.g., "str", "http")
-     * @return true if import was added or already existed
-     */
     fun ensureNamespaceImported(file: PhelFile, namespace: String): Boolean {
         if (PhelNamespaceUtils.isCoreNamespace(namespace)) {
             return true // Core namespace doesn't need import
@@ -33,15 +22,23 @@ object PhelNamespaceImporter {
         return addRequireToNamespace(file.project, nsDeclaration, phelNamespace)
     }
 
-    /**
-     * Adds a require form to the namespace declaration.
-     * Always adds a new (:require ...) form to avoid breaking existing requires with aliases.
-     */
+    fun ensureNamespaceImportedByFullName(file: PhelFile, fullNamespace: String): Boolean {
+        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false
+
+        // Check if already imported
+        if (PhelNamespaceUtils.isNamespaceRequired(nsDeclaration, fullNamespace)) {
+            return true
+        }
+
+        // Add the :require with the full namespace
+        return addRequireToNamespace(file.project, nsDeclaration, fullNamespace)
+    }
+
     private fun addRequireToNamespace(project: Project, nsDeclaration: PhelList, namespace: String): Boolean {
         try {
             addNewRequireForm(project, nsDeclaration, namespace)
             return true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return false
         }
     }

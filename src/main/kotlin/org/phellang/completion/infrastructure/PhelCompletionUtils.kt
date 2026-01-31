@@ -5,16 +5,17 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.util.Key
 import org.phellang.completion.handlers.NamespacedInsertHandler
 import org.phellang.core.utils.PhelErrorHandler
 import javax.swing.Icon
 
 object PhelCompletionUtils {
 
+    val FULL_NAMESPACE_KEY: Key<String> = Key.create("PHEL_FULL_NAMESPACE")
+
     @JvmStatic
-    fun addLocalSymbolCompletion(
-        result: CompletionResultSet, name: String, type: String, icon: Icon?
-    ) {
+    fun addLocalSymbolCompletion(result: CompletionResultSet, name: String, type: String, icon: Icon?) {
         PhelErrorHandler.safeOperation {
             val priority = when (type) {
                 "Parameter", "Function Parameter" -> PhelCompletionPriority.CURRENT_SCOPE_LOCALS
@@ -43,8 +44,28 @@ object PhelCompletionUtils {
     }
 
     @JvmStatic
+    fun addRankedCompletionWithNamespace(
+        result: CompletionResultSet,
+        name: String,
+        signature: String,
+        description: String,
+        priority: PhelCompletionPriority,
+        fullNamespace: String
+    ) {
+        PhelErrorHandler.safeOperation {
+            val element = createLookupElement(name, AllIcons.Nodes.Method, signature, description, fullNamespace = fullNamespace)
+            result.addElement(PrioritizedLookupElement.withPriority(element, priority.value))
+        }
+    }
+
+    @JvmStatic
     private fun createLookupElement(
-        name: String, icon: Icon?, signature: String?, description: String?, bold: Boolean = false
+        name: String,
+        icon: Icon?,
+        signature: String?,
+        description: String?,
+        bold: Boolean = false,
+        fullNamespace: String? = null
     ): LookupElement {
         return PhelErrorHandler.safeOperation {
             var builder = LookupElementBuilder.create(name).withIcon(icon)
@@ -67,7 +88,14 @@ object PhelCompletionUtils {
                 builder = builder.withInsertHandler(NamespacedInsertHandler())
             }
 
-            builder
+            val element = builder as LookupElement
+
+            // Store full namespace for auto-import if provided
+            if (fullNamespace != null) {
+                element.putUserData(FULL_NAMESPACE_KEY, fullNamespace)
+            }
+
+            element
         } ?: LookupElementBuilder.create(name)
     }
 }

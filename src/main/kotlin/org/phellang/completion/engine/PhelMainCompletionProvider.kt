@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
 import org.phellang.completion.handlers.*
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
+import org.phellang.completion.infrastructure.PhelProjectCompletionHelper
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.infrastructure.PhelIcons
@@ -90,7 +91,10 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
             val psiFile = element.containingFile as? PhelFile
             val aliasMap = psiFile?.let { PhelNamespaceUtils.extractAliasMap(it) } ?: emptyMap()
 
+            // Local symbols (parameters, let bindings, etc.)
             PhelLocalSymbolCompletions.addLocalSymbols(result, element)
+
+            // Standard library functions
             PhelRegistryCompletionHelper.addCoreFunctions(result, aliasMap)
             PhelRegistryCompletionHelper.addStringFunctions(result, aliasMap)
             PhelRegistryCompletionHelper.addJsonFunctions(result, aliasMap)
@@ -102,6 +106,11 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
             PhelRegistryCompletionHelper.addPhpInteropFunctions(result, aliasMap)
             PhelRegistryCompletionHelper.addReplFunctions(result, aliasMap)
             PhelRegistryCompletionHelper.addMockFunctions(result, aliasMap)
+
+            // Project symbols (functions from other project files)
+            if (psiFile != null) {
+                PhelProjectCompletionHelper.addProjectCompletions(result, psiFile, aliasMap)
+            }
         }
     }
 }
