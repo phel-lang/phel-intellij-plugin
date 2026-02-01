@@ -7,6 +7,7 @@ import com.intellij.util.ProcessingContext
 import org.phellang.completion.handlers.*
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelProjectCompletionHelper
+import org.phellang.completion.infrastructure.PhelReferCompletionHelper
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.infrastructure.PhelIcons
@@ -35,6 +36,16 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
             }
 
             when {
+                // Inside :refer vector - suggest functions from the required namespace
+                completionContext.isInsideReferVector() -> {
+                    val namespace = completionContext.getReferNamespace()
+                    if (namespace != null) {
+                        val psiFile = completionContext.element.containingFile as? PhelFile
+                        val alreadyReferred = completionContext.getAlreadyReferredSymbols()
+                        PhelReferCompletionHelper.addReferCompletions(result, namespace, psiFile, alreadyReferred)
+                    }
+                }
+
                 // At top level (nothing written) - suggest structural completions
                 completionContext.shouldSuggestNewForm() -> {
                     addTemplateCompletions(result)
