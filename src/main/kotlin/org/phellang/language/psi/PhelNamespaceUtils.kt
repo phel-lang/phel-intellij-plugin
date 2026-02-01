@@ -164,4 +164,52 @@ object PhelNamespaceUtils {
         val aliasMap = extractAliasMap(file)
         return aliasMap.values.contains(shortNamespace)
     }
+
+    fun extractReferredSymbols(file: PhelFile): Set<String> {
+        val referredSymbols = mutableSetOf<String>()
+
+        val nsDeclaration = findNamespaceDeclaration(file) ?: return referredSymbols
+        val requireForms = findRequireForms(nsDeclaration)
+
+        for (requireForm in requireForms) {
+            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
+
+            // Skip the :require keyword (first form)
+            // Look for pattern: namespace ... :refer [symbols]
+            var i = 1
+            while (i < forms.size) {
+                val form = forms[i]
+
+                // Check if this is a :refer keyword
+                val keyword = form as? PhelKeyword
+                    ?: PsiTreeUtil.findChildOfType(form, PhelKeyword::class.java)
+
+                if (keyword?.text == ":refer" && i + 1 < forms.size) {
+                    // Next form should be a vector with symbols
+                    val vectorForm = forms[i + 1]
+
+                    // Extract symbols from the vector (vec contains PhelSymbol children)
+                    val symbols = PsiTreeUtil.findChildrenOfType(vectorForm, PhelSymbol::class.java)
+                    for (symbol in symbols) {
+                        val symbolText = symbol.text
+                        // Skip namespace-qualified symbols (those with backslash)
+                        if (symbolText != null && !symbolText.contains("\\")) {
+                            referredSymbols.add(symbolText)
+                        }
+                    }
+
+                    i += 2 // Skip :refer and the vector
+                    continue
+                }
+
+                i++
+            }
+        }
+
+        return referredSymbols
+    }
+
+    fun isReferredSymbol(file: PhelFile, symbolName: String): Boolean {
+        return extractReferredSymbols(file).contains(symbolName)
+    }
 }
