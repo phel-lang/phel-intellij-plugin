@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.command.WriteCommandAction
+import org.phellang.completion.infrastructure.PhelCompletionUtils
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.PhelNamespaceImporter
 import org.phellang.language.psi.PhelNamespaceUtils
@@ -37,13 +38,14 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
 
             // Auto-import namespace if needed
             val psiFile = context.file as? PhelFile
-            autoImportNamespaceIfNeeded(context, psiFile, item.lookupString)
+            autoImportNamespaceIfNeeded(context, psiFile, item)
         }
     }
 
-    private fun autoImportNamespaceIfNeeded(context: InsertionContext, psiFile: PhelFile?, lookupString: String) {
+    private fun autoImportNamespaceIfNeeded(context: InsertionContext, psiFile: PhelFile?, item: LookupElement) {
         if (psiFile == null) return
 
+        val lookupString = item.lookupString
         val qualifier = PhelNamespaceUtils.extractNamespace(lookupString) ?: return
 
         // Check if the qualifier is an alias (meaning namespace is already imported)
@@ -53,10 +55,18 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
             return
         }
 
-        // Qualifier is a namespace name, check if it needs import
-        if (!PhelNamespaceUtils.isNamespaceImportedOrAliased(psiFile, qualifier)) {
+        val fullNamespace = item.getUserData(PhelCompletionUtils.FULL_NAMESPACE_KEY)
+        if (fullNamespace != null) {
+            // Use the full namespace directly for import
             WriteCommandAction.runWriteCommandAction(context.project) {
-                PhelNamespaceImporter.ensureNamespaceImported(psiFile, qualifier)
+                PhelNamespaceImporter.ensureNamespaceImportedByFullName(psiFile, fullNamespace)
+            }
+        } else {
+            // Fall back to the old behavior for standard library completions
+            if (!PhelNamespaceUtils.isNamespaceImportedOrAliased(psiFile, qualifier)) {
+                WriteCommandAction.runWriteCommandAction(context.project) {
+                    PhelNamespaceImporter.ensureNamespaceImported(psiFile, qualifier)
+                }
             }
         }
     }
