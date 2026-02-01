@@ -6,6 +6,7 @@ import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.annotator.quickfixes.PhelFixImportQuickFix
 import org.phellang.annotator.quickfixes.PhelRemoveImportQuickFix
 import org.phellang.annotator.validators.PhelImportValidator
+import org.phellang.annotator.validators.PhelReferSymbolValidator
 import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
@@ -17,6 +18,11 @@ object PhelRequireHighlighter {
      * Returns true if the symbol was handled (valid or invalid require), false otherwise.
      */
     fun annotateRequireNamespace(symbol: PhelSymbol, holder: AnnotationHolder): Boolean {
+        // First check if this is a symbol inside a :refer vector
+        if (annotateReferSymbol(symbol, holder)) {
+            return true
+        }
+
         // Check if this symbol is inside a (:require ...) form
         if (!isNamespaceInRequireForm(symbol)) {
             return false
@@ -55,6 +61,21 @@ object PhelRequireHighlighter {
         }
 
         // Return true to indicate we handled this symbol (whether valid or invalid)
+        return true
+    }
+
+    private fun annotateReferSymbol(symbol: PhelSymbol, holder: AnnotationHolder): Boolean {
+        if (!PhelReferSymbolValidator.isInsideReferVector(symbol)) {
+            return false
+        }
+
+        // Validate the symbol
+        val validationResult = PhelReferSymbolValidator.validateReferSymbol(symbol)
+
+        if (validationResult != null) {
+            PhelAnnotationUtils.createWarningAnnotation(holder, symbol, validationResult.message)
+        }
+
         return true
     }
 

@@ -9,9 +9,7 @@ import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
 import org.phellang.language.psi.files.PhelFile
 
-class PhelCompletionContext(
-    parameters: CompletionParameters
-) {
+class PhelCompletionContext(parameters: CompletionParameters) {
     val element: PsiElement = parameters.position
 
     fun shouldSuggestNewForm(): Boolean {
@@ -32,6 +30,24 @@ class PhelCompletionContext(
         return PhelErrorHandler.safeOperation {
             isInFunctionNamePosition() || isInParameterDefinitionPosition() || isInBindingDefinitionPosition() || isInDefinitionNamePosition()
         } ?: false
+    }
+
+    fun isInsideReferVector(): Boolean {
+        return PhelErrorHandler.safeOperation {
+            PhelReferUtils.isInsideReferVector(element)
+        } ?: false
+    }
+
+    fun getReferNamespace(): String? {
+        return PhelErrorHandler.safeOperation {
+            PhelReferUtils.getReferNamespace(element)
+        }
+    }
+
+    fun getAlreadyReferredSymbols(): Set<String> {
+        return PhelErrorHandler.safeOperation {
+            PhelReferUtils.getAlreadyReferredSymbols(element)
+        } ?: emptySet()
     }
 
     private fun isAtFileLevel(): Boolean {
