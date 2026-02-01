@@ -4,7 +4,10 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.completion.data.PhelProjectSymbol
 import org.phellang.completion.data.SymbolType
 import org.phellang.language.psi.PhelForm
+import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelLiteral
+import org.phellang.language.psi.PhelMap
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
@@ -74,12 +77,11 @@ object PhelProjectSymbolScanner {
         val name = nameSymbol.text
 
         // Check if private - skip private definitions
-        if (isPrivateDefinition(forms)) {
-            return null
-        }
+        if (isPrivateDefinition(forms)) return null
 
-        // Extract signature
+        // Extract signature and docstring
         val signature = extractSignature(keyword, name, forms)
+        val docstring = extractDocstring(forms)
 
         return PhelProjectSymbol(
             namespace = namespace,
@@ -88,18 +90,16 @@ object PhelProjectSymbolScanner {
             qualifiedName = "$shortNamespace/$name",
             signature = signature,
             type = symbolType,
-            file = virtualFile
+            file = virtualFile,
+            docstring = docstring
         )
     }
 
     private fun isPrivateDefinition(forms: Array<PhelForm>): Boolean {
         for (form in forms) {
-            val text = form.text
-            if (text != null) {
-                if (text.contains(":private")) {
-                    return true
-                }
-            }
+            val text = form.text ?: continue
+            if (!text.contains(":private")) continue
+            return true
         }
 
         return false
@@ -108,49 +108,68 @@ object PhelProjectSymbolScanner {
     private fun extractSignature(keyword: String, name: String, forms: Array<PhelForm>): String {
         return when (keyword) {
             "defn", "defmacro" -> {
-                // Find parameter vector
-                val paramVec = findParameterVector(forms)
-                if (paramVec != null) {
-                    val params = extractParameterNames(paramVec)
-                    "($name ${params.joinToString(" ")})"
+                // Check for multi-arity: look for lists that contain a vector as first element
+                val aritySignatures = extractMultiAritySignatures(name, forms)
+                if (aritySignatures.isNotEmpty()) {
+                    aritySignatures.joinToString("\n")
                 } else {
-                    "($name)"
+                    // Single-arity: find the parameter vector directly
+                    val paramVec = findDirectParameterVector(forms)
+                    if (paramVec != null) {
+                        val params = extractParameterNames(paramVec)
+                        if (params.isEmpty()) "($name)" else "($name ${params.joinToString(" ")})"
+                    } else {
+                        "($name)"
+                    }
                 }
             }
 
             "defstruct" -> {
-                // defstruct has fields in a vector
-                val fieldsVec = findParameterVector(forms)
+                val fieldsVec = findDirectParameterVector(forms)
                 if (fieldsVec != null) {
                     val fields = extractParameterNames(fieldsVec)
-                    "($name ${fields.joinToString(" ")})"
+                    if (fields.isEmpty()) "($name)" else "($name ${fields.joinToString(" ")})"
                 } else {
                     "($name)"
                 }
             }
 
-            "definterface" -> {
-                "($name ...)"
-            }
+            "definterface" -> "($name ...)"
 
-            else -> {
-                // def - just the name
-                "($name)"
-            }
+            "defexception" -> "($name)"
+
+            else -> "($name)"
         }
     }
 
-    private fun findParameterVector(forms: Array<PhelForm>): PhelVec? {
+    private fun extractMultiAritySignatures(name: String, forms: Array<PhelForm>): List<String> {
+        val signatures = mutableListOf<String>()
+
+        // Start from index 2 (after keyword and name)
+        for (i in 2 until forms.size) {
+            val form = forms[i]
+
+            // Multi-arity: each arity is a list that starts with a vector
+            if (form is PhelList) {
+                val listForms = PsiTreeUtil.getChildrenOfType(form, PhelForm::class.java)
+                if (!listForms.isNullOrEmpty() && listForms[0] is PhelVec) {
+                    val paramVec = listForms[0] as PhelVec
+                    val params = extractParameterNames(paramVec)
+                    val sig = if (params.isEmpty()) "($name)" else "($name ${params.joinToString(" ")})"
+                    signatures.add(sig)
+                }
+            }
+        }
+
+        return signatures
+    }
+
+    private fun findDirectParameterVector(forms: Array<PhelForm>): PhelVec? {
         // Start from index 2 (after keyword and name)
         for (i in 2 until forms.size) {
             val form = forms[i]
             if (form is PhelVec) {
                 return form
-            }
-            // Also check if the form contains a vector
-            val nestedVec = PsiTreeUtil.findChildOfType(form, PhelVec::class.java)
-            if (nestedVec != null) {
-                return nestedVec
             }
         }
         return null
@@ -161,16 +180,56 @@ object PhelProjectSymbolScanner {
         val forms = PsiTreeUtil.getChildrenOfType(paramVec, PhelForm::class.java) ?: return params
 
         for (form in forms) {
-            val symbol = if (form is PhelSymbol) {
-                form
-            } else {
-                PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-            }
-            if (symbol != null) {
-                params.add(symbol.text)
+            val text = form.text
+            if (!text.isNullOrBlank()) {
+                params.add(text)
             }
         }
 
         return params
+    }
+
+    private fun extractDocstring(forms: Array<PhelForm>): String? {
+        if (forms.size < 3) return null
+
+        val potentialDocstring = forms[2]
+
+        // Try string literal first (defn/defmacro style)
+        extractStringLiteral(potentialDocstring)?.let { return it }
+
+        // Try map metadata with :doc key (def style)
+        extractDocFromMap(potentialDocstring)?.let { return it }
+
+        return null
+    }
+
+    private fun extractDocFromMap(form: PhelForm): String? {
+        val map = form as? PhelMap ?: return null
+
+        // Get all children and look for :doc keyword followed by a string
+        val children = PsiTreeUtil.getChildrenOfType(map, PhelForm::class.java) ?: return null
+
+        for (i in 0 until children.size - 1) {
+            val child = children[i]
+            if (child is PhelKeyword && child.text == ":doc") {
+                // Next element should be the docstring
+                val docValue = children[i + 1]
+                return extractStringLiteral(docValue)
+            }
+        }
+
+        return null
+    }
+
+    private fun extractStringLiteral(form: PhelForm): String? {
+        // Only accept direct string literals, not strings nested inside other forms
+        val literal = form as? PhelLiteral ?: return null
+
+        val text = literal.text
+        if (text.startsWith("\"") && text.endsWith("\"")) {
+            return text.substring(1, text.length - 1)
+        }
+
+        return null
     }
 }

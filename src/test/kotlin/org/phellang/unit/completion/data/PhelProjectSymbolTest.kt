@@ -36,6 +36,11 @@ class PhelProjectSymbolTest {
         }
 
         @Test
+        fun `fromKeyword returns correct type for defexception`() {
+            assertEquals(SymbolType.EXCEPTION, SymbolType.fromKeyword("defexception"))
+        }
+
+        @Test
         fun `fromKeyword returns null for unknown keyword`() {
             assertNull(SymbolType.fromKeyword("unknown"))
             assertNull(SymbolType.fromKeyword("let"))
@@ -51,7 +56,8 @@ class PhelProjectSymbolTest {
             assertTrue(keywords.contains("defmacro"))
             assertTrue(keywords.contains("defstruct"))
             assertTrue(keywords.contains("definterface"))
-            assertEquals(5, keywords.size)
+            assertTrue(keywords.contains("defexception"))
+            assertEquals(6, keywords.size)
         }
 
         @Test
@@ -75,12 +81,13 @@ class PhelProjectSymbolTest {
             assertEquals("defmacro", SymbolType.MACRO.keyword)
             assertEquals("defstruct", SymbolType.STRUCT.keyword)
             assertEquals("definterface", SymbolType.INTERFACE.keyword)
+            assertEquals("defexception", SymbolType.EXCEPTION.keyword)
         }
 
         @Test
         fun `all entries are accessible`() {
             val entries = SymbolType.entries
-            assertEquals(5, entries.size)
+            assertEquals(6, entries.size)
         }
     }
 }

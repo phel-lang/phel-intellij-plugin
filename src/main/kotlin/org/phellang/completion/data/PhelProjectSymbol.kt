@@ -10,10 +10,11 @@ data class PhelProjectSymbol(
     val signature: String,
     val type: SymbolType,
     val file: VirtualFile,
+    val docstring: String? = null,
 )
 
 enum class SymbolType(val keyword: String) {
-    FUNCTION("defn"), VALUE("def"), MACRO("defmacro"), STRUCT("defstruct"), INTERFACE("definterface");
+    FUNCTION("defn"), VALUE("def"), MACRO("defmacro"), STRUCT("defstruct"), INTERFACE("definterface"), EXCEPTION("defexception");
 
     companion object {
         private val keywordMap = entries.associateBy { it.keyword }

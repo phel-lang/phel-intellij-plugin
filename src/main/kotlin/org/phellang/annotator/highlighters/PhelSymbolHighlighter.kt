@@ -10,6 +10,7 @@ import org.phellang.annotator.infrastructure.PhelAnnotationConstants.PHP_INTEROP
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.REGULAR_SYMBOL
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.VARIADIC_PARAMETER
 import org.phellang.annotator.quickfixes.PhelImportNamespaceQuickFix
+import org.phellang.annotator.validators.PhelFunctionReferenceValidator
 import org.phellang.annotator.validators.PhelNamespaceValidator
 import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
@@ -64,22 +65,30 @@ object PhelSymbolHighlighter {
 
         // Namespace-qualified function calls - use "/" as separator
         if (text.contains("/") && !text.startsWith("/") && !text.endsWith("/")) {
-            val validationResult = PhelNamespaceValidator.validateNamespace(symbol)
-            if (validationResult != null) {
-                // If we know the full namespace, offer a quick fix to import it
-                if (validationResult.fullNamespace != null) {
+            // First, validate the namespace itself
+            val namespaceValidation = PhelNamespaceValidator.validateNamespace(symbol)
+            if (namespaceValidation != null) {
+                // Namespace issue - report it with optional quick fix
+                if (namespaceValidation.fullNamespace != null) {
                     val quickFix = PhelImportNamespaceQuickFix(
-                        validationResult.fullNamespace
+                        namespaceValidation.fullNamespace
                     )
                     PhelAnnotationUtils.createWarningAnnotationWithFix(
-                        holder, symbol, validationResult.message, quickFix
+                        holder, symbol, namespaceValidation.message, quickFix
                     )
                 } else {
-                    // Namespace doesn't exist - no quick fix available
-                    PhelAnnotationUtils.createWarningAnnotation(holder, symbol, validationResult.message)
+                    PhelAnnotationUtils.createWarningAnnotation(holder, symbol, namespaceValidation.message)
                 }
                 return
             }
+
+            // Namespace is valid - now check if the function exists in that namespace
+            val functionValidation = PhelFunctionReferenceValidator.validateFunctionReference(symbol)
+            if (functionValidation != null) {
+                PhelAnnotationUtils.createWarningAnnotation(holder, symbol, functionValidation.message)
+                return
+            }
+
             PhelAnnotationUtils.createAnnotation(holder, symbol, NAMESPACE_SYMBOL)
             return
         }

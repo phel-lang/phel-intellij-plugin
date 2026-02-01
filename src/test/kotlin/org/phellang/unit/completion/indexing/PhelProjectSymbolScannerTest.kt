@@ -65,27 +65,6 @@ class PhelProjectSymbolScannerTest {
     }
 
     @Nested
-    inner class SignatureExtraction {
-
-        @Test
-        fun `function signature format`() {
-            // Expected: (name param1 param2)
-            val name = "greet"
-            val params = listOf("name", "greeting")
-
-            val signature = "($name ${params.joinToString(" ")})"
-            assertEquals("(greet name greeting)", signature)
-        }
-
-        @Test
-        fun `def signature is just the name`() {
-            val name = "config"
-            val signature = "($name)"
-            assertEquals("(config)", signature)
-        }
-    }
-
-    @Nested
     inner class QualifiedNameConstruction {
 
         @Test
