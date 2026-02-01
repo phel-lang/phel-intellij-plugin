@@ -5,6 +5,7 @@ import org.phellang.completion.data.PhelProjectSymbol
 import org.phellang.completion.data.SymbolType
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelLiteral
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
@@ -74,12 +75,11 @@ object PhelProjectSymbolScanner {
         val name = nameSymbol.text
 
         // Check if private - skip private definitions
-        if (isPrivateDefinition(forms)) {
-            return null
-        }
+        if (isPrivateDefinition(forms)) return null
 
-        // Extract signature
+        // Extract signature and docstring
         val signature = extractSignature(keyword, name, forms)
+        val docstring = extractDocstring(forms)
 
         return PhelProjectSymbol(
             namespace = namespace,
@@ -88,18 +88,16 @@ object PhelProjectSymbolScanner {
             qualifiedName = "$shortNamespace/$name",
             signature = signature,
             type = symbolType,
-            file = virtualFile
+            file = virtualFile,
+            docstring = docstring
         )
     }
 
     private fun isPrivateDefinition(forms: Array<PhelForm>): Boolean {
         for (form in forms) {
-            val text = form.text
-            if (text != null) {
-                if (text.contains(":private")) {
-                    return true
-                }
-            }
+            val text = form.text ?: continue
+            if (!text.contains(":private")) continue
+            return true
         }
 
         return false
@@ -161,16 +159,35 @@ object PhelProjectSymbolScanner {
         val forms = PsiTreeUtil.getChildrenOfType(paramVec, PhelForm::class.java) ?: return params
 
         for (form in forms) {
-            val symbol = if (form is PhelSymbol) {
-                form
-            } else {
-                PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-            }
-            if (symbol != null) {
-                params.add(symbol.text)
+            // Get the full text of each parameter form, preserving syntax
+            val text = form.text
+            if (!text.isNullOrBlank()) {
+                params.add(text)
             }
         }
 
         return params
+    }
+
+    private fun extractDocstring(forms: Array<PhelForm>): String? {
+        // Docstring is typically at index 2 (after keyword and name)
+        if (forms.size < 3) return null
+
+        val potentialDocstring = forms[2]
+
+        // Check if it's a string literal
+        val literal = potentialDocstring as? PhelLiteral
+            ?: PsiTreeUtil.findChildOfType(potentialDocstring, PhelLiteral::class.java)
+
+        if (literal != null) {
+            val text = literal.text
+            // Check if it's a string (starts and ends with quotes)
+            if (text.startsWith("\"") && text.endsWith("\"")) {
+                // Remove surrounding quotes
+                return text.substring(1, text.length - 1)
+            }
+        }
+
+        return null
     }
 }

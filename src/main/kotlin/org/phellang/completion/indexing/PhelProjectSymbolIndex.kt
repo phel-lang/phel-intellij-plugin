@@ -46,6 +46,11 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         return symbolsByNamespace.values.flatten()
     }
 
+    fun findSymbol(shortNamespace: String, name: String): PhelProjectSymbol? {
+        ensureIndexBuilt()
+        return symbolsByNamespace[shortNamespace]?.find { it.name == name }
+    }
+
     fun refreshFile(file: VirtualFile) {
         val psiManager = PsiManager.getInstance(project)
         val psiFile = psiManager.findFile(file) as? PhelFile ?: return

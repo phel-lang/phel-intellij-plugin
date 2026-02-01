@@ -10,6 +10,7 @@ data class PhelProjectSymbol(
     val signature: String,
     val type: SymbolType,
     val file: VirtualFile,
+    val docstring: String? = null,
 )
 
 enum class SymbolType(val keyword: String) {
