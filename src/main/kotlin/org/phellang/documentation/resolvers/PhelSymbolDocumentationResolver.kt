@@ -93,8 +93,9 @@ class PhelSymbolDocumentationResolver {
             append("<h3>${symbol.qualifiedName}</h3>")
             append("<br />")
 
-            // Signature
-            append("<code>${symbol.signature}</code><br /><br />")
+            // Signature (convert newlines to <br> for multi-arity functions)
+            val signatureHtml = symbol.signature.replace("\n", "<br />")
+            append("<code>$signatureHtml</code><br /><br />")
 
             // Description (docstring) if available
             if (!symbol.docstring.isNullOrBlank()) {

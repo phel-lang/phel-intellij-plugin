@@ -26,9 +26,12 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     private var indexBuilt = false
 
     init {
-        // Register file change listener to keep index in sync
+        // Register file change listener to keep index in sync (for file saves)
         val connection = project.messageBus.connect(this)
         connection.subscribe(VirtualFileManager.VFS_CHANGES, PhelFileChangeListener(project))
+
+        // Register PSI change listener to keep index in sync (for live edits)
+        PsiManager.getInstance(project).addPsiTreeChangeListener(PhelPsiChangeListener(project), this)
     }
 
     override fun dispose() {
@@ -54,21 +57,30 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     fun refreshFile(file: VirtualFile) {
         val psiManager = PsiManager.getInstance(project)
         val psiFile = psiManager.findFile(file) as? PhelFile ?: return
+        refreshFileFromPsi(psiFile)
+    }
 
-        val oldSymbols = symbolsByFile[file.path] ?: emptyList()
+    /**
+     * Refreshes the index from the current PSI state (used for live updates during editing).
+     */
+    fun refreshFileFromPsi(psiFile: PhelFile) {
+        val virtualFile = psiFile.virtualFile ?: return
+        val filePath = virtualFile.path
+
+        val oldSymbols = symbolsByFile[filePath] ?: emptyList()
 
         // Remove old symbols from namespace index
         for (symbol in oldSymbols) {
             val namespaceSymbols = symbolsByNamespace[symbol.shortNamespace]?.toMutableList()
-            namespaceSymbols?.removeIf { it.file.path == file.path }
+            namespaceSymbols?.removeIf { it.file.path == filePath }
             if (namespaceSymbols != null) {
                 symbolsByNamespace[symbol.shortNamespace] = namespaceSymbols
             }
         }
 
-        // Scan file for new symbols
+        // Scan file for new symbols from the current PSI state
         val newSymbols = PhelProjectSymbolScanner.scanFile(psiFile)
-        symbolsByFile[file.path] = newSymbols
+        symbolsByFile[filePath] = newSymbols
 
         // Add new symbols to namespace index
         for (symbol in newSymbols) {

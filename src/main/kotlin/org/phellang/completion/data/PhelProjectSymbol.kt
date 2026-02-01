@@ -14,7 +14,7 @@ data class PhelProjectSymbol(
 )
 
 enum class SymbolType(val keyword: String) {
-    FUNCTION("defn"), VALUE("def"), MACRO("defmacro"), STRUCT("defstruct"), INTERFACE("definterface");
+    FUNCTION("defn"), VALUE("def"), MACRO("defmacro"), STRUCT("defstruct"), INTERFACE("definterface"), EXCEPTION("defexception");
 
     companion object {
         private val keywordMap = entries.associateBy { it.keyword }

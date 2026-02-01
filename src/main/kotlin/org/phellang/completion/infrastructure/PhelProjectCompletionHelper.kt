@@ -150,6 +150,7 @@ object PhelProjectCompletionHelper {
             SymbolType.VALUE -> PhelCompletionPriority.PROJECT_SYMBOLS
             SymbolType.STRUCT -> PhelCompletionPriority.PROJECT_SYMBOLS
             SymbolType.INTERFACE -> PhelCompletionPriority.PROJECT_SYMBOLS
+            SymbolType.EXCEPTION -> PhelCompletionPriority.PROJECT_SYMBOLS
         }
 
         val description = when (symbol.type) {
@@ -158,6 +159,7 @@ object PhelProjectCompletionHelper {
             SymbolType.VALUE -> "value"
             SymbolType.STRUCT -> "struct"
             SymbolType.INTERFACE -> "interface"
+            SymbolType.EXCEPTION -> "exception"
         }
 
         PhelCompletionUtils.addRankedCompletionWithNamespace(

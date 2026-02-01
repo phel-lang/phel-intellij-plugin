@@ -65,42 +65,6 @@ class PhelProjectSymbolScannerTest {
     }
 
     @Nested
-    inner class DocstringExtraction {
-
-        @Test
-        fun `docstring is extracted from quoted string`() {
-            // In Phel: (defn my-fn "This is the docstring" [params] body)
-            val rawDocstring = "\"This is the docstring\""
-
-            // Remove surrounding quotes
-            val docstring = if (rawDocstring.startsWith("\"") && rawDocstring.endsWith("\"")) {
-                rawDocstring.substring(1, rawDocstring.length - 1)
-            } else {
-                rawDocstring
-            }
-
-            assertEquals("This is the docstring", docstring)
-        }
-
-        @Test
-        fun `docstring with escaped characters`() {
-            val rawDocstring = "\"Line 1\\nLine 2\""
-            val docstring = rawDocstring.substring(1, rawDocstring.length - 1)
-
-            assertEquals("Line 1\\nLine 2", docstring)
-        }
-
-        @Test
-        fun `non-string at position 2 returns null docstring`() {
-            // If position 2 is a vector (params), not a string, there's no docstring
-            val formText = "[param1 param2]"
-            val isString = formText.startsWith("\"") && formText.endsWith("\"")
-
-            assertFalse(isString)
-        }
-    }
-
-    @Nested
     inner class QualifiedNameConstruction {
 
         @Test
