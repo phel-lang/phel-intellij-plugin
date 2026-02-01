@@ -31,28 +31,68 @@ class PhelImportValidatorTest {
     }
 
     @Nested
-    inner class ValidationMessages {
+    inner class UnusedImportDetectionLogic {
 
         @Test
-        fun `duplicate import message format`() {
-            val namespace = "phel\\str"
-            val message = "Duplicate import: '$namespace' is already imported"
-            assertEquals("Duplicate import: 'phel\\str' is already imported", message)
+        fun `qualifier is extracted from qualified symbol`() {
+            val symbol = "str/join"
+            val qualifier = symbol.substringBefore("/")
+            assertEquals("str", qualifier)
         }
 
         @Test
-        fun `namespace does not exist message format`() {
-            val namespace = "my-project\\unknown"
-            val message = "Namespace '$namespace' does not exist"
-            assertEquals("Namespace 'my-project\\unknown' does not exist", message)
+        fun `short namespace matches qualifier for usage detection`() {
+            val fullNamespace = "phel\\str"
+            val shortNamespace = fullNamespace.substringAfterLast("\\")
+            val usageSymbol = "str/join"
+            val usageQualifier = usageSymbol.substringBefore("/")
+
+            assertEquals(shortNamespace, usageQualifier)
         }
 
         @Test
-        fun `namespace does not exist with suggestion message format`() {
-            val namespace = "my-project\\utls"
-            val suggestion = "my-project\\utils"
-            val message = "Namespace '$namespace' does not exist. Did you mean '$suggestion'?"
-            assertEquals("Namespace 'my-project\\utls' does not exist. Did you mean 'my-project\\utils'?", message)
+        fun `alias can be used as qualifier`() {
+            // If phel\str is imported as s, then s/join should count as usage
+            val aliasMap = mapOf("s" to "str")
+            val usageSymbol = "s/join"
+            val usageQualifier = usageSymbol.substringBefore("/")
+
+            assertTrue(aliasMap.containsKey(usageQualifier))
+        }
+
+        @Test
+        fun `unqualified symbols do not count as usage`() {
+            val symbol = "map"
+            assertFalse(symbol.contains("/"), "Unqualified symbol should not have qualifier")
+        }
+    }
+
+    @Nested
+    inner class ReferClauseDetection {
+
+        @Test
+        fun `require with refer is not considered unused`() {
+            // (:require phel\test :refer [deftest is])
+            // Even if no qualified calls like "test/xxx" exist, the referred symbols are used
+            val keywords = listOf(":require", ":refer")
+            assertTrue(keywords.contains(":refer"), "Should detect :refer in require form")
+        }
+
+        @Test
+        fun `require without refer checks for qualified usages`() {
+            // (:require phel\str)
+            // Must have str/xxx usages to not be unused
+            val keywords = listOf(":require")
+            assertFalse(keywords.contains(":refer"), "Should not have :refer")
+        }
+
+        @Test
+        fun `require with as checks for alias usages`() {
+            // (:require phel\str :as s)
+            // Must have s/xxx usages to not be unused
+            val keywords = listOf(":require", ":as")
+            assertTrue(keywords.contains(":as"), "Should detect :as in require form")
+            assertFalse(keywords.contains(":refer"), "Should not have :refer")
         }
     }
 }

@@ -25,6 +25,10 @@ object PhelAnnotationUtils {
         holder.newAnnotation(HighlightSeverity.WARNING, message).range(element.textRange).withFix(quickFix).create()
     }
 
+    fun createWeakWarningAnnotationWithFix(holder: AnnotationHolder, element: PsiElement, message: String, quickFix: IntentionAction) {
+        holder.newAnnotation(HighlightSeverity.WEAK_WARNING, message).range(element.textRange).withFix(quickFix).create()
+    }
+
     fun shouldAnnotate(element: PsiElement?): Boolean {
         return element != null && element.textRange != null && element.textRange.length > 0
     }
