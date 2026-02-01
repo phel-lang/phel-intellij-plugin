@@ -7,6 +7,9 @@ enum class PhelCompletionPriority(val value: Double) {
     // Local scope - always most relevant
     CURRENT_SCOPE_LOCALS(100.0),
     RECENT_DEFINITIONS(90.0),
+    
+    // Context-specific completions (very relevant in their context)
+    REFER_COMPLETIONS(95.0),
 
     // Language fundamentals (daily use)
     SPECIAL_FORMS(85.0),

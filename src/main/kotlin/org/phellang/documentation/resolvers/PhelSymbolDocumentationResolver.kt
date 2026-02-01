@@ -8,6 +8,7 @@ import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.core.psi.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelReferUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
@@ -25,10 +26,38 @@ class PhelSymbolDocumentationResolver {
 
         val content = when {
             isLocalSymbol(symbol) -> generateLocalSymbolDoc(symbol, symbolName)
+            isInsideReferVector(symbol) -> resolveReferSymbolDocumentation(symbol, symbolName)
             else -> resolveApiDocumentation(symbol, symbolName)
         }
 
         return formatAsHtml(content)
+    }
+
+    private fun isInsideReferVector(symbol: PhelSymbol): Boolean {
+        val symbolName = symbol.text ?: return false
+
+        // Symbols in :refer vectors don't have backslashes (they're simple names)
+        if (symbolName.contains("\\")) {
+            return false
+        }
+
+        return PhelReferUtils.isInsideReferVector(symbol)
+    }
+
+    private fun resolveReferSymbolDocumentation(symbol: PhelSymbol, symbolName: String): String {
+        val namespace = PhelReferUtils.getReferNamespace(symbol) ?: return generateBasicDocumentation(symbol, symbolName)
+        val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+
+        // Try API documentation (standard library)
+        val canonicalName = "$shortNamespace/$symbolName"
+        val apiDoc = PhelApiDocumentation.functionDocs[canonicalName]
+        if (apiDoc != null) return apiDoc
+
+        // Try project symbols
+        val projectDoc = resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
+        if (projectDoc != null) return projectDoc
+
+        return generateBasicDocumentation(symbol, symbolName)
     }
 
     private fun isLocalSymbol(symbol: PhelSymbol): Boolean {
@@ -76,9 +105,7 @@ class PhelSymbolDocumentationResolver {
     }
 
     private fun resolveProjectSymbolDocumentation(
-        symbol: PhelSymbol,
-        shortNamespace: String,
-        functionName: String
+        symbol: PhelSymbol, shortNamespace: String, functionName: String
     ): String? {
         val project = symbol.project
         val index = PhelProjectSymbolIndex.getInstance(project)

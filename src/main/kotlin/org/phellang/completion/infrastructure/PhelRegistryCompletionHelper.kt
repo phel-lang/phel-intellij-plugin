@@ -63,19 +63,13 @@ object PhelRegistryCompletionHelper {
     }
 
     private fun addNamespaceFunctions(
-        result: CompletionResultSet,
-        namespace: Namespace,
-        aliasMap: Map<String, String>
+        result: CompletionResultSet, namespace: Namespace, aliasMap: Map<String, String>
     ) {
         val functions = PhelFunctionRegistry.getFunctions(namespace)
         functions.forEach { function ->
             val displayName = transformNameWithAlias(function, aliasMap)
             PhelCompletionUtils.addRankedCompletion(
-                result,
-                displayName,
-                function.signature,
-                function.completion.tailText,
-                function.completion.priority
+                result, displayName, function.signature, function.completion.tailText, function.completion.priority
             )
         }
     }
