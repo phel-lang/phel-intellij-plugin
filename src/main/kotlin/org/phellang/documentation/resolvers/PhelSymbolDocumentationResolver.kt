@@ -90,6 +90,11 @@ class PhelSymbolDocumentationResolver {
             return true
         }
 
+        // PHP interop namespace is always available (built-in language feature)
+        if (shortNamespace == "php") {
+            return true
+        }
+
         val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false
         val phelNamespace = PhelNamespaceUtils.toPhelNamespace(shortNamespace)
 

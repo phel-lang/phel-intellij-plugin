@@ -9,6 +9,8 @@ import org.phellang.annotator.infrastructure.PhelAnnotationConstants.NAMESPACE_S
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.PHP_INTEROP
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.REGULAR_SYMBOL
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.VARIADIC_PARAMETER
+import org.phellang.annotator.quickfixes.PhelImportNamespaceQuickFix
+import org.phellang.annotator.validators.PhelNamespaceValidator
 import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
@@ -60,7 +62,28 @@ object PhelSymbolHighlighter {
             return
         }
 
-        // Namespace prefix highlighting
+        // Namespace-qualified function calls - use "/" as separator
+        if (text.contains("/") && !text.startsWith("/") && !text.endsWith("/")) {
+            val validationResult = PhelNamespaceValidator.validateNamespace(symbol)
+            if (validationResult != null) {
+                // If we know the full namespace, offer a quick fix to import it
+                if (validationResult.fullNamespace != null) {
+                    val quickFix = PhelImportNamespaceQuickFix(
+                        validationResult.fullNamespace
+                    )
+                    PhelAnnotationUtils.createWarningAnnotationWithFix(
+                        holder, symbol, validationResult.message, quickFix
+                    )
+                } else {
+                    // Namespace doesn't exist - no quick fix available
+                    PhelAnnotationUtils.createWarningAnnotation(holder, symbol, validationResult.message)
+                }
+                return
+            }
+            PhelAnnotationUtils.createAnnotation(holder, symbol, NAMESPACE_SYMBOL)
+            return
+        }
+
         if (PhelSymbolPositionAnalyzer.hasNamespacePrefix(text)) {
             PhelAnnotationUtils.createAnnotation(holder, symbol, NAMESPACE_SYMBOL)
             return

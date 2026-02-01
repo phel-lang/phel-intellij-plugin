@@ -6,14 +6,17 @@ import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
+import org.phellang.completion.indexing.PhelProjectSymbolScanner
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.psi.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.PhelVendorUtils
 
 /**
  * Reference implementation for Phel symbols that supports resolving to multiple targets.
@@ -51,6 +54,20 @@ class PhelReference @JvmOverloads constructor(
     }
 
     private fun findDefinitions(results: MutableList<ResolveResult>) {
+        // Check if this is a namespace-qualified symbol (e.g., utils/greet, m/square)
+        val qualifier = PhelPsiUtils.getQualifier(myElement!!)
+        if (qualifier != null) {
+            // This is a qualified symbol - resolve by namespace
+            val namespacedDefinitions = resolveQualifiedSymbol(qualifier)
+            for (def in namespacedDefinitions) {
+                results.add(PsiElementResolveResult(def))
+            }
+            // For qualified symbols, don't search local scope or other files
+            return
+        }
+
+        // Unqualified symbol - use original resolution logic
+
         // 1. Check local scope first - but collect ALL definitions for polyvariant resolution
         val localDefinition = resolveInLocalScope()
         if (localDefinition != null) {
@@ -107,6 +124,162 @@ class PhelReference @JvmOverloads constructor(
                 results.add(PsiElementResolveResult(def))
             }
         }
+
+        // 4. Phel standard library (vendor folder) - for core functions like map, filter, etc.
+        if (results.isEmpty()) {
+            val vendorDefinitions = resolveInVendor(myElement!!.project, "core")
+            for (def in vendorDefinitions) {
+                results.add(PsiElementResolveResult(def))
+            }
+        }
+    }
+
+    /**
+     * Resolves a qualified symbol (e.g., utils/greet, m/square, str/join) to its definition.
+     * This handles:
+     * - Direct namespace imports: utils/greet -> phel-project\utils/greet
+     * - Aliased imports: m/square -> phel-project\math/square (when m is alias for math)
+     * - Unimported namespaces: searches project files by short namespace name
+     * - Standard library functions: searches vendor/phel-lang/phel/src/phel/
+     */
+    private fun resolveQualifiedSymbol(qualifier: String): MutableCollection<PsiElement> {
+        val results: MutableList<PsiElement> = ArrayList()
+        val containingFile = myElement!!.containingFile as? PhelFile ?: return results
+        val project = myElement!!.project
+
+        // First, try to resolve the qualifier via imports (handles aliases)
+        val targetNamespace = resolveQualifierToNamespace(containingFile, qualifier)
+
+        // Determine the actual namespace to search for
+        val resolvedQualifier = if (targetNamespace != null) {
+            targetNamespace.substringAfterLast("\\")
+        } else {
+            qualifier
+        }
+
+        // Check if this is a standard library namespace - search vendor folder
+        val vendorResults = resolveInVendor(project, resolvedQualifier)
+        results.addAll(vendorResults)
+
+        // Also search project files
+        val phelFiles = FilenameIndex.getAllFilesByExt(
+            project, "phel", GlobalSearchScope.projectScope(project)
+        )
+        val psiManager = PsiManager.getInstance(project)
+
+        for (virtualFile in phelFiles) {
+            val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
+
+            val fileNamespace = PhelProjectSymbolScanner.extractNamespace(psiFile) ?: continue
+            val fileShortNamespace = fileNamespace.substringAfterLast("\\")
+
+            // Match by full namespace (if resolved from imports) OR by short namespace name
+            val matches = if (targetNamespace != null) {
+                fileNamespace == targetNamespace
+            } else {
+                // No import found - match by short namespace name
+                fileShortNamespace == qualifier
+            }
+
+            if (matches) {
+                // Found the file! Search for the definition in this file
+                val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
+                for (list in lists) {
+                    val definition = findDefinitionInList(list)
+                    if (definition != null) {
+                        results.add(definition)
+                    }
+                }
+            }
+        }
+
+        return results
+    }
+
+    /**
+     * Searches for the symbol definition in the Phel standard library (vendor folder).
+     */
+    private fun resolveInVendor(project: com.intellij.openapi.project.Project, namespace: String): List<PsiElement> {
+        val results: MutableList<PsiElement> = ArrayList()
+
+        // Find the vendor file for this namespace
+        val vendorFile = PhelVendorUtils.findStandardLibraryFile(project, namespace) ?: return results
+        
+        val psiManager = PsiManager.getInstance(project)
+        val psiFile = psiManager.findFile(vendorFile) as? PhelFile ?: return results
+
+        // Search for definitions in the vendor file
+        val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
+        for (list in lists) {
+            val definition = findDefinitionInList(list)
+            if (definition != null) {
+                results.add(definition)
+            }
+        }
+
+        return results
+    }
+
+    /**
+     * Resolves a qualifier to a full namespace name using the file's imports.
+     * Handles both direct imports and aliases.
+     *
+     * @param file The file containing the symbol
+     * @param qualifier The qualifier (e.g., "utils", "m", "str")
+     * @return The full namespace (e.g., "phel-project\\utils", "phel-project\\math", "phel\\str"),
+     *         or null if the qualifier is not found in imports
+     */
+    private fun resolveQualifierToNamespace(file: PhelFile, qualifier: String): String? {
+        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return null
+        val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
+        
+        if (requireForms.isEmpty()) {
+            return null // No imports, will fall back to short namespace matching
+        }
+
+        for (requireForm in requireForms) {
+            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
+
+            var i = 1 // Skip the :require keyword
+            while (i < forms.size) {
+                val form = forms[i]
+                val namespaceSymbol = if (form is PhelSymbol) form
+                else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+
+                if (namespaceSymbol != null) {
+                    val fullNamespace = namespaceSymbol.text
+                    val shortNamespace = fullNamespace.substringAfterLast("\\")
+
+                    // Check for :as alias pattern
+                    if (i + 2 < forms.size) {
+                        val nextForm = forms[i + 1]
+                        val asKeyword = nextForm as? org.phellang.language.psi.PhelKeyword
+                            ?: PsiTreeUtil.findChildOfType(nextForm, org.phellang.language.psi.PhelKeyword::class.java)
+
+                        if (asKeyword?.text == ":as") {
+                            val aliasForm = forms[i + 2]
+                            val aliasSymbol = if (aliasForm is PhelSymbol) aliasForm
+                            else PsiTreeUtil.findChildOfType(aliasForm, PhelSymbol::class.java)
+
+                            if (aliasSymbol != null && aliasSymbol.text == qualifier) {
+                                // Qualifier matches an alias
+                                return fullNamespace
+                            }
+                            i += 3
+                            continue
+                        }
+                    }
+
+                    // Check if qualifier matches short namespace (direct import)
+                    if (shortNamespace == qualifier) {
+                        return fullNamespace
+                    }
+                }
+                i++
+            }
+        }
+
+        return null
     }
 
     private fun findAllUsages(): MutableCollection<PsiElement> {
@@ -521,13 +694,27 @@ class PhelReference @JvmOverloads constructor(
         return null
     }
 
+    /**
+     * Checks if the keyword is a defining form (defn, def, defmacro, etc.).
+     */
     private fun isDefiningKeyword(keyword: String?): Boolean {
         if (keyword == null) return false
 
-        return PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.SPECIAL_FORMS)
+        // Direct check for common defining keywords
+        return keyword in DEFINING_KEYWORDS ||
+            PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.SPECIAL_FORMS)
+             || PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.MACROS)
     }
 
     companion object {
+        /**
+         * Keywords that define new symbols.
+         */
+        private val DEFINING_KEYWORDS = setOf(
+            "def", "defn", "defn-", "defmacro", "defmacro-",
+            "defstruct", "definterface", "def-"
+        )
+
         /**
          * Calculate the text range within the symbol that represents the reference.
          * For qualified symbols like "ns/symbol", we only reference the symbol part.
