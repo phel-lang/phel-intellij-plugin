@@ -17,7 +17,9 @@ import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.psi.PhelSymbolAnalyzer
+import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.files.PhelFile
 
 object PhelSymbolHighlighter {
 
@@ -100,6 +102,13 @@ object PhelSymbolHighlighter {
 
         // Function call position
         if (PhelSymbolPositionAnalyzer.isInFunctionCallPosition(symbol)) {
+            // Check if this is an imported function via :refer - use FUNCTION_CALL color
+            val containingFile = symbol.containingFile as? PhelFile
+            if (containingFile != null && PhelNamespaceUtils.isReferredSymbol(containingFile, text)) {
+                PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_CALL)
+                return
+            }
+
             PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_NAME)
             return
         }
