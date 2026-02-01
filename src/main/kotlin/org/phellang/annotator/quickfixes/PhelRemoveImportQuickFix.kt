@@ -10,11 +10,11 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 
-class PhelRemoveDuplicateImportQuickFix(
-    private val symbolToRemove: PhelSymbol
+class PhelRemoveImportQuickFix(
+    private val symbolToRemove: PhelSymbol, private val actionText: String = "Remove import"
 ) : PsiElementBaseIntentionAction(), IntentionAction {
 
-    override fun getText(): String = "Remove duplicate import"
+    override fun getText(): String = actionText
 
     override fun getFamilyName(): String = "Phel namespace imports"
 
