@@ -1,6 +1,5 @@
 package org.phellang.completion.indexing
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
@@ -8,6 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.BulkFileListener
 import com.intellij.openapi.vfs.newvfs.events.*
 import com.intellij.psi.PsiManager
+import com.intellij.util.FileContentUtilCore
 
 class PhelFileChangeListener(private val project: Project) : BulkFileListener {
 
@@ -73,15 +73,15 @@ class PhelFileChangeListener(private val project: Project) : BulkFileListener {
         ApplicationManager.getApplication().invokeLater {
             if (project.isDisposed) return@invokeLater
 
-            val psiManager = PsiManager.getInstance(project)
             val fileEditorManager = FileEditorManager.getInstance(project)
-            val daemonCodeAnalyzer = DaemonCodeAnalyzer.getInstance(project)
-
-            // Re-analyze all open Phel files
-            for (file in fileEditorManager.openFiles) {
-                if (file.extension != "phel") continue
-                val psiFile = psiManager.findFile(file) ?: continue
-                daemonCodeAnalyzer.restart(psiFile)
+            val psiManager = PsiManager.getInstance(project)
+            
+            val openPhelFiles = fileEditorManager.openFiles
+                .filter { it.extension == "phel" }
+                .mapNotNull { psiManager.findFile(it)?.virtualFile }
+            
+            if (openPhelFiles.isNotEmpty()) {
+                FileContentUtilCore.reparseFiles(openPhelFiles)
             }
         }
     }
