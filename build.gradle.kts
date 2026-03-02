@@ -2,7 +2,7 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 group = "org.phellang"
-version = "0.3.0"
+version = "0.3.1"
 
 plugins {
     id("java")
@@ -158,7 +158,7 @@ tasks {
             "-Didea.suppress.layout.warnings=true",
             "-Didea.is.unit.test=true",
             "-Didea.force.use.core.classloader=true",
-            "-Xshare:off"  // Disable CDS to avoid classloader conflicts
+            "-Xshare:off" // Disable CDS to avoid classloader conflicts
         )
     }
 
