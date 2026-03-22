@@ -9,6 +9,7 @@ enum class PhelCompletionPriority(val value: Double) {
     RECENT_DEFINITIONS(90.0),
     
     // Context-specific completions (very relevant in their context)
+    NS_KEYWORDS(96.0),
     REFER_COMPLETIONS(95.0),
 
     // Language fundamentals (daily use)
