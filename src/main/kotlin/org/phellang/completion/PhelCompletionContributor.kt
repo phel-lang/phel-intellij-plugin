@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.*
 import com.intellij.patterns.PlatformPatterns
 import org.phellang.language.infrastructure.PhelLanguage
 import org.phellang.completion.engine.PhelMainCompletionProvider
+import org.phellang.completion.engine.PhelNsKeywordCompletionProvider
 import org.phellang.language.psi.PhelTypes
 
 class PhelCompletionContributor : CompletionContributor() {
@@ -13,6 +14,12 @@ class PhelCompletionContributor : CompletionContributor() {
             CompletionType.BASIC,
             PlatformPatterns.psiElement(PhelTypes.SYM).withLanguage(PhelLanguage),
             PhelMainCompletionProvider()
+        )
+
+        extend(
+            CompletionType.BASIC,
+            PlatformPatterns.psiElement(PhelTypes.KEYWORD_TOKEN).withLanguage(PhelLanguage),
+            PhelNsKeywordCompletionProvider()
         )
     }
 }
