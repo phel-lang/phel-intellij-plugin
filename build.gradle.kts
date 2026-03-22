@@ -7,8 +7,8 @@ version = "0.3.1"
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.3.10"
-    id("org.jetbrains.intellij.platform") version "2.11.0"
-    id("org.jetbrains.grammarkit") version "2023.3.0.2"
+    id("org.jetbrains.intellij.platform") version "2.12.0"
+    id("org.jetbrains.grammarkit") version "2023.3.0.3"
 }
 
 tasks.withType<Wrapper> {
@@ -61,8 +61,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.3")
     testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.3")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.3")
-    testImplementation("org.mockito:mockito-core:5.22.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.22.0")
+    testImplementation("org.mockito:mockito-core:5.23.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
     implementation("com.google.code.gson:gson:2.13.2")
 }
 
