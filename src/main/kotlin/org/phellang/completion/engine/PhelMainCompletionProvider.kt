@@ -35,6 +35,17 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
                 return@safeOperation
             }
 
+            // Check if we're inside an ns form — add ns keyword suggestions
+            // and suppress general completions at ns keyword positions
+            val nsContext = PhelNsKeywordCompletionProvider.detectNsContext(element)
+            if (nsContext != null) {
+                PhelNsKeywordCompletionProvider.addNsKeywordCompletions(element, result)
+
+                // At keyword positions (NS_BODY_KEYWORD, REQUIRE_OPTION, USE_OPTION),
+                // don't show general function completions — they're not relevant
+                return@safeOperation
+            }
+
             when {
                 // Inside :refer vector - suggest functions from the required namespace
                 completionContext.isInsideReferVector() -> {
