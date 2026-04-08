@@ -348,7 +348,7 @@ Works with inline mock creation:<br />
     <pre><code>
     (with-mocks [http-get (mock {:status 200})]
       (http-get)
-      # Mock is automatically reset after this block)
+      ;; Mock is automatically reset after this block)
 </code></pre><br /><br />
 Also works with pre-defined mocks:<br />
     <pre><code>

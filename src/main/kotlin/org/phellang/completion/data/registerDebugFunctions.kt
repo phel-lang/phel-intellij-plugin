@@ -5,6 +5,23 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "debug",
+        name = "debug/add-tap",
+        signature = "(add-tap f)",
+        completion = CompletionInfo(
+            tailText = "Register a global tap handler function",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "Register a global tap handler function.",
+            example = "(add-tap println)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L87",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "debug",
         name = "debug/dbg",
         signature = "(dbg expr)",
         completion = CompletionInfo(
@@ -33,6 +50,40 @@ internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
             example = "(def add (dotrace \"add\" +))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L18",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "debug",
+        name = "debug/remove-tap",
+        signature = "(remove-tap f)",
+        completion = CompletionInfo(
+            tailText = "Unregister a global tap handler function",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "Unregister a global tap handler function.",
+            example = "(remove-tap println)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L97",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "debug",
+        name = "debug/reset-taps!",
+        signature = "(reset-taps!)",
+        completion = CompletionInfo(
+            tailText = "Clear all tap handlers",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "Clear all tap handlers.",
+            example = "(reset-taps!)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L121",
                 docs = "",
             ),
         ),
@@ -101,6 +152,23 @@ internal fun registerDebugFunctions(): List<PhelFunction> = listOf(
             example = "(-&gt; 5 (tap) (* 2))",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L71",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "debug",
+        name = "debug/tap>",
+        signature = "(tap> value)",
+        completion = CompletionInfo(
+            tailText = "Send a value to all registered tap handlers",
+            priority = PhelCompletionPriority.DEBUG_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "Send a value to all registered tap handlers.",
+            example = "(tap&gt; {:debug \"some value\"})",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/debug.phel#L106",
                 docs = "",
             ),
         ),

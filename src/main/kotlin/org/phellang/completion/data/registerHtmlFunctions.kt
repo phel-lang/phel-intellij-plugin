@@ -15,7 +15,7 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
             summary = "Returns an HTML doctype declaration.",
             example = "(doctype :html5) ; =&gt; \"&lt;!DOCTYPE html&gt;\\n\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L170",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L167",
                 docs = "",
             ),
         ),
@@ -49,7 +49,7 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
             summary = "Compiles Phel vectors to HTML strings.",
             example = "(html [:div \"Hello\"]) ; =&gt; \"&lt;div&gt;Hello&lt;/div&gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L155",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L152",
                 docs = "",
             ),
         ),
