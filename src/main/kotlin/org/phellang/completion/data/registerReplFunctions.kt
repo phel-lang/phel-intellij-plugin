@@ -18,7 +18,7 @@ Returns a vector of symbols whose name contains the given search string.<br />
 """,
             example = "(apropos \"map\") ; =&gt; [phel\\core/flat-map phel\\core/map ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L257",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L282",
                 docs = "",
             ),
         ),
@@ -35,7 +35,7 @@ Returns a vector of symbols whose name contains the given search string.<br />
             summary = "",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L15",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L16",
                 docs = "",
             ),
         ),
@@ -52,7 +52,7 @@ Returns a vector of symbols whose name contains the given search string.<br />
             summary = "Compiles a Phel expression string to PHP code.",
             example = "(compile-str \"(+ 1 2)\") ; =&gt; \"(1 + 2)\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L161",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L186",
                 docs = "",
             ),
         ),
@@ -72,7 +72,7 @@ Returns nil. Prints one name per line, sorted alphabetically.
 """,
             example = "(dir \"phel\\core\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L240",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L265",
                 docs = "",
             ),
         ),
@@ -89,7 +89,7 @@ Returns nil. Prints one name per line, sorted alphabetically.
             summary = "Prints the documentation for the given symbol.",
             example = "(doc map)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L79",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L77",
                 docs = "",
             ),
         ),
@@ -112,7 +112,7 @@ Useful for nREPL and other tooling that needs to separate printed output from<br
 """,
             example = "(eval-capturing \"(do (println \\\"hello\\\") 42)\") ; =&gt; {:value 42 :out \"hello\\n\" :success true :error nil}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L399",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L424",
                 docs = "",
             ),
         ),
@@ -132,7 +132,7 @@ Evaluates a string of Phel code and returns the result.<br />
 """,
             example = "(eval-str \"(+ 1 2)\") ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L170",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L195",
                 docs = "",
             ),
         ),
@@ -152,7 +152,7 @@ Searches for functions whose name or docstring contains the search string.<br />
 """,
             example = "(find-fn \"map\") ; =&gt; [{:ns \"phel\\core\" :name \"map\" ...} ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L275",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L300",
                 docs = "",
             ),
         ),
@@ -172,7 +172,7 @@ Returns the source code of the definition identified by namespace and name<br />
 """,
             example = "(get-source-code \"phel\\core\" \"map\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L307",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L332",
                 docs = "",
             ),
         ),
@@ -194,7 +194,7 @@ Keys: :doc, :file, :line, :column, :end-line, :end-column, :private,<br />
 """,
             example = "(get-symbol-info \"phel\\core\" \"map\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L198",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L223",
                 docs = "",
             ),
         ),
@@ -215,7 +215,7 @@ Loads and evaluates a Phel source file in the current REPL session.<br />
 """,
             example = "(load-file \"src/my-module.phel\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L180",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L205",
                 docs = "",
             ),
         ),
@@ -232,7 +232,7 @@ Loads and evaluates a Phel source file in the current REPL session.<br />
             summary = "Returns all namespaces currently loaded in the REPL.",
             example = "(loaded-namespaces) ; =&gt; [\"phel\\core\" \"phel\\repl\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L22",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L23",
                 docs = "",
             ),
         ),
@@ -243,16 +243,16 @@ Loads and evaluates a Phel source file in the current REPL session.<br />
         signature = "(macroexpand form)",
         completion = CompletionInfo(
             tailText = "Recursively expands the given form until it is no longer a macro call",
-            priority = PhelCompletionPriority.MACROS,
+            priority = PhelCompletionPriority.REPL_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
 Recursively expands the given form until it is no longer a macro call.<br />
-  The form is automatically quoted. Returns the fully expanded form.
+  The form must be quoted to prevent evaluation, matching Clojure semantics.
 """,
-            example = "(macroexpand (defn foo [x] x))",
+            example = "(macroexpand '(when true 1 2))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L475",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L500",
                 docs = "",
             ),
         ),
@@ -262,17 +262,17 @@ Recursively expands the given form until it is no longer a macro call.<br />
         name = "repl/macroexpand-1",
         signature = "(macroexpand-1 form)",
         completion = CompletionInfo(
-            tailText = "Expands the given form once",
-            priority = PhelCompletionPriority.MACROS,
+            tailText = "Expands the given form once if it is a macro call",
+            priority = PhelCompletionPriority.REPL_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Expands the given form once. The form is automatically quoted.<br />
-  Returns the expanded form, or the original if it is not a macro call.
+Expands the given form once if it is a macro call. The form must be<br />
+  quoted to prevent evaluation, matching Clojure semantics.
 """,
-            example = "(macroexpand-1 (defn foo [x] x))",
+            example = "(macroexpand-1 '(when true 1 2))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L467",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L492",
                 docs = "",
             ),
         ),
@@ -294,7 +294,7 @@ Expands the given form once if it is a macro call.<br />
 """,
             example = "(macroexpand-1-form '(defn foo [x] x))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L446",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L471",
                 docs = "",
             ),
         ),
@@ -315,7 +315,7 @@ Recursively expands the given form until it is no longer a macro call.<br />
 """,
             example = "(macroexpand-form '(defn foo [x] x))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L457",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L482",
                 docs = "",
             ),
         ),
@@ -335,7 +335,7 @@ Returns a hash-map of {alias => namespace} for all require aliases in the<br />
 """,
             example = "(ns-aliases *ns*) ; =&gt; {\"repl\" \"phel\\repl\" ...}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L349",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L374",
                 docs = "",
             ),
         ),
@@ -355,7 +355,7 @@ Returns a sorted vector of all loaded namespace names, decoded to<br />
 """,
             example = "(ns-list) ; =&gt; [\"phel\\core\" \"phel\\repl\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L28",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L29",
                 docs = "",
             ),
         ),
@@ -375,7 +375,7 @@ Returns a hash-map of {name => value} for all public definitions in the<br />
 """,
             example = "(ns-publics \"phel\\core\") ; =&gt; {\"map\" &lt;fn&gt; \"filter\" &lt;fn&gt; ...}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L333",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L358",
                 docs = "",
             ),
         ),
@@ -395,7 +395,7 @@ Returns a hash-map of {name => source-namespace} for all referred symbols<br />
 """,
             example = "(ns-refers *ns*) ; =&gt; {\"doc\" \"phel\\repl\" ...}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L362",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L387",
                 docs = "",
             ),
         ),
@@ -412,7 +412,7 @@ Returns a hash-map of {name => source-namespace} for all referred symbols<br />
             summary = "Prints arguments with colored output.",
             example = "(print-colorful [1 2 3])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L146",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L171",
                 docs = "",
             ),
         ),
@@ -429,7 +429,7 @@ Returns a hash-map of {name => source-namespace} for all referred symbols<br />
             summary = "Prints arguments with colored output followed by a newline.",
             example = "(println-colorful [1 2 3])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L153",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L178",
                 docs = "",
             ),
         ),
@@ -444,28 +444,9 @@ Returns a hash-map of {name => source-namespace} for all referred symbols<br />
         ),
         documentation = DocumentationInfo(
             summary = "Requires a Phel module into the environment.",
-            example = "(require phel\\http :as http :refer [request]) ; =&gt; phel\\http",
+            example = "(require 'phel\\http :as http :refer [request]) ; =&gt; phel\\http",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L109",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "repl",
-        name = "repl/resolve",
-        signature = "(resolve sym)",
-        completion = CompletionInfo(
-            tailText = "Resolves the given symbol in the current environment and returns a resolved Symbol with the absol...",
-            priority = PhelCompletionPriority.REPL_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = """
-Resolves the given symbol in the current environment and returns a resolved Symbol with the absolute namespace or nil if it cannot be resolved.
-""",
-            example = "(resolve 'map) ; =&gt; phel\\core/map",
-            links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L59",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L132",
                 docs = "",
             ),
         ),
@@ -485,7 +466,7 @@ Searches docstrings across all loaded namespaces for the given string.<br />
 """,
             example = "(search-doc \"reduce\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L375",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L400",
                 docs = "",
             ),
         ),
@@ -502,7 +483,7 @@ Searches docstrings across all loaded namespaces for the given string.<br />
             summary = "Returns the source code of the given symbol as a string, or nil if unavailable.",
             example = "(source map)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L324",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L349",
                 docs = "",
             ),
         ),
@@ -524,7 +505,7 @@ Keys: :doc, :file, :line, :column, :end-line, :end-column, :private,<br />
 """,
             example = "(symbol-info map) ; =&gt; {:doc \"...\" :ns \"phel\\core\" :name \"map\" ...}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L227",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L252",
                 docs = "",
             ),
         ),
@@ -546,7 +527,7 @@ Runs all tests in a given namespace from the REPL.<br />
 """,
             example = "(test-ns \"phel-test\\test\\core\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L426",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L451",
                 docs = "",
             ),
         ),
@@ -563,7 +544,7 @@ Runs all tests in a given namespace from the REPL.<br />
             summary = "Adds a use statement to the environment.",
             example = "(use DateTime :as DT) ; =&gt; DateTime",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L123",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L147",
                 docs = "",
             ),
         ),
