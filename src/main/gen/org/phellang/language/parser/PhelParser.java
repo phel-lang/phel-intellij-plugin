@@ -157,6 +157,21 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // "#(" list_body ")"
+  public static boolean hash_fn(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "hash_fn")) return false;
+    if (!nextTokenIs(builder_, HASH_PAREN)) return false;
+    boolean result_, pinned_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, HASH_FN, null);
+    result_ = consumeToken(builder_, HASH_PAREN);
+    pinned_ = result_; // pin = 1
+    result_ = result_ && report_error_(builder_, list_body(builder_, level_ + 1));
+    result_ = pinned_ && consumeToken(builder_, PAREN2) && result_;
+    exit_section_(builder_, level_, marker_, result_, pinned_, null);
+    return result_ || pinned_;
+  }
+
+  /* ********************************************************** */
   // <<items_entry <<recover>> <<param>>>> *
   static boolean items(PsiBuilder builder_, int level_, Parser recover, Parser param) {
     if (!recursion_guard_(builder_, level_, "items")) return false;
@@ -257,7 +272,7 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // number | hexnum | binnum | octnum | bool | nil | nan | string | char
+  // number | hexnum | binnum | octnum | radixnum | bool | nil | nan | symbolic_num | string | char | regex_literal
   public static boolean literal(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "literal")) return false;
     boolean result_;
@@ -266,11 +281,14 @@ public class PhelParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = consumeToken(builder_, HEXNUM);
     if (!result_) result_ = consumeToken(builder_, BINNUM);
     if (!result_) result_ = consumeToken(builder_, OCTNUM);
+    if (!result_) result_ = consumeToken(builder_, RADIXNUM);
     if (!result_) result_ = consumeToken(builder_, BOOL);
     if (!result_) result_ = consumeToken(builder_, NIL);
     if (!result_) result_ = consumeToken(builder_, NAN);
+    if (!result_) result_ = consumeToken(builder_, SYMBOLIC_NUM);
     if (!result_) result_ = consumeToken(builder_, STRING);
     if (!result_) result_ = consumeToken(builder_, CHAR);
+    if (!result_) result_ = regex_literal(builder_, level_ + 1);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
   }
@@ -354,7 +372,7 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // list | vec | map | set | short_fn
+  // list | vec | map | set | short_fn | hash_fn | reader_conditional | reader_conditional_splice
   static boolean p_forms(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "p_forms")) return false;
     boolean result_;
@@ -363,11 +381,44 @@ public class PhelParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = map(builder_, level_ + 1);
     if (!result_) result_ = set(builder_, level_ + 1);
     if (!result_) result_ = short_fn(builder_, level_ + 1);
+    if (!result_) result_ = hash_fn(builder_, level_ + 1);
+    if (!result_) result_ = reader_conditional(builder_, level_ + 1);
+    if (!result_) result_ = reader_conditional_splice(builder_, level_ + 1);
     return result_;
   }
 
   /* ********************************************************** */
-  // "'" | "~" | "~@" | "`" | "," | ",@"
+  // "#?(" list_body ")"
+  public static boolean reader_conditional(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "reader_conditional")) return false;
+    if (!nextTokenIs(builder_, READER_COND)) return false;
+    boolean result_, pinned_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, READER_CONDITIONAL, null);
+    result_ = consumeToken(builder_, READER_COND);
+    pinned_ = result_; // pin = 1
+    result_ = result_ && report_error_(builder_, list_body(builder_, level_ + 1));
+    result_ = pinned_ && consumeToken(builder_, PAREN2) && result_;
+    exit_section_(builder_, level_, marker_, result_, pinned_, null);
+    return result_ || pinned_;
+  }
+
+  /* ********************************************************** */
+  // "#?@(" list_body ")"
+  public static boolean reader_conditional_splice(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "reader_conditional_splice")) return false;
+    if (!nextTokenIs(builder_, READER_COND_SPLICE)) return false;
+    boolean result_, pinned_;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, READER_CONDITIONAL_SPLICE, null);
+    result_ = consumeToken(builder_, READER_COND_SPLICE);
+    pinned_ = result_; // pin = 1
+    result_ = result_ && report_error_(builder_, list_body(builder_, level_ + 1));
+    result_ = pinned_ && consumeToken(builder_, PAREN2) && result_;
+    exit_section_(builder_, level_, marker_, result_, pinned_, null);
+    return result_ || pinned_;
+  }
+
+  /* ********************************************************** */
+  // "'" | "~" | "~@" | "`" | "," | ",@" | "@" | "#'"
   public static boolean reader_macro(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "reader_macro")) return false;
     boolean result_;
@@ -378,7 +429,21 @@ public class PhelParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = consumeToken(builder_, SYNTAX_QUOTE);
     if (!result_) result_ = consumeToken(builder_, COMMA);
     if (!result_) result_ = consumeToken(builder_, COMMA_AT);
+    if (!result_) result_ = consumeToken(builder_, DEREF);
+    if (!result_) result_ = consumeToken(builder_, VAR_QUOTE);
     exit_section_(builder_, level_, marker_, result_, false, null);
+    return result_;
+  }
+
+  /* ********************************************************** */
+  // regex_start regex_body
+  public static boolean regex_literal(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "regex_literal")) return false;
+    if (!nextTokenIs(builder_, REGEX_START)) return false;
+    boolean result_;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeTokens(builder_, 0, REGEX_START, REGEX_BODY);
+    exit_section_(builder_, marker_, REGEX_LITERAL, result_);
     return result_;
   }
 

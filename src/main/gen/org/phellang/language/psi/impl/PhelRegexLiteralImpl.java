@@ -8,29 +8,23 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.phellang.language.psi.PhelTypes.*;
-import org.phellang.language.psi.mixins.PhelLiteralMixin;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.phellang.language.psi.*;
 
-public class PhelLiteralImpl extends PhelLiteralMixin implements PhelLiteral {
+public class PhelRegexLiteralImpl extends ASTWrapperPsiElement implements PhelRegexLiteral {
 
-  public PhelLiteralImpl(ASTNode node) {
+  public PhelRegexLiteralImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PhelVisitor visitor) {
-    visitor.visitLiteral(this);
+    visitor.visitRegexLiteral(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof PhelVisitor) accept((PhelVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @Nullable
-  public PhelRegexLiteral getRegexLiteral() {
-    return findChildByClass(PhelRegexLiteral.class);
   }
 
 }

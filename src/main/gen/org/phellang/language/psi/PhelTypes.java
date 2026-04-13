@@ -13,12 +13,16 @@ public interface PhelTypes {
   IElementType ACCESS = new PhelElementType("ACCESS");
   IElementType FORM = new PhelElementType("FORM");
   IElementType FORM_COMMENT_MACRO = new PhelElementType("FORM_COMMENT_MACRO");
+  IElementType HASH_FN = new PhelElementType("HASH_FN");
   IElementType KEYWORD = new PhelElementType("KEYWORD");
   IElementType LIST = new PhelElementType("LIST");
   IElementType LITERAL = new PhelElementType("LITERAL");
   IElementType MAP = new PhelElementType("MAP");
   IElementType METADATA = new PhelElementType("METADATA");
+  IElementType READER_CONDITIONAL = new PhelElementType("READER_CONDITIONAL");
+  IElementType READER_CONDITIONAL_SPLICE = new PhelElementType("READER_CONDITIONAL_SPLICE");
   IElementType READER_MACRO = new PhelElementType("READER_MACRO");
+  IElementType REGEX_LITERAL = new PhelElementType("REGEX_LITERAL");
   IElementType SET = new PhelElementType("SET");
   IElementType SHORT_FN = new PhelElementType("SHORT_FN");
   IElementType SYMBOL = new PhelElementType("SYMBOL");
@@ -35,11 +39,13 @@ public interface PhelTypes {
   IElementType COLONCOLON = new PhelTokenType("::");
   IElementType COMMA = new PhelTokenType(",");
   IElementType COMMA_AT = new PhelTokenType(",@");
+  IElementType DEREF = new PhelTokenType("@");
   IElementType DOT = new PhelTokenType(".");
   IElementType DOTDASH = new PhelTokenType(".-");
   IElementType FN_SHORT = new PhelTokenType("|(");
   IElementType FORM_COMMENT = new PhelTokenType("#_");
   IElementType HASH_BRACE = new PhelTokenType("#{");
+  IElementType HASH_PAREN = new PhelTokenType("#(");
   IElementType HAT = new PhelTokenType("^");
   IElementType HEXNUM = new PhelTokenType("hexnum");
   IElementType KEYWORD_TOKEN = new PhelTokenType("KEYWORD_TOKEN");
@@ -52,11 +58,18 @@ public interface PhelTypes {
   IElementType PAREN1 = new PhelTokenType("(");
   IElementType PAREN2 = new PhelTokenType(")");
   IElementType QUOTE = new PhelTokenType("'");
+  IElementType RADIXNUM = new PhelTokenType("radixnum");
+  IElementType READER_COND = new PhelTokenType("#?(");
+  IElementType READER_COND_SPLICE = new PhelTokenType("#?@(");
+  IElementType REGEX_BODY = new PhelTokenType("REGEX_BODY");
+  IElementType REGEX_START = new PhelTokenType("REGEX_START");
   IElementType STRING = new PhelTokenType("string");
   IElementType SYM = new PhelTokenType("sym");
+  IElementType SYMBOLIC_NUM = new PhelTokenType("SYMBOLIC_NUM");
   IElementType SYNTAX_QUOTE = new PhelTokenType("`");
   IElementType TILDE = new PhelTokenType("~");
   IElementType TILDE_AT = new PhelTokenType("~@");
+  IElementType VAR_QUOTE = new PhelTokenType("#'");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -69,6 +82,9 @@ public interface PhelTypes {
       }
       else if (type == FORM_COMMENT_MACRO) {
         return new PhelFormCommentMacroImpl(node);
+      }
+      else if (type == HASH_FN) {
+        return new PhelHashFnImpl(node);
       }
       else if (type == KEYWORD) {
         return new PhelKeywordImpl(node);
@@ -85,8 +101,17 @@ public interface PhelTypes {
       else if (type == METADATA) {
         return new PhelMetadataImpl(node);
       }
+      else if (type == READER_CONDITIONAL) {
+        return new PhelReaderConditionalImpl(node);
+      }
+      else if (type == READER_CONDITIONAL_SPLICE) {
+        return new PhelReaderConditionalSpliceImpl(node);
+      }
       else if (type == READER_MACRO) {
         return new PhelReaderMacroImpl(node);
+      }
+      else if (type == REGEX_LITERAL) {
+        return new PhelRegexLiteralImpl(node);
       }
       else if (type == SET) {
         return new PhelSetImpl(node);

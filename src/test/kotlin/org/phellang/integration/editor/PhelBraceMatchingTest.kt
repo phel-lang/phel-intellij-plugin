@@ -37,7 +37,7 @@ class PhelBraceMatchingTest {
     @Test
     fun `complete brace matching workflow should work end-to-end`() {
         val pairs = braceMatcher.pairs
-        Assertions.assertEquals(5, pairs.size)
+        Assertions.assertEquals(8, pairs.size)
 
         Assertions.assertTrue(braceMatcher.isPairedBracesAllowedBeforeType(PhelTypes.PAREN1, null))
         Assertions.assertFalse(braceMatcher.isPairedBracesAllowedBeforeType(PhelTypes.PAREN1, PhelTypes.PAREN2))
@@ -72,9 +72,7 @@ class PhelBraceMatchingTest {
         positions.forEach { position ->
             val constructStart = braceMatcher.getCodeConstructStart(mockFile, position)
             Assertions.assertEquals(
-                position,
-                constructStart,
-                "Construct start should be at brace position for nested structure"
+                position, constructStart, "Construct start should be at brace position for nested structure"
             )
         }
     }
@@ -106,12 +104,12 @@ class PhelBraceMatchingTest {
             Arguments.of("Parentheses with no context", PhelTypes.PAREN1, null, 0, 0, true),
             Arguments.of("Brackets with no context", PhelTypes.BRACKET1, null, 5, 5, true),
             Arguments.of("Braces with no context", PhelTypes.BRACE1, null, 10, 10, true),
-            
+
             // Test pairing not allowed scenarios (closing brace context)
             Arguments.of("Parentheses before closing paren", PhelTypes.PAREN1, PhelTypes.PAREN2, 0, 0, false),
             Arguments.of("Brackets before closing bracket", PhelTypes.BRACKET1, PhelTypes.BRACKET2, 5, 5, false),
             Arguments.of("Braces before closing brace", PhelTypes.BRACE1, PhelTypes.BRACE2, 10, 10, false),
-            
+
             // Test pairing allowed scenarios (opening brace context)
             Arguments.of("Parentheses before opening paren", PhelTypes.PAREN1, PhelTypes.PAREN1, 15, 15, true),
             Arguments.of("Mixed braces - paren before bracket", PhelTypes.PAREN1, PhelTypes.BRACKET1, 20, 20, true)

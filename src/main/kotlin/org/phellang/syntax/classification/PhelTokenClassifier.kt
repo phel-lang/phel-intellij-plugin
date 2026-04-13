@@ -7,16 +7,15 @@ import org.phellang.language.psi.PhelTypes
 object PhelTokenClassifier {
 
     enum class TokenCategory {
-        COMMENT, STRING, NUMBER, BOOLEAN, NIL, NAN, CHARACTER,
-        PARENTHESES, BRACKETS, BRACES, QUOTE, SYNTAX_QUOTE,
-        UNQUOTE, UNQUOTE_SPLICING, KEYWORD, METADATA,
-        DOT_OPERATOR, COMMA, SYMBOL, BAD_CHARACTER, UNKNOWN
+        COMMENT, STRING, NUMBER, BOOLEAN, NIL, NAN, CHARACTER, PARENTHESES, BRACKETS, BRACES, QUOTE, SYNTAX_QUOTE,
+        UNQUOTE, UNQUOTE_SPLICING, KEYWORD, METADATA, DOT_OPERATOR, SYMBOL, BAD_CHARACTER, UNKNOWN, REGEX, DEREF
     }
 
     fun classifyToken(tokenType: IElementType): TokenCategory {
         return when {
             isComment(tokenType) -> TokenCategory.COMMENT
             isString(tokenType) -> TokenCategory.STRING
+            isRegex(tokenType) -> TokenCategory.REGEX
             isNumber(tokenType) -> TokenCategory.NUMBER
             isBoolean(tokenType) -> TokenCategory.BOOLEAN
             isNil(tokenType) -> TokenCategory.NIL
@@ -29,12 +28,12 @@ object PhelTokenClassifier {
             isShortFnOpener(tokenType) -> TokenCategory.PARENTHESES
             isQuote(tokenType) -> TokenCategory.QUOTE
             isSyntaxQuote(tokenType) -> TokenCategory.SYNTAX_QUOTE
+            isDeref(tokenType) -> TokenCategory.DEREF
             isUnquote(tokenType) -> TokenCategory.UNQUOTE
             isUnquoteSplicing(tokenType) -> TokenCategory.UNQUOTE_SPLICING
             isKeyword(tokenType) -> TokenCategory.KEYWORD
             isMetadata(tokenType) -> TokenCategory.METADATA
             isDotOperator(tokenType) -> TokenCategory.DOT_OPERATOR
-            isComma(tokenType) -> TokenCategory.COMMA
             isSymbol(tokenType) -> TokenCategory.SYMBOL
             isBadCharacter(tokenType) -> TokenCategory.BAD_CHARACTER
             else -> TokenCategory.UNKNOWN
@@ -49,8 +48,14 @@ object PhelTokenClassifier {
         return tokenType == PhelTypes.STRING
     }
 
+    fun isRegex(tokenType: IElementType): Boolean {
+        return tokenType == PhelTypes.REGEX_START || tokenType == PhelTypes.REGEX_BODY
+    }
+
     fun isNumber(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.NUMBER || tokenType == PhelTypes.HEXNUM || tokenType == PhelTypes.BINNUM || tokenType == PhelTypes.OCTNUM
+        return tokenType == PhelTypes.NUMBER || tokenType == PhelTypes.BINNUM
+                || tokenType == PhelTypes.OCTNUM || tokenType == PhelTypes.HEXNUM
+                || tokenType == PhelTypes.RADIXNUM || tokenType == PhelTypes.SYMBOLIC_NUM
     }
 
     fun isBoolean(tokenType: IElementType): Boolean {
@@ -70,7 +75,8 @@ object PhelTokenClassifier {
     }
 
     fun isParentheses(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.PAREN1 || tokenType == PhelTypes.PAREN2
+        return tokenType == PhelTypes.PAREN1 || tokenType == PhelTypes.PAREN2 || tokenType == PhelTypes.HASH_PAREN
+                || tokenType == PhelTypes.READER_COND || tokenType == PhelTypes.READER_COND_SPLICE
     }
 
     fun isBrackets(tokenType: IElementType): Boolean {
@@ -90,11 +96,15 @@ object PhelTokenClassifier {
     }
 
     fun isQuote(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.QUOTE
+        return tokenType == PhelTypes.QUOTE || tokenType == PhelTypes.VAR_QUOTE
     }
 
     fun isSyntaxQuote(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.SYNTAX_QUOTE
+    }
+
+    fun isDeref(tokenType: IElementType): Boolean {
+        return tokenType == PhelTypes.DEREF
     }
 
     fun isUnquote(tokenType: IElementType): Boolean {
@@ -106,7 +116,8 @@ object PhelTokenClassifier {
     }
 
     fun isKeyword(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.KEYWORD || tokenType == PhelTypes.KEYWORD_TOKEN || tokenType == PhelTypes.COLON || tokenType == PhelTypes.COLONCOLON
+        return tokenType == PhelTypes.KEYWORD || tokenType == PhelTypes.KEYWORD_TOKEN
+                || tokenType == PhelTypes.COLON || tokenType == PhelTypes.COLONCOLON
     }
 
     fun isMetadata(tokenType: IElementType): Boolean {
@@ -115,10 +126,6 @@ object PhelTokenClassifier {
 
     fun isDotOperator(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.DOT || tokenType == PhelTypes.DOTDASH
-    }
-
-    fun isComma(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.COMMA
     }
 
     fun isSymbol(tokenType: IElementType): Boolean {

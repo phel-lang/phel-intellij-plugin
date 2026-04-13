@@ -7,12 +7,13 @@ class PhelCommenter : Commenter {
         return ";"
     }
 
-    override fun getBlockCommentPrefix(): String {
-        return "#|"
+    override fun getBlockCommentPrefix(): String? {
+        // Block comments (#| ... |#) are deprecated since v0.31
+        return null
     }
 
-    override fun getBlockCommentSuffix(): String {
-        return "|#"
+    override fun getBlockCommentSuffix(): String? {
+        return null
     }
 
     override fun getCommentedBlockCommentPrefix(): String? {
