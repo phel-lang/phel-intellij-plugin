@@ -24,19 +24,20 @@ class PhelDemoTextProvider {
     }
 
     private fun StringBuilder.appendLiteralsSection() {
-        append("\n# Boolean and nil literals")
+        append("\n; Boolean and nil literals")
         append("\n(def config {:debug true :prod false :cache nil :timeout NAN})")
         append("\n")
-        append("\n# Numbers in different bases")
-        append("\n(def numbers [42 0xFF 0b1010 0o777 3.14159 -1.5e10])")
+        append("\n; Numbers in different bases")
+        append("\n(def numbers [42 0xFF 0b1010 0o777 3.14159 -1.5e10 16rFF 2r1010])")
         append("\n")
-        append("\n# Character literals and strings")
+        append("\n; Character literals and strings")
         append("\n(def greeting \"Phel-lo world!\")")
+        append("\n(def pattern #\"[a-z]+\")")
         append("\n")
     }
 
     private fun StringBuilder.appendFunctionDefinitionSection() {
-        append("\n# Advanced destructuring")
+        append("\n; Advanced destructuring")
         append("\n(defn process-data")
         append("\n  \"Function with comprehensive destructuring\"")
         append("\n  {:export true}")
@@ -48,7 +49,7 @@ class PhelDemoTextProvider {
         append("\n      \"POST\" (handle-post-request keys headers)")
         append("\n      (throw (php/new Exception \"Unsupported method\")))))")
         append("\n")
-        append("\n# Function with metadata and PHP interop")
+        append("\n; Function with metadata and PHP interop")
         append("\n(defn ^{:doc \"Fetches user data from API\"} fetch-user")
         append("\n  [user-id]")
         append("\n  (let [response (http/get (str \"/api/users/\" user-id))")
@@ -61,7 +62,7 @@ class PhelDemoTextProvider {
     }
 
     private fun StringBuilder.appendDataStructuresSection() {
-        append("\n# Complex data structures")
+        append("\n; Complex data structures")
         append("\n(def user-database")
         append("\n  {:users [{:id 1 :name \"Alice\" :roles #{:admin :user}}")
         append("\n           {:id 2 :name \"Bob\" :roles #{:user}}]")
@@ -69,17 +70,22 @@ class PhelDemoTextProvider {
         append("\n   :metadata ^{:version \"1.0\" :created-at \"2024-01-01\"}")
         append("\n             {:schema-version 2}})")
         append("\n")
-        append("\n# Short function syntax")
-        append("\n(def squared-numbers (map |$1 * $1| [1 2 3 4 5]))")
+        append("\n; Anonymous function shorthand")
+        append("\n(def squared-numbers (map #(* % %) [1 2 3 4 5]))")
+        append("\n(def add-ten (map #(+ %1 10) [1 2 3]))")
         append("\n")
-        append("\n# Bitwise operations")
+        append("\n; Deref and atoms")
+        append("\n(def counter (atom 0))")
+        append("\n(println @counter)")
+        append("\n")
+        append("\n; Bitwise operations")
         append("\n(def flags (bit-or 0b0001 0b0010 0b0100))")
         append("\n(def masked (bit-and flags 0b0110))")
         append("\n")
     }
 
     private fun StringBuilder.appendMacrosSection() {
-        append("\n# Macros")
+        append("\n; Macros and syntax-quote")
         append("\n(def processed-text")
         append("\n  (-> \"  Hello World  \"")
         append("\n      s/trim")
@@ -87,10 +93,14 @@ class PhelDemoTextProvider {
         append("\n      (s/replace \"world\" \"Phel\")")
         append("\n      (str \"!\")))")
         append("\n")
+        append("\n; Syntax quote with unquote")
+        append("\n(defmacro my-when [test & body]")
+        append("\n  `(if ~test (do ~@body) nil))")
+        append("\n")
     }
 
     private fun StringBuilder.appendExceptionHandlingSection() {
-        append("\n# Exception handling")
+        append("\n; Exception handling")
         append("\n(defn safe-divide [a b]")
         append("\n  (try")
         append("\n    (/ a b)")
@@ -102,18 +112,18 @@ class PhelDemoTextProvider {
     }
 
     private fun StringBuilder.appendCommentsSection() {
-        append("\n# REPL and documentation")
+        append("\n; REPL and documentation")
         append("\n(comment")
         append("\n  \"This is a comment block for REPL experimentation\"")
         append("\n  (doc map)")
         append("\n  (require phel\\test :as test)")
         append("\n  (test/run-tests))")
         append("\n")
-        append("\n#|")
-        append("\nI am a multiline comment")
+        append("\n; Reader conditionals")
+        append("\n#?(:phel (println \"Running on Phel\")")
+        append("\n   :default (println \"Unknown platform\"))")
         append("\n")
-        append("\nIf you know Lisp or Clojure, you'll feel right at home,")
-        append("\nelse, this is a great place to start.")
-        append("\n|#")
+        append("\n; Form comments")
+        append("\n[#_:one :two :three]")
     }
 }

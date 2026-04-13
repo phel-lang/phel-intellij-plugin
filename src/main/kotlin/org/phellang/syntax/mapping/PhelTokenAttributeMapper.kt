@@ -27,13 +27,13 @@ object PhelTokenAttributeMapper {
     private val KEYWORD_KEYS = arrayOf(PhelTextAttributesRegistry.KEYWORD)
     private val METADATA_KEYS = arrayOf(PhelTextAttributesRegistry.METADATA)
     private val DOT_KEYS = arrayOf(PhelTextAttributesRegistry.DOT_OPERATOR)
-    private val COMMA_KEYS = arrayOf(PhelTextAttributesRegistry.COMMA)
     private val BAD_CHARACTER_KEYS = arrayOf(PhelTextAttributesRegistry.BAD_CHARACTER)
 
     fun getTextAttributes(category: TokenCategory): Array<TextAttributesKey> {
         return when (category) {
             TokenCategory.COMMENT -> COMMENT_KEYS
             TokenCategory.STRING -> STRING_KEYS
+            TokenCategory.REGEX -> STRING_KEYS
             TokenCategory.NUMBER -> NUMBER_KEYS
             TokenCategory.BOOLEAN -> BOOLEAN_KEYS
             TokenCategory.NIL -> NIL_KEYS
@@ -44,12 +44,12 @@ object PhelTokenAttributeMapper {
             TokenCategory.BRACES -> BRACES_KEYS
             TokenCategory.QUOTE -> QUOTE_KEYS
             TokenCategory.SYNTAX_QUOTE -> SYNTAX_QUOTE_KEYS
+            TokenCategory.DEREF -> QUOTE_KEYS
             TokenCategory.UNQUOTE -> UNQUOTE_KEYS
             TokenCategory.UNQUOTE_SPLICING -> UNQUOTE_SPLICING_KEYS
             TokenCategory.KEYWORD -> KEYWORD_KEYS
             TokenCategory.METADATA -> METADATA_KEYS
             TokenCategory.DOT_OPERATOR -> DOT_KEYS
-            TokenCategory.COMMA -> COMMA_KEYS
             TokenCategory.SYMBOL -> SYMBOL_KEYS
             TokenCategory.BAD_CHARACTER -> BAD_CHARACTER_KEYS
             TokenCategory.UNKNOWN -> EMPTY_KEYS

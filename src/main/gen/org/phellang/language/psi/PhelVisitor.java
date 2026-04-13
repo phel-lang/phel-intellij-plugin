@@ -20,6 +20,10 @@ public class PhelVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitHashFn(@NotNull PhelHashFn o) {
+    visitPsiElement(o);
+  }
+
   public void visitKeyword(@NotNull PhelKeyword o) {
     visitSForm(o);
   }
@@ -48,7 +52,19 @@ public class PhelVisitor extends PsiElementVisitor {
     visitForm(o);
   }
 
+  public void visitReaderConditional(@NotNull PhelReaderConditional o) {
+    visitPsiElement(o);
+  }
+
+  public void visitReaderConditionalSplice(@NotNull PhelReaderConditionalSplice o) {
+    visitPsiElement(o);
+  }
+
   public void visitReaderMacro(@NotNull PhelReaderMacro o) {
+    visitPsiElement(o);
+  }
+
+  public void visitRegexLiteral(@NotNull PhelRegexLiteral o) {
     visitPsiElement(o);
   }
 

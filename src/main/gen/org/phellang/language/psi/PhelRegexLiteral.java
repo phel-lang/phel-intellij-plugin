@@ -5,9 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PhelLiteral extends PhelSForm {
-
-  @Nullable
-  PhelRegexLiteral getRegexLiteral();
+public interface PhelRegexLiteral extends PsiElement {
 
 }

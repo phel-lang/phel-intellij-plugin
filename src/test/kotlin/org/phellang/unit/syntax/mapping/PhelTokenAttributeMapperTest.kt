@@ -47,8 +47,9 @@ class PhelTokenAttributeMapperTest {
             TokenCategory.KEYWORD to arrayOf(PhelTextAttributesRegistry.KEYWORD),
             TokenCategory.METADATA to arrayOf(PhelTextAttributesRegistry.METADATA),
             TokenCategory.DOT_OPERATOR to arrayOf(PhelTextAttributesRegistry.DOT_OPERATOR),
-            TokenCategory.COMMA to arrayOf(PhelTextAttributesRegistry.COMMA),
             TokenCategory.SYMBOL to arrayOf(PhelTextAttributesRegistry.SYMBOL),
+            TokenCategory.REGEX to arrayOf(PhelTextAttributesRegistry.STRING),
+            TokenCategory.DEREF to arrayOf(PhelTextAttributesRegistry.QUOTE),
             TokenCategory.BAD_CHARACTER to arrayOf(PhelTextAttributesRegistry.BAD_CHARACTER)
         )
 
@@ -97,8 +98,9 @@ class PhelTokenAttributeMapperTest {
             TokenCategory.KEYWORD to 1,
             TokenCategory.METADATA to 1,
             TokenCategory.DOT_OPERATOR to 1,
-            TokenCategory.COMMA to 1,
             TokenCategory.SYMBOL to 1,
+            TokenCategory.REGEX to 1,
+            TokenCategory.DEREF to 1,
             TokenCategory.BAD_CHARACTER to 1,
             TokenCategory.UNKNOWN to 0
         )

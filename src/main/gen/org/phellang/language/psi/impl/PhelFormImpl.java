@@ -35,6 +35,24 @@ public class PhelFormImpl extends PhelFormMixin implements PhelForm {
 
   @Override
   @Nullable
+  public PhelHashFn getHashFn() {
+    return findChildByClass(PhelHashFn.class);
+  }
+
+  @Override
+  @Nullable
+  public PhelReaderConditional getReaderConditional() {
+    return findChildByClass(PhelReaderConditional.class);
+  }
+
+  @Override
+  @Nullable
+  public PhelReaderConditionalSplice getReaderConditionalSplice() {
+    return findChildByClass(PhelReaderConditionalSplice.class);
+  }
+
+  @Override
+  @Nullable
   public PhelSet getSet() {
     return findChildByClass(PhelSet.class);
   }

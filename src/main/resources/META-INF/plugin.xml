@@ -17,7 +17,7 @@
   <li><strong>Smart Editing</strong> - Auto-insertion of parentheses, bracket matching, and quote handling</li>
   <li><strong>Code Folding</strong> - Collapse and expand function definitions, data structures, and comment blocks</li>
   <li><strong>Symbol Navigation</strong> - Go-to definition and find usages for Phel symbols</li>
-  <li><strong>Comment Support</strong> - Line comments (#, ;) and form comments (#_) with proper IDE integration</li>
+  <li><strong>Comment Support</strong> - Line comments (;) and form comments (#_) with proper IDE integration</li>
 </ul>
 
 <h3>Language Features</h3>
@@ -90,6 +90,14 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="org.phellang.inspection.deprecated.PhelDeprecatedFunctionInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelDeprecatedSyntax"
+                displayName="Deprecated syntax usage"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="org.phellang.inspection.deprecated.PhelDeprecatedSyntaxInspection"/>
     </extensions>
 
     <actions>

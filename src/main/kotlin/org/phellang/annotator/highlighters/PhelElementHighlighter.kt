@@ -1,7 +1,6 @@
 package org.phellang.annotator.highlighters
 
 import com.intellij.lang.annotation.AnnotationHolder
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.COLLECTION_TYPE
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.KEYWORD
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.SHORT_FUNCTION
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
@@ -18,6 +17,12 @@ object PhelElementHighlighter {
     fun annotateShortFunction(shortFn: PhelShortFn, holder: AnnotationHolder) {
         if (PhelAnnotationUtils.shouldAnnotate(shortFn)) {
             PhelAnnotationUtils.createAnnotation(holder, shortFn, SHORT_FUNCTION)
+        }
+    }
+
+    fun annotateShortFunction(hashFn: PhelHashFn, holder: AnnotationHolder) {
+        if (PhelAnnotationUtils.shouldAnnotate(hashFn)) {
+            PhelAnnotationUtils.createAnnotation(holder, hashFn, SHORT_FUNCTION)
         }
     }
 }

@@ -16,15 +16,20 @@ object PhelCommentAnalyzer {
         return isInCommentedFormByText(containingForm)
     }
 
-    fun isInsideShortFunction(element: PsiElement): Boolean {
+    fun isInsideAnonFunction(element: PsiElement): Boolean {
         var current = element.parent
         while (current != null) {
-            if (current is PhelShortFn) {
+            if (current is PhelShortFn || current is PhelHashFn) {
                 return true
             }
             current = current.parent
         }
         return false
+    }
+
+    @Deprecated("Use isInsideAnonFunction instead", replaceWith = ReplaceWith("isInsideAnonFunction(element)"))
+    fun isInsideShortFunction(element: PsiElement): Boolean {
+        return isInsideAnonFunction(element)
     }
 
     private fun isInCommentedFormByText(element: PsiElement): Boolean {

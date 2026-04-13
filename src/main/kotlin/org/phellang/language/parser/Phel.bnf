@@ -15,14 +15,18 @@
     line_comment='LINE_COMMENT'
     multiline_comment='MULTILINE_COMMENT'
     string='regexp:"([^"]|\\")*"'
-    number='regexp:[+-]?[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?'
-    hexnum='regexp:[+-]?0x[\da-fA-F_]+'
-    binnum='regexp:[+-]?0b[01_]+'
-    octnum='regexp:[+-]?0o[0-7_]+'
+    number='regexp:[+-]?[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?[NM]?'
+    hexnum='regexp:[+-]?0x[\da-fA-F_]+N?'
+    binnum='regexp:[+-]?0b[01_]+N?'
+    octnum='regexp:[+-]?0o[0-7_]+N?'
+    radixnum='regexp:[0-9]{1,2}r[0-9a-zA-Z]+'
     char='regexp:\\([btrnf]|u[0-9a-fA-F]{4}|o[0-7]{3}|backspace|tab|newline|formfeed|return|space|.)'
     bool="regexp:true|false"
     nil='nil'
     nan='NAN'
+    symbolic_num='SYMBOLIC_NUM'
+    regex_start='REGEX_START'
+    regex_body='REGEX_BODY'
     sym="regexp:[\w<>$%&=*+\-!?_|\\@--#][\w.<>$%&=*+\-!?_|'#\\@]*((:[\w<>$%&=*+\-!?_'])+)?"
 
     paren1='('
@@ -41,13 +45,18 @@
     hat="^"
     tilde="~"
     tilde_at="~@"
+    deref="@"
     form_comment="#_"
     hash_brace="#{"
     fn_short="|("
+    hash_paren="#("
+    reader_cond="#?("
+    reader_cond_splice="#?@("
+    var_quote="#'"
 
     dot='.'
     dotdash='.-'
-    
+
     keyword_token='KEYWORD_TOKEN'
   ]
   extends("p_form|s_form")=form
@@ -60,6 +69,7 @@
   elementType("symbol_.*")=symbol
   elementType("access_.*")=access
   pin("list|vec|map")="'[\(\[\{]'"
+  pin("hash_fn|reader_conditional|reader_conditional_splice")=1
 
   name("metadata")=form
 
@@ -75,7 +85,7 @@ private form_prefix ::= metadata | reader_macro
 
 upper form_upper ::= form_inner {elementType=form name=form}
 private form_inner ::= p_forms | s_forms
-private p_forms ::= list | vec | map | set | short_fn
+private p_forms ::= list | vec | map | set | short_fn | hash_fn | reader_conditional | reader_conditional_splice
 private s_forms ::= symbol access_left? | keyword | literal | access
 
 fake p_form ::= form * {methods=[forms="form"]}
@@ -93,7 +103,7 @@ keyword ::= keyword_token | (':' | '::') symbol_qualified
 private symbol_qualified ::= symbol_plain symbol_nsq?
 symbol_plain ::= sym
 left symbol_nsq ::= '/' (sym | coloncolon | dot | dotdash | hat | tilde)
-literal ::= number | hexnum | binnum | octnum | bool | nil | nan | string | char
+literal ::= number | hexnum | binnum | octnum | radixnum | bool | nil | nan | symbolic_num | string | char | regex_literal
   {mixin="org.phellang.language.psi.mixins.PhelLiteralMixin"}
 
 access ::= ('.' | '.-') symbol
@@ -101,11 +111,15 @@ left access_left ::= ! '.'
 
 metadata ::= "^" (string | symbol | keyword | map)
   {mixin="org.phellang.language.psi.mixins.PhelMetadataMixin"}
-reader_macro ::= "'" | "~" | "~@" | "`" | "," | ",@"
+reader_macro ::= "'" | "~" | "~@" | "`" | "," | ",@" | "@" | "#'"
   {mixin="org.phellang.language.psi.mixins.PhelReaderMacroMixin"}
 
 form_comment_macro ::= "#_" form
 short_fn ::= "|(" list_body ")"
+hash_fn ::= "#(" list_body ")"
+reader_conditional ::= "#?(" list_body ")"
+reader_conditional_splice ::= "#?@(" list_body ")"
+regex_literal ::= regex_start regex_body
 
 private meta items ::= <<items_entry <<recover>> <<param>>>> * {recoverWhile="<<recover>>"}
 private meta items_entry ::= (not_eof <<recover>>) <<param>>

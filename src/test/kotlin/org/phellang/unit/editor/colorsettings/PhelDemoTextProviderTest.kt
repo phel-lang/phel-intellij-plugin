@@ -29,8 +29,10 @@ class PhelDemoTextProviderTest {
         assertTrue(demoText.contains("nil"))
         assertTrue(demoText.contains("php/"))
         assertTrue(demoText.contains("->"))
-        assertTrue(demoText.contains("#|"))
-        assertTrue(demoText.contains("|#"))
+        assertTrue(demoText.contains("#("))
+        assertTrue(demoText.contains("#?(:phel"))
+        assertTrue(demoText.contains("#\""))
+        assertTrue(demoText.contains("@counter"))
     }
 
     @Test

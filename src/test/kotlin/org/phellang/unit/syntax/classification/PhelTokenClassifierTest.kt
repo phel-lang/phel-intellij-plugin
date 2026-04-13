@@ -29,6 +29,8 @@ class PhelTokenClassifierTest {
         assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.HEXNUM))
         assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.BINNUM))
         assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.OCTNUM))
+        assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.RADIXNUM))
+        assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.SYMBOLIC_NUM))
     }
 
     @Test
@@ -52,11 +54,25 @@ class PhelTokenClassifierTest {
     }
 
     @Test
+    fun `classifyToken should correctly classify regex tokens`() {
+        assertEquals(TokenCategory.REGEX, PhelTokenClassifier.classifyToken(PhelTypes.REGEX_START))
+        assertEquals(TokenCategory.REGEX, PhelTokenClassifier.classifyToken(PhelTypes.REGEX_BODY))
+    }
+
+    @Test
+    fun `classifyToken should correctly classify deref tokens`() {
+        assertEquals(TokenCategory.DEREF, PhelTokenClassifier.classifyToken(PhelTypes.DEREF))
+    }
+
+    @Test
     fun `classifyToken should correctly classify delimiter tokens`() {
         // Parentheses
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.PAREN1))
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.PAREN2))
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.FN_SHORT))
+        assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.HASH_PAREN))
+        assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.READER_COND))
+        assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.READER_COND_SPLICE))
 
         // Brackets
         assertEquals(TokenCategory.BRACKETS, PhelTokenClassifier.classifyToken(PhelTypes.BRACKET1))
@@ -71,6 +87,7 @@ class PhelTokenClassifierTest {
     @Test
     fun `classifyToken should correctly classify quote tokens`() {
         assertEquals(TokenCategory.QUOTE, PhelTokenClassifier.classifyToken(PhelTypes.QUOTE))
+        assertEquals(TokenCategory.QUOTE, PhelTokenClassifier.classifyToken(PhelTypes.VAR_QUOTE))
         assertEquals(TokenCategory.SYNTAX_QUOTE, PhelTokenClassifier.classifyToken(PhelTypes.SYNTAX_QUOTE))
     }
 
@@ -99,7 +116,6 @@ class PhelTokenClassifierTest {
     fun `classifyToken should correctly classify operator tokens`() {
         assertEquals(TokenCategory.DOT_OPERATOR, PhelTokenClassifier.classifyToken(PhelTypes.DOT))
         assertEquals(TokenCategory.DOT_OPERATOR, PhelTokenClassifier.classifyToken(PhelTypes.DOTDASH))
-        // Note: COMMA is classified as UNQUOTE in Phel (same as original implementation)
     }
 
     @Test
@@ -129,6 +145,8 @@ class PhelTokenClassifierTest {
         assertTrue(PhelTokenClassifier.isNumber(PhelTypes.HEXNUM))
         assertTrue(PhelTokenClassifier.isNumber(PhelTypes.BINNUM))
         assertTrue(PhelTokenClassifier.isNumber(PhelTypes.OCTNUM))
+        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.RADIXNUM))
+        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.SYMBOLIC_NUM))
         assertFalse(PhelTokenClassifier.isNumber(PhelTypes.STRING))
 
         // Test boolean classification
@@ -205,7 +223,6 @@ class PhelTokenClassifierTest {
         assertFalse(PhelTokenClassifier.isKeyword(testToken))
         assertFalse(PhelTokenClassifier.isMetadata(testToken))
         assertFalse(PhelTokenClassifier.isDotOperator(testToken))
-        assertFalse(PhelTokenClassifier.isComma(testToken))
         assertFalse(PhelTokenClassifier.isSymbol(testToken))
         assertFalse(PhelTokenClassifier.isBadCharacter(testToken))
     }
@@ -215,11 +232,11 @@ class PhelTokenClassifierTest {
         // Compound tokens have semantic check methods
         assertTrue(PhelTokenClassifier.isSetOpener(PhelTypes.HASH_BRACE), "isSetOpener should recognize #{")
         assertTrue(PhelTokenClassifier.isShortFnOpener(PhelTypes.FN_SHORT), "isShortFnOpener should recognize |(")
-        
+
         // But they classify as their visual equivalents for styling
         assertEquals(TokenCategory.BRACES, PhelTokenClassifier.classifyToken(PhelTypes.HASH_BRACE))
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.FN_SHORT))
-        
+
         // And they're NOT regular delimiters
         assertFalse(PhelTokenClassifier.isBraces(PhelTypes.HASH_BRACE), "#{ is a set opener, not a regular brace")
         assertFalse(PhelTokenClassifier.isParentheses(PhelTypes.FN_SHORT), "|( is a short fn opener, not a regular paren")

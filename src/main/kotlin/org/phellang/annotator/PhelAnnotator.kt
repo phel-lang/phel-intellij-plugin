@@ -20,8 +20,8 @@ class PhelAnnotator : Annotator {
             return  // Don't apply other highlighting to commented-out forms
         }
 
-        // Skip highlighting if element is inside a short function
-        if (PhelCommentAnalyzer.isInsideShortFunction(element)) {
+        // Skip highlighting if element is inside an anonymous function literal
+        if (PhelCommentAnalyzer.isInsideAnonFunction(element)) {
             return
         }
 
@@ -43,6 +43,10 @@ class PhelAnnotator : Annotator {
             }
 
             is PhelShortFn -> {
+                PhelElementHighlighter.annotateShortFunction(element, holder)
+            }
+
+            is PhelHashFn -> {
                 PhelElementHighlighter.annotateShortFunction(element, holder)
             }
         }
