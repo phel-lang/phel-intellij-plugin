@@ -17,7 +17,7 @@ Return the remainder of <code>dividend</code> / <code>divisor</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3369",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L148",
                 docs = "",
             ),
         ),
@@ -37,7 +37,7 @@ numbers. If <code>xs</code> is empty, return 1.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3343",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L122",
                 docs = "",
             ),
         ),
@@ -56,7 +56,7 @@ Return <code>a</code> to the power of <code>x</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3376",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L155",
                 docs = "",
             ),
         ),
@@ -79,7 +79,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L57",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L17",
                 docs = "",
             ),
         ),
@@ -89,11 +89,11 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
         name = "*build-mode*",
         signature = "",
         completion = CompletionInfo(
-            tailText = "Set to true when a file is being built/compiled, false otherwise",
+            tailText = "",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Set to true when a file is being built/compiled, false otherwise.",
+            summary = "",
             example = null,
             links = DocumentationLinks(
                 github = "",
@@ -130,7 +130,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
             summary = "Global hierarchy for keyword/symbol taxonomies.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4014",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L47",
                 docs = "",
             ),
         ),
@@ -164,7 +164,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
             summary = "The script path or namespace being executed.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L166",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L145",
                 docs = "",
             ),
         ),
@@ -184,7 +184,7 @@ Returns the sum of all elements in <code>xs</code>. All elements <code>xs</code>
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3319",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L98",
                 docs = "",
             ),
         ),
@@ -204,7 +204,7 @@ Returns the difference of all elements in <code>xs</code>. If <code>xs</code> is
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3330",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L109",
                 docs = "",
             ),
         ),
@@ -226,7 +226,7 @@ Threads the expr through the forms. Inserts <code>x</code> as the second item<br
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3769",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L184",
                 docs = "",
             ),
         ),
@@ -248,7 +248,7 @@ Threads the expr through the forms. Inserts <code>x</code> as the<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3785",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L200",
                 docs = "",
             ),
         ),
@@ -268,7 +268,7 @@ returns 1. If <code>xs</code> has one value, returns the reciprocal of x.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3356",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L135",
                 docs = "",
             ),
         ),
@@ -285,7 +285,7 @@ returns 1. If <code>xs</code> has one value, returns the reciprocal of x.
             summary = "Checks if each argument is strictly less than the following argument.",
             example = "(&lt; 1 2 3 4) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L776",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L125",
                 docs = "",
             ),
         ),
@@ -304,7 +304,7 @@ Checks if each argument is less than or equal to the following argument. Returns
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L789",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L138",
                 docs = "",
             ),
         ),
@@ -321,7 +321,7 @@ Checks if each argument is less than or equal to the following argument. Returns
             summary = "Alias for the spaceship PHP operator in ascending order. Returns an int.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L826",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L175",
                 docs = "",
             ),
         ),
@@ -338,7 +338,7 @@ Checks if each argument is less than or equal to the following argument. Returns
             summary = "Checks if all values are equal (value equality, not identity).",
             example = "(= [1 2 3] [1 2 3]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L751",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L100",
                 docs = "",
             ),
         ),
@@ -355,7 +355,7 @@ Checks if each argument is less than or equal to the following argument. Returns
             summary = "Checks if each argument is strictly greater than the following argument.",
             example = "(&gt; 4 3 2 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L801",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L150",
                 docs = "",
             ),
         ),
@@ -374,7 +374,7 @@ Checks if each argument is greater than or equal to the following argument. Retu
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L814",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L163",
                 docs = "",
             ),
         ),
@@ -391,7 +391,7 @@ Checks if each argument is greater than or equal to the following argument. Retu
             summary = "Alias for the spaceship PHP operator in descending order. Returns an int.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L832",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L181",
                 docs = "",
             ),
         ),
@@ -408,7 +408,7 @@ Checks if each argument is greater than or equal to the following argument. Retu
             summary = "Constant for Not a Number (NAN) values.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3315",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L94",
                 docs = "",
             ),
         ),
@@ -427,7 +427,7 @@ Checks if <code>x</code> is not a number. Alias for <code>nan?</code>, matching 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3432",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L211",
                 docs = "",
             ),
         ),
@@ -448,7 +448,7 @@ Returns the absolute value of <code>x</code>.<br />
 """,
             example = "(abs -5) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3445",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L224",
                 docs = "",
             ),
         ),
@@ -472,7 +472,27 @@ Returns a shallow copy of a PHP array. The returned array is a<br />
 """,
             example = "(aclone (object-array 3)) ; =&gt; a fresh PHP array [nil, nil, nil]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L528",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L79",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "add-tap",
+        signature = "(add-tap f)",
+        completion = CompletionInfo(
+            tailText = "Registers f as a tap",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Registers <code>f</code> as a tap. Every call to <code>tap></code> invokes each registered tap<br />
+  with the tapped value. Returns nil.
+""",
+            example = "(add-tap println)\n(tap&gt; 42) ; prints 42",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/tap.phel#L15",
                 docs = "",
             ),
         ),
@@ -492,7 +512,49 @@ Adds a watch function to a variable. The watch fn is called when the variable<br
 """,
             example = "(add-watch my-var :logger (fn [key ref old new] (println old \"-&gt;\" new)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1474",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L101",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "aget",
+        signature = "(aget arr & indices)",
+        completion = CompletionInfo(
+            tailText = "Returns the value at index in a PHP array",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the value at <code>index</code> in a PHP array. With multiple indices,<br />
+   accesses nested arrays: <code>(aget arr i j)</code> is <code>(aget (aget arr i) j)</code>.<br />
+   Matches Clojure's <code>aget</code> for <code>.cljc</code> interop.
+""",
+            example = "(aget (php/array 10 20 30) 1) ; =&gt; 20",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L160",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "alength",
+        signature = "(alength arr)",
+        completion = CompletionInfo(
+            tailText = "Returns the number of elements in a PHP array",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the number of elements in a PHP array. Matches Clojure's<br />
+  <code>alength</code> for <code>.cljc</code> interop; raises <code>InvalidArgumentException</code> on<br />
+  non-array inputs (use <code>count</code> for collections).
+""",
+            example = "(alength (int-array 3)) ; =&gt; 3",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L91",
                 docs = "",
             ),
         ),
@@ -511,7 +573,31 @@ Returns true if predicate is true for every element in collection, false otherwi
 """,
             example = "(all? even? [2 4 6 8]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L838",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L189",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "alter-var-root",
+        signature = "(alter-var-root & _)",
+        completion = CompletionInfo(
+            tailText = "Clojure's alter-var-root is out of scope in Phel: there are no first-class vars whose root bindin...",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Clojure's <code>alter-var-root</code> is out of scope in Phel: there are no first-class<br />
+  vars whose root binding could be swapped. Reaching for this function in<br />
+  <code>.cljc</code> code is nearly always a bug; prefer an <code>atom</code> and <code>swap!</code> for mutable<br />
+  state, or redefine the top-level binding with <code>def</code> if the intent was to<br />
+  replace it at load time. Calling <code>alter-var-root</code> at runtime throws to make<br />
+  the mismatch obvious instead of silently no-oping.
+""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L110",
                 docs = "",
             ),
         ),
@@ -528,7 +614,7 @@ Returns true if predicate is true for every element in collection, false otherwi
             summary = "Returns the set of all transitive ancestors of tag, or nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4101",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L137",
                 docs = "",
             ),
         ),
@@ -547,7 +633,28 @@ Evaluates expressions left to right, returning the first falsy value or the last
 """,
             example = "(and true 1 \"hello\") ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L718",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L45",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "any?",
+        signature = "(any? _)",
+        completion = CompletionInfo(
+            tailText = "Returns true given any argument, including nil and false",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true given any argument, including <code>nil</code> and <code>false</code>. Mirrors<br />
+  Clojure's <code>clojure.core/any?</code> — useful as a default predicate in spec<br />
+  / validation contexts where every value should be accepted.
+""",
+            example = "(any? nil) ; =&gt; true\n(any? 0) ; =&gt; true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L267",
                 docs = "",
             ),
         ),
@@ -586,7 +693,7 @@ Vector of user arguments passed to the script (excludes program name).<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L171",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L150",
                 docs = "",
             ),
         ),
@@ -609,7 +716,7 @@ Constructs a map from the given key/value pairs. If any keys are<br />
 """,
             example = "(array-map :a 1 :b 2) ; =&gt; {:a 1 :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L87",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L47",
                 docs = "",
             ),
         ),
@@ -630,7 +737,31 @@ Binds <code>name</code> to <code>expr</code>, evaluates the first form in the le
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3849",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L264",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "aset",
+        signature = "(aset arr idx & more)",
+        completion = CompletionInfo(
+            tailText = "Sets the value at index in a PHP array to val",
+            priority = PhelCompletionPriority.MACROS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Sets the value at <code>index</code> in a PHP array to <code>val</code>. Returns <code>val</code>.<br />
+   With additional indices, navigates nested arrays before setting:<br />
+   <code>(aset arr i j val)</code> sets index <code>j</code> in <code>(aget arr i)</code>.<br />
+   Matches Clojure's <code>aset</code> for <code>.cljc</code> interop.<br />
+   This is a macro because PHP arrays are value types; a function<br />
+   wrapper would mutate a copy rather than the original.
+""",
+            example = "(let [a (php/array 1 2 3)] (aset a 0 42) (aget a 0)) ; =&gt; 42",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L173",
                 docs = "",
             ),
         ),
@@ -652,7 +783,7 @@ Throws an exception if expr is falsy. Optional message string.<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4647",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L684",
                 docs = "",
             ),
         ),
@@ -673,7 +804,7 @@ Associates one or more key-value pairs with a collection.<br />
 """,
             example = "(assoc {:a 1} :b 2) ; =&gt; {:a 1 :b 2}\n(assoc {:a 1} :b 2 :c 3) ; =&gt; {:a 1 :b 2 :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1344",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L186",
                 docs = "",
             ),
         ),
@@ -697,7 +828,7 @@ Associates one or more key-value pairs with a transient collection,<br />
 """,
             example = "(persistent! (assoc! (transient {}) :a 1 :b 2)) ; =&gt; {:a 1 :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1964",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L108",
                 docs = "",
             ),
         ),
@@ -717,7 +848,7 @@ Creates intermediate maps if they don't exist.
 """,
             example = "(assoc-in {:a {:b 1}} [:a :c] 2) ; =&gt; {:a {:b 1 :c 2}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2104",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L266",
                 docs = "",
             ),
         ),
@@ -738,7 +869,7 @@ Associative data structures include vectors, hash maps, structs, and PHP arrays<
 """,
             example = "(associative? [1 2 3]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1190",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L382",
                 docs = "",
             ),
         ),
@@ -759,7 +890,7 @@ Atoms provide a way to manage mutable state. Use <code>reset!</code> to set a ne
 """,
             example = "(def counter (atom 0))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1397",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L20",
                 docs = "",
             ),
         ),
@@ -776,7 +907,7 @@ Atoms provide a way to manage mutable state. Use <code>reset!</code> to set a ne
             summary = "Returns true if the given value is an atom.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1416",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L39",
                 docs = "",
             ),
         ),
@@ -796,7 +927,7 @@ Temporary redefines definitions while executing the body.<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3968",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L383",
                 docs = "",
             ),
         ),
@@ -813,7 +944,7 @@ Temporary redefines definitions while executing the body.<br />
             summary = "Bitwise and.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3246",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L25",
                 docs = "",
             ),
         ),
@@ -832,7 +963,7 @@ Clear bit an index <code>n</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3296",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L75",
                 docs = "",
             ),
         ),
@@ -851,7 +982,7 @@ Flip bit at index <code>n</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3301",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L80",
                 docs = "",
             ),
         ),
@@ -868,7 +999,7 @@ Flip bit at index <code>n</code>.
             summary = "Bitwise complement.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3270",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L49",
                 docs = "",
             ),
         ),
@@ -885,7 +1016,7 @@ Flip bit at index <code>n</code>.
             summary = "Bitwise or.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3254",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L33",
                 docs = "",
             ),
         ),
@@ -904,7 +1035,7 @@ Set bit an index <code>n</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3291",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L70",
                 docs = "",
             ),
         ),
@@ -921,7 +1052,7 @@ Set bit an index <code>n</code>.
             summary = "Bitwise shift left.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3277",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L56",
                 docs = "",
             ),
         ),
@@ -938,7 +1069,7 @@ Set bit an index <code>n</code>.
             summary = "Bitwise shift right.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3284",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L63",
                 docs = "",
             ),
         ),
@@ -957,7 +1088,7 @@ Test bit at index <code>n</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3306",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L85",
                 docs = "",
             ),
         ),
@@ -974,7 +1105,7 @@ Test bit at index <code>n</code>.
             summary = "Bitwise xor.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3262",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L41",
                 docs = "",
             ),
         ),
@@ -994,7 +1125,7 @@ Coerces <code>x</code> to a boolean. Returns <code>false</code> if <code>x</code
 """,
             example = "(boolean nil) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1098",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L260",
                 docs = "",
             ),
         ),
@@ -1013,7 +1144,7 @@ Returns true if <code>x</code> is a boolean, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1093",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L255",
                 docs = "",
             ),
         ),
@@ -1032,7 +1163,7 @@ Returns all but the last item in <code>coll</code>.
 """,
             example = "(butlast [1 2 3 4]) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2205",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L363",
                 docs = "",
             ),
         ),
@@ -1056,7 +1187,7 @@ Coerces <code>x</code> to a signed 8-bit integer in the range <code>-128..127</c
 """,
             example = "(byte 127) ; =&gt; 127\n(byte 1.9) ; =&gt; 1\n(byte -128) ; =&gt; -128",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3473",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L285",
                 docs = "",
             ),
         ),
@@ -1075,7 +1206,7 @@ Evaluates expression and matches it against constant test values, returning the 
 """,
             example = "(case x 1 \"one\" 2 \"two\" \"other\") ; =&gt; \"one\" (when x is 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L653",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L45",
                 docs = "",
             ),
         ),
@@ -1092,7 +1223,7 @@ Evaluates expression and matches it against constant test values, returning the 
             summary = "A transducer that concatenates the contents of each input into the reduction.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2679",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L842",
                 docs = "",
             ),
         ),
@@ -1137,7 +1268,7 @@ Coerces <code>x</code> to a single-character string representing the given<br />
 """,
             example = "(char 65) ; =&gt; \"A\"\n(char 32) ; =&gt; \" \"\n(char \\A) ; =&gt; \"A\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3491",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L303",
                 docs = "",
             ),
         ),
@@ -1161,7 +1292,7 @@ Returns true if <code>x</code> is a single-character string, false otherwise.<br
 """,
             example = "(char? \\A) ; =&gt; true\n(char? \"a\") ; =&gt; true\n(char? \"ab\") ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1031",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L142",
                 docs = "",
             ),
         ),
@@ -1180,7 +1311,7 @@ Returns <code>v</code> if it is in the range, or <code>min</code> if <code>v</co
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3568",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L380",
                 docs = "",
             ),
         ),
@@ -1203,7 +1334,7 @@ Returns true if <code>x</code> is a persistent collection — vector, list, hash
 """,
             example = "(coll? [1 2 3]) ; =&gt; true\n(coll? \"abc\") ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1205",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L406",
                 docs = "",
             ),
         ),
@@ -1220,7 +1351,7 @@ Returns true if <code>x</code> is a persistent collection — vector, list, hash
             summary = "Ignores the body of the comment.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L356",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L125",
                 docs = "",
             ),
         ),
@@ -1239,7 +1370,7 @@ Takes a list of functions and returns a function that is the composition of thos
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1792",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L77",
                 docs = "",
             ),
         ),
@@ -1259,7 +1390,7 @@ Returns a lazy sequence with specified values removed from <code>coll</code>.<br
 """,
             example = "(compact [1 nil 2 nil 3]) ; =&gt; (1 2 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2929",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1108",
                 docs = "",
             ),
         ),
@@ -1269,18 +1400,21 @@ Returns a lazy sequence with specified values removed from <code>coll</code>.<br
         name = "compare",
         signature = "(compare x y)",
         completion = CompletionInfo(
-            tailText = "Wrapper for PHP's spaceship operator (php/<=>)",
+            tailText = "Compares x and y using PHP's spaceship operator, returning a negative integer, zero, or a positiv...",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Wrapper for PHP's spaceship operator (<code>php/<=></code>).<br />
-  Returns an integer less than, equal to, or greater than zero<br />
-  when <code>x</code> is less than, equal to, or greater than <code>y</code>, respectively.
+Compares <code>x</code> and <code>y</code> using PHP's spaceship operator, returning a negative<br />
+  integer, zero, or a positive integer when <code>x</code> is less than, equal to, or<br />
+  greater than <code>y</code>.<br /><br />
+<code>nil</code> is less than every non-nil value and equal to itself. Throws<br />
+  <code>InvalidArgumentException</code> when <code>x</code> and <code>y</code> come from mutually incomparable<br />
+  categories (e.g. <code>(compare 1 [])</code>).
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L936",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L303",
                 docs = "",
             ),
         ),
@@ -1297,7 +1431,7 @@ Wrapper for PHP's spaceship operator (<code>php/<=></code>).<br />
             summary = "Returns the compiled PHP code string for the given form.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4691",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L728",
                 docs = "",
             ),
         ),
@@ -1316,7 +1450,7 @@ Returns a function that takes the same arguments as <code>f</code> and returns t
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3045",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L91",
                 docs = "",
             ),
         ),
@@ -1336,7 +1470,7 @@ Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1737",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L74",
                 docs = "",
             ),
         ),
@@ -1353,7 +1487,7 @@ Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for
             summary = "Concatenates multiple collections into a lazy sequence.",
             example = "(concat [1 2] [3 4]) ; =&gt; (1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2665",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L828",
                 docs = "",
             ),
         ),
@@ -1370,7 +1504,7 @@ Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for
             summary = "Evaluates test/expression pairs, returning the first matching expression.",
             example = "(cond (&lt; x 0) \"negative\" (&gt; x 0) \"positive\" \"zero\") ; =&gt; \"negative\", \"positive\", or \"zero\" depending on x",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L639",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L31",
                 docs = "",
             ),
         ),
@@ -1392,7 +1526,7 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
 """,
             example = "(cond-&gt; 1 true inc false (* 42) true (* 3)) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3873",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L288",
                 docs = "",
             ),
         ),
@@ -1414,7 +1548,7 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
 """,
             example = "(cond-&gt;&gt; [1 2 3] true (map inc) false (filter odd?)) ; =&gt; [2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3890",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L305",
                 docs = "",
             ),
         ),
@@ -1442,7 +1576,7 @@ Takes a binary predicate, an expression, and a set of clauses.<br />
 """,
             example = "(condp = 1 1 \"one\" 2 \"two\" \"other\") ; =&gt; \"one\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L684",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L76",
                 docs = "",
             ),
         ),
@@ -1489,7 +1623,7 @@ Adds <code>value</code> to the transient collection <code>tcoll</code>, mutating
 """,
             example = "(persistent (conj! (transient [1 2]) 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1932",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L76",
                 docs = "",
             ),
         ),
@@ -1506,7 +1640,7 @@ Adds <code>value</code> to the transient collection <code>tcoll</code>, mutating
             summary = "Prepends an element to the beginning of a collection.",
             example = "(cons 0 [1 2 3]) ; =&gt; [0 1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L551",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-basics.phel#L26",
                 docs = "",
             ),
         ),
@@ -1525,7 +1659,7 @@ Returns a function that always returns <code>x</code> and ignores any passed arg
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3040",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L86",
                 docs = "",
             ),
         ),
@@ -1544,7 +1678,7 @@ Returns true if the value is present in the given collection, otherwise returns 
 """,
             example = "(contains-value? {:a 1 :b 2} 2) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2572",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L735",
                 docs = "",
             ),
         ),
@@ -1561,7 +1695,7 @@ Returns true if the value is present in the given collection, otherwise returns 
             summary = "Returns true if key is present in collection (checks keys/indices, not values).",
             example = "(contains? [10 20 30] 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L926",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L275",
                 docs = "",
             ),
         ),
@@ -1582,7 +1716,7 @@ Works with lists, vectors, hash-maps, sets, strings, and PHP arrays.<br />
 """,
             example = "(count [1 2 3]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L599",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-basics.phel#L81",
                 docs = "",
             ),
         ),
@@ -1606,7 +1740,7 @@ Returns true if <code>coll</code> can report its length in constant time — per
 """,
             example = "(counted? [1 2 3]) ; =&gt; true\n(counted? (range)) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1222",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L433",
                 docs = "",
             ),
         ),
@@ -1623,7 +1757,7 @@ Returns true if <code>coll</code> can report its length in constant time — per
             summary = "Returns a lazy sequence of rows from a CSV file.",
             example = "(take 10 (csv-seq \"data.csv\")) ; =&gt; [[\"col1\" \"col2\"] [\"val1\" \"val2\"] ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3748",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L163",
                 docs = "",
             ),
         ),
@@ -1642,7 +1776,7 @@ Returns an infinite lazy sequence that cycles through the elements of collection
 """,
             example = "(take 7 (cycle [1 2 3])) ; =&gt; (1 2 3 1 2 3 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2656",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L819",
                 docs = "",
             ),
         ),
@@ -1661,7 +1795,7 @@ Decrements <code>x</code> by one.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3390",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L169",
                 docs = "",
             ),
         ),
@@ -1678,7 +1812,7 @@ Decrements <code>x</code> by one.
             summary = "Declare a global symbol before it is defined.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L158",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L135",
                 docs = "",
             ),
         ),
@@ -1698,7 +1832,7 @@ Returns a lazy sequence with consecutive duplicate values removed in <code>coll<
 """,
             example = "(dedupe [1 1 2 2 2 3 1 1]) ; =&gt; (1 2 3 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2902",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1081",
                 docs = "",
             ),
         ),
@@ -1715,7 +1849,7 @@ Returns a lazy sequence with consecutive duplicate values removed in <code>coll<
             summary = "Recursively merges data structures.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3223",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L270",
                 docs = "",
             ),
         ),
@@ -1749,7 +1883,7 @@ Returns a lazy sequence with consecutive duplicate values removed in <code>coll<
             summary = "Define a private value that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L310",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L79",
                 docs = "",
             ),
         ),
@@ -1766,7 +1900,7 @@ Returns a lazy sequence with consecutive duplicate values removed in <code>coll<
             summary = "Define a new exception.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L342",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L111",
                 docs = "",
             ),
         ),
@@ -1802,7 +1936,7 @@ An interface in Phel defines an abstract set of functions. It is directly mapped
 """,
             example = "(definterface name &amp; fns)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3991",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L24",
                 docs = "",
             ),
         ),
@@ -1838,7 +1972,7 @@ An interface in Phel defines an abstract set of functions. It is directly mapped
             summary = "Define a macro.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L315",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L84",
                 docs = "",
             ),
         ),
@@ -1855,7 +1989,7 @@ An interface in Phel defines an abstract set of functions. It is directly mapped
             summary = "Define a private macro that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L325",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L94",
                 docs = "",
             ),
         ),
@@ -1880,7 +2014,7 @@ Registers a method implementation for a multimethod.<br /><br />
 """,
             example = "(defmethod area :circle [{:radius r}] (* 3.14159 r r))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4500",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L537",
                 docs = "",
             ),
         ),
@@ -1903,7 +2037,7 @@ If no method matches the dispatch value, the <code>:default</code> method is use
 """,
             example = "(defmulti area :shape)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4471",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L508",
                 docs = "",
             ),
         ),
@@ -1920,7 +2054,7 @@ If no method matches the dispatch value, the <code>:default</code> method is use
             summary = "Define a new global function.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L305",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L74",
                 docs = "",
             ),
         ),
@@ -1937,7 +2071,7 @@ If no method matches the dispatch value, the <code>:default</code> method is use
             summary = "Define a private function that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L320",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L89",
                 docs = "",
             ),
         ),
@@ -1961,7 +2095,7 @@ A <code>:default</code> type can be registered via <code>extend-type</code> as a
 """,
             example = "(defprotocol Stringable (to-string [this]))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4175",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L212",
                 docs = "",
             ),
         ),
@@ -1989,7 +2123,7 @@ An optional tail of protocol/method forms is spliced into an <code>extend-type</
 """,
             example = "(defrecord Point [x y] Drawable (draw [this canvas] ...))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4408",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L445",
                 docs = "",
             ),
         ),
@@ -2008,7 +2142,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L330",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L99",
                 docs = "",
             ),
         ),
@@ -2057,7 +2191,7 @@ Deviation from Clojure: Phel's <code>deftype</code> shares the map-backed<br />
 """,
             example = "(deftype PointT [x y] Drawable (draw [this canvas] ...))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4438",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L475",
                 docs = "",
             ),
         ),
@@ -2077,7 +2211,7 @@ Takes a body of expressions and yields a Delay object that will invoke the<br />
 """,
             example = "(def d (delay (println \"computing\") 42))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4719",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/lazy.phel#L12",
                 docs = "",
             ),
         ),
@@ -2094,7 +2228,7 @@ Takes a body of expressions and yields a Delay object that will invoke the<br />
             summary = "Returns true if x is a Delay.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4736",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/lazy.phel#L29",
                 docs = "",
             ),
         ),
@@ -2117,7 +2251,7 @@ With three arguments, and when <code>variable</code> is a <code>PhelFuture</code
 """,
             example = "(deref (atom 42)) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1444",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L67",
                 docs = "",
             ),
         ),
@@ -2137,7 +2271,7 @@ Establishes a parent/child relationship between child and parent keywords<br />
 """,
             example = "(derive :square :shape)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4061",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L97",
                 docs = "",
             ),
         ),
@@ -2154,7 +2288,7 @@ Establishes a parent/child relationship between child and parent keywords<br />
             summary = "Returns the set of all descendants of tag, or nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4108",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L144",
                 docs = "",
             ),
         ),
@@ -2171,7 +2305,7 @@ Establishes a parent/child relationship between child and parent keywords<br />
             summary = "Difference between multiple sets into a new one.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3008",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L54",
                 docs = "",
             ),
         ),
@@ -2191,7 +2325,7 @@ Returns a new set that does not contain the given key(s). Works on hash-sets and
 """,
             example = "(disj #{1 2 3} 2) ; =&gt; #{1 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2051",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L207",
                 docs = "",
             ),
         ),
@@ -2212,7 +2346,7 @@ Removes one or more elements from a transient set, mutating it in place.<br />
 """,
             example = "(persistent! (disj! (transient #{1 2 3}) 2)) ; =&gt; #{1 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2016",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L160",
                 docs = "",
             ),
         ),
@@ -2220,18 +2354,18 @@ Removes one or more elements from a transient set, mutating it in place.<br />
     PhelFunction(
         namespace = "core",
         name = "dissoc",
-        signature = "(dissoc ds key)",
+        signature = "(dissoc ds & ks)",
         completion = CompletionInfo(
-            tailText = "Dissociates key from the datastructure ds",
+            tailText = "Returns ds without the given keys",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Dissociates <code>key</code> from the datastructure <code>ds</code>. Returns <code>ds</code> without <code>key</code>.
+Returns <code>ds</code> without the given keys. With no keys returns <code>ds</code> unchanged.
 """,
-            example = "(dissoc {:a 1 :b 2} :b) ; =&gt; {:a 1}",
+            example = "(dissoc {:a 1 :b 2} :b) ; =&gt; {:a 1}\n(dissoc {:a 1 :b 2 :c 3} :a :c) ; =&gt; {:b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1368",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L226",
                 docs = "",
             ),
         ),
@@ -2252,7 +2386,7 @@ Dissociates one or more keys from a transient map, mutating it in place.<br />
 """,
             example = "(persistent! (dissoc! (transient {:a 1 :b 2}) :a)) ; =&gt; {:b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1995",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L139",
                 docs = "",
             ),
         ),
@@ -2269,7 +2403,7 @@ Dissociates one or more keys from a transient map, mutating it in place.<br />
             summary = "Dissociates a value from a nested data structure at the given path.",
             example = "(dissoc-in {:a {:b 1 :c 2}} [:a :b]) ; =&gt; {:a {:c 2}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2139",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L301",
                 docs = "",
             ),
         ),
@@ -2289,7 +2423,7 @@ Returns a lazy sequence with duplicated values removed in <code>coll</code>.<br 
 """,
             example = "(distinct [1 2 1 3 2 4 3]) ; =&gt; (1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2390",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L545",
                 docs = "",
             ),
         ),
@@ -2325,7 +2459,7 @@ Evaluates the expressions in order and returns the value of the last expression.
             summary = "Forces realization of a lazy sequence and returns it as a vector.",
             example = "(doall (map println [1 2 3])) ; =&gt; [nil nil nil]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2769",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L937",
                 docs = "",
             ),
         ),
@@ -2345,7 +2479,7 @@ Repeatedly executes body for side effects with bindings and modifiers as<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1622",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L261",
                 docs = "",
             ),
         ),
@@ -2362,7 +2496,7 @@ Repeatedly executes body for side effects with bindings and modifiers as<br />
             summary = "Forces realization of a lazy sequence for side effects, returns nil.",
             example = "(dorun (map println [1 2 3])) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2780",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L948",
                 docs = "",
             ),
         ),
@@ -2372,16 +2506,42 @@ Repeatedly executes body for side effects with bindings and modifiers as<br />
         name = "doseq",
         signature = "(doseq seq-exprs & body)",
         completion = CompletionInfo(
-            tailText = "Alias for dofor",
+            tailText = "Repeatedly executes body for side effects with Clojure-style bindings",
             priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Alias for <code>dofor</code>.
+Repeatedly executes body for side effects with Clojure-style bindings.<br />
+  <code>(doseq [x coll] body)</code> runs <code>body</code> once per element of <code>coll</code>. When <code>coll</code><br />
+  is a map, each iteration sees a <code>[k v]</code> entry pair, so destructuring works<br />
+  just like in Clojure: <code>(doseq [[k v] m] ...)</code>. Supports <code>:when</code>, <code>:while</code>,<br />
+  and <code>:let</code> modifiers between bindings.
+""",
+            example = "(doseq [x [1 2 3]] (println x))\n(doseq [[k v] {:a 1 :b 2}] (println k v))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L315",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "doseq-iterable",
+        signature = "(doseq-iterable coll)",
+        completion = CompletionInfo(
+            tailText = "Internal helper used by the doseq macro expansion",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Internal helper used by the <code>doseq</code> macro expansion. Returns a value<br />
+  suitable for Clojure-style iteration: maps are expanded to a sequence of<br />
+  <code>[k v]</code> pair vectors so destructuring binds entries as in Clojure. Every<br />
+  other value is returned unchanged.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1628",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L274",
                 docs = "",
             ),
         ),
@@ -2401,7 +2561,7 @@ Evaluates body <code>n</code> times with <code>binding</code> bound to integers 
 """,
             example = "(dotimes [i 5] (println i))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4902",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/loops.phel#L17",
                 docs = "",
             ),
         ),
@@ -2422,7 +2582,7 @@ Evaluates x then calls all of the methods and functions with the<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3859",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L274",
                 docs = "",
             ),
         ),
@@ -2442,7 +2602,27 @@ Coerces <code>x</code> to a double. In PHP there is no distinction between float
 """,
             example = "(double 1) ; =&gt; 1.0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3465",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L252",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "double-array",
+        signature = "(double-array size-or-seq)",
+        completion = CompletionInfo(
+            tailText = "Creates a PHP array of doubles (same as float-array in PHP)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Creates a PHP array of doubles (same as float-array in PHP).<br />
+   Given a size, fills with <code>0.0</code>. Given a sequence, coerces each element to float.
+""",
+            example = "(double-array 3) ; =&gt; PHP array [0.0, 0.0, 0.0]\n(double-array [1 2]) ; =&gt; PHP array [1.0, 2.0]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L144",
                 docs = "",
             ),
         ),
@@ -2464,7 +2644,7 @@ Returns true if <code>x</code> is a floating-point number, false otherwise.<br /
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1017",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L128",
                 docs = "",
             ),
         ),
@@ -2484,7 +2664,7 @@ Drops the first <code>n</code> elements of <code>coll</code>. Returns a lazy seq
 """,
             example = "(drop 2 [1 2 3 4 5]) ; =&gt; (3 4 5)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2158",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L320",
                 docs = "",
             ),
         ),
@@ -2501,12 +2681,12 @@ Drops the first <code>n</code> elements of <code>coll</code>. Returns a lazy seq
             summary = """
 Drops the last <code>n</code> elements of <code>coll</code>. <code>n</code> defaults to <code>1</code> when omitted,<br />
    matching Clojure's <code>(drop-last coll)</code> single-arity form. Returns an empty<br />
-   vector when <code>coll</code> is <code>nil</code>, matching Clojure's <code>(drop-last n nil)</code> → <code>()</code><br />
-   and aligning with <code>drop</code>/<code>take</code>, which also return an empty result on <code>nil</code>.
+   sequence when <code>coll</code> is <code>nil</code>. Works with any seqable collection including<br />
+   lazy sequences and ranges.
 """,
-            example = "(drop-last [1 2 3 4 5]) ; =&gt; [1 2 3 4]\n(drop-last 2 [1 2 3 4 5]) ; =&gt; [1 2 3]\n(drop-last 5 nil) ; =&gt; []",
+            example = "(drop-last [1 2 3 4 5]) ; =&gt; (1 2 3 4)\n(drop-last 2 [1 2 3 4 5]) ; =&gt; (1 2 3)\n(drop-last 5 nil) ; =&gt; ()",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2181",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L343",
                 docs = "",
             ),
         ),
@@ -2526,7 +2706,26 @@ Drops all elements at the front of <code>coll</code> where <code>(pred x)</code>
 """,
             example = "(drop-while #(&lt; % 5) [1 2 3 4 5 6 3 2 1]) ; =&gt; (5 6 3 2 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2212",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L370",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "empty",
+        signature = "(empty coll)",
+        completion = CompletionInfo(
+            tailText = "Returns an empty collection of the same category as coll, or nil",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns an empty collection of the same category as <code>coll</code>, or nil.
+""",
+            example = "(empty [1 2 3]) ; =&gt; []\n(empty {:a 1}) ; =&gt; {}",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L325",
                 docs = "",
             ),
         ),
@@ -2541,11 +2740,12 @@ Drops all elements at the front of <code>coll</code> where <code>(pred x)</code>
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if x would be 0, "" or empty collection, false otherwise.
+Returns true if x would be 0, "" or empty collection, false otherwise.<br />
+  Safe on infinite/lazy sequences: checks the first element instead of counting.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1126",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L308",
                 docs = "",
             ),
         ),
@@ -2562,7 +2762,7 @@ Returns true if x would be 0, "" or empty collection, false otherwise.
             summary = "Evaluates a form and return the evaluated results.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4685",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L722",
                 docs = "",
             ),
         ),
@@ -2581,7 +2781,7 @@ Checks if <code>x</code> is even.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3397",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L176",
                 docs = "",
             ),
         ),
@@ -2601,7 +2801,7 @@ Returns true if predicate is true for every element in collection, false otherwi
 """,
             example = "(every? even? [2 4 6 8]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L847",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L198",
                 docs = "",
             ),
         ),
@@ -2618,7 +2818,7 @@ Returns true if predicate is true for every element in collection, false otherwi
             summary = "Returns the cause of an exception, or nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4790",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/exceptions.phel#L34",
                 docs = "",
             ),
         ),
@@ -2637,7 +2837,7 @@ Returns the data map from an ex-info exception, or nil if not an ExInfoException
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4777",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/exceptions.phel#L21",
                 docs = "",
             ),
         ),
@@ -2654,7 +2854,7 @@ Returns the data map from an ex-info exception, or nil if not an ExInfoException
             summary = "Creates an exception with a message and a data map. Optionally takes a cause.",
             example = "(throw (ex-info \"Invalid input\" {:field :email}))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4768",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/exceptions.phel#L12",
                 docs = "",
             ),
         ),
@@ -2671,7 +2871,7 @@ Returns the data map from an ex-info exception, or nil if not an ExInfoException
             summary = "Returns the message of an exception.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4784",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/exceptions.phel#L28",
                 docs = "",
             ),
         ),
@@ -2692,7 +2892,7 @@ Equivalent to multiple <code>extend-type</code> calls.
 """,
             example = "(extend-protocol Describable\n  :string (describe [s] s)\n  :int (describe [n] (str n)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4305",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L342",
                 docs = "",
             ),
         ),
@@ -2721,7 +2921,7 @@ Note: <code>:struct</code> and <code>:php/object</code> cannot be used as type-s
 """,
             example = "(extend-type :string Stringable (to-string [s] s))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4215",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L252",
                 docs = "",
             ),
         ),
@@ -2741,7 +2941,7 @@ Returns true if the given type-key has implementations for all methods<br />
 """,
             example = "(extends? Stringable :string)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4294",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L331",
                 docs = "",
             ),
         ),
@@ -2760,7 +2960,7 @@ Returns the most extreme value in <code>args</code> based on the binary <code>or
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3539",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L351",
                 docs = "",
             ),
         ),
@@ -2777,7 +2977,7 @@ Returns the most extreme value in <code>args</code> based on the binary <code>or
             summary = "Checks if value is exactly false (not just falsy).",
             example = "(false? nil) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L908",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L257",
                 docs = "",
             ),
         ),
@@ -2796,7 +2996,7 @@ Same as <code>(first (first coll))</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L566",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-basics.phel#L41",
                 docs = "",
             ),
         ),
@@ -2813,7 +3013,7 @@ Same as <code>(first (first coll))</code>.
             summary = "Returns a lazy sequence of all files and directories in a directory tree.",
             example = "(filter #(php/str_ends_with % \".phel\") (file-seq \"src/\")) ; =&gt; [\"src/file1.phel\" \"src/file2.phel\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3722",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L137",
                 docs = "",
             ),
         ),
@@ -2833,7 +3033,7 @@ Returns a lazy sequence of elements where predicate returns true.<br />
 """,
             example = "(filter even? [1 2 3 4 5 6]) ; =&gt; (2 4 6)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2300",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L458",
                 docs = "",
             ),
         ),
@@ -2871,7 +3071,7 @@ Returns the first item in <code>coll</code> where <code>(pred item)</code> evalu
 """,
             example = "(find #(&gt; % 5) [1 2 3 6 7 8]) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2365",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L523",
                 docs = "",
             ),
         ),
@@ -2891,7 +3091,7 @@ Finds the best matching method for dispatch-val using the global hierarchy.<br /
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4123",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L159",
                 docs = "",
             ),
         ),
@@ -2910,7 +3110,7 @@ Returns the index of the first item in <code>coll</code> where <code>(pred item)
 """,
             example = "(find-index #(&gt; % 5) [1 2 3 6 7 8]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2377",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L533",
                 docs = "",
             ),
         ),
@@ -2924,10 +3124,15 @@ Returns the index of the first item in <code>coll</code> where <code>(pred item)
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Returns the first element of a sequence, or nil if empty.",
+            summary = """
+Returns the first element of a sequence, or nil if empty.<br /><br />
+Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns the<br />
+  first <code>[:a 1]</code> vector. Strings are treated as sequences of multibyte<br />
+  characters.
+""",
             example = "(first [1 2 3]) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L119",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L95",
                 docs = "",
             ),
         ),
@@ -2944,7 +3149,7 @@ Returns the index of the first item in <code>coll</code> where <code>(pred item)
             summary = "Flattens nested sequential structure into a lazy sequence of all leaf values.",
             example = "(flatten [[1 2] [3 [4 5]] 6]) ; =&gt; (1 2 3 4 5 6)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3187",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L233",
                 docs = "",
             ),
         ),
@@ -2965,7 +3170,27 @@ Coerces <code>x</code> to a float. In PHP there is no distinction between float 
 """,
             example = "(float 1) ; =&gt; 1.0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3456",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L243",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "float-array",
+        signature = "(float-array size-or-seq)",
+        completion = CompletionInfo(
+            tailText = "Creates a PHP array of floats",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Creates a PHP array of floats. Given a size, fills with <code>0.0</code>.<br />
+   Given a sequence, coerces each element to float via <code>floatval</code>.
+""",
+            example = "(float-array 3) ; =&gt; PHP array [0.0, 0.0, 0.0]\n(float-array [1 2]) ; =&gt; PHP array [1.0, 2.0]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L136",
                 docs = "",
             ),
         ),
@@ -2984,7 +3209,7 @@ Returns true if <code>x</code> is float point number, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L990",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L70",
                 docs = "",
             ),
         ),
@@ -3022,7 +3247,26 @@ Returns true if <code>x</code> is a function, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1054",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L206",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "fnext",
+        signature = "(fnext coll)",
+        completion = CompletionInfo(
+            tailText = "Same as (first (next coll))",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Same as <code>(first (next coll))</code>.
+""",
+            example = "(fnext [1 2 3]) ; =&gt; 2",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-basics.phel#L69",
                 docs = "",
             ),
         ),
@@ -3043,7 +3287,7 @@ Returns a function that replaces nil arguments with the provided defaults<br />
 """,
             example = "(let [safe-inc (fnil inc 0)] (safe-inc nil)) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3084",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L130",
                 docs = "",
             ),
         ),
@@ -3078,7 +3322,7 @@ Finally, additional options can be set:<br /><br />
 """,
             example = "(for [x :in [1 2 3]] (* x 2)) ; =&gt; [2 4 6]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1582",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L221",
                 docs = "",
             ),
         ),
@@ -3095,7 +3339,7 @@ Finally, additional options can be set:<br /><br />
             summary = "If x is a Delay, forces it and returns its cached value. Otherwise returns x.",
             example = "(force (delay 42)) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4727",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/lazy.phel#L20",
                 docs = "",
             ),
         ),
@@ -3133,7 +3377,7 @@ Returns a formatted string. See PHP's <a href="https://www.php.net/manual/en/fun
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3642",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L57",
                 docs = "",
             ),
         ),
@@ -3153,7 +3397,7 @@ Works with vectors, lists, sets, and strings.
 """,
             example = "(frequencies [:a :b :a :c :b :a]) ; =&gt; {:a 3 :b 2 :c 1}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2452",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L600",
                 docs = "",
             ),
         ),
@@ -3170,7 +3414,7 @@ Works with vectors, lists, sets, and strings.
             summary = "Return the namespace and name string of a string, keyword or symbol.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4671",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L708",
                 docs = "",
             ),
         ),
@@ -3190,7 +3434,7 @@ Returns true if <code>x</code> is a function, false otherwise.
             example = null,
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "fn?"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1059",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L220",
                 docs = "",
             ),
         ),
@@ -3207,7 +3451,7 @@ Returns true if <code>x</code> is a function, false otherwise.
             summary = "Generates a new unique symbol.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L371",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/strings.phel#L25",
                 docs = "",
             ),
         ),
@@ -3224,7 +3468,7 @@ Returns true if <code>x</code> is a function, false otherwise.
             summary = "Gets the value at key in a collection. Returns default if not found.",
             example = "(get {:a 1} :a) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1290",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L57",
                 docs = "",
             ),
         ),
@@ -3244,7 +3488,7 @@ Returns <code>opt</code> (default nil) if the path doesn't exist.
 """,
             example = "(get-in {:a {:b {:c 42}}} [:a :b :c]) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2094",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L256",
                 docs = "",
             ),
         ),
@@ -3261,7 +3505,7 @@ Returns <code>opt</code> (default nil) if the path doesn't exist.
             summary = "Returns the validator function of a variable, or nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1500",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L139",
                 docs = "",
             ),
         ),
@@ -3280,7 +3524,7 @@ Returns a map of the elements of coll keyed by the result of <code>f</code> on e
 """,
             example = "(group-by count [\"a\" \"bb\" \"c\" \"ddd\" \"ee\"]) ; =&gt; {1 [\"a\" \"c\"] 2 [\"bb\" \"ee\"] 3 [\"ddd\"]}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2801",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L969",
                 docs = "",
             ),
         ),
@@ -3319,7 +3563,7 @@ Returns true if <code>x</code> is a hash map, false otherwise.
             example = null,
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "map?"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1076",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L238",
                 docs = "",
             ),
         ),
@@ -3336,7 +3580,7 @@ Returns true if <code>x</code> is a hash map, false otherwise.
             summary = "Creates a new Set from the given arguments. Shortcut: #{}",
             example = "(hash-set 1 2 3) ; =&gt; #{1 2 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L432",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/collections.phel#L15",
                 docs = "",
             ),
         ),
@@ -3356,7 +3600,26 @@ Checks if all values are identical. Same as <code>a === b</code> in PHP.
             example = null,
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "identical?"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L744",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L93",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "ident?",
+        signature = "(ident? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a symbol or keyword",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a symbol or keyword.
+""",
+            example = "(ident? 'x) ; =&gt; true\n(ident? :a) ; =&gt; true\n(ident? 42) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L165",
                 docs = "",
             ),
         ),
@@ -3375,7 +3638,7 @@ Checks if all values are identical. Same as <code>a === b</code> in PHP.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L734",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L83",
                 docs = "",
             ),
         ),
@@ -3392,7 +3655,7 @@ Checks if all values are identical. Same as <code>a === b</code> in PHP.
             summary = "Returns its argument.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1633",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L326",
                 docs = "",
             ),
         ),
@@ -3431,7 +3694,7 @@ If test is true, evaluates then with binding-form bound to the value of test,<br
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4517",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L554",
                 docs = "",
             ),
         ),
@@ -3448,7 +3711,7 @@ If test is true, evaluates then with binding-form bound to the value of test,<br
             summary = "Evaluates then if test is false, else otherwise.",
             example = "(if-not (&lt; 5 3) \"not less\" \"less\") ; =&gt; \"not less\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L621",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L13",
                 docs = "",
             ),
         ),
@@ -3469,7 +3732,27 @@ Binds name to the value of test. If test is not nil, evaluates then with binding
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4557",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L594",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "ifn?",
+        signature = "(ifn? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x can be invoked as a function",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> can be invoked as a function.<br />
+   This includes functions, keywords, maps, vectors, sets, and lists.
+""",
+            example = "(ifn? inc) ; =&gt; true\n(ifn? :a) ; =&gt; true\n(ifn? {}) ; =&gt; true\n(ifn? 42) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L211",
                 docs = "",
             ),
         ),
@@ -3488,7 +3771,7 @@ Increments <code>x</code> by one.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3383",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L162",
                 docs = "",
             ),
         ),
@@ -3508,7 +3791,7 @@ Indexed sequences include lists, vectors, and indexed PHP arrays.
 """,
             example = "(indexed? [1 2 3]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1178",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L372",
                 docs = "",
             ),
         ),
@@ -3527,7 +3810,71 @@ Checks if <code>x</code> is infinite.
 """,
             example = "(inf? php/INF) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3438",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L217",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "instance?",
+        signature = "(instance? c x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is an instance of class c, false otherwise",
+            priority = PhelCompletionPriority.MACROS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is an instance of class <code>c</code>, false otherwise.<br />
+  Mirrors Clojure's <code>clojure.core/instance?</code> argument order (class first,<br />
+  value second). <code>c</code> should be a literal class reference such as<br />
+  <code>\DateTime</code> or a <code>:use</code>d short name; for runtime class names use<br />
+  <code>(php/is_a x class-name)</code>.
+""",
+            example = "(instance? \\DateTime (php/new \\DateTime)) ; =&gt; true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L276",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "int",
+        signature = "(int x)",
+        completion = CompletionInfo(
+            tailText = "Coerces x to an integer",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Coerces <code>x</code> to an integer. Delegates to PHP's <code>intval</code>, so floats are<br />
+   truncated toward zero, numeric strings are parsed, and <code>nil</code> returns <code>0</code>.
+""",
+            example = "(int 1.9) ; =&gt; 1\n(int \"42\") ; =&gt; 42",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L235",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "int-array",
+        signature = "(int-array size-or-seq)",
+        completion = CompletionInfo(
+            tailText = "Creates a PHP array of integers",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Creates a PHP array of integers. Given a size, fills with <code>0</code>.<br />
+   Given a sequence, coerces each element to int via <code>intval</code>.<br />
+   PHP has no typed arrays, so the result is a plain PHP array.
+""",
+            example = "(int-array 3) ; =&gt; PHP array [0, 0, 0]\n(int-array [1.5 2.7]) ; =&gt; PHP array [1, 2]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L119",
                 docs = "",
             ),
         ),
@@ -3550,7 +3897,7 @@ Note that, unlike Clojure, Phel uses PHP integers and there is no<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1001",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L81",
                 docs = "",
             ),
         ),
@@ -3569,7 +3916,7 @@ Returns true if <code>x</code> is an integer number, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L995",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L75",
                 docs = "",
             ),
         ),
@@ -3591,7 +3938,7 @@ Returns elements by taking one from each collection in turn.<br />
 """,
             example = "(interleave [1 2 3] [:a :b :c]) ; =&gt; (1 :a 2 :b 3 :c)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2751",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L919",
                 docs = "",
             ),
         ),
@@ -3611,7 +3958,7 @@ Returns elements separated by a separator. Returns a lazy sequence.<br />
 """,
             example = "(interpose 0 [1 2 3]) ; =&gt; (1 0 2 0 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2704",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L872",
                 docs = "",
             ),
         ),
@@ -3628,7 +3975,7 @@ Returns elements separated by a separator. Returns a lazy sequence.<br />
             summary = "Intersect multiple sets into a new one.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2989",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L35",
                 docs = "",
             ),
         ),
@@ -3649,7 +3996,7 @@ When <code>from</code> is associative, it is treated as a sequence of key-value 
 """,
             example = "(into [] '(1 2 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1801",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L86",
                 docs = "",
             ),
         ),
@@ -3669,7 +4016,7 @@ If map has duplicated values, some keys will be ignored.
 """,
             example = "(invert {:a 1 :b 2 :c 3}) ; =&gt; {1 :a 2 :b 3 :c}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2868",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1046",
                 docs = "",
             ),
         ),
@@ -3689,7 +4036,7 @@ Returns true if child equals parent, or child is a descendant of parent<br />
 """,
             example = "(do (derive :square :shape) (isa? :square :shape)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4052",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L88",
                 docs = "",
             ),
         ),
@@ -3706,7 +4053,7 @@ Returns true if child equals parent, or child is a descendant of parent<br />
             summary = "Returns an infinite lazy sequence of x, (f x), (f (f x)), and so on.",
             example = "(take 5 (iterate inc 0)) ; =&gt; (0 1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2649",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L812",
                 docs = "",
             ),
         ),
@@ -3732,7 +4079,7 @@ Options map keys:<br />
 """,
             example = "(iteration fetch-page {:kf :next-token :vf :items :initk nil})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4744",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/lazy.phel#L37",
                 docs = "",
             ),
         ),
@@ -3751,7 +4098,7 @@ Takes a list of functions and returns a new function that is the juxtaposition o
 """,
             example = "((juxt inc dec #(* % 2)) 10) =&gt; [11 9 20]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3067",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L113",
                 docs = "",
             ),
         ),
@@ -3771,7 +4118,7 @@ Returns a lazy sequence of non-nil results of applying function to elements.<br 
 """,
             example = "(keep #(when (even? %) (* % %)) [1 2 3 4 5]) ; =&gt; (4 16)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2327",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L485",
                 docs = "",
             ),
         ),
@@ -3791,7 +4138,26 @@ Returns a lazy sequence of non-nil results of <code>(pred i x)</code>.<br />
 """,
             example = "(keep-indexed #(when (even? %1) %2) [\"a\" \"b\" \"c\" \"d\"]) ; =&gt; (\"a\" \"c\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2345",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L503",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "key",
+        signature = "(key entry)",
+        completion = CompletionInfo(
+            tailText = "Returns the key of a map entry (a two-element vector [key value])",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the key of a map entry (a two-element vector <code>[key value]</code>).
+""",
+            example = "(key (first (pairs {:a 1}))) ; =&gt; :a",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L629",
                 docs = "",
             ),
         ),
@@ -3801,14 +4167,17 @@ Returns a lazy sequence of non-nil results of <code>(pred i x)</code>.<br />
         name = "keys",
         signature = "(keys coll)",
         completion = CompletionInfo(
-            tailText = "Returns a sequence of all keys in a map",
+            tailText = "Returns a sequence of all keys in a map, or nil when the map is nil or empty",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Returns a sequence of all keys in a map.",
-            example = "(keys {:a 1 :b 2}) ; =&gt; (:a :b)",
+            summary = """
+Returns a sequence of all keys in a map, or <code>nil</code> when the map is <code>nil</code><br />
+  or empty.
+""",
+            example = "(keys {:a 1 :b 2}) ; =&gt; (:a :b)\n(keys nil) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2464",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L613",
                 docs = "",
             ),
         ),
@@ -3818,14 +4187,20 @@ Returns a lazy sequence of non-nil results of <code>(pred i x)</code>.<br />
         name = "keyword",
         signature = "(keyword x)",
         completion = CompletionInfo(
-            tailText = "Creates a new Keyword from a given string",
+            tailText = "Creates a new Keyword",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Creates a new Keyword from a given string.",
-            example = "(keyword \"name\") ; =&gt; :name",
+            summary = """
+Creates a new Keyword.<br /><br />
+Arity-1 accepts a string, keyword, or symbol. Returns <code>nil</code> when <code>x</code> is <code>nil</code>.<br />
+  If <code>x</code> is already a keyword, it is returned unchanged.<br /><br />
+Arity-2 builds a namespaced keyword from the namespace and name parts; returns<br />
+  <code>nil</code> when <code>name</code> is <code>nil</code>.
+""",
+            example = "(keyword \"name\") ; =&gt; :name\n(keyword :abc) ; =&gt; :abc\n(keyword \"ns\" \"name\") ; =&gt; :ns/name",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L469",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L56",
                 docs = "",
             ),
         ),
@@ -3844,7 +4219,7 @@ Returns true if <code>x</code> is a keyword, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1044",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L155",
                 docs = "",
             ),
         ),
@@ -3863,7 +4238,7 @@ Returns a vector of key-value pairs like <code>[k1 v1 k2 v2 k3 v3 ...]</code>.
 """,
             example = "(kvs {:a 1 :b 2}) ; =&gt; [:a 1 :b 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2494",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L659",
                 docs = "",
             ),
         ),
@@ -3882,7 +4257,7 @@ Returns the last element of <code>coll</code> or nil if <code>coll</code> is emp
 """,
             example = "(last [1 2 3]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2196",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L354",
                 docs = "",
             ),
         ),
@@ -3899,7 +4274,7 @@ Returns the last element of <code>coll</code> or nil if <code>coll</code> is emp
             summary = "Concatenates collections into a lazy sequence (expands to concat).",
             example = "(lazy-cat [1 2] [3 4]) ; =&gt; (1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2643",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L806",
                 docs = "",
             ),
         ),
@@ -3916,7 +4291,7 @@ Returns the last element of <code>coll</code> or nil if <code>coll</code> is emp
             summary = "Creates a lazy sequence that evaluates the body only when accessed.",
             example = "(lazy-seq (cons 1 (lazy-seq nil))) ; =&gt; (1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2634",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L797",
                 docs = "",
             ),
         ),
@@ -3957,7 +4332,7 @@ bindings is a vector of function specs: (letfn [(f [params] body) (g [params] bo
 """,
             example = "(letfn [(my-even? [n] (if (zero? n) true (my-odd? (dec n))))\n        (my-odd? [n] (if (zero? n) false (my-even? (dec n))))]\n  (my-even? 10))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4609",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L646",
                 docs = "",
             ),
         ),
@@ -3974,7 +4349,7 @@ bindings is a vector of function specs: (letfn [(f [params] body) (g [params] bo
             summary = "Returns a lazy sequence of lines from a file.",
             example = "(take 10 (line-seq \"large-file.txt\")) ; =&gt; [\"line1\" \"line2\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3710",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L125",
                 docs = "",
             ),
         ),
@@ -4010,7 +4385,47 @@ Returns true if <code>x</code> is a list, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1088",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L250",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "long",
+        signature = "(long x)",
+        completion = CompletionInfo(
+            tailText = "Coerces x to a long integer",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Coerces <code>x</code> to a long integer. In PHP there is no distinction between int<br />
+   and long; both map to the same native PHP int type. Alias for <code>int</code>.
+""",
+            example = "(long 1.9) ; =&gt; 1",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L260",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "long-array",
+        signature = "(long-array size-or-seq)",
+        completion = CompletionInfo(
+            tailText = "Creates a PHP array of longs (same as int-array in PHP)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Creates a PHP array of longs (same as int-array in PHP).<br />
+   Given a size, fills with <code>0</code>. Given a sequence, coerces each element to int.
+""",
+            example = "(long-array 3) ; =&gt; PHP array [0, 0, 0]\n(long-array [1.5 2.7]) ; =&gt; PHP array [1, 2]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L128",
                 docs = "",
             ),
         ),
@@ -4046,7 +4461,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = "Recursively expands the given form until it is no longer a macro call.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4816",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/macroexpand.phel#L32",
                 docs = "",
             ),
         ),
@@ -4063,7 +4478,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = "Expands the given form once if it is a macro call.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4796",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/macroexpand.phel#L12",
                 docs = "",
             ),
         ),
@@ -4073,14 +4488,19 @@ Creates a new lexical context with variables defined in bindings and defines a r
         name = "make-hierarchy",
         signature = "(make-hierarchy)",
         completion = CompletionInfo(
-            tailText = "Returns a new hierarchy map with no parent relationships",
+            tailText = "Creates a fresh, empty hierarchy",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Returns a new hierarchy map with no parent relationships.",
+            summary = """
+Creates a fresh, empty hierarchy.<br /><br />
+Returns a map with <code>:parents</code>, <code>:descendants</code>, and <code>:ancestors</code> keys, each<br />
+  holding an empty map. Matches Clojure's hierarchy shape so consumers can<br />
+  destructure any of the three relationship views.
+""",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4018",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L51",
                 docs = "",
             ),
         ),
@@ -4103,7 +4523,7 @@ When given a single collection, applies the function to each element.<br />
 """,
             example = "(map inc [1 2 3]) ; =&gt; (2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1652",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L52",
                 docs = "",
             ),
         ),
@@ -4125,7 +4545,7 @@ Applies <code>f</code> to each element in <code>xs</code>. <code>f</code> is a t
 """,
             example = "(map-indexed vector [:a :b :c]) ; =&gt; ([0 :a] [1 :b] [2 :c])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2734",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L902",
                 docs = "",
             ),
         ),
@@ -4144,7 +4564,7 @@ Returns true if <code>x</code> is a hash map, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1071",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L232",
                 docs = "",
             ),
         ),
@@ -4154,17 +4574,21 @@ Returns true if <code>x</code> is a hash map, false otherwise.
         name = "mapcat",
         signature = "(mapcat f & args)",
         completion = CompletionInfo(
-            tailText = "Maps a function over a collection and concatenates the results",
+            tailText = "Maps a function over one or more collections and concatenates the results",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Maps a function over a collection and concatenates the results. Returns a lazy sequence.<br />
-  When called with f only, returns a transducer.
+Maps a function over one or more collections and concatenates the results.<br />
+  Returns a lazy sequence. When called with <code>f</code> alone, returns a transducer.<br /><br />
+With a single collection behaves like <code>(apply concat (map f coll))</code>. With<br />
+  multiple collections, <code>f</code> is called with corresponding elements from each<br />
+  (stopping when the shortest is exhausted) and the resulting sequences are<br />
+  concatenated.
 """,
-            example = "(mapcat reverse [[1 2] [3 4]]) ; =&gt; (2 1 4 3)",
+            example = "(mapcat reverse [[1 2] [3 4]]) ; =&gt; (2 1 4 3)\n(mapcat list [:a :b :c] [1 2 3]) ; =&gt; (:a 1 :b 2 :c 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2686",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L849",
                 docs = "",
             ),
         ),
@@ -4181,7 +4605,7 @@ Maps a function over a collection and concatenates the results. Returns a lazy s
             summary = "Returns the numeric maximum of all numbers.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3549",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L361",
                 docs = "",
             ),
         ),
@@ -4200,7 +4624,7 @@ Returns the arg for which (k arg) is largest. On ties, returns the latest argume
 """,
             example = "(max-key count \"bb\" \"aaa\" \"b\") ; =&gt; \"aaa\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3561",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L373",
                 docs = "",
             ),
         ),
@@ -4219,7 +4643,7 @@ Returns the mean of <code>xs</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3580",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L392",
                 docs = "",
             ),
         ),
@@ -4238,7 +4662,7 @@ Returns the median of <code>xs</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3585",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L397",
                 docs = "",
             ),
         ),
@@ -4258,7 +4682,7 @@ Returns a memoized version of the function <code>f</code>. The memoized function
 """,
             example = "(defn fact [n]\n  (if (zero? n)\n    1\n    (* n (fact (dec n)))))\n(def fact-memo (memoize fact))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3102",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L149",
                 docs = "",
             ),
         ),
@@ -4281,7 +4705,7 @@ Without arguments, uses a default cache size of 128 entries.
 """,
             example = "(defn fact [n]\n  (if (zero? n)\n    1\n    (* n (fact (dec n)))))\n(def fact-memo (memoize-lru fact 100))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3122",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L169",
                 docs = "",
             ),
         ),
@@ -4301,7 +4725,7 @@ If a key appears in more than one collection, later values replace previous ones
 """,
             example = "(merge {:a 1 :b 2} {:b 3 :c 4}) ; =&gt; {:a 1 :b 3 :c 4}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2836",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1009",
                 docs = "",
             ),
         ),
@@ -4321,7 +4745,7 @@ Merges multiple maps into one new map. If a key appears in more than one<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3202",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L249",
                 docs = "",
             ),
         ),
@@ -4342,7 +4766,7 @@ Gets the metadata attached to a value.<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L189",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/meta.phel#L23",
                 docs = "",
             ),
         ),
@@ -4359,7 +4783,7 @@ Gets the metadata attached to a value.<br />
             summary = "Returns the numeric minimum of all numbers.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3544",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L356",
                 docs = "",
             ),
         ),
@@ -4378,7 +4802,7 @@ Returns the arg for which (k arg) is smallest. On ties, returns the latest argum
 """,
             example = "(min-key count \"bb\" \"aaa\" \"b\") ; =&gt; \"b\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3554",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L366",
                 docs = "",
             ),
         ),
@@ -4395,7 +4819,7 @@ Returns the arg for which (k arg) is smallest. On ties, returns the latest argum
             summary = "Returns the name string of a string, keyword or symbol.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4661",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L698",
                 docs = "",
             ),
         ),
@@ -4412,7 +4836,7 @@ Returns the arg for which (k arg) is smallest. On ties, returns the latest argum
             summary = "Return the namespace string of a symbol or keyword. Nil if not present.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4666",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L703",
                 docs = "",
             ),
         ),
@@ -4431,7 +4855,45 @@ Checks if <code>x</code> is not a number.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3427",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L206",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "nat-int?",
+        signature = "(nat-int? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a non-negative integer (zero or positive)",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a non-negative integer (zero or positive).
+""",
+            example = "(nat-int? 0) ; =&gt; true\n(nat-int? 1) ; =&gt; true\n(nat-int? -1) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L106",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "neg-int?",
+        signature = "(neg-int? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a negative integer",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a negative integer.
+""",
+            example = "(neg-int? -1) ; =&gt; true\n(neg-int? 0) ; =&gt; false\n(neg-int? 1) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L92",
                 docs = "",
             ),
         ),
@@ -4450,7 +4912,7 @@ Checks if <code>x</code> is smaller than zero.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3422",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L201",
                 docs = "",
             ),
         ),
@@ -4467,7 +4929,7 @@ Checks if <code>x</code> is smaller than zero.
             summary = "Returns the sequence after the first element, or nil if empty.",
             example = "(next [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L98",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L58",
                 docs = "",
             ),
         ),
@@ -4486,7 +4948,7 @@ Same as <code>(next (first coll))</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L589",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-basics.phel#L64",
                 docs = "",
             ),
         ),
@@ -4503,7 +4965,7 @@ Same as <code>(next (first coll))</code>.
             summary = "Returns true if value is nil, false otherwise.",
             example = "(nil? (get {:a 1} :b)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L914",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L263",
                 docs = "",
             ),
         ),
@@ -4522,7 +4984,7 @@ Same as <code>(next (next coll))</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L594",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-basics.phel#L76",
                 docs = "",
             ),
         ),
@@ -4539,7 +5001,7 @@ Same as <code>(next (next coll))</code>.
             summary = "Returns true if value is falsy (nil or false), false otherwise.",
             example = "(not nil) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L762",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L111",
                 docs = "",
             ),
         ),
@@ -4559,7 +5021,7 @@ Returns true if <code>(pred x)</code> is logical false for every <code>x</code> 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L880",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L229",
                 docs = "",
             ),
         ),
@@ -4578,7 +5040,7 @@ Returns <code>coll</code> if it contains elements, otherwise nil.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1135",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L318",
                 docs = "",
             ),
         ),
@@ -4598,7 +5060,7 @@ Returns false if <code>(pred x)</code> is logical true for every <code>x</code> 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L858",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L209",
                 docs = "",
             ),
         ),
@@ -4617,7 +5079,7 @@ Checks if all values are unequal. Same as <code>a != b</code> in PHP.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L768",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L117",
                 docs = "",
             ),
         ),
@@ -4634,10 +5096,71 @@ Checks if all values are unequal. Same as <code>a != b</code> in PHP.
             summary = """
 Defines the namespace for the current file and adds imports to the environment. Imports can either be uses or requires. The keyword :use is used to import PHP classes, the keyword :require is used to import Phel modules and the keyword :require-file is used to load php files.
 """,
-            example = "(ns my-app\\core (:require phel\\str :as str))",
+            example = "(ns my-app\\core (:require phel\\string :as str))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/namespaces/#namespace-ns",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "nth",
+        signature = "(nth coll index)",
+        completion = CompletionInfo(
+            tailText = "Returns the value at index in coll",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the value at <code>index</code> in <code>coll</code>. Throws an<br />
+   OutOfBoundsException if the index is out of range and no<br />
+   <code>not-found</code> value is supplied. For indexed collections (vectors,<br />
+   strings) this is O(1); for sequences it is O(n).
+""",
+            example = "(nth [1 2 3] 1) ; =&gt; 2\n(nth [1 2 3] 5 :default) ; =&gt; :default",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L87",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "nthnext",
+        signature = "(nthnext coll n)",
+        completion = CompletionInfo(
+            tailText = "Returns the nth next of coll, (seq coll) when n is 0",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the nth next of <code>coll</code>, <code>(seq coll)</code> when <code>n</code> is 0.<br />
+   Returns nil if there are fewer than <code>n</code> elements remaining.
+""",
+            example = "(nthnext [1 2 3 4 5] 2) ; =&gt; (3 4 5)\n(nthnext [1 2] 5) ; =&gt; nil",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L150",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "nthrest",
+        signature = "(nthrest coll n)",
+        completion = CompletionInfo(
+            tailText = "Returns the nth rest of coll, coll when n is 0",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the nth rest of <code>coll</code>, <code>coll</code> when <code>n</code> is 0.
+""",
+            example = "(nthrest [1 2 3 4 5] 2) ; =&gt; (3 4 5)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L139",
+                docs = "",
             ),
         ),
     ),
@@ -4655,7 +5178,7 @@ Returns true if <code>x</code> is a number, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1012",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L113",
                 docs = "",
             ),
         ),
@@ -4678,7 +5201,7 @@ Creates a PHP array of the given size initialized to <code>nil</code>, or a PHP<
 """,
             example = "(object-array 3) ; =&gt; a PHP array [nil, nil, nil]\n(object-array [1 2 3]) ; =&gt; a PHP array [1, 2, 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L499",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L42",
                 docs = "",
             ),
         ),
@@ -4697,7 +5220,7 @@ Checks if <code>x</code> is odd.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3402",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L181",
                 docs = "",
             ),
         ),
@@ -4716,7 +5239,7 @@ Checks if <code>x</code> is one.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3412",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L191",
                 docs = "",
             ),
         ),
@@ -4735,7 +5258,7 @@ Evaluates expressions left to right, returning the first truthy value or the las
 """,
             example = "(or false nil 42 100) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L707",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L34",
                 docs = "",
             ),
         ),
@@ -4752,7 +5275,7 @@ Evaluates expressions left to right, returning the first truthy value or the las
             summary = "Gets the pairs of an associative data structure.",
             example = "(pairs {:a 1 :b 2}) ; =&gt; ([:a 1] [:b 2])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2486",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L651",
                 docs = "",
             ),
         ),
@@ -4769,7 +5292,7 @@ Evaluates expressions left to right, returning the first truthy value or the las
             summary = "Returns the set of immediate parents of tag in the global hierarchy, or nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4094",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L130",
                 docs = "",
             ),
         ),
@@ -4788,7 +5311,7 @@ Parses a string as a boolean. Returns true for "true", false for "false", nil ot
 """,
             example = "(parse-boolean \"true\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4867",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/parsing.phel#L36",
                 docs = "",
             ),
         ),
@@ -4802,10 +5325,14 @@ Parses a string as a boolean. Returns true for "true", false for "false", nil ot
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Parses a string as a float. Returns nil if parsing fails.",
-            example = "(parse-double \"3.14\") ; =&gt; 3.14",
+            summary = """
+Parses a string as a float. Returns <code>nil</code> for non-numeric input or for<br />
+  inputs that are not strings. Accepts <code>Infinity</code>, <code>-Infinity</code>, and <code>NaN</code><br />
+  alongside regular decimal and scientific notation.
+""",
+            example = "(parse-double \"3.14\") ; =&gt; 3.14\n(parse-double \"Infinity\") ; =&gt; INF",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4857",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/parsing.phel#L20",
                 docs = "",
             ),
         ),
@@ -4822,7 +5349,28 @@ Parses a string as a boolean. Returns true for "true", false for "false", nil ot
             summary = "Parses a string as an integer. Returns nil if parsing fails.",
             example = "(parse-long \"123\") ; =&gt; 123",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4847",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/parsing.phel#L10",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "parse-uuid",
+        signature = "(parse-uuid s)",
+        completion = CompletionInfo(
+            tailText = "Parses s as a canonical UUID string",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Parses <code>s</code> as a canonical UUID string. Returns the lower-cased UUID<br />
+  string if valid, or nil otherwise. Since PHP has no UUID type, UUIDs<br />
+  are returned as strings.
+""",
+            example = "(parse-uuid \"550E8400-E29B-41D4-A716-446655440000\")\n  ; =&gt; \"550e8400-e29b-41d4-a716-446655440000\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L43",
                 docs = "",
             ),
         ),
@@ -4843,7 +5391,7 @@ Takes a function <code>f</code> and fewer than normal arguments of <code>f</code
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3077",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L123",
                 docs = "",
             ),
         ),
@@ -4862,7 +5410,7 @@ Partitions collection into chunks of size n, dropping incomplete final partition
 """,
             example = "(partition 3 [1 2 3 4 5 6 7]) ; =&gt; ([1 2 3] [4 5 6])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2942",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1121",
                 docs = "",
             ),
         ),
@@ -4881,7 +5429,7 @@ Partitions collection into chunks of size n, including incomplete final partitio
 """,
             example = "(partition-all 3 [1 2 3 4 5 6 7]) ; =&gt; ([1 2 3] [4 5 6] [7])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2954",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1133",
                 docs = "",
             ),
         ),
@@ -4900,7 +5448,7 @@ Returns a lazy sequence of partitions. Applies <code>f</code> to each value in <
 """,
             example = "(partition-by #(&lt; % 3) [1 2 3 4 5 1 2]) ; =&gt; [[1 2] [3 4 5] [1 2]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2892",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1071",
                 docs = "",
             ),
         ),
@@ -4920,7 +5468,7 @@ Returns the last element of a sequence, or nil if empty or nil.<br />
 """,
             example = "(peek [1 2 3]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1256",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L23",
                 docs = "",
             ),
         ),
@@ -4937,7 +5485,7 @@ Returns the last element of a sequence, or nil if empty or nil.<br />
             summary = "Converts a transient collection back to a persistent collection.",
             example = "(def t (transient {}))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L413",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L27",
                 docs = "",
             ),
         ),
@@ -4957,7 +5505,7 @@ Converts a transient collection back to a persistent collection.<br />
 """,
             example = "(persistent! (conj! (transient []) 1 2 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L420",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L34",
                 docs = "",
             ),
         ),
@@ -4974,7 +5522,7 @@ Converts a transient collection back to a persistent collection.<br />
             summary = "Recursively converts a Phel data structure to a PHP array.",
             example = "(phel-&gt;php {:a [1 2 3] :b {:c 4}}) ; =&gt; (PHP array [\"a\" =&gt; [1, 2, 3], \"b\" =&gt; [\"c\" =&gt; 4]])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2518",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L681",
                 docs = "",
             ),
         ),
@@ -4994,7 +5542,7 @@ Indexed PHP arrays become vectors, associative PHP arrays become maps.
 """,
             example = "(php-&gt;phel (php-associative-array \"a\" 1 \"b\" 2)) ; =&gt; {\"a\" 1 \"b\" 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2550",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L713",
                 docs = "",
             ),
         ),
@@ -5011,7 +5559,7 @@ Indexed PHP arrays become vectors, associative PHP arrays become maps.
             summary = "Converts a PHP Array to a Phel map.",
             example = "(php-array-to-map (php-associative-array \"a\" 1 \"b\" 2)) ; =&gt; {\"a\" 1 \"b\" 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2507",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L670",
                 docs = "",
             ),
         ),
@@ -5030,7 +5578,7 @@ Returns true if <code>x</code> is a PHP Array, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1105",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L287",
                 docs = "",
             ),
         ),
@@ -5051,7 +5599,7 @@ Arguments:<br />
 """,
             example = "(php-associative-array \"name\" \"Alice\" \"age\" 30) ; =&gt; (PHP array [\"name\" =&gt; \"Alice\", \"age\" =&gt; 30])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L481",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L24",
                 docs = "",
             ),
         ),
@@ -5068,7 +5616,7 @@ Arguments:<br />
             summary = "Creates a PHP indexed array from the given values.",
             example = "(php-indexed-array 1 2 3) ; =&gt; (PHP array [1, 2, 3])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L475",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L18",
                 docs = "",
             ),
         ),
@@ -5087,7 +5635,7 @@ Returns true if <code>x</code> is a PHP object, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1115",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L297",
                 docs = "",
             ),
         ),
@@ -5106,7 +5654,7 @@ Returns true if <code>x</code> is a PHP resource, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1110",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L292",
                 docs = "",
             ),
         ),
@@ -5125,7 +5673,7 @@ Removes the last element of the array <code>coll</code>. If the array is empty r
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1282",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L49",
                 docs = "",
             ),
         ),
@@ -5146,7 +5694,26 @@ Removes the last element from a transient vector, mutating it in place.<br />
 """,
             example = "(persistent! (pop! (transient [1 2 3]))) ; =&gt; [1 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2027",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L171",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "pos-int?",
+        signature = "(pos-int? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a positive integer (greater than zero)",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a positive integer (greater than zero).
+""",
+            example = "(pos-int? 1) ; =&gt; true\n(pos-int? 0) ; =&gt; false\n(pos-int? -1) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L99",
                 docs = "",
             ),
         ),
@@ -5165,7 +5732,7 @@ Checks if <code>x</code> is greater than zero.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3417",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L196",
                 docs = "",
             ),
         ),
@@ -5182,7 +5749,7 @@ Checks if <code>x</code> is greater than zero.
             summary = "Prints the given values to the default output stream. Returns nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3629",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L44",
                 docs = "",
             ),
         ),
@@ -5201,7 +5768,7 @@ Same as print. But instead of writing it to an output stream, the resulting stri
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3614",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L30",
                 docs = "",
             ),
         ),
@@ -5220,7 +5787,7 @@ Output a formatted string. See PHP's <a href="https://www.php.net/manual/en/func
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3647",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L62",
                 docs = "",
             ),
         ),
@@ -5237,7 +5804,7 @@ Output a formatted string. See PHP's <a href="https://www.php.net/manual/en/func
             summary = "Same as print followed by a newline.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3635",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L50",
                 docs = "",
             ),
         ),
@@ -5259,7 +5826,7 @@ Optimized to avoid the full <code>type</code> cond chain: checks scalars first<b
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4154",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L191",
                 docs = "",
             ),
         ),
@@ -5279,7 +5846,7 @@ Inserts <code>x</code> at the end of the sequence <code>coll</code>.
             example = null,
             deprecation = DeprecationInfo(version = "0.25.0", replacement = "conj"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1275",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L42",
                 docs = "",
             ),
         ),
@@ -5299,7 +5866,7 @@ Puts <code>value</code> mapped to <code>key</code> on the datastructure <code>ds
             example = null,
             deprecation = DeprecationInfo(version = "0.25.0", replacement = "assoc"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1361",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L203",
                 docs = "",
             ),
         ),
@@ -5317,7 +5884,7 @@ Puts <code>value</code> mapped to <code>key</code> on the datastructure <code>ds
             example = null,
             deprecation = DeprecationInfo(version = "0.25.0", replacement = "assoc-in"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2115",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L277",
                 docs = "",
             ),
         ),
@@ -5351,7 +5918,7 @@ Puts <code>value</code> mapped to <code>key</code> on the datastructure <code>ds
             summary = "Returns a random number between 0 and 1.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3524",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L336",
                 docs = "",
             ),
         ),
@@ -5370,7 +5937,7 @@ Returns a random number between 0 and <code>n</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3529",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L341",
                 docs = "",
             ),
         ),
@@ -5387,7 +5954,7 @@ Returns a random number between 0 and <code>n</code>.
             summary = "Returns a random item from xs.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3534",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L346",
                 docs = "",
             ),
         ),
@@ -5404,7 +5971,7 @@ Returns a random number between 0 and <code>n</code>.
             summary = "Returns a random UUID v4 string.",
             example = "(random-uuid) ; =&gt; \"550e8400-e29b-41d4-a716-446655440000\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4877",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L25",
                 docs = "",
             ),
         ),
@@ -5425,7 +5992,29 @@ Creates a lazy sequence of numbers. With no arguments returns an infinite<br />
 """,
             example = "(range 5) ; =&gt; (0 1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1519",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L158",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "ratio?",
+        signature = "(ratio? _)",
+        completion = CompletionInfo(
+            tailText = "Always returns false",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Always returns false. Phel has no Ratio type — Clojure-style ratio<br />
+  literals like <code>1/2</code> are accepted by the reader but evaluate to floats<br />
+  (<code>num / den</code>). Provided for <code>.cljc</code> interop so cross-host code can<br />
+  call <code>ratio?</code> without compilation errors.
+""",
+            example = "(ratio? 1/2) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L118",
                 docs = "",
             ),
         ),
@@ -5445,7 +6034,7 @@ Returns the first match of pattern in string, or nil if no match.<br />
 """,
             example = "(re-find #\"\\d+\" \"abc123def\") ; =&gt; \"123\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3936",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L351",
                 docs = "",
             ),
         ),
@@ -5466,7 +6055,7 @@ Returns the match, if any, of string to pattern. If the pattern has groups,<br /
 """,
             example = "(re-matches #\"(\\d+)-(\\d+)\" \"12-34\") ; =&gt; [\"12-34\" \"12\" \"34\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3950",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L365",
                 docs = "",
             ),
         ),
@@ -5486,7 +6075,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
 """,
             example = "(re-pattern \"\\\\d+\") ; =&gt; \"/\\\\d+/\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3911",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L326",
                 docs = "",
             ),
         ),
@@ -5503,7 +6092,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Returns a sequence of successive matches of pattern in string.",
             example = "(re-seq #\"\\d+\" \"a1b2c3\") ; =&gt; [\"1\" \"2\" \"3\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3924",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L339",
                 docs = "",
             ),
         ),
@@ -5520,7 +6109,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Returns a lazy sequence of byte chunks from a file.",
             example = "(take 5 (read-file-lazy \"large-file.bin\" 1024)) ; =&gt; [\"chunk1\" \"chunk2\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3734",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L149",
                 docs = "",
             ),
         ),
@@ -5537,7 +6126,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Reads the first phel expression from the string s.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4676",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L713",
                 docs = "",
             ),
         ),
@@ -5556,7 +6145,7 @@ Returns true if a lazy sequence, delay, or future has been realized, false other
 """,
             example = "(realized? (take 5 (iterate inc 1))) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2790",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L958",
                 docs = "",
             ),
         ),
@@ -5595,7 +6184,7 @@ Reduces collection to a single value by repeatedly applying function to accumula
 """,
             example = "(reduce + [1 2 3 4]) ; =&gt; 10",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1713",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L50",
                 docs = "",
             ),
         ),
@@ -5614,7 +6203,7 @@ Wraps <code>x</code> in a Reduced, signaling early termination from reduce/trans
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1681",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L18",
                 docs = "",
             ),
         ),
@@ -5633,7 +6222,7 @@ Returns true if <code>x</code> is a Reduced value.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1687",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L24",
                 docs = "",
             ),
         ),
@@ -5660,7 +6249,7 @@ Syntax:<br />
 """,
             example = "(reify Speakable (speak [this] \"hello\"))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4335",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L372",
                 docs = "",
             ),
         ),
@@ -5680,7 +6269,26 @@ Returns a lazy sequence of elements where predicate returns false.<br />
 """,
             example = "(remove even? [1 2 3 4 5 6]) ; =&gt; (1 3 5)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2316",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L474",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "remove-tap",
+        signature = "(remove-tap f)",
+        completion = CompletionInfo(
+            tailText = "Removes f from the tap set",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Removes <code>f</code> from the tap set. Returns nil.
+""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/tap.phel#L24",
                 docs = "",
             ),
         ),
@@ -5697,7 +6305,7 @@ Returns a lazy sequence of elements where predicate returns false.<br />
             summary = "Removes a watch function from a variable by key.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1483",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L122",
                 docs = "",
             ),
         ),
@@ -5717,7 +6325,7 @@ Returns the map with keys renamed according to kmap.<br />
 """,
             example = "(rename-keys {:a 1 :b 2 :c 3} {:a :x :b :y}) ; =&gt; {:x 1 :y 2 :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2858",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1035",
                 docs = "",
             ),
         ),
@@ -5737,7 +6345,7 @@ With one argument returns an infinite lazy sequence of x.
 """,
             example = "(repeat 3 :a) ; =&gt; [:a :a :a]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2608",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L771",
                 docs = "",
             ),
         ),
@@ -5757,7 +6365,7 @@ With one argument returns an infinite lazy sequence of calls to f.
 """,
             example = "(repeatedly 3 rand) ; =&gt; [0.234 0.892 0.456] (random values)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2620",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L783",
                 docs = "",
             ),
         ),
@@ -5774,7 +6382,7 @@ With one argument returns an infinite lazy sequence of calls to f.
             summary = "Sets a new value on the given atom. Returns the new value.",
             example = "(def x (atom 10))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1428",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L51",
                 docs = "",
             ),
         ),
@@ -5793,7 +6401,7 @@ Resolves the given symbol in the current environment and returns a resolved Symb
 """,
             example = "(resolve 'map) ; =&gt; phel\\core/map",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4703",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L740",
                 docs = "",
             ),
         ),
@@ -5810,7 +6418,7 @@ Resolves the given symbol in the current environment and returns a resolved Symb
             summary = "Returns the sequence after the first element, or empty sequence if none.",
             example = "(rest [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L577",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-basics.phel#L52",
                 docs = "",
             ),
         ),
@@ -5827,7 +6435,49 @@ Resolves the given symbol in the current environment and returns a resolved Symb
             summary = "Reverses the order of the elements in the given sequence.",
             example = "(reverse [1 2 3 4]) ; =&gt; [4 3 2 1]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2411",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L566",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "reversible?",
+        signature = "(reversible? coll)",
+        completion = CompletionInfo(
+            tailText = "Returns true if coll can be reverse-iterated in constant time",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>coll</code> can be reverse-iterated in constant time.<br />
+  Currently this is true for vectors and sorted-maps.
+""",
+            example = "(reversible? [1 2 3]) ; =&gt; true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L577",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "rseq",
+        signature = "(rseq rev)",
+        completion = CompletionInfo(
+            tailText = "Returns, in constant time, a sequence of the items in rev in reverse order",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns, in constant time, a sequence of the items in <code>rev</code> in reverse<br />
+  order. <code>rev</code> must be reversible (a vector or sorted-map); otherwise an<br />
+  exception is thrown. For sorted-maps, returns reversed <code>[key value]</code> pairs.<br />
+  Returns nil if <code>rev</code> is empty.
+""",
+            example = "(rseq [1 2 3]) ; =&gt; [3 2 1]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L586",
                 docs = "",
             ),
         ),
@@ -5846,7 +6496,7 @@ Calls <code>(f x)</code> for each element in <code>coll</code> for side effects.
 """,
             example = "(run! println [1 2 3])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4894",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/loops.phel#L9",
                 docs = "",
             ),
         ),
@@ -5863,7 +6513,7 @@ Calls <code>(f x)</code> for each element in <code>coll</code> for side effects.
             summary = "Returns true if x's type implements all methods of the given protocol.",
             example = "(satisfies? Stringable \"hello\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4283",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L320",
                 docs = "",
             ),
         ),
@@ -5880,7 +6530,7 @@ Calls <code>(f x)</code> for each element in <code>coll</code> for side effects.
             summary = "Returns the second element of a sequence, or nil if not present.",
             example = "(second [1 2 3]) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L571",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-basics.phel#L46",
                 docs = "",
             ),
         ),
@@ -5899,7 +6549,7 @@ Returns a new map including key value pairs from <code>m</code> selected with ke
 """,
             example = "(select-keys {:a 1 :b 2 :c 3} [:a :c]) ; =&gt; {:a 1 :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2847",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1021",
                 docs = "",
             ),
         ),
@@ -5921,7 +6571,7 @@ This function is useful for explicitly converting strings to sequences of charac
 """,
             example = "(seq \"hello\") ; =&gt; [\"h\" \"e\" \"l\" \"l\" \"o\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1142",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L339",
                 docs = "",
             ),
         ),
@@ -5940,7 +6590,28 @@ Returns true if <code>x</code> is a seq (implements LazySeqInterface), false oth
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1120",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L302",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "seqable?",
+        signature = "(seqable? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if (seq x) is supported: collections (vectors, lists, maps, sets, structs), lazy seq...",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>(seq x)</code> is supported: collections (vectors, lists,<br />
+   maps, sets, structs), lazy sequences, strings, PHP arrays, and nil.<br />
+   Returns false for numbers, booleans, keywords, symbols, and other types.
+""",
+            example = "(seqable? [1 2]) ; =&gt; true\n(seqable? 42) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L421",
                 docs = "",
             ),
         ),
@@ -5959,7 +6630,29 @@ Applies transducer <code>xform</code> to <code>coll</code>, returning a vector o
 """,
             example = "(sequence (comp (filter even?) (map inc)) [1 2 3 4 5]) ; =&gt; [3 5]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2922",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1101",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "sequential?",
+        signature = "(sequential? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a sequential collection (vector, list, or lazy sequence), false otherwise",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a sequential collection (vector, list, or lazy<br />
+   sequence), false otherwise. Sequential collections maintain insertion<br />
+   order and support indexed or linear access. Maps, sets, and structs<br />
+   are not sequential, matching Clojure's <code>Sequential</code> marker.
+""",
+            example = "(sequential? [1 2 3]) ; =&gt; true\n(sequential? {:a 1}) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L394",
                 docs = "",
             ),
         ),
@@ -5979,7 +6672,7 @@ Coerces a collection to a set. Returns a set containing the distinct elements of
 """,
             example = "(set [1 2 3 2 1]) ; =&gt; #{1 2 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2071",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L227",
                 docs = "",
             ),
         ),
@@ -5997,7 +6690,7 @@ Coerces a collection to a set. Returns a set containing the distinct elements of
             example = "(def x (var 10))",
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "reset!"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1435",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L58",
                 docs = "",
             ),
         ),
@@ -6015,7 +6708,7 @@ Coerces a collection to a set. Returns a set containing the distinct elements of
             example = null,
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "with-meta"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L233",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/meta.phel#L70",
                 docs = "",
             ),
         ),
@@ -6036,7 +6729,7 @@ Sets a validator function on a variable. The validator is called before any<br /
 """,
             example = "(set-validator! my-var pos?)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1490",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L129",
                 docs = "",
             ),
         ),
@@ -6074,7 +6767,50 @@ Returns true if <code>x</code> is a set, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1239",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L448",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "short",
+        signature = "(short x)",
+        completion = CompletionInfo(
+            tailText = "Coerces x to a signed 16-bit integer in the range -32768",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Coerces <code>x</code> to a signed 16-bit integer in the range <code>-32768..32767</code>.<br />
+   Decimal values are truncated toward zero (as in Clojure on the JVM).<br />
+   Values outside the range or non-numeric inputs raise<br />
+   <code>InvalidArgumentException</code>. Phel has no dedicated short type, so the<br />
+   result is a plain PHP int.
+""",
+            example = "(short 32767) ; =&gt; 32767\n(short 1.9) ; =&gt; 1\n(short -32768) ; =&gt; -32768",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L268",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "short-array",
+        signature = "(short-array size-or-seq)",
+        completion = CompletionInfo(
+            tailText = "Creates a PHP array of shorts (16-bit integers)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Creates a PHP array of shorts (16-bit integers). Given a size, fills with <code>0</code>.<br />
+   Given a sequence, coerces each element to int via <code>intval</code>.
+""",
+            example = "(short-array 3) ; =&gt; PHP array [0, 0, 0]\n(short-array [1.5 2.7]) ; =&gt; PHP array [1, 2]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L152",
                 docs = "",
             ),
         ),
@@ -6091,7 +6827,64 @@ Returns true if <code>x</code> is a set, false otherwise.
             summary = "Returns a random permutation of coll.",
             example = "(shuffle [1 2 3 4 5]) ; =&gt; [3 1 5 2 4] (random order)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2600",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L763",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "simple-ident?",
+        signature = "(simple-ident? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a symbol or keyword without a namespace",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a symbol or keyword without a namespace.
+""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L184",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "simple-keyword?",
+        signature = "(simple-keyword? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a keyword without a namespace",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a keyword without a namespace.
+""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L178",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "simple-symbol?",
+        signature = "(simple-symbol? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a symbol without a namespace",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a symbol without a namespace.
+""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L172",
                 docs = "",
             ),
         ),
@@ -6110,7 +6903,7 @@ Extracts a slice of <code>coll</code> starting at <code>offset</code> with optio
 """,
             example = "(slice [1 2 3 4 5] 1 3) ; =&gt; [2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2062",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L218",
                 docs = "",
             ),
         ),
@@ -6127,7 +6920,7 @@ Extracts a slice of <code>coll</code> starting at <code>offset</code> with optio
             summary = "Reads entire file or URL into a string.",
             example = "(slurp \"file.txt\") ; =&gt; \"file contents\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3666",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L81",
                 docs = "",
             ),
         ),
@@ -6146,7 +6939,7 @@ Returns the first truthy value of applying predicate to elements, or nil if none
 """,
             example = "(some #(when (&gt; % 10) %) [5 15 8]) ; =&gt; 15",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L886",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L235",
                 docs = "",
             ),
         ),
@@ -6165,7 +6958,7 @@ Threads <code>x</code> through the forms like <code>-></code> but stops when a f
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3801",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L216",
                 docs = "",
             ),
         ),
@@ -6184,7 +6977,7 @@ Threads <code>x</code> through the forms like <code>->></code> but stops when a 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3825",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L240",
                 docs = "",
             ),
         ),
@@ -6211,7 +7004,7 @@ Takes a variadic set of predicates and returns a function <code>f</code> that,<b
 """,
             example = "((some-fn even? nil?) 1 2) ; =&gt; true\n((some-fn pos? even?) -3 -1) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3050",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L96",
                 docs = "",
             ),
         ),
@@ -6231,7 +7024,7 @@ With 1 arg, returns true if <code>x</code> is not nil (Clojure semantics).<br />
 """,
             example = "(some? 1) ; =&gt; true\n(some? even? [1 3 5 6 7]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L868",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L218",
                 docs = "",
             ),
         ),
@@ -6248,7 +7041,7 @@ With 1 arg, returns true if <code>x</code> is not nil (Clojure semantics).<br />
             summary = "Returns a sorted vector. If no comparator is supplied compare is used.",
             example = "(sort [3 1 4 1 5 9 2 6]) ; =&gt; [1 1 2 3 4 5 6 9]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2579",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L742",
                 docs = "",
             ),
         ),
@@ -6268,7 +7061,7 @@ If no comparator is supplied compare is used.
 """,
             example = "(sort-by count [\"aaa\" \"c\" \"bb\"]) ; =&gt; [\"c\" \"bb\" \"aaa\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2588",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L751",
                 docs = "",
             ),
         ),
@@ -6288,7 +7081,7 @@ Creates a new sorted map. Keys are in natural sorted order.<br />
 """,
             example = "(sorted-map :c 3 :a 1 :b 2) ; keys iterate as :a :b :c",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L438",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/collections.phel#L21",
                 docs = "",
             ),
         ),
@@ -6309,7 +7102,7 @@ Creates a new sorted map using the given comparator for key ordering.<br />
 """,
             example = "(sorted-map-by (fn [a b] (compare b a)) :a 1 :b 2) ; keys iterate as :b :a",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L446",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/collections.phel#L29",
                 docs = "",
             ),
         ),
@@ -6326,7 +7119,7 @@ Creates a new sorted map using the given comparator for key ordering.<br />
             summary = "Creates a new sorted set. Elements are in natural sorted order.",
             example = "(sorted-set 3 1 2) ; iterates as 1 2 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L455",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/collections.phel#L38",
                 docs = "",
             ),
         ),
@@ -6343,7 +7136,7 @@ Creates a new sorted map using the given comparator for key ordering.<br />
             summary = "Creates a new sorted set using the given comparator for element ordering.",
             example = "(sorted-set-by (fn [a b] (compare b a)) 3 1 2) ; iterates as 3 2 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L462",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/collections.phel#L45",
                 docs = "",
             ),
         ),
@@ -6362,7 +7155,43 @@ Returns true if <code>coll</code> is a sorted collection (sorted-map or sorted-s
 """,
             example = "(sorted? (sorted-set 1 2 3)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1244",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L453",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "special-symbol?",
+        signature = "(special-symbol? s)",
+        completion = CompletionInfo(
+            tailText = "Returns true if s names a special form",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>s</code> names a special form.
+""",
+            example = "(special-symbol? 'def) ; =&gt; true\n(special-symbol? 'map) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L199",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "special-symbols",
+        signature = "",
+        completion = CompletionInfo(
+            tailText = "The set of symbols that name Phel special forms",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "The set of symbols that name Phel special forms.",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L190",
                 docs = "",
             ),
         ),
@@ -6384,7 +7213,7 @@ See PHP's <a href="https://www.php.net/manual/en/function.file-put-contents.php"
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3694",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L109",
                 docs = "",
             ),
         ),
@@ -6403,7 +7232,7 @@ Returns a vector of <code>[(take n coll) (drop n coll)]</code>.
 """,
             example = "(split-at 2 [1 2 3 4 5]) ; =&gt; [[1 2] [3 4 5]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2878",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1057",
                 docs = "",
             ),
         ),
@@ -6422,7 +7251,7 @@ Returns a vector of <code>[(take-while pred coll) (drop-while pred coll)]</code>
 """,
             example = "(split-with #(&lt; % 4) [1 2 3 4 5 6]) ; =&gt; [[1 2 3] [4 5 6]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2885",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1064",
                 docs = "",
             ),
         ),
@@ -6444,7 +7273,7 @@ Otherwise, it tries to call <code>__toString</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L388",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/strings.phel#L55",
                 docs = "",
             ),
         ),
@@ -6460,9 +7289,9 @@ Otherwise, it tries to call <code>__toString</code>.
         documentation = DocumentationInfo(
             summary = "Returns true if str contains s.",
             example = null,
-            deprecation = DeprecationInfo(version = "Use phel\\str\\contains?"),
+            deprecation = DeprecationInfo(version = "Use phel\\string\\contains?"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L920",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L269",
                 docs = "",
             ),
         ),
@@ -6481,7 +7310,7 @@ Returns true if <code>x</code> is a string, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1026",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L137",
                 docs = "",
             ),
         ),
@@ -6500,7 +7329,7 @@ Returns true if <code>x</code> is a struct, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1066",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L227",
                 docs = "",
             ),
         ),
@@ -6519,7 +7348,7 @@ Returns true if <code>s1</code> is a subset of <code>s2</code>, i.e. every eleme
 """,
             example = "(subset? (hash-set 1 2) (hash-set 1 2 3)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3018",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L64",
                 docs = "",
             ),
         ),
@@ -6538,7 +7367,7 @@ Returns the sum of all elements is <code>xs</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3575",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L387",
                 docs = "",
             ),
         ),
@@ -6557,7 +7386,7 @@ Returns true if <code>s1</code> is a superset of <code>s2</code>, i.e. every ele
 """,
             example = "(superset? (hash-set 1 2 3) (hash-set 1 2)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3030",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L76",
                 docs = "",
             ),
         ),
@@ -6577,7 +7406,7 @@ Returns the new value after the swap.
 """,
             example = "(def counter (atom 0))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1463",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L86",
                 docs = "",
             ),
         ),
@@ -6598,7 +7427,7 @@ With one argument, creates a symbol without namespace.<br />
 """,
             example = "(symbol \"foo\") ; =&gt; foo",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L360",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/strings.phel#L14",
                 docs = "",
             ),
         ),
@@ -6617,7 +7446,7 @@ Returns true if <code>x</code> is a symbol, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1049",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L160",
                 docs = "",
             ),
         ),
@@ -6634,7 +7463,7 @@ Returns true if <code>x</code> is a symbol, false otherwise.
             summary = "Symmetric difference between multiple sets into a new one.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3013",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L59",
                 docs = "",
             ),
         ),
@@ -6654,7 +7483,7 @@ Takes the first <code>n</code> elements of <code>coll</code>.<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2232",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L390",
                 docs = "",
             ),
         ),
@@ -6673,7 +7502,7 @@ Takes the last <code>n</code> elements of <code>coll</code>.
 """,
             example = "(take-last 3 [1 2 3 4 5]) ; =&gt; [3 4 5]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2254",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L412",
                 docs = "",
             ),
         ),
@@ -6693,7 +7522,7 @@ Returns every nth item in <code>coll</code>. Returns a lazy sequence.<br />
 """,
             example = "(take-nth 2 [0 1 2 3 4 5 6 7 8]) ; =&gt; (0 2 4 6 8)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2278",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L436",
                 docs = "",
             ),
         ),
@@ -6713,7 +7542,27 @@ Takes all elements at the front of <code>coll</code> where <code>(pred x)</code>
 """,
             example = "(take-while #(&lt; % 5) [1 2 3 4 5 6 3 2 1]) ; =&gt; (1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2261",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L419",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "tap>",
+        signature = "(tap> x)",
+        completion = CompletionInfo(
+            tailText = "Sends x to every registered tap",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Sends <code>x</code> to every registered tap. Exceptions thrown by individual taps are<br />
+  swallowed so one misbehaving tap does not affect the others. Returns true.
+""",
+            example = "(add-tap println)\n(tap&gt; {:event :login :user \"alice\"})",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/tap.phel#L31",
                 docs = "",
             ),
         ),
@@ -6747,7 +7596,7 @@ Takes all elements at the front of <code>coll</code> where <code>(pred x)</code>
             summary = "Evaluates expr and prints the time it took. Returns the value of expr.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4639",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L676",
                 docs = "",
             ),
         ),
@@ -6769,7 +7618,7 @@ Returns a PHP array containing the elements of <code>coll</code>. Accepts any<br
 """,
             example = "(to-array [1 2 3]) ; =&gt; a PHP array [1, 2, 3]\n(to-array nil) ; =&gt; a PHP array []",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L516",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/arrays.phel#L59",
                 docs = "",
             ),
         ),
@@ -6786,7 +7635,7 @@ Returns a PHP array containing the elements of <code>coll</code>. Accepts any<br
             summary = "Creates a PHP Array from a sequential data structure.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L253",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/defs.phel#L22",
                 docs = "",
             ),
         ),
@@ -6807,7 +7656,7 @@ Reduce with a transformation of <code>f</code> (xf). If init is not supplied,<br
 """,
             example = "(transduce (map inc) + [1 2 3]) ; =&gt; 9",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1749",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L86",
                 docs = "",
             ),
         ),
@@ -6828,7 +7677,7 @@ Transient collections provide faster performance for multiple sequential updates
 """,
             example = "(def t (transient []))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L403",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L17",
                 docs = "",
             ),
         ),
@@ -6851,7 +7700,7 @@ Returns a vector of the nodes in the tree, via a depth-first walk.<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3167",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L215",
                 docs = "",
             ),
         ),
@@ -6868,7 +7717,7 @@ Returns a vector of the nodes in the tree, via a depth-first walk.<br />
             summary = "Checks if value is exactly true (not just truthy).",
             example = "(true? 1) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L897",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L246",
                 docs = "",
             ),
         ),
@@ -6887,7 +7736,7 @@ Checks if <code>x</code> is truthy. Same as <code>x == true</code> in PHP.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L903",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L252",
                 docs = "",
             ),
         ),
@@ -6943,7 +7792,7 @@ Returns the type of <code>x</code>. The following types can be returned:<br /><b
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L948",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L28",
                 docs = "",
             ),
         ),
@@ -6960,7 +7809,7 @@ Returns the type of <code>x</code>. The following types can be returned:<br /><b
             summary = "Removes a parent/child relationship from the global hierarchy.",
             example = "(underive :square :shape)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4078",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L114",
                 docs = "",
             ),
         ),
@@ -6977,7 +7826,7 @@ Returns the type of <code>x</code>. The following types can be returned:<br /><b
             summary = "Union multiple sets into a new one.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2970",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L16",
                 docs = "",
             ),
         ),
@@ -7034,7 +7883,7 @@ If <code>x</code> is Reduced, returns the unwrapped value; otherwise returns <co
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1693",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L30",
                 docs = "",
             ),
         ),
@@ -7054,7 +7903,7 @@ Returns <code>ds</code> without <code>key</code>.
             example = null,
             deprecation = DeprecationInfo(version = "0.25.0", replacement = "dissoc"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1386",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/sequences.phel#L236",
                 docs = "",
             ),
         ),
@@ -7072,7 +7921,7 @@ Returns <code>ds</code> without <code>key</code>.
             example = null,
             deprecation = DeprecationInfo(version = "0.25.0", replacement = "dissoc-in"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2151",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L313",
                 docs = "",
             ),
         ),
@@ -7091,7 +7940,7 @@ Updates a value in a datastructure by applying <code>f</code> to the current val
 """,
             example = "(update {:count 5} :count inc) ; =&gt; {:count 6}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2122",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L284",
                 docs = "",
             ),
         ),
@@ -7110,7 +7959,7 @@ Updates a value in a nested data structure by applying <code>f</code> to the val
 """,
             example = "(update-in {:a {:b 5}} [:a :b] inc) ; =&gt; {:a {:b 6}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2129",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L291",
                 docs = "",
             ),
         ),
@@ -7129,7 +7978,7 @@ Returns a map with <code>f</code> applied to each key.
 """,
             example = "(update-keys {:a 1 :b 2} name) ; =&gt; {\"a\" 1 \"b\" 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4827",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L281",
                 docs = "",
             ),
         ),
@@ -7148,7 +7997,64 @@ Returns a map with <code>f</code> applied to each value.
 """,
             example = "(update-vals {:a 1 :b 2} inc) ; =&gt; {:a 2 :b 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4836",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/fns-sets.phel#L291",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "uuid-regex",
+        signature = "",
+        completion = CompletionInfo(
+            tailText = "",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L12",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "uuid?",
+        signature = "(uuid? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a canonical UUID string (36 characters, 8-4-4-4-12 hexadecimal groups), fals...",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a canonical UUID string (36 characters,<br />
+  <code>8-4-4-4-12</code> hexadecimal groups), false otherwise. PHP has no UUID<br />
+  type, so UUIDs are represented as strings.
+""",
+            example = "(uuid? \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L15",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "val",
+        signature = "(val entry)",
+        completion = CompletionInfo(
+            tailText = "Returns the value of a map entry (a two-element vector [key value])",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the value of a map entry (a two-element vector <code>[key value]</code>).
+""",
+            example = "(val (first (pairs {:a 1}))) ; =&gt; 1",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L636",
                 docs = "",
             ),
         ),
@@ -7158,14 +8064,17 @@ Returns a map with <code>f</code> applied to each value.
         name = "vals",
         signature = "(vals coll)",
         completion = CompletionInfo(
-            tailText = "Returns a sequence of all values in a map",
+            tailText = "Returns a sequence of all values in a map, or nil when the map is nil or empty",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Returns a sequence of all values in a map.",
-            example = "(vals {:a 1 :b 2}) ; =&gt; (1 2)",
+            summary = """
+Returns a sequence of all values in a map, or <code>nil</code> when the map is <code>nil</code><br />
+  or empty.
+""",
+            example = "(vals {:a 1 :b 2}) ; =&gt; (1 2)\n(vals nil) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2471",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L621",
                 docs = "",
             ),
         ),
@@ -7183,7 +8092,7 @@ Returns a map with <code>f</code> applied to each value.
             example = "(values {:a 1 :b 2}) ; =&gt; (1 2)",
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "vals"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2478",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L643",
                 docs = "",
             ),
         ),
@@ -7201,7 +8110,7 @@ Returns a map with <code>f</code> applied to each value.
             example = "(def counter (var 0))",
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "atom"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1407",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L30",
                 docs = "",
             ),
         ),
@@ -7219,7 +8128,7 @@ Returns a map with <code>f</code> applied to each value.
             example = null,
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "atom?"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1421",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L44",
                 docs = "",
             ),
         ),
@@ -7236,7 +8145,7 @@ Returns a map with <code>f</code> applied to each value.
             summary = "Returns an object with (apply f (meta obj) args) as its new metadata.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L240",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/meta.phel#L77",
                 docs = "",
             ),
         ),
@@ -7256,7 +8165,7 @@ Coerces a collection to a vector. For hash-maps and structs, entries<br />
 """,
             example = "(vec {:a 1 :b 2}) ; =&gt; [[:a 1] [:b 2]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2081",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L239",
                 docs = "",
             ),
         ),
@@ -7292,7 +8201,7 @@ Returns true if <code>x</code> is a vector, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1083",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/predicates.phel#L245",
                 docs = "",
             ),
         ),
@@ -7312,7 +8221,7 @@ Creates a volatile mutable reference with initial value <code>val</code>.<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1766",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L103",
                 docs = "",
             ),
         ),
@@ -7331,7 +8240,7 @@ Returns true if <code>x</code> is a Volatile.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1786",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L123",
                 docs = "",
             ),
         ),
@@ -7350,7 +8259,7 @@ Sets the value of volatile <code>vol</code> to <code>val</code>. Returns <code>v
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1773",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L110",
                 docs = "",
             ),
         ),
@@ -7370,7 +8279,7 @@ Applies <code>f</code> to the current value of volatile <code>vol</code> plus <c
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L1779",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transducers.phel#L116",
                 docs = "",
             ),
         ),
@@ -7387,7 +8296,7 @@ Applies <code>f</code> to the current value of volatile <code>vol</code> plus <c
             summary = "Evaluates body if test is true, otherwise returns nil.",
             example = "(when (&gt; 10 5) \"greater\") ; =&gt; \"greater\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L627",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L19",
                 docs = "",
             ),
         ),
@@ -7407,7 +8316,7 @@ Binds name to the first element of coll. When the collection is non-empty<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4588",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L625",
                 docs = "",
             ),
         ),
@@ -7424,7 +8333,7 @@ Binds name to the first element of coll. When the collection is non-empty<br />
             summary = "When test is true, evaluates body with binding-form bound to the value of test",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4538",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L575",
                 docs = "",
             ),
         ),
@@ -7441,7 +8350,7 @@ Binds name to the first element of coll. When the collection is non-empty<br />
             summary = "Evaluates body if test is false, otherwise returns nil.",
             example = "(when-not (empty? [1 2 3]) \"has items\") ; =&gt; \"has items\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L633",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L25",
                 docs = "",
             ),
         ),
@@ -7462,7 +8371,7 @@ Binds name to the value of test. When test is not nil, evaluates body with<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L4580",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/protocols.phel#L617",
                 docs = "",
             ),
         ),
@@ -7481,7 +8390,7 @@ Returns <code>obj</code> with the given metadata <code>meta</code> attached.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L227",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/meta.phel#L64",
                 docs = "",
             ),
         ),
@@ -7501,7 +8410,7 @@ Everything that is printed inside the body will be stored in a buffer.<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3602",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/io.phel#L18",
                 docs = "",
             ),
         ),
@@ -7520,7 +8429,7 @@ Checks if <code>x</code> is zero.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L3407",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/math.phel#L186",
                 docs = "",
             ),
         ),
@@ -7537,7 +8446,7 @@ Checks if <code>x</code> is zero.
             summary = "Creates a map from two sequential data structures. Returns a new map.",
             example = "(zipcoll [:a :b :c] [1 2 3]) ; =&gt; {:a 1 :b 2 :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2814",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L1002",
                 docs = "",
             ),
         ),
@@ -7558,7 +8467,7 @@ Stops when the shorter of <code>keys</code> or <code>vals</code> is exhausted.<b
 """,
             example = "(zipmap [:a :b :c] [1 2 3]) ; =&gt; {:a 1 :b 2 :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L2821",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/seq-fns.phel#L987",
                 docs = "",
             ),
         ),

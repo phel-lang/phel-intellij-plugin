@@ -82,15 +82,17 @@ object PhelReferSymbolValidator {
 
     private fun mapToNamespace(shortNamespace: String): Namespace? {
         return when (shortNamespace.lowercase()) {
+            "ai" -> Namespace.AI
             "base64" -> Namespace.BASE64
             "core" -> Namespace.CORE
             "debug" -> Namespace.DEBUG
             "html" -> Namespace.HTML
             "http" -> Namespace.HTTP
+            "http_client" -> Namespace.HTTP_CLIENT
             "json" -> Namespace.JSON
             "mock" -> Namespace.MOCK
             "repl" -> Namespace.REPL
-            "str" -> Namespace.STRING
+            "string" -> Namespace.STRING
             "test" -> Namespace.TEST
             else -> null
         }

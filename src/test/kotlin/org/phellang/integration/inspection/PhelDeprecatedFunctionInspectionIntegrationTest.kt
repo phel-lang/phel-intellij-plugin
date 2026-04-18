@@ -38,8 +38,8 @@ class PhelDeprecatedFunctionInspectionIntegrationTest {
 
             val parsed = ReplacementParser.parse(replacement!!)
 
-            assertEquals("str", parsed.namespace)
-            assertEquals("str/contains?", parsed.functionName)
+            assertEquals("string", parsed.namespace)
+            assertEquals("string/contains?", parsed.functionName)
         }
 
         @Test
@@ -66,7 +66,7 @@ class PhelDeprecatedFunctionInspectionIntegrationTest {
         @Test
         fun `should format replacement for display in quick-fix`() {
             val testCases = mapOf(
-                "phel\\str\\contains?" to "str/contains?",
+                "phel\\string\\contains?" to "string/contains?",
                 "phel\\json\\encode" to "json/encode",
                 "assoc" to "assoc",
                 "map" to "map"
@@ -80,9 +80,9 @@ class PhelDeprecatedFunctionInspectionIntegrationTest {
 
         @Test
         fun `should determine if namespace import is needed`() {
-            val strReplacement = ReplacementParser.parse("phel\\str\\contains?")
+            val strReplacement = ReplacementParser.parse("phel\\string\\contains?")
             assertNotNull(strReplacement.namespace)
-            assertEquals("str", strReplacement.namespace)
+            assertEquals("string", strReplacement.namespace)
 
             val coreReplacement = ReplacementParser.parse("assoc")
             assertNull(coreReplacement.namespace)

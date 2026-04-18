@@ -237,16 +237,18 @@ object PriorityRules {
     )
 
     private val namespacePriority = mapOf(
+        "ai" to PhelCompletionPriority.AI_FUNCTIONS,
         "base64" to PhelCompletionPriority.BASE64_FUNCTIONS,
         "core" to PhelCompletionPriority.CORE_FUNCTIONS,
         "debug" to PhelCompletionPriority.DEBUG_FUNCTIONS,
         "html" to PhelCompletionPriority.HTML_FUNCTIONS,
         "http" to PhelCompletionPriority.HTTP_FUNCTIONS,
+        "http_client" to PhelCompletionPriority.HTTP_CLIENT_FUNCTIONS,
         "json" to PhelCompletionPriority.JSON_FUNCTIONS,
         "mock" to PhelCompletionPriority.MOCK_FUNCTIONS,
         "php" to PhelCompletionPriority.PHP_INTEROP,
         "repl" to PhelCompletionPriority.REPL_FUNCTIONS,
-        "str" to PhelCompletionPriority.STRING_FUNCTIONS,
+        "string" to PhelCompletionPriority.STRING_FUNCTIONS,
         "test" to PhelCompletionPriority.TEST_FUNCTIONS
     )
 
@@ -264,12 +266,12 @@ object PriorityRules {
         val namespace = apiFunction.namespace
 
         // Check for deprecated functions first
-        if (apiFunction.meta.deprecated != null) {
+        if (apiFunction.meta?.deprecated != null) {
             return PhelCompletionPriority.DEPRECATED_FUNCTIONS
         }
 
         // Check for macros
-        if (apiFunction.meta.macro == true) {
+        if (apiFunction.meta?.macro == true) {
             return PhelCompletionPriority.MACROS
         }
 
@@ -304,7 +306,7 @@ object PriorityRules {
         }
 
         // String functions get special priority
-        if (namespace == "str") {
+        if (namespace == "str" || namespace == "string") {
             return PhelCompletionPriority.STRING_FUNCTIONS
         }
 

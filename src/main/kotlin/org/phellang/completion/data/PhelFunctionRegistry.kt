@@ -26,11 +26,13 @@ object PhelFunctionRegistry {
     }
 
     init {
+        functions[Namespace.AI] = registerAiFunctions()
         functions[Namespace.BASE64] = registerBase64Functions()
         functions[Namespace.CORE] = registerCoreFunctions()
         functions[Namespace.DEBUG] = registerDebugFunctions()
         functions[Namespace.HTML] = registerHtmlFunctions()
         functions[Namespace.HTTP] = registerHttpFunctions()
+        functions[Namespace.HTTP_CLIENT] = registerHttpClientFunctions()
         functions[Namespace.JSON] = registerJsonFunctions()
         functions[Namespace.MOCK] = registerMockFunctions()
         functions[Namespace.PHP_INTEROP] = registerPhpInteropFunctions()

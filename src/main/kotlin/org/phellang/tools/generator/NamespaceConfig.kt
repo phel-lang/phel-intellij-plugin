@@ -5,16 +5,19 @@ object NamespaceConfig {
     data class NamespaceInfo(val functionName: String, val fileName: String)
 
     private val config = mapOf(
+        "ai" to NamespaceInfo("registerAiFunctions", "registerAiFunctions.kt"),
         "base64" to NamespaceInfo("registerBase64Functions", "registerBase64Functions.kt"),
         "core" to NamespaceInfo("registerCoreFunctions", "registerCoreFunctions.kt"),
         "debug" to NamespaceInfo("registerDebugFunctions", "registerDebugFunctions.kt"),
         "html" to NamespaceInfo("registerHtmlFunctions", "registerHtmlFunctions.kt"),
         "http" to NamespaceInfo("registerHttpFunctions", "registerHttpFunctions.kt"),
+        "http_client" to NamespaceInfo("registerHttpClientFunctions", "registerHttpClientFunctions.kt"),
         "json" to NamespaceInfo("registerJsonFunctions", "registerJsonFunctions.kt"),
         "mock" to NamespaceInfo("registerMockFunctions", "registerMockFunctions.kt"),
         "php" to NamespaceInfo("registerPhpInteropFunctions", "registerPhpInteropFunctions.kt"),
         "repl" to NamespaceInfo("registerReplFunctions", "registerReplFunctions.kt"),
         "str" to NamespaceInfo("registerStringFunctions", "registerStringFunctions.kt"),
+        "string" to NamespaceInfo("registerStringFunctions", "registerStringFunctions.kt"),
         "test" to NamespaceInfo("registerTestFunctions", "registerTestFunctions.kt")
     )
 

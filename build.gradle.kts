@@ -2,7 +2,7 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 group = "org.phellang"
-version = "0.3.4"
+version = "0.3.5"
 
 plugins {
     id("java")
@@ -169,9 +169,10 @@ tasks {
 
         pluginVerification {
             ides {
-                create("IC", "2024.2.5")
-                create("IC", "2024.3.1")
+                create("IC", "2024.2")
+                create("IC", "2024.3")
                 create("IC", "2025.1")
+                create("IC", "2025.2")
             }
         }
 

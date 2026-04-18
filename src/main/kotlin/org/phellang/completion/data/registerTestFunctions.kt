@@ -39,7 +39,7 @@ Checks multiple assertions with a template expression.<br />
 """,
             example = "(are [x y] (= x y)\n  2 (+ 1 1)\n  4 (* 2 2))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L303",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L321",
                 docs = "",
             ),
         ),
@@ -56,7 +56,7 @@ Checks multiple assertions with a template expression.<br />
             summary = "",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L211",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L214",
                 docs = "",
             ),
         ),
@@ -73,7 +73,7 @@ Checks multiple assertions with a template expression.<br />
             summary = "",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L211",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L214",
                 docs = "",
             ),
         ),
@@ -90,7 +90,7 @@ Checks multiple assertions with a template expression.<br />
             summary = "Defines a test function.",
             example = "(deftest test-add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L260",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L274",
                 docs = "",
             ),
         ),
@@ -111,7 +111,7 @@ Add file and line information to a test result and call report.<br />
 """,
             example = "(do-report {:state :pass :type :any :message \"ok\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L71",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L73",
                 docs = "",
             ),
         ),
@@ -130,7 +130,7 @@ Returns the current test statistics as a hash-map with :failed and :counts keys.
 """,
             example = "(get-stats) ; =&gt; {:failed [] :counts {:failed 0 :error 0 :pass 0 :total 0}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L471",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L546",
                 docs = "",
             ),
         ),
@@ -147,7 +147,7 @@ Returns the current test statistics as a hash-map with :failed and :counts keys.
             summary = "Asserts that an expression is true.",
             example = "(is (= 4 (+ 2 2)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L243",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L257",
                 docs = "",
             ),
         ),
@@ -164,7 +164,7 @@ Returns the current test statistics as a hash-map with :failed and :counts keys.
             summary = "Prints test results summary.",
             example = "(print-summary)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L403",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L421",
                 docs = "",
             ),
         ),
@@ -181,7 +181,7 @@ Returns the current test statistics as a hash-map with :failed and :counts keys.
             summary = "Records test results and prints status indicators.",
             example = "(report {:state :pass})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L49",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L46",
                 docs = "",
             ),
         ),
@@ -201,7 +201,7 @@ Resets the test statistics to their initial state.<br />
 """,
             example = "(reset-stats)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L453",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L528",
                 docs = "",
             ),
         ),
@@ -218,7 +218,7 @@ Resets the test statistics to their initial state.<br />
             summary = "Restores test statistics from a previously saved state.",
             example = "(restore-stats saved)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L477",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L552",
                 docs = "",
             ),
         ),
@@ -235,7 +235,7 @@ Resets the test statistics to their initial state.<br />
             summary = "Runs all tests in the given namespaces.",
             example = "(run-tests {} 'my-app\test)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L441",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L516",
                 docs = "",
             ),
         ),
@@ -252,7 +252,7 @@ Resets the test statistics to their initial state.<br />
             summary = "Checks if all tests passed.",
             example = "(successful?) # =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L464",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L539",
                 docs = "",
             ),
         ),
@@ -272,7 +272,32 @@ Adds a testing context string. Used inside deftest to describe a group of assert
 """,
             example = "(deftest test-math\n  (testing \"addition\"\n    (is (= 2 (+ 1 1)))))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L268",
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L286",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "test",
+        name = "test/use-fixtures",
+        signature = "(use-fixtures fixture-type & fns)",
+        completion = CompletionInfo(
+            tailText = "Registers fixture functions for the current namespace",
+            priority = PhelCompletionPriority.TEST_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Registers fixture functions for the current namespace.<br /><br />
+<code>fixture-type</code> is either <code>:each</code> (wraps every individual test) or<br />
+  <code>:once</code> (wraps the whole run in a single function). Each fixture is<br />
+  a function of one argument — a thunk <code>(fn [])</code> representing the tests<br />
+  to run — and is expected to invoke that thunk somewhere in its body.<br /><br />
+Calling <code>use-fixtures</code> with no fixture functions removes all fixtures<br />
+  of that type previously registered on the namespace.
+""",
+            example = "(use-fixtures :once (fn [t] (setup) (t) (teardown)))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test.phel#L462",
                 docs = "",
             ),
         ),

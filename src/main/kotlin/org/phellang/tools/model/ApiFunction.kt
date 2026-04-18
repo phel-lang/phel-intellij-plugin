@@ -10,7 +10,7 @@ data class ApiFunction(
     val signatures: List<String>,
     val githubUrl: String,
     val docUrl: String,
-    val meta: ApiFunctionMeta
+    val meta: ApiFunctionMeta?
 )
 
 data class ApiFunctionMeta(

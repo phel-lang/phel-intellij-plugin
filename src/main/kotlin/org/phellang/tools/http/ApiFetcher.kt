@@ -1,8 +1,10 @@
 package org.phellang.tools.http
 
-import com.google.gson.Gson
+import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import org.phellang.tools.model.ApiFunction
+import org.phellang.tools.model.ApiFunctionMeta
+import java.lang.reflect.Type
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -18,7 +20,9 @@ class ApiFetcher {
 
     private val httpClient = HttpClient.newBuilder().connectTimeout(TIMEOUT).build()
 
-    private val gson = Gson()
+    private val gson: Gson = GsonBuilder()
+        .registerTypeAdapter(ApiFunctionMeta::class.java, MetaDeserializer())
+        .create()
 
     fun fetchApiFunctions(): List<ApiFunction> {
         println("Fetching Phel API from $API_URL...")
@@ -41,5 +45,17 @@ class ApiFetcher {
 
         println("Parsed ${functions.size} functions")
         return functions
+    }
+
+    private class MetaDeserializer : JsonDeserializer<ApiFunctionMeta?> {
+        private val defaultGson = Gson()
+
+        override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ApiFunctionMeta? {
+            if (!json.isJsonObject) {
+                // meta is sometimes an array (e.g., empty PHP array []) — skip it
+                return null
+            }
+            return defaultGson.fromJson(json, ApiFunctionMeta::class.java)
+        }
     }
 }

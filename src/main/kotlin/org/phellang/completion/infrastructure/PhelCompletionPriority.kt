@@ -28,6 +28,8 @@ enum class PhelCompletionPriority(val value: Double) {
     JSON_FUNCTIONS(30.0),
     HTML_FUNCTIONS(29.0),
     HTTP_FUNCTIONS(28.0),
+    HTTP_CLIENT_FUNCTIONS(27.0),
+    AI_FUNCTIONS(26.0),
 
     // Development and testing
     TEST_FUNCTIONS(25.0),

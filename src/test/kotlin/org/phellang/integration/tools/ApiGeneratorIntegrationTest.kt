@@ -240,7 +240,7 @@ class ApiGeneratorIntegrationTest {
         @Test
         fun `should support all standard namespaces`() {
             val expectedNamespaces = listOf(
-                "base64", "core", "debug", "html", "http", "json", "mock", "php", "repl", "str", "test"
+                "ai", "base64", "core", "debug", "html", "http", "http_client", "json", "mock", "php", "repl", "str", "string", "test"
             )
 
             expectedNamespaces.forEach { namespace ->

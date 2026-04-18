@@ -28,6 +28,11 @@ object PhelRegistryCompletionHelper {
     }
 
     @JvmStatic
+    fun addHttpClientFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
+        addNamespaceFunctions(result, Namespace.HTTP_CLIENT, aliasMap)
+    }
+
+    @JvmStatic
     fun addHtmlFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
         addNamespaceFunctions(result, Namespace.HTML, aliasMap)
     }
@@ -45,6 +50,11 @@ object PhelRegistryCompletionHelper {
     @JvmStatic
     fun addReplFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
         addNamespaceFunctions(result, Namespace.REPL, aliasMap)
+    }
+
+    @JvmStatic
+    fun addAiFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
+        addNamespaceFunctions(result, Namespace.AI, aliasMap)
     }
 
     @JvmStatic

@@ -52,7 +52,7 @@ internal object PhelFunctionRenderer {
         val signature = apiFunction.signatures.firstOrNull() ?: ""
         val tailText = TailTextGenerator.generate(apiFunction.description)
         val summary = MarkdownToHtmlTransformer.transform(apiFunction.description)
-        val example = apiFunction.meta.example?.let { StringEscaper.escapeHtml(it) }
+        val example = apiFunction.meta?.example?.let { StringEscaper.escapeHtml(it) }
         val deprecation = renderDeprecation(apiFunction)
 
         return buildString {
@@ -84,8 +84,8 @@ internal object PhelFunctionRenderer {
     }
 
     private fun renderDeprecation(apiFunction: ApiFunction): String? {
-        val deprecated = apiFunction.meta.deprecated ?: return null
-        val supersededBy = apiFunction.meta.supersededBy
+        val deprecated = apiFunction.meta?.deprecated ?: return null
+        val supersededBy = apiFunction.meta?.supersededBy
 
         return if (supersededBy != null) {
             "DeprecationInfo(version = ${StringEscaper.toKotlinString(deprecated)}, replacement = ${
