@@ -1,8 +1,8 @@
 # Phel IntelliJ Plugin
 
-IntelliJ IDEA plugin for the [Phel programming language](https://phel-lang.org/) — a functional Lisp that transpiles to PHP, inspired by Clojure and Janet.
+IntelliJ IDEA plugin for the [Phel programming language](https://phel-lang.org/) — a functional, Lisp-inspired language that compiles to PHP. Inspired by Clojure, Phel brings macros, persistent data structures, and expressive functional idioms to the PHP ecosystem.
 
-- **Phel is NOT Clojure** — always verify syntax against [official Phel docs](https://phel-lang.org/)
+- **Phel is (_almost_) Clojure** — always verify syntax against [official Phel docs](https://phel-lang.org/)
 - **API reference**: https://phel-lang.org/api.json
 - **Plugin SDK**: https://plugins.jetbrains.com/docs/intellij/welcome.html
 - **Marketplace**: https://plugins.jetbrains.com/plugin/28459-phel-lang

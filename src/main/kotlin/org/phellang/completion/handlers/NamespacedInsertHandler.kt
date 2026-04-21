@@ -32,7 +32,7 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
 
             val symbolEnd = context.tailOffset
 
-            // Insert the lookup string as-is (already aliased at suggestion time if applicable)
+            // Already aliased at suggestion time if applicable.
             document.replaceString(symbolStart, symbolEnd, item.lookupString)
             editor.caretModel.moveToOffset(symbolStart + item.lookupString.length)
 
@@ -57,16 +57,12 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
 
         val fullNamespace = item.getUserData(PhelCompletionUtils.FULL_NAMESPACE_KEY)
         if (fullNamespace != null) {
-            // Use the full namespace directly for import
             WriteCommandAction.runWriteCommandAction(context.project) {
                 PhelNamespaceImporter.ensureNamespaceImportedByFullName(psiFile, fullNamespace)
             }
-        } else {
-            // Fall back to the old behavior for standard library completions
-            if (!PhelNamespaceUtils.isNamespaceImportedOrAliased(psiFile, qualifier)) {
-                WriteCommandAction.runWriteCommandAction(context.project) {
-                    PhelNamespaceImporter.ensureNamespaceImported(psiFile, qualifier)
-                }
+        } else if (!PhelNamespaceUtils.isNamespaceImportedOrAliased(psiFile, qualifier)) {
+            WriteCommandAction.runWriteCommandAction(context.project) {
+                PhelNamespaceImporter.ensureNamespaceImported(psiFile, qualifier)
             }
         }
     }

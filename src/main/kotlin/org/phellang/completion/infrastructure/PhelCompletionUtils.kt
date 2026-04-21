@@ -83,19 +83,15 @@ object PhelCompletionUtils {
                 builder = builder.withBoldness(true)
             }
 
-            // Use namespaced insert handler if the name contains '/'
             if (name.contains('/')) {
                 builder = builder.withInsertHandler(NamespacedInsertHandler())
             }
 
-            val element = builder as LookupElement
-
-            // Store full namespace for auto-import if provided
             if (fullNamespace != null) {
-                element.putUserData(FULL_NAMESPACE_KEY, fullNamespace)
+                builder.putUserData(FULL_NAMESPACE_KEY, fullNamespace)
             }
 
-            element
+            builder
         } ?: LookupElementBuilder.create(name)
     }
 }

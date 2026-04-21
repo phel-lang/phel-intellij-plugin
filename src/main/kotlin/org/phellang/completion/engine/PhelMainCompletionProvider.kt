@@ -78,32 +78,32 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
     private fun addTemplateCompletions(result: CompletionResultSet) {
         result.addElement(
             LookupElementBuilder.create("()").withTypeText("(...)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(ParenthesisTemplateInsertHandler())
+                .withInsertHandler(PhelTemplateInsertHandler.PARENTHESIS)
         )
 
         result.addElement(
             LookupElementBuilder.create("defn").withTypeText("(defn name [args] body)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(DefnTemplateInsertHandler())
+                .withInsertHandler(PhelTemplateInsertHandler.DEFN)
         )
 
         result.addElement(
             LookupElementBuilder.create("def").withTypeText("(def name value)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(DefTemplateInsertHandler())
+                .withInsertHandler(PhelTemplateInsertHandler.DEF)
         )
 
         result.addElement(
             LookupElementBuilder.create("let").withTypeText("(let [bindings] body)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(LetTemplateInsertHandler())
+                .withInsertHandler(PhelTemplateInsertHandler.LET)
         )
 
         result.addElement(
             LookupElementBuilder.create("if").withTypeText("(if condition then else)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(IfTemplateInsertHandler())
+                .withInsertHandler(PhelTemplateInsertHandler.IF)
         )
 
         result.addElement(
             LookupElementBuilder.create("fn").withTypeText("(fn [args] body)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(FnTemplateInsertHandler())
+                .withInsertHandler(PhelTemplateInsertHandler.FN)
         )
     }
 

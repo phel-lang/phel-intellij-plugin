@@ -19,10 +19,5 @@ data class ApiFunctionMeta(
     val deprecated: String? = null,
     @SerializedName("superseded-by") val supersededBy: String? = null,
     val macro: Boolean? = null,
-    @SerializedName("min-arity") val minArity: Int? = null,
-    val inline: Map<String, Any>? = null,
-    @SerializedName("inline-arity") val inlineArity: Map<String, Any>? = null,
-    @SerializedName("see-also") val seeAlso: Map<String, Any>? = null,
-    @SerializedName("start-location") val startLocation: Map<String, Any>? = null,
-    @SerializedName("end-location") val endLocation: Map<String, Any>? = null
+    @SerializedName("min-arity") val minArity: Int? = null
 )

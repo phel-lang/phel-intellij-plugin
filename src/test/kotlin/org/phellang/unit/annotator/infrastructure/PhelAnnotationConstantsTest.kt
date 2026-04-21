@@ -12,12 +12,11 @@ class PhelAnnotationConstantsTest {
         val constants = listOf(
             PhelAnnotationConstants.NAMESPACE_SYMBOL,
             PhelAnnotationConstants.FUNCTION_NAME,
-            PhelAnnotationConstants.SHORT_FUNCTION,
+            PhelAnnotationConstants.ANONYMOUS_FUNCTION,
             PhelAnnotationConstants.PHP_INTEROP,
             PhelAnnotationConstants.FUNCTION_CALL,
             PhelAnnotationConstants.COMMENTED_OUT_FORM,
             PhelAnnotationConstants.FUNCTION_PARAMETER,
-            PhelAnnotationConstants.COLLECTION_TYPE,
             PhelAnnotationConstants.KEYWORD,
             PhelAnnotationConstants.REGULAR_SYMBOL,
             PhelAnnotationConstants.VARIADIC_PARAMETER
@@ -32,12 +31,11 @@ class PhelAnnotationConstantsTest {
         val constants = mapOf(
             "NAMESPACE_SYMBOL" to PhelAnnotationConstants.NAMESPACE_SYMBOL,
             "FUNCTION_NAME" to PhelAnnotationConstants.FUNCTION_NAME,
-            "SHORT_FUNCTION" to PhelAnnotationConstants.SHORT_FUNCTION,
+            "ANONYMOUS_FUNCTION" to PhelAnnotationConstants.ANONYMOUS_FUNCTION,
             "PHP_INTEROP" to PhelAnnotationConstants.PHP_INTEROP,
             "FUNCTION_CALL" to PhelAnnotationConstants.FUNCTION_CALL,
             "COMMENTED_OUT_FORM" to PhelAnnotationConstants.COMMENTED_OUT_FORM,
             "FUNCTION_PARAMETER" to PhelAnnotationConstants.FUNCTION_PARAMETER,
-            "COLLECTION_TYPE" to PhelAnnotationConstants.COLLECTION_TYPE,
             "KEYWORD" to PhelAnnotationConstants.KEYWORD,
             "REGULAR_SYMBOL" to PhelAnnotationConstants.REGULAR_SYMBOL,
             "VARIADIC_PARAMETER" to PhelAnnotationConstants.VARIADIC_PARAMETER
@@ -56,12 +54,11 @@ class PhelAnnotationConstantsTest {
         val expectedFallbacks = mapOf(
             PhelAnnotationConstants.NAMESPACE_SYMBOL to DefaultLanguageHighlighterColors.CLASS_REFERENCE,
             PhelAnnotationConstants.FUNCTION_NAME to DefaultLanguageHighlighterColors.CONSTANT,
-            PhelAnnotationConstants.SHORT_FUNCTION to DefaultLanguageHighlighterColors.FUNCTION_DECLARATION,
+            PhelAnnotationConstants.ANONYMOUS_FUNCTION to DefaultLanguageHighlighterColors.FUNCTION_DECLARATION,
             PhelAnnotationConstants.PHP_INTEROP to DefaultLanguageHighlighterColors.NUMBER,
             PhelAnnotationConstants.FUNCTION_CALL to DefaultLanguageHighlighterColors.KEYWORD,
             PhelAnnotationConstants.COMMENTED_OUT_FORM to DefaultLanguageHighlighterColors.LINE_COMMENT,
             PhelAnnotationConstants.FUNCTION_PARAMETER to DefaultLanguageHighlighterColors.PARAMETER,
-            PhelAnnotationConstants.COLLECTION_TYPE to DefaultLanguageHighlighterColors.BRACES,
             PhelAnnotationConstants.KEYWORD to DefaultLanguageHighlighterColors.INSTANCE_FIELD,
             PhelAnnotationConstants.REGULAR_SYMBOL to DefaultLanguageHighlighterColors.LOCAL_VARIABLE,
             PhelAnnotationConstants.VARIADIC_PARAMETER to DefaultLanguageHighlighterColors.STATIC_FIELD
@@ -81,12 +78,11 @@ class PhelAnnotationConstantsTest {
         val constants = listOf(
             PhelAnnotationConstants.NAMESPACE_SYMBOL,
             PhelAnnotationConstants.FUNCTION_NAME,
-            PhelAnnotationConstants.SHORT_FUNCTION,
+            PhelAnnotationConstants.ANONYMOUS_FUNCTION,
             PhelAnnotationConstants.PHP_INTEROP,
             PhelAnnotationConstants.FUNCTION_CALL,
             PhelAnnotationConstants.COMMENTED_OUT_FORM,
             PhelAnnotationConstants.FUNCTION_PARAMETER,
-            PhelAnnotationConstants.COLLECTION_TYPE,
             PhelAnnotationConstants.KEYWORD,
             PhelAnnotationConstants.REGULAR_SYMBOL,
             PhelAnnotationConstants.VARIADIC_PARAMETER
@@ -106,12 +102,11 @@ class PhelAnnotationConstantsTest {
         val expectedNames = mapOf(
             PhelAnnotationConstants.NAMESPACE_SYMBOL to "PHEL_NAMESPACE_SYMBOL",
             PhelAnnotationConstants.FUNCTION_NAME to "PHEL_FUNCTION_NAME",
-            PhelAnnotationConstants.SHORT_FUNCTION to "PHEL_SHORT_FUNCTION",
+            PhelAnnotationConstants.ANONYMOUS_FUNCTION to "PHEL_SHORT_FUNCTION",
             PhelAnnotationConstants.PHP_INTEROP to "PHEL_PHP_INTEROP",
             PhelAnnotationConstants.FUNCTION_CALL to "PHEL_FUNCTION_CALL",
             PhelAnnotationConstants.COMMENTED_OUT_FORM to "PHEL_COMMENTED_OUT_FORM",
             PhelAnnotationConstants.FUNCTION_PARAMETER to "PHEL_FUNCTION_PARAMETER",
-            PhelAnnotationConstants.COLLECTION_TYPE to "PHEL_COLLECTION_TYPE",
             PhelAnnotationConstants.KEYWORD to "PHEL_SEMANTIC_KEYWORD",
             PhelAnnotationConstants.REGULAR_SYMBOL to "PHEL_REGULAR_SYMBOL",
             PhelAnnotationConstants.VARIADIC_PARAMETER to "PHEL_VARIADIC_PARAMETER"
@@ -144,7 +139,7 @@ class PhelAnnotationConstantsTest {
         // Test that we have constants for key Phel language constructs
         val phelSpecificConstants = listOf(
             PhelAnnotationConstants.PHP_INTEROP,        // php/ interop
-            PhelAnnotationConstants.SHORT_FUNCTION,     // |(...) syntax
+            PhelAnnotationConstants.ANONYMOUS_FUNCTION,     // #(...) syntax
             PhelAnnotationConstants.COMMENTED_OUT_FORM, // #_ comments
             PhelAnnotationConstants.VARIADIC_PARAMETER, // & parameter
             PhelAnnotationConstants.NAMESPACE_SYMBOL    // namespace\symbol

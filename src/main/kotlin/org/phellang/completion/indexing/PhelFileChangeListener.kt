@@ -24,31 +24,26 @@ class PhelFileChangeListener(private val project: Project) : BulkFileListener {
 
             when (event) {
                 is VFileContentChangeEvent -> {
-                    // File content changed - refresh its symbols
                     index.refreshFile(file)
                     needsReparse = true
                 }
 
                 is VFileCreateEvent -> {
-                    // New file created - add to index
                     index.refreshFile(file)
                     needsReparse = true
                 }
 
                 is VFileDeleteEvent -> {
-                    // File deleted - remove from index
                     index.removeFile(file)
                     needsReparse = true
                 }
 
                 is VFileMoveEvent -> {
-                    // File moved - refresh index
                     index.refreshFile(file)
                     needsReparse = true
                 }
 
                 is VFilePropertyChangeEvent -> {
-                    // File renamed
                     if (event.propertyName == VirtualFile.PROP_NAME) {
                         index.refreshFile(file)
                         needsReparse = true

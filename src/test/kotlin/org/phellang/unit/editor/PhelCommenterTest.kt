@@ -112,7 +112,7 @@ class PhelCommenterTest {
     @Test
     fun `commenter should follow Phel language conventions`() {
         Assertions.assertEquals(";", commenter.lineCommentPrefix) // Standard Lisp line comment
-        // Block comments (#| |#) are deprecated since v0.31
+        // Phel does not support block comments
         Assertions.assertNull(commenter.blockCommentPrefix)
         Assertions.assertNull(commenter.blockCommentSuffix)
 

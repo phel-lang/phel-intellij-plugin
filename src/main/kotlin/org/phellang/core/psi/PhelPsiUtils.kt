@@ -7,12 +7,6 @@ import org.phellang.language.psi.*
 
 object PhelPsiUtils {
 
-    private val INTEGER_REGEX = Regex("[+-]?[0-9]+")
-    private val FLOAT_REGEX = Regex("[+-]?[0-9]+\\.[0-9]*([eE][+-]?[0-9]+)?")
-    private val HEX_NUM_REGEX = Regex("[+-]?0x[\\da-fA-F_]+")
-    private val BIN_NUM_REGEX = Regex("[+-]?0b[01_]+")
-    private val OCT_NUM_REGEX = Regex("[+-]?0o[0-7_]+")
-
     @JvmStatic
     fun findTopmostSymbol(element: PsiElement?): PhelSymbol? {
         if (element == null) return null
@@ -22,7 +16,6 @@ object PhelPsiUtils {
             else -> PsiTreeUtil.getParentOfType(element, PhelSymbol::class.java)
         }
 
-        // Traverse up to find the topmost PhelSymbol
         while (symbol != null) {
             val parentSymbol = PsiTreeUtil.getParentOfType(symbol, PhelSymbol::class.java) ?: break
             symbol = parentSymbol
@@ -36,7 +29,6 @@ object PhelPsiUtils {
         return PhelErrorHandler.safeOperation({
             val text = symbol.text ?: return@safeOperation null
 
-            // Handle qualified symbols (namespace/name)
             val slashIndex = text.lastIndexOf('/')
             if (slashIndex > 0 && slashIndex < text.length - 1) {
                 text.substring(slashIndex + 1)
@@ -74,68 +66,33 @@ object PhelPsiUtils {
         }) ?: 0
     }
 
+    /** The first symbol inside the enclosing list — e.g. `defn` for `(defn foo [])`. */
     @JvmStatic
-    fun toString(form: PhelForm): String {
-        return PhelErrorHandler.safeOperation({
-            form.text ?: ""
-        }) ?: ""
+    fun getDefiningKeyword(symbol: PhelSymbol): String? {
+        val containingList = PsiTreeUtil.getParentOfType(symbol, PhelList::class.java) ?: return null
+        val firstForm = PsiTreeUtil.findChildOfType(containingList, PhelForm::class.java) ?: return null
+        return PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)?.text
     }
 
+    /** 1-based line number of [element] within its containing file, or 0 if unknown. */
     @JvmStatic
-    fun toString(metadata: PhelMetadata): String {
-        return PhelErrorHandler.safeOperation({
-            metadata.text ?: ""
-        }) ?: ""
+    fun getLineNumber(element: PsiElement): Int {
+        val fileText = element.containingFile?.text ?: return 0
+        val offset = element.textOffset
+        var lineNumber = 1
+        var i = 0
+        while (i < offset && i < fileText.length) {
+            if (fileText[i] == '\n') lineNumber++
+            i++
+        }
+        return lineNumber
     }
 
+    /** `(file.phel:42)` location suffix, or empty string when the file is unavailable. */
     @JvmStatic
-    fun toString(readerMacro: PhelReaderMacro): String {
-        return PhelErrorHandler.safeOperation({
-            readerMacro.text ?: ""
-        }) ?: ""
-    }
-
-    @JvmStatic
-    fun getTextOffset(list: PhelList): Int {
-        return PhelErrorHandler.safeOperation({
-            list.textRange.startOffset
-        }) ?: 0
-    }
-
-    @JvmStatic
-    fun getFirst(list: PhelList): PsiElement? {
-        return PhelErrorHandler.safeOperation({
-            // Get the first form inside the list (skip the opening parenthesis)
-            val children = list.children
-            children.find { it is PhelForm }
-        })
-    }
-
-    @JvmStatic
-    fun getLiteralType(literal: PhelLiteral): String {
-        return PhelErrorHandler.safeOperation {
-            val text = literal.text ?: return@safeOperation "unknown"
-
-            when {
-                text == "true" || text == "false" -> "boolean"
-                text == "nil" -> "nil"
-                text == "NAN" -> "nan"
-                text.startsWith("\"") && text.endsWith("\"") -> "string"
-                text.startsWith("\\") -> "char"
-                text.matches(INTEGER_REGEX) -> "integer"
-                text.matches(FLOAT_REGEX) -> "float"
-                text.matches(HEX_NUM_REGEX) -> "hexnum"
-                text.matches(BIN_NUM_REGEX) -> "binnum"
-                text.matches(OCT_NUM_REGEX) -> "octnum"
-                else -> "unknown"
-            }
-        } ?: "unknown"
-    }
-
-    @JvmStatic
-    fun getLiteralText(literal: PhelLiteral): String {
-        return PhelErrorHandler.safeOperation {
-            literal.text ?: ""
-        } ?: ""
+    fun getLocationString(element: PsiElement): String {
+        val containingFile = element.containingFile ?: return ""
+        val line = getLineNumber(element)
+        return if (line > 0) "(${containingFile.name}:$line)" else "(${containingFile.name})"
     }
 }

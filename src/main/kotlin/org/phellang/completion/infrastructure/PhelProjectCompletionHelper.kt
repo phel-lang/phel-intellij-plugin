@@ -9,6 +9,7 @@ import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
@@ -87,7 +88,7 @@ object PhelProjectCompletionHelper {
 
                 if (namespaceSymbol != null) {
                     val fullNamespace = namespaceSymbol.text
-                    val shortNamespace = fullNamespace.substringAfterLast("\\")
+                    val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
                     var alias: String?
 
                     // Check if next form is :as keyword

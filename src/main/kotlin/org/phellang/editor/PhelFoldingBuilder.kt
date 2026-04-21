@@ -13,17 +13,12 @@ class PhelFoldingBuilder : FoldingBuilder {
     private val collector = PhelFoldingCollector()
 
     override fun buildFoldRegions(node: ASTNode, document: Document): Array<FoldingDescriptor> {
-        // Collect all potential folding descriptors
         val descriptors = collector.collectFoldingDescriptors(node, document)
-
-        // Filter out conflicting folding regions - prioritize outer expressions
         val filteredDescriptors = PhelFoldingConflictResolver.removeConflictingDescriptors(descriptors)
-
         return filteredDescriptors.toTypedArray()
     }
 
     override fun getPlaceholderText(node: ASTNode): String? {
-        // This method is called for nodes that don't have explicit placeholder text
         return PhelFoldingDefaults.getDefaultPlaceholderText(node)
     }
 

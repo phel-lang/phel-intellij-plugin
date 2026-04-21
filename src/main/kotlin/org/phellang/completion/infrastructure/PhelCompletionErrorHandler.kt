@@ -6,6 +6,8 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.openapi.project.IndexNotReadyException
 import com.intellij.psi.PsiElement
 
 object PhelCompletionErrorHandler {
@@ -18,6 +20,10 @@ object PhelCompletionErrorHandler {
         try {
             operation.execute()
             return true
+        } catch (e: ProcessCanceledException) {
+            throw e
+        } catch (e: IndexNotReadyException) {
+            throw e
         } catch (e: NullPointerException) {
             LOG.warn("Null pointer exception in completion: $context", e)
             addErrorCompletion(
@@ -62,7 +68,10 @@ object PhelCompletionErrorHandler {
                 }
 
             result.addElement(errorElement)
-        } catch (_: Exception) {
+        } catch (e: ProcessCanceledException) {
+            throw e
+        } catch (e: Exception) {
+            LOG.debug("Failed to add error completion element", e)
         }
     }
 
@@ -73,11 +82,12 @@ object PhelCompletionErrorHandler {
             return false
         }
 
-        // Check if we're in a malformed or incomplete PSI tree
         try {
             element.containingFile
             element.parent
             return true
+        } catch (e: ProcessCanceledException) {
+            throw e
         } catch (e: Exception) {
             LOG.debug("Completion context invalid: PSI tree issues", e)
             return false

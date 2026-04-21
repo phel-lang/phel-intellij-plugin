@@ -36,9 +36,11 @@ class PhelColorSettingsProvider {
             AttributesDescriptor("Variadic parameters (&)", PhelAnnotationConstants.VARIADIC_PARAMETER),
             AttributesDescriptor("PHP interop", PhelAnnotationConstants.PHP_INTEROP),
             AttributesDescriptor("Namespace symbols", PhelAnnotationConstants.NAMESPACE_SYMBOL),
-            AttributesDescriptor("Short functions", PhelAnnotationConstants.SHORT_FUNCTION),
+            AttributesDescriptor("Anonymous function shorthand", PhelAnnotationConstants.ANONYMOUS_FUNCTION),
             AttributesDescriptor("Commented out forms", PhelAnnotationConstants.COMMENTED_OUT_FORM),
             AttributesDescriptor("Regular symbols", PhelAnnotationConstants.REGULAR_SYMBOL),
+            AttributesDescriptor("Keywords (semantic)", PhelAnnotationConstants.KEYWORD),
+            AttributesDescriptor("Deprecated symbols", PhelAnnotationConstants.DEPRECATED_SYMBOL),
 
             // Basic symbols and operators
             AttributesDescriptor("Symbols", PhelTextAttributesRegistry.SYMBOL),

@@ -316,7 +316,8 @@ object PhelSymbolAnalyzer {
         return isSecondChild
     }
 
-    private fun findParameterVector(functionList: PhelList): PhelVec? {
+    @JvmStatic
+    fun findParameterVector(functionList: PhelList): PhelVec? {
         val children = functionList.children
         if (children.isEmpty()) return null
 

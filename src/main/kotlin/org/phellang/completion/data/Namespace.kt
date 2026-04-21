@@ -32,5 +32,28 @@ enum class Namespace {
     TEST_SELECTOR,
     TEST_SHRINK,
     WALK,
-    WATCH,
+    WATCH;
+
+    companion object {
+        private val ALIASES: Map<String, Namespace> = mapOf(
+            "ai" to AI,
+            "base64" to BASE64,
+            "core" to CORE,
+            "debug" to DEBUG,
+            "html" to HTML,
+            "http" to HTTP,
+            "http-client" to HTTP_CLIENT,
+            "http_client" to HTTP_CLIENT,
+            "json" to JSON,
+            "mock" to MOCK,
+            "repl" to REPL,
+            "str" to STRING,
+            "string" to STRING,
+            "test" to TEST,
+        )
+
+        /** Maps a short/alias namespace token (case-insensitive) to a [Namespace], or null if unknown. */
+        fun fromShortName(shortNamespace: String): Namespace? =
+            ALIASES[shortNamespace.lowercase()]
+    }
 }

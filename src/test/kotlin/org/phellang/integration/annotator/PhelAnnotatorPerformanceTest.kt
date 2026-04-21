@@ -22,7 +22,7 @@ class PhelAnnotatorPerformanceTest {
     private lateinit var mockElement: PsiElement
 
     @Mock
-    private lateinit var mockShortFn: PhelHashFn
+    private lateinit var mockHashFn: PhelHashFn
 
     @Test
     fun `text validation should be performant with large strings`() {
@@ -93,7 +93,7 @@ class PhelAnnotatorPerformanceTest {
             for (i in 0 until parents.size - 1) {
                 `when`(parents[i].parent).thenReturn(parents[i + 1])
             }
-            `when`(parents.last().parent).thenReturn(mockShortFn)
+            `when`(parents.last().parent).thenReturn(mockHashFn)
 
             val startTime = System.nanoTime()
             val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
@@ -101,7 +101,7 @@ class PhelAnnotatorPerformanceTest {
 
             val durationMs = (endTime - startTime) / 1_000_000.0
 
-            assertTrue(result, "Should find short function at depth $depth")
+            assertTrue(result, "Should find anonymous function at depth $depth")
             assertTrue(durationMs < 10.0, "Analysis should be efficient at depth $depth: ${durationMs}ms")
         }
     }

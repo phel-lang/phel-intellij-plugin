@@ -2,6 +2,8 @@ package org.phellang.inspection.deprecated
 
 import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemDescriptor
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import org.phellang.language.psi.PhelNamespaceImporter
 import org.phellang.language.psi.PhelPsiFactory
@@ -19,22 +21,25 @@ class PhelDeprecatedFunctionQuickFix(private val replacement: String) : LocalQui
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.psiElement
         try {
-            // Parse the replacement to get namespace and function name
             val parsed = ReplacementParser.parse(replacement)
 
-            // IMPORTANT: Get file BEFORE replacing element, as element becomes invalid after replace()
+            // Grab the file before replace() invalidates the element.
             val file = element.containingFile as? PhelFile
 
-            // Replace the deprecated symbol with the new one
             val newElement = PhelPsiFactory.createSymbol(project, parsed.functionName)
             element.replace(newElement)
 
-            // Ensure namespace is imported (if not core)
             if (file != null && parsed.namespace != null) {
                 PhelNamespaceImporter.ensureNamespaceImported(file, parsed.namespace)
             }
-        } catch (_: Exception) {
-            // Silently fail if replacement cannot be created
+        } catch (e: ProcessCanceledException) {
+            throw e
+        } catch (e: Exception) {
+            LOG.warn("Failed to apply deprecated function replacement: $replacement", e)
         }
+    }
+
+    companion object {
+        private val LOG = Logger.getInstance(PhelDeprecatedFunctionQuickFix::class.java)
     }
 }

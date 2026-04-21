@@ -14,6 +14,7 @@ import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.PhelVendorUtils
@@ -152,7 +153,7 @@ class PhelReference @JvmOverloads constructor(
 
         // Determine the actual namespace to search for
         val resolvedQualifier = if (targetNamespace != null) {
-            targetNamespace.substringAfterLast("\\")
+            PhelProjectNamespaceFinder.extractShortNamespace(targetNamespace)
         } else {
             qualifier
         }
@@ -171,7 +172,7 @@ class PhelReference @JvmOverloads constructor(
             val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
 
             val fileNamespace = PhelProjectSymbolScanner.extractNamespace(psiFile) ?: continue
-            val fileShortNamespace = fileNamespace.substringAfterLast("\\")
+            val fileShortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fileNamespace)
 
             // Match by full namespace (if resolved from imports) OR by short namespace name
             val matches = if (targetNamespace != null) {
@@ -248,7 +249,7 @@ class PhelReference @JvmOverloads constructor(
 
                 if (namespaceSymbol != null) {
                     val fullNamespace = namespaceSymbol.text
-                    val shortNamespace = fullNamespace.substringAfterLast("\\")
+                    val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
 
                     // Check for :as alias pattern
                     if (i + 2 < forms.size) {
@@ -291,7 +292,7 @@ class PhelReference @JvmOverloads constructor(
             val localUsages = findUsagesInLocalScope()
             if (!localUsages.isEmpty()) {
                 usages.addAll(localUsages)
-                return usages // Return immediately for local bindings - no project-wide search needed
+                return usages // Local bindings skip project-wide search.
             }
         }
 
@@ -429,22 +430,15 @@ class PhelReference @JvmOverloads constructor(
     }
 
     override fun getVariants(): Array<Any?> {
-        val variants: MutableList<Any?> = ArrayList()
+        val variants = mutableListOf<PsiElement>()
 
-        // Add local scope definitions (let bindings, parameters)
         val localDef = resolveInLocalScope()
-        if (localDef != null) {
-            variants.add(localDef)
-        }
+        if (localDef != null) variants.add(localDef)
 
-        // Add file-level definitions
-        val fileDefinitions = resolveInCurrentFile()
-        variants.addAll(fileDefinitions)
+        variants.addAll(resolveInCurrentFile())
 
-        // Add project-wide definitions (limited for performance)
-        if (variants.size < 20) { // Limit to prevent performance issues
-            val projectDefs = resolveInProject()
-            variants.addAll(projectDefs)
+        if (variants.size < 20) {
+            variants.addAll(resolveInProject())
         }
 
         return variants.toTypedArray()
@@ -547,7 +541,6 @@ class PhelReference @JvmOverloads constructor(
         return results
     }
 
-    // === Helper Methods ===
     private fun findInLetBindings(letForm: PhelList): PsiElement? {
         val forms = PsiTreeUtil.getChildrenOfType(letForm, PhelForm::class.java)
         if (forms == null || forms.size < 2) {

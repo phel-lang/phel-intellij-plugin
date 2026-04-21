@@ -23,11 +23,11 @@ class PhelCommentAnalyzerSimpleTest {
     private lateinit var mockGrandParent: PsiElement
 
     @Mock
-    private lateinit var mockShortFn: PhelHashFn
+    private lateinit var mockHashFn: PhelHashFn
 
     @Test
     fun `isInsideAnonFunction should return true when element is directly inside PhelHashFn`() {
-        `when`(mockElement.parent).thenReturn(mockShortFn)
+        `when`(mockElement.parent).thenReturn(mockHashFn)
 
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
 
@@ -36,9 +36,9 @@ class PhelCommentAnalyzerSimpleTest {
 
     @Test
     fun `isInsideAnonFunction should return true when element is nested inside PhelHashFn`() {
-        // Setup: element -> parent -> shortFn
+        // Setup: element -> parent -> hashFn
         `when`(mockElement.parent).thenReturn(mockParent)
-        `when`(mockParent.parent).thenReturn(mockShortFn)
+        `when`(mockParent.parent).thenReturn(mockHashFn)
 
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
 
@@ -47,10 +47,10 @@ class PhelCommentAnalyzerSimpleTest {
 
     @Test
     fun `isInsideAnonFunction should return true when element is deeply nested inside PhelHashFn`() {
-        // Setup: element -> parent -> grandparent -> shortFn
+        // Setup: element -> parent -> grandparent -> hashFn
         `when`(mockElement.parent).thenReturn(mockParent)
         `when`(mockParent.parent).thenReturn(mockGrandParent)
-        `when`(mockGrandParent.parent).thenReturn(mockShortFn)
+        `when`(mockGrandParent.parent).thenReturn(mockHashFn)
 
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
 
@@ -99,11 +99,11 @@ class PhelCommentAnalyzerSimpleTest {
         val mockIntermediateElement2 = mock(PsiElement::class.java)
         val mockIntermediateElement3 = mock(PsiElement::class.java)
 
-        // Setup: element -> intermediate1 -> intermediate2 -> intermediate3 -> shortFn
+        // Setup: element -> intermediate1 -> intermediate2 -> intermediate3 -> hashFn
         `when`(mockElement.parent).thenReturn(mockIntermediateElement1)
         `when`(mockIntermediateElement1.parent).thenReturn(mockIntermediateElement2)
         `when`(mockIntermediateElement2.parent).thenReturn(mockIntermediateElement3)
-        `when`(mockIntermediateElement3.parent).thenReturn(mockShortFn)
+        `when`(mockIntermediateElement3.parent).thenReturn(mockHashFn)
 
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
 
@@ -112,8 +112,8 @@ class PhelCommentAnalyzerSimpleTest {
 
     @Test
     fun `isInsideAnonFunction should stop at first PhelHashFn found`() {
-        // Setup: element -> shortFn (should stop at first one)
-        `when`(mockElement.parent).thenReturn(mockShortFn)
+        // Setup: element -> hashFn (should stop at first one)
+        `when`(mockElement.parent).thenReturn(mockHashFn)
 
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
 
@@ -125,10 +125,10 @@ class PhelCommentAnalyzerSimpleTest {
         val mockMixedElement1 = mock(PsiElement::class.java)
         val mockMixedElement2 = mock(PsiElement::class.java)
 
-        // Setup: element -> mixed1 -> mixed2 -> shortFn -> mixed3
+        // Setup: element -> mixed1 -> mixed2 -> hashFn -> mixed3
         `when`(mockElement.parent).thenReturn(mockMixedElement1)
         `when`(mockMixedElement1.parent).thenReturn(mockMixedElement2)
-        `when`(mockMixedElement2.parent).thenReturn(mockShortFn)
+        `when`(mockMixedElement2.parent).thenReturn(mockHashFn)
 
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
 
@@ -147,14 +147,14 @@ class PhelCommentAnalyzerSimpleTest {
 
     @Test
     fun `isInsideAnonFunction should handle very deep nesting`() {
-        // Create a deep hierarchy: element -> p1 -> p2 -> p3 -> p4 -> p5 -> shortFn
+        // Create a deep hierarchy: element -> p1 -> p2 -> p3 -> p4 -> p5 -> hashFn
         val parents = (1..5).map { mock(PsiElement::class.java) }
 
         `when`(mockElement.parent).thenReturn(parents[0])
         for (i in 0 until parents.size - 1) {
             `when`(parents[i].parent).thenReturn(parents[i + 1])
         }
-        `when`(parents.last().parent).thenReturn(mockShortFn)
+        `when`(parents.last().parent).thenReturn(mockHashFn)
 
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
 
@@ -170,7 +170,7 @@ class PhelCommentAnalyzerSimpleTest {
         for (i in 0 until parents.size - 1) {
             `when`(parents[i].parent).thenReturn(parents[i + 1])
         }
-        `when`(parents.last().parent).thenReturn(mockShortFn)
+        `when`(parents.last().parent).thenReturn(mockHashFn)
 
         val startTime = System.nanoTime()
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
@@ -183,8 +183,8 @@ class PhelCommentAnalyzerSimpleTest {
 
     @Test
     fun `isInsideAnonFunction should handle multiple short functions in hierarchy`() {
-        // Setup: element -> shortFn (should stop at first one)
-        `when`(mockElement.parent).thenReturn(mockShortFn)
+        // Setup: element -> hashFn (should stop at first one)
+        `when`(mockElement.parent).thenReturn(mockHashFn)
 
         val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
 
@@ -194,7 +194,7 @@ class PhelCommentAnalyzerSimpleTest {
 
     @Test
     fun `isInsideAnonFunction should be consistent across multiple calls`() {
-        `when`(mockElement.parent).thenReturn(mockShortFn)
+        `when`(mockElement.parent).thenReturn(mockHashFn)
 
         // Call multiple times to ensure consistency
         repeat(5) {

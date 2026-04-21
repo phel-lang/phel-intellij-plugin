@@ -1,8 +1,8 @@
 package org.phellang.annotator.highlighters
 
 import com.intellij.lang.annotation.AnnotationHolder
+import org.phellang.annotator.infrastructure.PhelAnnotationConstants.ANONYMOUS_FUNCTION
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.KEYWORD
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.SHORT_FUNCTION
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.language.psi.*
 
@@ -14,9 +14,9 @@ object PhelElementHighlighter {
         }
     }
 
-    fun annotateShortFunction(hashFn: PhelHashFn, holder: AnnotationHolder) {
+    fun annotateAnonymousFunction(hashFn: PhelHashFn, holder: AnnotationHolder) {
         if (PhelAnnotationUtils.shouldAnnotate(hashFn)) {
-            PhelAnnotationUtils.createAnnotation(holder, hashFn, SHORT_FUNCTION)
+            PhelAnnotationUtils.createAnnotation(holder, hashFn, ANONYMOUS_FUNCTION)
         }
     }
 }

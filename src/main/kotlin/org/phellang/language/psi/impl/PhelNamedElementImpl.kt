@@ -18,47 +18,29 @@ import org.phellang.language.psi.references.PhelReference
  * This class implements PsiNameIdentifierOwner to enable proper 'Go to Definition' functionality.
  */
 abstract class PhelNamedElementImpl(node: ASTNode) : PhelSFormImpl(node), PsiNameIdentifierOwner {
-    override fun getName(): String? {
-        if (this is PhelSymbol) {
-            return PhelPsiUtils.getName(this as PhelSymbol)
-        }
-        return null
-    }
+    override fun getName(): String? =
+        if (this is PhelSymbol) PhelPsiUtils.getName(this) else null
 
     @Throws(IncorrectOperationException::class)
     override fun setName(name: @NonNls String): PsiElement {
-        // For now, return this unchanged. In a full implementation, 
-        // this would create a new PSI element with the new name.
+        // Rename not yet supported -- returns element unchanged.
+        // Implementing this requires creating a replacement PSI node via PhelPsiFactory.
         return this
     }
 
-    override fun getNameIdentifier(): PsiElement? {
-        // For symbols, the entire element is the name identifier
-        return this
-    }
+    override fun getNameIdentifier(): PsiElement? = this
 
     override fun getReference(): PsiReference? {
         if (this is PhelSymbol) {
-            val symbol = this as PhelSymbol
-            val isDefinition = PhelSymbolAnalyzer.isDefinition(symbol)
-
-            return if (isDefinition) {
-                PhelReference(symbol, true) // findUsages = true
-            } else {
-                PhelReference(symbol, false) // findUsages = false
-            }
+            val isDefinition = PhelSymbolAnalyzer.isDefinition(this)
+            return PhelReference(this, findUsages = isDefinition)
         }
         return null
     }
 
-    override fun getTextOffset(): Int {
-        return PhelPsiUtils.getNameTextOffset(this as PhelSymbol)
-    }
+    override fun getTextOffset(): Int =
+        if (this is PhelSymbol) PhelPsiUtils.getNameTextOffset(this) else super.getTextOffset()
 
-    override fun getPresentation(): ItemPresentation? {
-        if (this is PhelSymbol) {
-            return PhelItemPresentation(this as PhelSymbol)
-        }
-        return super.getPresentation()
-    }
+    override fun getPresentation(): ItemPresentation? =
+        if (this is PhelSymbol) PhelItemPresentation(this) else super.getPresentation()
 }

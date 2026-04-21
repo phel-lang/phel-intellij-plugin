@@ -43,7 +43,7 @@ class PhelAnnotator : Annotator {
             }
 
             is PhelHashFn -> {
-                PhelElementHighlighter.annotateShortFunction(element, holder)
+                PhelElementHighlighter.annotateAnonymousFunction(element, holder)
             }
         }
     }

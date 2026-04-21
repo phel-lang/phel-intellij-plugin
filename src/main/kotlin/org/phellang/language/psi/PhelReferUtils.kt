@@ -120,7 +120,6 @@ object PhelReferUtils {
     }
 
     @JvmStatic
-    fun extractShortNamespace(fullNamespace: String): String {
-        return fullNamespace.substringAfterLast("\\")
-    }
+    fun extractShortNamespace(fullNamespace: String): String =
+        PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
 }

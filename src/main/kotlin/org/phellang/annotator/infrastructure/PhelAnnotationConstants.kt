@@ -20,8 +20,8 @@ object PhelAnnotationConstants {
         )
     }
 
-    /** Short function syntax (|(+ %1 %2)) */
-    val SHORT_FUNCTION: TextAttributesKey by lazy {
+    /** Anonymous function shorthand #(+ %1 %2). External key kept as PHEL_SHORT_FUNCTION to preserve user color settings. */
+    val ANONYMOUS_FUNCTION: TextAttributesKey by lazy {
         TextAttributesKey.createTextAttributesKey(
             "PHEL_SHORT_FUNCTION", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
         )
@@ -52,13 +52,6 @@ object PhelAnnotationConstants {
     val FUNCTION_PARAMETER: TextAttributesKey by lazy {
         TextAttributesKey.createTextAttributesKey(
             "PHEL_FUNCTION_PARAMETER", DefaultLanguageHighlighterColors.PARAMETER
-        )
-    }
-
-    /** Collection types (sets, maps, etc.) */
-    val COLLECTION_TYPE: TextAttributesKey by lazy {
-        TextAttributesKey.createTextAttributesKey(
-            "PHEL_COLLECTION_TYPE", DefaultLanguageHighlighterColors.BRACES
         )
     }
 

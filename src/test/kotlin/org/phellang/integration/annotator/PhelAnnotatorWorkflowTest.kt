@@ -100,12 +100,11 @@ class PhelAnnotatorWorkflowTest {
         val constants = listOf(
             PhelAnnotationConstants.NAMESPACE_SYMBOL,
             PhelAnnotationConstants.FUNCTION_NAME,
-            PhelAnnotationConstants.SHORT_FUNCTION,
+            PhelAnnotationConstants.ANONYMOUS_FUNCTION,
             PhelAnnotationConstants.PHP_INTEROP,
             PhelAnnotationConstants.FUNCTION_CALL,
             PhelAnnotationConstants.COMMENTED_OUT_FORM,
             PhelAnnotationConstants.FUNCTION_PARAMETER,
-            PhelAnnotationConstants.COLLECTION_TYPE,
             PhelAnnotationConstants.KEYWORD,
             PhelAnnotationConstants.REGULAR_SYMBOL,
             PhelAnnotationConstants.VARIADIC_PARAMETER

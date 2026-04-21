@@ -7,6 +7,7 @@ import org.phellang.completion.data.Namespace
 import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.language.infrastructure.PhelIcons
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.files.PhelFile
 
 object PhelReferCompletionHelper {
@@ -26,8 +27,7 @@ object PhelReferCompletionHelper {
         file: PhelFile?,
         alreadyReferred: Set<String> = emptySet()
     ) {
-        // Extract short namespace (e.g., "phel\test" -> "test")
-        val shortNamespace = namespaceText.substringAfterLast("\\")
+        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
 
         // Try standard library first
         val namespace = mapToNamespace(shortNamespace)
@@ -41,23 +41,8 @@ object PhelReferCompletionHelper {
         }
     }
 
-    private fun mapToNamespace(shortNamespace: String): Namespace? {
-        return when (shortNamespace.lowercase()) {
-            "ai" -> Namespace.AI
-            "base64" -> Namespace.BASE64
-            "core" -> Namespace.CORE
-            "debug" -> Namespace.DEBUG
-            "html" -> Namespace.HTML
-            "http" -> Namespace.HTTP
-            "http-client", "http_client" -> Namespace.HTTP_CLIENT
-            "json" -> Namespace.JSON
-            "mock" -> Namespace.MOCK
-            "repl" -> Namespace.REPL
-            "str", "string" -> Namespace.STRING
-            "test" -> Namespace.TEST
-            else -> null
-        }
-    }
+    private fun mapToNamespace(shortNamespace: String): Namespace? =
+        Namespace.fromShortName(shortNamespace)
 
     private fun addStandardLibraryCompletions(
         result: CompletionResultSet,

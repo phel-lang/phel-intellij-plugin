@@ -214,7 +214,7 @@ class PhelLexerTest {
         assertEquals("foo", tokens[1].second)
     }
 
-    // --- Removed deprecated syntax (v0.32+): | short-fn, # line comments, , unquote, #| |# multiline comments ---
+    // --- Tokens that are NOT reader macros (regression tests for removed-syntax handling) ---
 
     @Test
     fun `pipe character is now a plain symbol not a short-fn opener`() {
@@ -232,7 +232,7 @@ class PhelLexerTest {
         assertEquals("x", tokens[1].second)
     }
 
-    // --- Tagged literal dispatch (v0.32+): #inst, #uuid, #regex, #php, generic #<name> ---
+    // --- Tagged literal dispatch: #inst, #uuid, #regex, #php, generic #<name> ---
 
     @Test
     fun `hash-inst tokenizes as TAG`() {

@@ -1,6 +1,7 @@
 package org.phellang.language.psi
 
 import com.intellij.openapi.project.Project
+import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.files.PhelFile
 
 object PhelNamespaceImporter {
@@ -13,34 +14,28 @@ object PhelNamespaceImporter {
         val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false
         val phelNamespace = PhelNamespaceUtils.toPhelNamespace(namespace)
 
-        // Check if already imported
         if (PhelNamespaceUtils.isNamespaceRequired(nsDeclaration, phelNamespace)) {
             return true
         }
 
-        // Add the require
         return addRequireToNamespace(file.project, nsDeclaration, phelNamespace)
     }
 
     fun ensureNamespaceImportedByFullName(file: PhelFile, fullNamespace: String): Boolean {
         val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false
 
-        // Check if already imported
         if (PhelNamespaceUtils.isNamespaceRequired(nsDeclaration, fullNamespace)) {
             return true
         }
 
-        // Add the :require with the full namespace
         return addRequireToNamespace(file.project, nsDeclaration, fullNamespace)
     }
 
     private fun addRequireToNamespace(project: Project, nsDeclaration: PhelList, namespace: String): Boolean {
-        try {
+        return PhelErrorHandler.safeOperation {
             addNewRequireForm(project, nsDeclaration, namespace)
-            return true
-        } catch (_: Exception) {
-            return false
-        }
+            true
+        } ?: false
     }
 
     private fun addNewRequireForm(project: Project, nsDeclaration: PhelList, namespace: String) {

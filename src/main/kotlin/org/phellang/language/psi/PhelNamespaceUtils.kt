@@ -82,8 +82,7 @@ object PhelNamespaceUtils {
 
                             if (aliasSymbol != null) {
                                 val alias = aliasSymbol.text
-                                // Extract short namespace (e.g., "phel\str" -> "str")
-                                val shortNamespace = namespace.substringAfterLast("\\")
+                                val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
                                 aliasMap[alias] = shortNamespace
                                 i += 3  // Skip namespace, :as, and alias
                                 continue
@@ -126,7 +125,8 @@ object PhelNamespaceUtils {
     }
 
     fun extractShortNamespaceFromDeclaration(nsDeclaration: PhelList): String? {
-        return extractNamespaceFromDeclaration(nsDeclaration)?.substringAfterLast("\\")
+        return extractNamespaceFromDeclaration(nsDeclaration)
+            ?.let(PhelProjectNamespaceFinder::extractShortNamespace)
     }
 
     fun extractNamespaceFromFile(file: PhelFile): String? {

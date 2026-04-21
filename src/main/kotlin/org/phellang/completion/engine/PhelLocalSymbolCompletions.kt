@@ -44,7 +44,7 @@ object PhelLocalSymbolCompletions {
 
         check(PhelCompletionErrorHandler.isCompletionContextValid(position)) { "Invalid PSI element context for local symbol completion" }
 
-        val addedSymbols: MutableSet<String?> = HashSet()
+        val addedSymbols: MutableSet<String> = HashSet()
 
         // First priority: Add function parameters from current scope
         addCurrentFunctionParameters(result, position, addedSymbols)
@@ -64,9 +64,9 @@ object PhelLocalSymbolCompletions {
         symbolName: String,
         typeText: String,
         icon: Icon?,
-        addedSymbols: MutableSet<String?>
+        addedSymbols: MutableSet<String>
     ) {
-        if (!addedSymbols.contains(symbolName) && !symbolName.trim { it <= ' ' }.isEmpty()) {
+        if (!addedSymbols.contains(symbolName) && symbolName.isNotBlank()) {
             addedSymbols.add(symbolName)
 
             PhelCompletionUtils.addLocalSymbolCompletion(result, symbolName, typeText, icon)
@@ -74,7 +74,7 @@ object PhelLocalSymbolCompletions {
     }
 
     private fun addCurrentFunctionParameters(
-        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String?>
+        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
     ) {
         var current = position.parent
         var depth = 0
@@ -88,14 +88,14 @@ object PhelLocalSymbolCompletions {
                         val functionType = firstChild.text
 
                         if (PhelSymbolAnalyzer.isSymbolType(functionType, PhelCompletionPriority.SPECIAL_FORMS)) {
-                            val paramVec = findParameterVectorInFunction(current) ?: break
+                            val paramVec = PhelSymbolAnalyzer.findParameterVector(current) ?: break
                             // Extract parameters from the vector
                             val paramChildren = paramVec.children
                             for (paramChild in paramChildren) {
                                 if (paramChild !is PhelSymbol && paramChild !is PhelAccessImpl) continue
 
                                 val paramName = paramChild.text
-                                if (paramName == null || !paramName.isNotEmpty()) continue
+                                if (paramName.isNullOrEmpty()) continue
 
                                 addSymbolCompletion(
                                     result,
@@ -116,7 +116,7 @@ object PhelLocalSymbolCompletions {
     }
 
     private fun addCurrentLetBindings(
-        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String?>
+        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
     ) {
         var current = position.parent
         var depth = 0
@@ -143,7 +143,7 @@ object PhelLocalSymbolCompletions {
                                         if (bindingChild !is PhelSymbol && bindingChild !is PhelAccessImpl) continue
 
                                         val bindingName = bindingChild.text
-                                        if (bindingName == null || !bindingName.isNotEmpty()) continue
+                                        if (bindingName.isNullOrEmpty()) continue
 
                                         val typeText = when (bindingType) {
                                             "let" -> "Let Binding"
@@ -179,7 +179,7 @@ object PhelLocalSymbolCompletions {
     }
 
     private fun addProjectGlobalDefinitions(
-        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String?>
+        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
     ) {
         val project = position.project
 
@@ -222,7 +222,7 @@ object PhelLocalSymbolCompletions {
     }
 
     private fun extractGlobalDefinitionsFromFile(
-        file: PhelFile, result: CompletionResultSet, addedSymbols: MutableSet<String?>
+        file: PhelFile, result: CompletionResultSet, addedSymbols: MutableSet<String>
     ) {
         var definitionCount = 0
         val maxDefinitionsPerFile = 10
@@ -278,7 +278,7 @@ object PhelLocalSymbolCompletions {
     }
 
     private fun addLocalDefinitionSymbolsSimple(
-        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String?>
+        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
     ) {
         val file = position.containingFile as PhelFile? ?: return
 
@@ -370,36 +370,4 @@ object PhelLocalSymbolCompletions {
         return null // Not inside a function definition
     }
 
-    private fun findParameterVectorInFunction(functionList: PhelList): PhelVec? {
-        val children = functionList.children
-        if (children.isEmpty()) return null
-
-        val functionType = when (val firstChild = children[0]) {
-            is PhelSymbol -> firstChild.text
-            is PhelAccessImpl -> firstChild.text
-            else -> return null
-        }
-
-        return when (functionType) {
-            "fn" -> {
-                // For (fn [params] ...), parameter vector is at index 1
-                if (children.size >= 2 && children[1] is PhelVec) {
-                    children[1] as PhelVec
-                } else null
-            }
-
-            "defn", "defn-", "defmacro", "defmacro-" -> {
-                // For defn forms, find the first vector after the function name
-                // Skip docstring and metadata: (defn name "doc" {:meta} [params] ...)
-                for (i in 2 until children.size) {
-                    if (children[i] is PhelVec) {
-                        return children[i] as PhelVec
-                    }
-                }
-                null
-            }
-
-            else -> null
-        }
-    }
 }
