@@ -173,7 +173,7 @@ class ApiGeneratorIntegrationTest {
 
             generator.generate(functions)
 
-            val content = File(tempDir, "registerCoreFunctions.kt").readText()
+            val content = File(tempDir, "core/registerCoreRootFunctions.kt").readText()
             assertTrue(content.contains("deprecation = DeprecationInfo"))
             assertTrue(content.contains("version = \"1.0\""))
             assertTrue(content.contains("replacement = \"new-func\""))
