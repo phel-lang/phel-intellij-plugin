@@ -6,13 +6,21 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.SymbolCategory
 
 object PhelSymbolAnalyzer {
 
     @JvmStatic
-    fun isSymbolType(symbolText: String?, priority: PhelCompletionPriority): Boolean {
+    fun isSymbolType(symbolText: String?, category: SymbolCategory): Boolean {
         if (symbolText == null) return false
 
+        val priority = when (category) {
+            SymbolCategory.SPECIAL_FORMS -> PhelCompletionPriority.SPECIAL_FORMS
+            SymbolCategory.CONTROL_FLOW -> PhelCompletionPriority.CONTROL_FLOW
+            SymbolCategory.MACROS -> PhelCompletionPriority.MACROS
+            SymbolCategory.CORE_FUNCTIONS -> PhelCompletionPriority.CORE_FUNCTIONS
+            SymbolCategory.COLLECTION_FUNCTIONS -> PhelCompletionPriority.COLLECTION_FUNCTIONS
+        }
         return symbolText in PhelFunctionRegistry.getFunctions(priority).map { it.name }
     }
 
@@ -37,7 +45,7 @@ object PhelSymbolAnalyzer {
             val firstSymbol = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java) ?: return@safeOperation false
             
             val firstSymbolText = firstSymbol.text
-            if (!isSymbolType(firstSymbolText, PhelCompletionPriority.SPECIAL_FORMS)) {
+            if (!isSymbolType(firstSymbolText, SymbolCategory.SPECIAL_FORMS)) {
                 return@safeOperation false
             }
 
@@ -93,7 +101,7 @@ object PhelSymbolAnalyzer {
             val firstSymbol =
                 PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: return@safeOperation false
             val formType = firstSymbol.text
-            if (!isSymbolType(formType, PhelCompletionPriority.CONTROL_FLOW)) return@safeOperation false
+            if (!isSymbolType(formType, SymbolCategory.CONTROL_FLOW)) return@safeOperation false
 
             // Check if binding vector is at forms[1]
             if (forms[1] !== bindingVec) return@safeOperation false
@@ -173,7 +181,7 @@ object PhelSymbolAnalyzer {
             }
 
             val functionType = firstChild.text
-            if (isSymbolType(functionType, PhelCompletionPriority.SPECIAL_FORMS)) {
+            if (isSymbolType(functionType, SymbolCategory.SPECIAL_FORMS)) {
                 return current
             }
 
@@ -222,7 +230,7 @@ object PhelSymbolAnalyzer {
             }
 
             val bindingType = firstChild.text
-            if (!isSymbolType(bindingType, PhelCompletionPriority.CONTROL_FLOW)) {
+            if (!isSymbolType(bindingType, SymbolCategory.CONTROL_FLOW)) {
                 current = current.parent
                 continue
             }
@@ -275,7 +283,7 @@ object PhelSymbolAnalyzer {
             if (firstChild !is PhelSymbol && firstChild !is PhelAccess) continue
             
             val functionType = firstChild.text
-            if (!isSymbolType(functionType, PhelCompletionPriority.SPECIAL_FORMS)) continue
+            if (!isSymbolType(functionType, SymbolCategory.SPECIAL_FORMS)) continue
 
             // Check if the function name matches our symbol
             if ((secondChild is PhelSymbol || secondChild is PhelAccess) && secondChild.text == symbolText) {
@@ -307,7 +315,7 @@ object PhelSymbolAnalyzer {
         if (firstChild !is PhelSymbol && firstChild !is PhelAccess) return false
         
         val functionType = firstChild.text
-        if (!isSymbolType(functionType, PhelCompletionPriority.SPECIAL_FORMS)) return false
+        if (!isSymbolType(functionType, SymbolCategory.SPECIAL_FORMS)) return false
 
         // Check if the symbol is the function name (second child)
         // The symbol might be wrapped in PhelAccess, so check both direct and wrapped cases
@@ -414,7 +422,7 @@ object PhelSymbolAnalyzer {
         val firstText = firstSymbol?.text
 
         return when {
-            isSymbolType(firstText, PhelCompletionPriority.SPECIAL_FORMS) -> {
+            isSymbolType(firstText, SymbolCategory.SPECIAL_FORMS) -> {
                 if (firstText == "fn") {
                     // For (fn [params] ...), parameter vector is at forms[1]
                     forms.size >= 2 && forms[1] === paramVec

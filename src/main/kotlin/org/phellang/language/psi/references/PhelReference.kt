@@ -6,7 +6,7 @@ import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
-import org.phellang.completion.infrastructure.PhelCompletionPriority
+import org.phellang.language.psi.utils.SymbolCategory
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
@@ -392,8 +392,8 @@ class PhelReference @JvmOverloads constructor(
                     val firstSymbol = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
                     if (firstSymbol != null) {
                         val keyword = firstSymbol.text
-                        if (PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.SPECIAL_FORMS) ||
-                            PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.CONTROL_FLOW)) {
+                        if (PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.SPECIAL_FORMS) ||
+                            PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.CONTROL_FLOW)) {
                             return list
                         }
                     }
@@ -680,8 +680,8 @@ class PhelReference @JvmOverloads constructor(
 
         // Direct check for common defining keywords
         return keyword in DEFINING_KEYWORDS ||
-            PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.SPECIAL_FORMS)
-             || PhelSymbolAnalyzer.isSymbolType(keyword, PhelCompletionPriority.MACROS)
+            PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.SPECIAL_FORMS)
+             || PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.MACROS)
     }
 
     companion object {

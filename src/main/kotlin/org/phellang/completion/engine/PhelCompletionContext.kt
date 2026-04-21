@@ -3,11 +3,11 @@ package org.phellang.completion.engine
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.SymbolCategory
 
 class PhelCompletionContext(parameters: CompletionParameters) {
     val element: PsiElement = parameters.position
@@ -97,7 +97,7 @@ class PhelCompletionContext(parameters: CompletionParameters) {
                 val parentFirstForm = parentForms[0]
                 if (parentFirstForm is PhelSymbol || parentFirstForm is PhelAccess) {
                     val parentType = parentFirstForm.text
-                    if (PhelSymbolAnalyzer.isSymbolType(parentType, PhelCompletionPriority.SPECIAL_FORMS)) {
+                    if (PhelSymbolAnalyzer.isSymbolType(parentType, SymbolCategory.SPECIAL_FORMS)) {
                         return false
                     }
                 }
@@ -108,7 +108,7 @@ class PhelCompletionContext(parameters: CompletionParameters) {
         if (firstForm !is PhelSymbol && firstForm !is PhelAccess) return false
 
         val formType = firstForm.text
-        if (!PhelSymbolAnalyzer.isSymbolType(formType, PhelCompletionPriority.SPECIAL_FORMS)) return false
+        if (!PhelSymbolAnalyzer.isSymbolType(formType, SymbolCategory.SPECIAL_FORMS)) return false
 
         if (forms.size < 2) return false
 
@@ -163,7 +163,7 @@ class PhelCompletionContext(parameters: CompletionParameters) {
             else -> return false
         }
 
-        val isBindingForm = PhelSymbolAnalyzer.isSymbolType(bindingType, PhelCompletionPriority.CONTROL_FLOW)
+        val isBindingForm = PhelSymbolAnalyzer.isSymbolType(bindingType, SymbolCategory.CONTROL_FLOW)
         if (!isBindingForm) return false
 
         if (children[1] !== containingVec) return false
@@ -191,7 +191,7 @@ class PhelCompletionContext(parameters: CompletionParameters) {
             else -> return false
         }
 
-        val isDefinitionForm = PhelSymbolAnalyzer.isSymbolType(defType, PhelCompletionPriority.SPECIAL_FORMS)
+        val isDefinitionForm = PhelSymbolAnalyzer.isSymbolType(defType, SymbolCategory.SPECIAL_FORMS)
         if (!isDefinitionForm) return false
 
         val nameElement = children[1]

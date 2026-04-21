@@ -15,11 +15,11 @@ import org.phellang.annotator.validators.PhelNamespaceValidator
 import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
-import org.phellang.completion.infrastructure.PhelCompletionPriority
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.SymbolCategory
 
 object PhelSymbolHighlighter {
 
@@ -49,11 +49,11 @@ object PhelSymbolHighlighter {
             return
         }
 
-        if (PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.SPECIAL_FORMS)
-            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.CONTROL_FLOW)
-            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.CORE_FUNCTIONS)
-            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.COLLECTION_FUNCTIONS)
-            || PhelSymbolAnalyzer.isSymbolType(text, PhelCompletionPriority.MACROS)
+        if (PhelSymbolAnalyzer.isSymbolType(text, SymbolCategory.SPECIAL_FORMS)
+            || PhelSymbolAnalyzer.isSymbolType(text, SymbolCategory.CONTROL_FLOW)
+            || PhelSymbolAnalyzer.isSymbolType(text, SymbolCategory.CORE_FUNCTIONS)
+            || PhelSymbolAnalyzer.isSymbolType(text, SymbolCategory.COLLECTION_FUNCTIONS)
+            || PhelSymbolAnalyzer.isSymbolType(text, SymbolCategory.MACROS)
         ) {
             PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_CALL)
             return
