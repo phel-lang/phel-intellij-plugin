@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.phellang.annotator.analyzers.PhelCommentAnalyzer
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
-import org.phellang.language.psi.PhelShortFn
+import org.phellang.language.psi.PhelHashFn
 
 @ExtendWith(MockitoExtension::class)
 class PhelAnnotatorPerformanceTest {
@@ -22,7 +22,7 @@ class PhelAnnotatorPerformanceTest {
     private lateinit var mockElement: PsiElement
 
     @Mock
-    private lateinit var mockShortFn: PhelShortFn
+    private lateinit var mockShortFn: PhelHashFn
 
     @Test
     fun `text validation should be performant with large strings`() {
@@ -96,7 +96,7 @@ class PhelAnnotatorPerformanceTest {
             `when`(parents.last().parent).thenReturn(mockShortFn)
 
             val startTime = System.nanoTime()
-            val result = PhelCommentAnalyzer.isInsideShortFunction(mockElement)
+            val result = PhelCommentAnalyzer.isInsideAnonFunction(mockElement)
             val endTime = System.nanoTime()
 
             val durationMs = (endTime - startTime) / 1_000_000.0

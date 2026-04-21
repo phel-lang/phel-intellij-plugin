@@ -37,7 +37,7 @@ class PhelSyntaxHighlightingWorkflowTest {
             PhelTypes.KEYWORD to PhelTextAttributesRegistry.KEYWORD,
             PhelTypes.HAT to PhelTextAttributesRegistry.METADATA,
             PhelTypes.DOT to PhelTextAttributesRegistry.DOT_OPERATOR,
-            PhelTypes.COMMA to PhelTextAttributesRegistry.UNQUOTE, // COMMA is treated as UNQUOTE in Phel
+            PhelTypes.TAG to PhelTextAttributesRegistry.TAG,
             PhelTypes.SYM to PhelTextAttributesRegistry.SYMBOL,
             TokenType.BAD_CHARACTER to PhelTextAttributesRegistry.BAD_CHARACTER
         )
@@ -184,7 +184,7 @@ class PhelSyntaxHighlightingWorkflowTest {
         val syntaxHighlighter = PhelSyntaxHighlighter()
 
         val commentTypes = listOf(
-            PhelTypes.LINE_COMMENT, PhelTypes.FORM_COMMENT, PhelTypes.MULTILINE_COMMENT
+            PhelTypes.LINE_COMMENT, PhelTypes.FORM_COMMENT
         )
 
         val expectedAttribute = PhelTextAttributesRegistry.COMMENT
@@ -221,9 +221,7 @@ class PhelSyntaxHighlightingWorkflowTest {
             PhelTypes.QUOTE to PhelTextAttributesRegistry.QUOTE,
             PhelTypes.SYNTAX_QUOTE to PhelTextAttributesRegistry.SYNTAX_QUOTE,
             PhelTypes.TILDE to PhelTextAttributesRegistry.UNQUOTE,
-            PhelTypes.COMMA to PhelTextAttributesRegistry.UNQUOTE, // COMMA is also unquote
-            PhelTypes.TILDE_AT to PhelTextAttributesRegistry.UNQUOTE_SPLICING,
-            PhelTypes.COMMA_AT to PhelTextAttributesRegistry.UNQUOTE_SPLICING
+            PhelTypes.TILDE_AT to PhelTextAttributesRegistry.UNQUOTE_SPLICING
         )
 
         quoteTestCases.forEach { (tokenType, expectedAttribute) ->

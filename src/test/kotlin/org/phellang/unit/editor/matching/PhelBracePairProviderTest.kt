@@ -23,7 +23,7 @@ class PhelBracePairProviderTest {
     fun `getBracePairs should return all supported pairs`() {
         val pairs = provider.getBracePairs()
 
-        assertEquals(8, pairs.size)
+        assertEquals(7, pairs.size)
 
         // Check parentheses
         val parenPair = pairs.find { it.leftBraceType == PhelTypes.PAREN1 }
@@ -31,17 +31,11 @@ class PhelBracePairProviderTest {
         assertEquals(PhelTypes.PAREN2, parenPair!!.rightBraceType)
         assertFalse(parenPair.isStructural)
 
-        // Check new short function #(
+        // Check anonymous function #(
         val hashFnPair = pairs.find { it.leftBraceType == PhelTypes.HASH_PAREN }
         assertNotNull(hashFnPair)
         assertEquals(PhelTypes.PAREN2, hashFnPair!!.rightBraceType)
         assertFalse(hashFnPair.isStructural)
-
-        // Check deprecated short function |(
-        val shortFnPair = pairs.find { it.leftBraceType == PhelTypes.FN_SHORT }
-        assertNotNull(shortFnPair)
-        assertEquals(PhelTypes.PAREN2, shortFnPair!!.rightBraceType)
-        assertFalse(shortFnPair.isStructural)
 
         // Check reader conditional #?(
         val readerCondPair = pairs.find { it.leftBraceType == PhelTypes.READER_COND }
@@ -87,7 +81,6 @@ class PhelBracePairProviderTest {
         val openingBraces = setOf(
             PhelTypes.PAREN1,
             PhelTypes.HASH_PAREN,
-            PhelTypes.FN_SHORT,
             PhelTypes.READER_COND,
             PhelTypes.READER_COND_SPLICE,
             PhelTypes.BRACKET1,

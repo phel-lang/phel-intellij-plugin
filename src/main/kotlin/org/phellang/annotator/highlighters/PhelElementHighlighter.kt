@@ -14,12 +14,6 @@ object PhelElementHighlighter {
         }
     }
 
-    fun annotateShortFunction(shortFn: PhelShortFn, holder: AnnotationHolder) {
-        if (PhelAnnotationUtils.shouldAnnotate(shortFn)) {
-            PhelAnnotationUtils.createAnnotation(holder, shortFn, SHORT_FUNCTION)
-        }
-    }
-
     fun annotateShortFunction(hashFn: PhelHashFn, holder: AnnotationHolder) {
         if (PhelAnnotationUtils.shouldAnnotate(hashFn)) {
             PhelAnnotationUtils.createAnnotation(holder, hashFn, SHORT_FUNCTION)

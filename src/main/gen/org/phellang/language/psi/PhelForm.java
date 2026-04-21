@@ -23,9 +23,6 @@ public interface PhelForm extends PsiElement {
   PhelSet getSet();
 
   @Nullable
-  PhelShortFn getShortFn();
-
-  @Nullable
   PhelSymbol getSymbol();
 
   @NotNull

@@ -76,10 +76,6 @@ public class PhelVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitShortFn(@NotNull PhelShortFn o) {
-    visitPsiElement(o);
-  }
-
   public void visitSymbol(@NotNull PhelSymbol o) {
     visitPsiNameIdentifierOwner(o);
   }

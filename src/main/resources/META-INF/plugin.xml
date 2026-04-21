@@ -90,14 +90,6 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="org.phellang.inspection.deprecated.PhelDeprecatedFunctionInspection"/>
-        <localInspection
-                language="Phel"
-                shortName="PhelDeprecatedSyntax"
-                displayName="Deprecated syntax usage"
-                groupName="Phel"
-                enabledByDefault="true"
-                level="WARNING"
-                implementationClass="org.phellang.inspection.deprecated.PhelDeprecatedSyntaxInspection"/>
     </extensions>
 
     <actions>

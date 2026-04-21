@@ -27,7 +27,6 @@ class PhelSyntaxHighlighterTest {
             // Comments
             PhelTypes.LINE_COMMENT to PhelTextAttributesRegistry.COMMENT,
             PhelTypes.FORM_COMMENT to PhelTextAttributesRegistry.COMMENT,
-            PhelTypes.MULTILINE_COMMENT to PhelTextAttributesRegistry.COMMENT,
 
             // Literals
             PhelTypes.STRING to PhelTextAttributesRegistry.STRING,
@@ -52,9 +51,10 @@ class PhelSyntaxHighlighterTest {
             PhelTypes.QUOTE to PhelTextAttributesRegistry.QUOTE,
             PhelTypes.SYNTAX_QUOTE to PhelTextAttributesRegistry.SYNTAX_QUOTE,
             PhelTypes.TILDE to PhelTextAttributesRegistry.UNQUOTE,
-            PhelTypes.COMMA to PhelTextAttributesRegistry.UNQUOTE,
             PhelTypes.TILDE_AT to PhelTextAttributesRegistry.UNQUOTE_SPLICING,
-            PhelTypes.COMMA_AT to PhelTextAttributesRegistry.UNQUOTE_SPLICING,
+
+            // Tagged literals
+            PhelTypes.TAG to PhelTextAttributesRegistry.TAG,
 
             // Keywords
             PhelTypes.KEYWORD to PhelTextAttributesRegistry.KEYWORD,
@@ -203,13 +203,14 @@ class PhelSyntaxHighlighterTest {
 
         // Test all major language construct categories
         val languageConstructs = mapOf(
-            "Comments" to listOf(PhelTypes.LINE_COMMENT, PhelTypes.FORM_COMMENT, PhelTypes.MULTILINE_COMMENT),
+            "Comments" to listOf(PhelTypes.LINE_COMMENT, PhelTypes.FORM_COMMENT),
             "Literals" to listOf(PhelTypes.STRING, PhelTypes.NUMBER, PhelTypes.BOOL, PhelTypes.NIL, PhelTypes.CHAR),
             "Delimiters" to listOf(PhelTypes.PAREN1, PhelTypes.BRACKET1, PhelTypes.BRACE1),
             "Keywords" to listOf(PhelTypes.KEYWORD, PhelTypes.COLON),
             "Symbols" to listOf(PhelTypes.SYM),
             "Macros" to listOf(PhelTypes.QUOTE, PhelTypes.SYNTAX_QUOTE, PhelTypes.TILDE),
-            "Operators" to listOf(PhelTypes.DOT, PhelTypes.COMMA),
+            "Operators" to listOf(PhelTypes.DOT),
+            "Tagged literals" to listOf(PhelTypes.TAG),
             "Metadata" to listOf(PhelTypes.HAT)
         )
 
@@ -228,14 +229,12 @@ class PhelSyntaxHighlighterTest {
 
         // Test that related tokens use consistent attributes
         val relatedTokenGroups = mapOf(
-            "All comments" to listOf(PhelTypes.LINE_COMMENT, PhelTypes.FORM_COMMENT, PhelTypes.MULTILINE_COMMENT),
+            "All comments" to listOf(PhelTypes.LINE_COMMENT, PhelTypes.FORM_COMMENT),
             "All numbers" to listOf(PhelTypes.NUMBER, PhelTypes.HEXNUM, PhelTypes.BINNUM, PhelTypes.OCTNUM),
             "All keywords" to listOf(PhelTypes.KEYWORD, PhelTypes.KEYWORD_TOKEN, PhelTypes.COLON, PhelTypes.COLONCOLON),
             "Parentheses pair" to listOf(PhelTypes.PAREN1, PhelTypes.PAREN2),
             "Bracket pair" to listOf(PhelTypes.BRACKET1, PhelTypes.BRACKET2),
             "Brace pair" to listOf(PhelTypes.BRACE1, PhelTypes.BRACE2),
-            "Unquote variants" to listOf(PhelTypes.TILDE, PhelTypes.COMMA),
-            "Unquote splicing variants" to listOf(PhelTypes.TILDE_AT, PhelTypes.COMMA_AT),
             "Dot operators" to listOf(PhelTypes.DOT, PhelTypes.DOTDASH)
         )
 

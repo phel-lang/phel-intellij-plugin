@@ -59,12 +59,6 @@ public class PhelFormImpl extends PhelFormMixin implements PhelForm {
 
   @Override
   @Nullable
-  public PhelShortFn getShortFn() {
-    return findChildByClass(PhelShortFn.class);
-  }
-
-  @Override
-  @Nullable
   public PhelSymbol getSymbol() {
     return findChildByClass(PhelSymbol.class);
   }

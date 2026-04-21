@@ -14,7 +14,6 @@ interface PhelTokenSets {
         val CHAR: TokenSet = TokenSet.create(PhelTypes.CHAR)
         val COLON: TokenSet = TokenSet.create(PhelTypes.COLON)
         val COLONCOLON: TokenSet = TokenSet.create(PhelTypes.COLONCOLON)
-        val COMMA: TokenSet = TokenSet.create(PhelTypes.COMMA)
         val DOT: TokenSet = TokenSet.create(PhelTypes.DOT)
         val DOTDASH: TokenSet = TokenSet.create(PhelTypes.DOTDASH)
         val HAT: TokenSet = TokenSet.create(PhelTypes.HAT)

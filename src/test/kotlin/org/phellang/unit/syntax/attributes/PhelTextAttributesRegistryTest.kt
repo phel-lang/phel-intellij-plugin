@@ -27,7 +27,7 @@ class PhelTextAttributesRegistryTest {
             PhelTextAttributesRegistry.SYMBOL,
             PhelTextAttributesRegistry.METADATA,
             PhelTextAttributesRegistry.DOT_OPERATOR,
-            PhelTextAttributesRegistry.COMMA,
+            PhelTextAttributesRegistry.TAG,
             PhelTextAttributesRegistry.BAD_CHARACTER
         )
 
@@ -59,7 +59,7 @@ class PhelTextAttributesRegistryTest {
             PhelTextAttributesRegistry.SYMBOL to "PHEL_SYMBOL",
             PhelTextAttributesRegistry.METADATA to "PHEL_METADATA",
             PhelTextAttributesRegistry.DOT_OPERATOR to "PHEL_DOT",
-            PhelTextAttributesRegistry.COMMA to "PHEL_COMMA",
+            PhelTextAttributesRegistry.TAG to "PHEL_TAG",
             PhelTextAttributesRegistry.BAD_CHARACTER to "PHEL_BAD_CHARACTER"
         )
 

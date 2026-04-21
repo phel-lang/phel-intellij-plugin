@@ -15,7 +15,6 @@ class PhelTokenClassifierTest {
     fun `classifyToken should correctly classify comment tokens`() {
         assertEquals(TokenCategory.COMMENT, PhelTokenClassifier.classifyToken(PhelTypes.LINE_COMMENT))
         assertEquals(TokenCategory.COMMENT, PhelTokenClassifier.classifyToken(PhelTypes.FORM_COMMENT))
-        assertEquals(TokenCategory.COMMENT, PhelTokenClassifier.classifyToken(PhelTypes.MULTILINE_COMMENT))
     }
 
     @Test
@@ -69,7 +68,6 @@ class PhelTokenClassifierTest {
         // Parentheses
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.PAREN1))
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.PAREN2))
-        assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.FN_SHORT))
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.HASH_PAREN))
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.READER_COND))
         assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.READER_COND_SPLICE))
@@ -94,9 +92,12 @@ class PhelTokenClassifierTest {
     @Test
     fun `classifyToken should correctly classify unquote tokens`() {
         assertEquals(TokenCategory.UNQUOTE, PhelTokenClassifier.classifyToken(PhelTypes.TILDE))
-        assertEquals(TokenCategory.UNQUOTE, PhelTokenClassifier.classifyToken(PhelTypes.COMMA))
         assertEquals(TokenCategory.UNQUOTE_SPLICING, PhelTokenClassifier.classifyToken(PhelTypes.TILDE_AT))
-        assertEquals(TokenCategory.UNQUOTE_SPLICING, PhelTokenClassifier.classifyToken(PhelTypes.COMMA_AT))
+    }
+
+    @Test
+    fun `classifyToken should correctly classify tagged literal dispatch`() {
+        assertEquals(TokenCategory.TAG, PhelTokenClassifier.classifyToken(PhelTypes.TAG))
     }
 
     @Test
@@ -133,7 +134,6 @@ class PhelTokenClassifierTest {
         // Test comment classification
         assertTrue(PhelTokenClassifier.isComment(PhelTypes.LINE_COMMENT))
         assertTrue(PhelTokenClassifier.isComment(PhelTypes.FORM_COMMENT))
-        assertTrue(PhelTokenClassifier.isComment(PhelTypes.MULTILINE_COMMENT))
         assertFalse(PhelTokenClassifier.isComment(PhelTypes.STRING))
 
         // Test string classification
@@ -228,17 +228,14 @@ class PhelTokenClassifierTest {
     }
 
     @Test
-    fun `set and short function openers should have dedicated check methods`() {
+    fun `set opener has a dedicated check method`() {
         // Compound tokens have semantic check methods
         assertTrue(PhelTokenClassifier.isSetOpener(PhelTypes.HASH_BRACE), "isSetOpener should recognize #{")
-        assertTrue(PhelTokenClassifier.isShortFnOpener(PhelTypes.FN_SHORT), "isShortFnOpener should recognize |(")
 
-        // But they classify as their visual equivalents for styling
+        // But it classifies as its visual equivalent for styling
         assertEquals(TokenCategory.BRACES, PhelTokenClassifier.classifyToken(PhelTypes.HASH_BRACE))
-        assertEquals(TokenCategory.PARENTHESES, PhelTokenClassifier.classifyToken(PhelTypes.FN_SHORT))
 
-        // And they're NOT regular delimiters
+        // And it's NOT a regular brace
         assertFalse(PhelTokenClassifier.isBraces(PhelTypes.HASH_BRACE), "#{ is a set opener, not a regular brace")
-        assertFalse(PhelTokenClassifier.isParentheses(PhelTypes.FN_SHORT), "|( is a short fn opener, not a regular paren")
     }
 }

@@ -27,6 +27,7 @@ object PhelTokenAttributeMapper {
     private val KEYWORD_KEYS = arrayOf(PhelTextAttributesRegistry.KEYWORD)
     private val METADATA_KEYS = arrayOf(PhelTextAttributesRegistry.METADATA)
     private val DOT_KEYS = arrayOf(PhelTextAttributesRegistry.DOT_OPERATOR)
+    private val TAG_KEYS = arrayOf(PhelTextAttributesRegistry.TAG)
     private val BAD_CHARACTER_KEYS = arrayOf(PhelTextAttributesRegistry.BAD_CHARACTER)
 
     fun getTextAttributes(category: TokenCategory): Array<TextAttributesKey> {
@@ -50,6 +51,7 @@ object PhelTokenAttributeMapper {
             TokenCategory.KEYWORD -> KEYWORD_KEYS
             TokenCategory.METADATA -> METADATA_KEYS
             TokenCategory.DOT_OPERATOR -> DOT_KEYS
+            TokenCategory.TAG -> TAG_KEYS
             TokenCategory.SYMBOL -> SYMBOL_KEYS
             TokenCategory.BAD_CHARACTER -> BAD_CHARACTER_KEYS
             TokenCategory.UNKNOWN -> EMPTY_KEYS

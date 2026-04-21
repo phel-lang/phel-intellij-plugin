@@ -37,7 +37,7 @@ class PhelBraceMatchingTest {
     @Test
     fun `complete brace matching workflow should work end-to-end`() {
         val pairs = braceMatcher.pairs
-        Assertions.assertEquals(8, pairs.size)
+        Assertions.assertEquals(7, pairs.size)
 
         Assertions.assertTrue(braceMatcher.isPairedBracesAllowedBeforeType(PhelTypes.PAREN1, null))
         Assertions.assertFalse(braceMatcher.isPairedBracesAllowedBeforeType(PhelTypes.PAREN1, PhelTypes.PAREN2))

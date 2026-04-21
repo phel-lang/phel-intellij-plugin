@@ -80,8 +80,8 @@ object PhelTextAttributesRegistry {
         TextAttributesKey.createTextAttributesKey("PHEL_DOT", DefaultLanguageHighlighterColors.DOT)
 
     @JvmField
-    val COMMA: TextAttributesKey =
-        TextAttributesKey.createTextAttributesKey("PHEL_COMMA", DefaultLanguageHighlighterColors.COMMA)
+    val TAG: TextAttributesKey =
+        TextAttributesKey.createTextAttributesKey("PHEL_TAG", DefaultLanguageHighlighterColors.METADATA)
 
     @JvmField
     val BAD_CHARACTER: TextAttributesKey =

@@ -8,7 +8,7 @@ object PhelTokenClassifier {
 
     enum class TokenCategory {
         COMMENT, STRING, NUMBER, BOOLEAN, NIL, NAN, CHARACTER, PARENTHESES, BRACKETS, BRACES, QUOTE, SYNTAX_QUOTE,
-        UNQUOTE, UNQUOTE_SPLICING, KEYWORD, METADATA, DOT_OPERATOR, SYMBOL, BAD_CHARACTER, UNKNOWN, REGEX, DEREF
+        UNQUOTE, UNQUOTE_SPLICING, KEYWORD, METADATA, DOT_OPERATOR, SYMBOL, BAD_CHARACTER, UNKNOWN, REGEX, DEREF, TAG
     }
 
     fun classifyToken(tokenType: IElementType): TokenCategory {
@@ -25,12 +25,12 @@ object PhelTokenClassifier {
             isBrackets(tokenType) -> TokenCategory.BRACKETS
             isBraces(tokenType) -> TokenCategory.BRACES
             isSetOpener(tokenType) -> TokenCategory.BRACES
-            isShortFnOpener(tokenType) -> TokenCategory.PARENTHESES
             isQuote(tokenType) -> TokenCategory.QUOTE
             isSyntaxQuote(tokenType) -> TokenCategory.SYNTAX_QUOTE
             isDeref(tokenType) -> TokenCategory.DEREF
             isUnquote(tokenType) -> TokenCategory.UNQUOTE
             isUnquoteSplicing(tokenType) -> TokenCategory.UNQUOTE_SPLICING
+            isTag(tokenType) -> TokenCategory.TAG
             isKeyword(tokenType) -> TokenCategory.KEYWORD
             isMetadata(tokenType) -> TokenCategory.METADATA
             isDotOperator(tokenType) -> TokenCategory.DOT_OPERATOR
@@ -41,7 +41,7 @@ object PhelTokenClassifier {
     }
 
     fun isComment(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.LINE_COMMENT || tokenType == PhelTypes.FORM_COMMENT || tokenType == PhelTypes.MULTILINE_COMMENT
+        return tokenType == PhelTypes.LINE_COMMENT || tokenType == PhelTypes.FORM_COMMENT
     }
 
     fun isString(tokenType: IElementType): Boolean {
@@ -91,10 +91,6 @@ object PhelTokenClassifier {
         return tokenType == PhelTypes.HASH_BRACE
     }
 
-    fun isShortFnOpener(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.FN_SHORT
-    }
-
     fun isQuote(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.QUOTE || tokenType == PhelTypes.VAR_QUOTE
     }
@@ -108,11 +104,15 @@ object PhelTokenClassifier {
     }
 
     fun isUnquote(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.TILDE || tokenType == PhelTypes.COMMA
+        return tokenType == PhelTypes.TILDE
     }
 
     fun isUnquoteSplicing(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.TILDE_AT || tokenType == PhelTypes.COMMA_AT
+        return tokenType == PhelTypes.TILDE_AT
+    }
+
+    fun isTag(tokenType: IElementType): Boolean {
+        return tokenType == PhelTypes.TAG
     }
 
     fun isKeyword(tokenType: IElementType): Boolean {

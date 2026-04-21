@@ -43,7 +43,7 @@ class PhelColorSettingsProvider {
             // Basic symbols and operators
             AttributesDescriptor("Symbols", PhelTextAttributesRegistry.SYMBOL),
             AttributesDescriptor("Dot operator", PhelTextAttributesRegistry.DOT_OPERATOR),
-            AttributesDescriptor("Comma", PhelTextAttributesRegistry.COMMA),
+            AttributesDescriptor("Tagged literal dispatch", PhelTextAttributesRegistry.TAG),
             AttributesDescriptor("Bad characters", PhelTextAttributesRegistry.BAD_CHARACTER),
         )
     }

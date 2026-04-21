@@ -27,13 +27,12 @@ class PhelBraceMatcherTest {
     fun `getPairs should return all supported brace pairs`() {
         val pairs = braceMatcher.pairs
 
-        Assertions.assertEquals(8, pairs.size)
+        Assertions.assertEquals(7, pairs.size)
 
         val pairTypes = pairs.map { it.leftBraceType to it.rightBraceType }.toSet()
 
         Assertions.assertTrue(pairTypes.contains(PhelTypes.PAREN1 to PhelTypes.PAREN2))
         Assertions.assertTrue(pairTypes.contains(PhelTypes.HASH_PAREN to PhelTypes.PAREN2))
-        Assertions.assertTrue(pairTypes.contains(PhelTypes.FN_SHORT to PhelTypes.PAREN2))
         Assertions.assertTrue(pairTypes.contains(PhelTypes.READER_COND to PhelTypes.PAREN2))
         Assertions.assertTrue(pairTypes.contains(PhelTypes.READER_COND_SPLICE to PhelTypes.PAREN2))
         Assertions.assertTrue(pairTypes.contains(PhelTypes.BRACKET1 to PhelTypes.BRACKET2))

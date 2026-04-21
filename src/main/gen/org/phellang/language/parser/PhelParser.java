@@ -74,7 +74,7 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // form_prefix form_prefix * form_upper | form_inner | form_comment_macro | multiline_comment | line_comment
+  // form_prefix form_prefix * form_upper | form_inner | form_comment_macro | line_comment
   public static boolean form(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "form")) return false;
     boolean result_;
@@ -82,7 +82,6 @@ public class PhelParser implements PsiParser, LightPsiParser {
     result_ = form_0(builder_, level_ + 1);
     if (!result_) result_ = form_inner(builder_, level_ + 1);
     if (!result_) result_ = form_comment_macro(builder_, level_ + 1);
-    if (!result_) result_ = consumeToken(builder_, MULTILINE_COMMENT);
     if (!result_) result_ = consumeToken(builder_, LINE_COMMENT);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
@@ -372,7 +371,7 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // list | vec | map | set | short_fn | hash_fn | reader_conditional | reader_conditional_splice
+  // list | vec | map | set | hash_fn | reader_conditional | reader_conditional_splice
   static boolean p_forms(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "p_forms")) return false;
     boolean result_;
@@ -380,7 +379,6 @@ public class PhelParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = vec(builder_, level_ + 1);
     if (!result_) result_ = map(builder_, level_ + 1);
     if (!result_) result_ = set(builder_, level_ + 1);
-    if (!result_) result_ = short_fn(builder_, level_ + 1);
     if (!result_) result_ = hash_fn(builder_, level_ + 1);
     if (!result_) result_ = reader_conditional(builder_, level_ + 1);
     if (!result_) result_ = reader_conditional_splice(builder_, level_ + 1);
@@ -418,7 +416,7 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "'" | "~" | "~@" | "`" | "," | ",@" | "@" | "#'"
+  // "'" | "~" | "~@" | "`" | "@" | "#'" | tag
   public static boolean reader_macro(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "reader_macro")) return false;
     boolean result_;
@@ -427,10 +425,9 @@ public class PhelParser implements PsiParser, LightPsiParser {
     if (!result_) result_ = consumeToken(builder_, TILDE);
     if (!result_) result_ = consumeToken(builder_, TILDE_AT);
     if (!result_) result_ = consumeToken(builder_, SYNTAX_QUOTE);
-    if (!result_) result_ = consumeToken(builder_, COMMA);
-    if (!result_) result_ = consumeToken(builder_, COMMA_AT);
     if (!result_) result_ = consumeToken(builder_, DEREF);
     if (!result_) result_ = consumeToken(builder_, VAR_QUOTE);
+    if (!result_) result_ = consumeToken(builder_, TAG);
     exit_section_(builder_, level_, marker_, result_, false, null);
     return result_;
   }
@@ -518,20 +515,6 @@ public class PhelParser implements PsiParser, LightPsiParser {
     Marker marker_ = enter_section_(builder_, level_, _NOT_);
     result_ = !consumeToken(builder_, BRACE2);
     exit_section_(builder_, level_, marker_, result_, false, null);
-    return result_;
-  }
-
-  /* ********************************************************** */
-  // "|(" list_body ")"
-  public static boolean short_fn(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "short_fn")) return false;
-    if (!nextTokenIs(builder_, FN_SHORT)) return false;
-    boolean result_;
-    Marker marker_ = enter_section_(builder_);
-    result_ = consumeToken(builder_, FN_SHORT);
-    result_ = result_ && list_body(builder_, level_ + 1);
-    result_ = result_ && consumeToken(builder_, PAREN2);
-    exit_section_(builder_, marker_, SHORT_FN, result_);
     return result_;
   }
 

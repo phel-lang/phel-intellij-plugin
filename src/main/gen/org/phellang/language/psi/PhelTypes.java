@@ -24,7 +24,6 @@ public interface PhelTypes {
   IElementType READER_MACRO = new PhelElementType("READER_MACRO");
   IElementType REGEX_LITERAL = new PhelElementType("REGEX_LITERAL");
   IElementType SET = new PhelElementType("SET");
-  IElementType SHORT_FN = new PhelElementType("SHORT_FN");
   IElementType SYMBOL = new PhelElementType("SYMBOL");
   IElementType VEC = new PhelElementType("VEC");
 
@@ -37,12 +36,9 @@ public interface PhelTypes {
   IElementType CHAR = new PhelTokenType("char");
   IElementType COLON = new PhelTokenType(":");
   IElementType COLONCOLON = new PhelTokenType("::");
-  IElementType COMMA = new PhelTokenType(",");
-  IElementType COMMA_AT = new PhelTokenType(",@");
   IElementType DEREF = new PhelTokenType("@");
   IElementType DOT = new PhelTokenType(".");
   IElementType DOTDASH = new PhelTokenType(".-");
-  IElementType FN_SHORT = new PhelTokenType("|(");
   IElementType FORM_COMMENT = new PhelTokenType("#_");
   IElementType HASH_BRACE = new PhelTokenType("#{");
   IElementType HASH_PAREN = new PhelTokenType("#(");
@@ -50,7 +46,6 @@ public interface PhelTypes {
   IElementType HEXNUM = new PhelTokenType("hexnum");
   IElementType KEYWORD_TOKEN = new PhelTokenType("KEYWORD_TOKEN");
   IElementType LINE_COMMENT = new PhelTokenType("LINE_COMMENT");
-  IElementType MULTILINE_COMMENT = new PhelTokenType("MULTILINE_COMMENT");
   IElementType NAN = new PhelTokenType("NAN");
   IElementType NIL = new PhelTokenType("nil");
   IElementType NUMBER = new PhelTokenType("number");
@@ -67,6 +62,7 @@ public interface PhelTypes {
   IElementType SYM = new PhelTokenType("sym");
   IElementType SYMBOLIC_NUM = new PhelTokenType("SYMBOLIC_NUM");
   IElementType SYNTAX_QUOTE = new PhelTokenType("`");
+  IElementType TAG = new PhelTokenType("TAG");
   IElementType TILDE = new PhelTokenType("~");
   IElementType TILDE_AT = new PhelTokenType("~@");
   IElementType VAR_QUOTE = new PhelTokenType("#'");
@@ -115,9 +111,6 @@ public interface PhelTypes {
       }
       else if (type == SET) {
         return new PhelSetImpl(node);
-      }
-      else if (type == SHORT_FN) {
-        return new PhelShortFnImpl(node);
       }
       else if (type == SYMBOL) {
         return new PhelSymbolImpl(node);

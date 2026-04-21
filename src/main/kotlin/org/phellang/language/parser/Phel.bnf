@@ -11,9 +11,8 @@
   tokenTypeClass="org.phellang.language.psi.elements.PhelTokenType"
 
   tokens=[
-    whitespace='regexp:\s+'
+    whitespace='regexp:[\s,]+'
     line_comment='LINE_COMMENT'
-    multiline_comment='MULTILINE_COMMENT'
     string='regexp:"([^"]|\\")*"'
     number='regexp:[+-]?[0-9]+(\.[0-9]*)?([eE][+-]?[0-9]+)?[NM]?'
     hexnum='regexp:[+-]?0x[\da-fA-F_]+N?'
@@ -37,8 +36,6 @@
     brace2='}'
     colon=':'
     coloncolon='::'
-    comma=','
-    comma_at=',@'
     quote="'"
     syntax_quote="`"
 
@@ -48,11 +45,11 @@
     deref="@"
     form_comment="#_"
     hash_brace="#{"
-    fn_short="|("
     hash_paren="#("
     reader_cond="#?("
     reader_cond_splice="#?@("
     var_quote="#'"
+    tag='TAG'
 
     dot='.'
     dotdash='.-'
@@ -79,13 +76,13 @@
 root ::= form *
 private not_eof ::= !<<eof>>
 
-form ::= form_prefix form_prefix * form_upper | form_inner | form_comment_macro | multiline_comment | line_comment
+form ::= form_prefix form_prefix * form_upper | form_inner | form_comment_macro | line_comment
   {pin(".*")=1 methods=[form="" metas="metadata" readerMacros="reader_macro"] mixin="org.phellang.language.psi.mixins.PhelFormMixin"}
 private form_prefix ::= metadata | reader_macro
 
 upper form_upper ::= form_inner {elementType=form name=form}
 private form_inner ::= p_forms | s_forms
-private p_forms ::= list | vec | map | set | short_fn | hash_fn | reader_conditional | reader_conditional_splice
+private p_forms ::= list | vec | map | set | hash_fn | reader_conditional | reader_conditional_splice
 private s_forms ::= symbol access_left? | keyword | literal | access
 
 fake p_form ::= form * {methods=[forms="form"]}
@@ -111,11 +108,10 @@ left access_left ::= ! '.'
 
 metadata ::= "^" (string | symbol | keyword | map)
   {mixin="org.phellang.language.psi.mixins.PhelMetadataMixin"}
-reader_macro ::= "'" | "~" | "~@" | "`" | "," | ",@" | "@" | "#'"
+reader_macro ::= "'" | "~" | "~@" | "`" | "@" | "#'" | tag
   {mixin="org.phellang.language.psi.mixins.PhelReaderMacroMixin"}
 
 form_comment_macro ::= "#_" form
-short_fn ::= "|(" list_body ")"
 hash_fn ::= "#(" list_body ")"
 reader_conditional ::= "#?(" list_body ")"
 reader_conditional_splice ::= "#?@(" list_body ")"

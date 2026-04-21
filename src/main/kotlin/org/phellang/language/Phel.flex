@@ -16,13 +16,10 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 %type IElementType
 %unicode
 
-%state MULTILINE_COMMENT
 %state REGEX_LITERAL
 
-WHITE_SPACE=\s+
+WHITE_SPACE=[\s,]+
 LINE_COMMENT=;.*
-// Deprecated: # line comments — exclude dispatch chars so #( #? #" #' ## #{ #_ #| are not treated as comments
-HASH_LINE_COMMENT=#([^_(|{?\"'#\r\n].*)?
 STR_CHAR=[^\\\"]|\\.|\\\"
 STRING=\" {STR_CHAR}* \"
 NUMBER=[+-]? [0-9]+ (\.[0-9]*)? ([eE][+-]?[0-9]+)? [NM]?
@@ -33,7 +30,7 @@ RADIXNUM=[0-9]{1,2}r[0-9a-zA-Z]+
 CHARACTER=\\([btrnf]|u[0-9a-fA-F]{4}|o[0-7]{3}|backspace|tab|newline|formfeed|return|space|.)
 BAD_LITERAL=\" ([^\\\"]|\\.|\\\")*
 
-// Atoms: first char excludes reader macro chars (' # @ ; ~ ^ `)
+// Atoms: first char excludes reader macro chars (' # @ ; ~ ^ `) and whitespace (comma is whitespace now)
 // Subsequent chars allow ' and # (for auto-gensym name# and symbol names with ')
 ATOM_START=[^\(\)\[\]\{\}',`@;\~\^ \n\r\t\#]
 ATOM_CONT=[^\(\)\[\]\{\},`@;\~\^ \n\r\t]
@@ -41,11 +38,16 @@ ATOM={ATOM_START}{ATOM_CONT}*
 
 KEYWORD_TAIL={ATOM} ("/" {ATOM})? (":" {ATOM}+)?
 
+// Tagged literal dispatch: #inst, #uuid, #regex, #php, #cpp, etc.
+// Must start with a letter so #_ still matches the form-comment rule via first-match-wins.
+TAG_NAME=[a-zA-Z] [a-zA-Z0-9_\-]*
+TAG="#" {TAG_NAME}
+
 %%
 <YYINITIAL> {
   {WHITE_SPACE}          { return WHITE_SPACE; }
 
-  // New dispatch forms (v0.31+) — must come before deprecated # comment
+  // Dispatch forms: order matters — specific tokens must come before the generic TAG rule
   "#?@("                 { return PhelTypes.READER_COND_SPLICE; }
   "#?("                  { return PhelTypes.READER_COND; }
   "#("                   { return PhelTypes.HASH_PAREN; }
@@ -55,23 +57,14 @@ KEYWORD_TAIL={ATOM} ("/" {ATOM})? (":" {ATOM}+)?
   "##NaN"                { return PhelTypes.SYMBOLIC_NUM; }
   "##" [^\r\n]*          { return BAD_CHARACTER; } // Malformed symbolic number (not ##Inf, ##-Inf, ##NaN)
   "#\""                  { yybegin(REGEX_LITERAL); return PhelTypes.REGEX_START; }
-
-  // Existing dispatch forms
   "#_"                   { return PhelTypes.FORM_COMMENT; }
   "#{"                   { return PhelTypes.HASH_BRACE; }
-
-  // Deprecated dispatch forms (kept for backward compatibility)
-  "|("                   { return PhelTypes.FN_SHORT; }
-  "|"                    { return PhelTypes.SYM; }
-  "#|"                   { yybegin(MULTILINE_COMMENT); return PhelTypes.MULTILINE_COMMENT; }
-  {HASH_LINE_COMMENT}    { return PhelTypes.LINE_COMMENT; }
+  {TAG}                  { return PhelTypes.TAG; }
 
   // Reader macros
   "^"                    { return PhelTypes.HAT; }
-  ",@"                   { return PhelTypes.COMMA_AT; }
   "~@"                   { return PhelTypes.TILDE_AT; }
   "@"                    { return PhelTypes.DEREF; }
-  ","                    { return PhelTypes.COMMA; }
   "~"                    { return PhelTypes.TILDE; }
   "'"                    { return PhelTypes.QUOTE; }
   "`"                    { return PhelTypes.SYNTAX_QUOTE; }
@@ -113,11 +106,6 @@ KEYWORD_TAIL={ATOM} ("/" {ATOM})? (":" {ATOM}+)?
 
   // Symbols (catch-all)
   {ATOM}                 { return PhelTypes.SYM; }
-}
-
-<MULTILINE_COMMENT> {
-  "|#"                   { yybegin(YYINITIAL); return PhelTypes.MULTILINE_COMMENT; }
-  [^]                    { return PhelTypes.MULTILINE_COMMENT; }
 }
 
 <REGEX_LITERAL> {

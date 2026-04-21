@@ -1,5 +1,6 @@
 package org.phellang.unit.language
 
+import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -86,10 +87,12 @@ class PhelLexerTest {
     }
 
     @Test
-    fun `comma-at should still tokenize as COMMA_AT not DEREF`() {
+    fun `comma is treated as whitespace not unquote-splicing`() {
         val tokens = tokenize(",@forms")
-        assertEquals(PhelTypes.COMMA_AT, tokens[0].first)
-        assertEquals(",@", tokens[0].second)
+        // Comma is whitespace in Phel; ,@ tokenizes as WHITE_SPACE then DEREF then symbol
+        assertEquals(TokenType.WHITE_SPACE, tokens[0].first)
+        assertEquals(PhelTypes.DEREF, tokens[1].first)
+        assertEquals("@", tokens[1].second)
     }
 
     // --- Var quote ---
@@ -211,32 +214,45 @@ class PhelLexerTest {
         assertEquals("foo", tokens[1].second)
     }
 
-    // --- Deprecated syntax still lexes correctly ---
+    // --- Removed deprecated syntax (v0.32+): | short-fn, # line comments, , unquote, #| |# multiline comments ---
 
     @Test
-    fun `deprecated pipe-paren short fn still tokenizes`() {
-        val tokens = tokenize("|(+ $1 $2)")
-        assertEquals(PhelTypes.FN_SHORT, tokens[0].first)
-        assertEquals("|(", tokens[0].second)
+    fun `pipe character is now a plain symbol not a short-fn opener`() {
+        val tokens = tokenize("|(foo)")
+        // | is now part of a symbol; (foo) remains a list
+        assertEquals(PhelTypes.SYM, tokens[0].first)
     }
 
     @Test
-    fun `deprecated hash line comment still tokenizes`() {
-        val tokens = tokenize("# this is a comment")
-        assertEquals(PhelTypes.LINE_COMMENT, tokens[0].first)
-    }
-
-    @Test
-    fun `deprecated comma unquote still tokenizes`() {
+    fun `comma is now treated as whitespace not an unquote reader macro`() {
         val tokens = tokenize(",x")
-        assertEquals(PhelTypes.COMMA, tokens[0].first)
-        assertEquals(",", tokens[0].second)
+        // Comma is whitespace; [0] is WHITE_SPACE, [1] is the symbol x
+        assertEquals(TokenType.WHITE_SPACE, tokens[0].first)
+        assertEquals(PhelTypes.SYM, tokens[1].first)
+        assertEquals("x", tokens[1].second)
+    }
+
+    // --- Tagged literal dispatch (v0.32+): #inst, #uuid, #regex, #php, generic #<name> ---
+
+    @Test
+    fun `hash-inst tokenizes as TAG`() {
+        val tokens = tokenize("#inst \"2020-01-01\"")
+        assertEquals(PhelTypes.TAG, tokens[0].first)
+        assertEquals("#inst", tokens[0].second)
     }
 
     @Test
-    fun `deprecated multiline comment still tokenizes`() {
-        val tokens = tokenize("#| comment |#")
-        tokens.forEach { assertEquals(PhelTypes.MULTILINE_COMMENT, it.first) }
+    fun `hash-uuid tokenizes as TAG`() {
+        val tokens = tokenize("#uuid \"abc\"")
+        assertEquals(PhelTypes.TAG, tokens[0].first)
+        assertEquals("#uuid", tokens[0].second)
+    }
+
+    @Test
+    fun `hash-php tokenizes as TAG`() {
+        val tokens = tokenize("#php [1 2 3]")
+        assertEquals(PhelTypes.TAG, tokens[0].first)
+        assertEquals("#php", tokens[0].second)
     }
 
     // --- Existing syntax preserved ---
