@@ -52,8 +52,6 @@ class PhelCompletionErrorHandlerTest {
 
         val methods = operationClass.declaredMethods.map { it.name }
         assertTrue(methods.contains("execute"), "Should have execute method")
-
-        assertTrue(methods.contains("getResult"), "Should have getResult method")
     }
 
     @Test

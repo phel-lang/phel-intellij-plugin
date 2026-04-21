@@ -1,4 +1,4 @@
-package org.phellang.core.psi
+package org.phellang.language.psi.utils
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
@@ -26,7 +26,7 @@ object PhelPsiUtils {
 
     @JvmStatic
     fun getName(symbol: PhelSymbol): String? {
-        return PhelErrorHandler.safeOperation({
+        return PhelErrorHandler.safeOperation {
             val text = symbol.text ?: return@safeOperation null
 
             val slashIndex = text.lastIndexOf('/')
@@ -35,26 +35,22 @@ object PhelPsiUtils {
             } else {
                 text
             }
-        })
+        }
     }
 
     @JvmStatic
     fun getQualifier(symbol: PhelSymbol): String? {
-        return PhelErrorHandler.safeOperation({
+        return PhelErrorHandler.safeOperation {
             val text = symbol.text ?: return@safeOperation null
 
             val slashIndex = text.lastIndexOf('/')
-            if (slashIndex > 0) {
-                text.take(slashIndex)
-            } else {
-                null
-            }
-        })
+            if (slashIndex > 0) text.take(slashIndex) else null
+        }
     }
 
     @JvmStatic
     fun getNameTextOffset(symbol: PhelSymbol): Int {
-        return PhelErrorHandler.safeOperation({
+        return PhelErrorHandler.safeOperation {
             val text = symbol.text ?: return@safeOperation symbol.textRange.startOffset
 
             val slashIndex = text.lastIndexOf('/')
@@ -63,7 +59,7 @@ object PhelPsiUtils {
             } else {
                 symbol.textRange.startOffset
             }
-        }) ?: 0
+        } ?: 0
     }
 
     /** The first symbol inside the enclosing list — e.g. `defn` for `(defn foo [])`. */

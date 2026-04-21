@@ -75,7 +75,7 @@ object PhelProjectCompletionHelper {
         val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
 
         for (requireForm in requireForms) {
-            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
+            val forms = requireForm.forms
 
             // Skip the :require keyword (first form)
             var i = 1

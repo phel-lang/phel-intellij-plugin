@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.psi.PhelPsiUtils
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.lexer.PhelLexerAdapter
 import org.phellang.language.psi.PhelList

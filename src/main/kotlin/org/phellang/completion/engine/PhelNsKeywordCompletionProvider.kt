@@ -119,10 +119,8 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
         }
 
         private fun findPrecedingKeyword(list: PhelList, element: PsiElement): String? {
-            val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java) ?: return null
-
             var previousKeyword: String? = null
-            for (form in forms) {
+            for (form in list.forms) {
                 if (PsiTreeUtil.isAncestor(form, element, false)) {
                     return previousKeyword
                 }
@@ -137,10 +135,9 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
         }
 
         private fun collectExistingKeywords(list: PhelList, element: PsiElement): Set<String> {
-            val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java) ?: return emptySet()
             val keywords = mutableSetOf<String>()
 
-            for (form in forms) {
+            for (form in list.forms) {
                 // Skip the element being completed
                 if (PsiTreeUtil.isAncestor(form, element, false)) continue
 
@@ -159,16 +156,12 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
         }
 
         private fun isElementAtFirstFormPosition(list: PhelList, element: PsiElement): Boolean {
-            val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-            if (forms.isNullOrEmpty()) return true
-            return PsiTreeUtil.isAncestor(forms[0], element, false)
+            val firstForm = list.forms.firstOrNull() ?: return true
+            return PsiTreeUtil.isAncestor(firstForm, element, false)
         }
 
         private fun getFirstFormText(list: PhelList, completionElement: PsiElement): String? {
-            val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-            if (forms.isNullOrEmpty()) return null
-
-            val firstForm = forms[0]
+            val firstForm = list.forms.firstOrNull() ?: return null
 
             // If the first form contains the completion element, it's being typed — no established first form
             if (PsiTreeUtil.isAncestor(firstForm, completionElement, false)) {

@@ -28,8 +28,7 @@ object PhelReferUtils {
         // Find the containing require form
         val requireForm = PsiTreeUtil.getParentOfType(containingVec, PhelList::class.java) ?: return null
 
-        // Get forms in the require statement
-        val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: return null
+        val forms = requireForm.forms
         if (forms.isEmpty()) return null
 
         // First form should be :require keyword

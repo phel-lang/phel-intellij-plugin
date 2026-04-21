@@ -2,7 +2,7 @@ package org.phellang.annotator.validators
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.psi.PhelPsiUtils
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
@@ -116,9 +116,7 @@ object PhelNamespaceValidator {
         // Check direct imports
         val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
         for (requireForm in requireForms) {
-            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
-
-            for (form in forms) {
+            for (form in requireForm.forms) {
                 val namespaceSymbol = if (form is PhelSymbol) form
                 else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
 
@@ -142,9 +140,7 @@ object PhelNamespaceValidator {
         val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
 
         for (requireForm in requireForms) {
-            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
-
-            for (form in forms) {
+            for (form in requireForm.forms) {
                 val namespaceSymbol = if (form is PhelSymbol) form
                 else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
 

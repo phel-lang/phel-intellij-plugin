@@ -2,7 +2,7 @@ package org.phellang.documentation.providers
 
 import com.intellij.psi.PsiElement
 import org.phellang.completion.data.PhelFunctionRegistry
-import org.phellang.core.psi.PhelPsiUtils
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelQuickNavigateInfoProvider {
 

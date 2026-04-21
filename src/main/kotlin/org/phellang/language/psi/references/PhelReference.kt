@@ -6,9 +6,8 @@ import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
-import org.phellang.completion.indexing.PhelProjectSymbolScanner
 import org.phellang.completion.infrastructure.PhelCompletionPriority
-import org.phellang.core.psi.PhelPsiUtils
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.PhelForm
@@ -171,7 +170,7 @@ class PhelReference @JvmOverloads constructor(
         for (virtualFile in phelFiles) {
             val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
 
-            val fileNamespace = PhelProjectSymbolScanner.extractNamespace(psiFile) ?: continue
+            val fileNamespace = PhelNamespaceUtils.extractNamespaceFromFile(psiFile) ?: continue
             val fileShortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fileNamespace)
 
             // Match by full namespace (if resolved from imports) OR by short namespace name
@@ -239,9 +238,9 @@ class PhelReference @JvmOverloads constructor(
         }
 
         for (requireForm in requireForms) {
-            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
+            val forms = requireForm.forms
 
-            var i = 1 // Skip the :require keyword
+            var i = 1
             while (i < forms.size) {
                 val form = forms[i]
                 val namespaceSymbol = if (form is PhelSymbol) form
@@ -542,10 +541,8 @@ class PhelReference @JvmOverloads constructor(
     }
 
     private fun findInLetBindings(letForm: PhelList): PsiElement? {
-        val forms = PsiTreeUtil.getChildrenOfType(letForm, PhelForm::class.java)
-        if (forms == null || forms.size < 2) {
-            return null
-        }
+        val forms = letForm.forms
+        if (forms.size < 2) return null
 
         // Check if this is a binding form (let, for, binding, loop, foreach, dofor)
         val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: return null
@@ -566,7 +563,7 @@ class PhelReference @JvmOverloads constructor(
             return null
         }
 
-        val bindings = PsiTreeUtil.getChildrenOfType(bindingsVec, PhelForm::class.java) ?: return null
+        val bindings = bindingsVec.forms
 
         // Bindings are pairs: [symbol1 value1 symbol2 value2 ...]
         var i = 0
@@ -594,9 +591,8 @@ class PhelReference @JvmOverloads constructor(
             // Find the next parent PhelList
             val fnForm = PsiTreeUtil.getParentOfType(current, PhelList::class.java) ?: break
 
-            val forms = PsiTreeUtil.getChildrenOfType(fnForm, PhelForm::class.java)
-            if (forms != null && forms.size >= 2) {
-                // Check if this is a function definition
+            val forms = fnForm.forms
+            if (forms.size >= 2) {
                 val fnKeyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
 
                 if (fnKeyword != null) {
@@ -604,13 +600,10 @@ class PhelReference @JvmOverloads constructor(
                     val paramVec = findParameterVectorInForms(forms, keyword)
 
                     if (paramVec != null) {
-                        val params = PsiTreeUtil.getChildrenOfType(paramVec, PhelForm::class.java)
-                        if (params != null) {
-                            for (param in params) {
-                                val paramSymbol = PsiTreeUtil.findChildOfType(param, PhelSymbol::class.java)
-                                if (paramSymbol != null && symbolName == paramSymbol.text) {
-                                    return paramSymbol
-                                }
+                        for (param in paramVec.forms) {
+                            val paramSymbol = PsiTreeUtil.findChildOfType(param, PhelSymbol::class.java)
+                            if (paramSymbol != null && symbolName == paramSymbol.text) {
+                                return paramSymbol
                             }
                         }
                     }
@@ -635,19 +628,14 @@ class PhelReference @JvmOverloads constructor(
         if (file != null) {
             val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
             for (list in lists) {
-                val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-                if (forms == null || forms.size < 2) continue
+                val forms = list.forms
+                if (forms.size < 2) continue
 
-                // Check if this is a function definition
                 val fnKeyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: continue
-
                 val keyword = fnKeyword.text
-
                 val paramVec = findParameterVectorInForms(forms, keyword) ?: continue
 
-                val params = PsiTreeUtil.getChildrenOfType(paramVec, PhelForm::class.java) ?: continue
-
-                for (param in params) {
+                for (param in paramVec.forms) {
                     val paramSymbol = PsiTreeUtil.findChildOfType(param, PhelSymbol::class.java)
                     if (paramSymbol != null && symbolName == paramSymbol.text) {
                         results.add(paramSymbol)
@@ -663,11 +651,8 @@ class PhelReference @JvmOverloads constructor(
      * Find definition in a list form: (def name value), (defn name [...] ...), etc.
      */
     private fun findDefinitionInList(list: PhelList): PsiElement? {
-        val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-
-        if (forms == null || forms.size < 2) {
-            return null
-        }
+        val forms = list.forms
+        if (forms.size < 2) return null
 
         // Check if this is a defining form
         val defKeyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
@@ -726,7 +711,7 @@ class PhelReference @JvmOverloads constructor(
         }
     }
 
-    private fun findParameterVectorInForms(forms: Array<PhelForm>, keyword: String): PhelVec? {
+    private fun findParameterVectorInForms(forms: List<PhelForm>, keyword: String): PhelVec? {
         return when (keyword) {
             "fn" -> {
                 // For (fn [params] ...), parameter vector is at index 1

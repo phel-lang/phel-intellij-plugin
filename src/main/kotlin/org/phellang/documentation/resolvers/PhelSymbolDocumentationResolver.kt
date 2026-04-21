@@ -5,8 +5,8 @@ import org.phellang.completion.data.PhelProjectSymbol
 import org.phellang.completion.documentation.PhelApiDocumentation
 import org.phellang.completion.documentation.PhelBasicDocumentation
 import org.phellang.completion.indexing.PhelProjectSymbolIndex
-import org.phellang.core.psi.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelReferUtils
 import org.phellang.language.psi.PhelSymbol

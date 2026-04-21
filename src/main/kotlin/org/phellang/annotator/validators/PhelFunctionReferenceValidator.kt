@@ -2,7 +2,7 @@ package org.phellang.annotator.validators
 
 import org.phellang.completion.documentation.PhelApiDocumentation
 import org.phellang.completion.indexing.PhelProjectSymbolIndex
-import org.phellang.core.psi.PhelPsiUtils
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol

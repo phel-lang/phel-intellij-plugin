@@ -2,7 +2,7 @@ package org.phellang.language.psi.navigation
 
 import com.intellij.navigation.ItemPresentation
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.psi.PhelPsiUtils
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol

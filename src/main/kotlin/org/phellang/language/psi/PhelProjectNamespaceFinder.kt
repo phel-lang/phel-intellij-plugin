@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
-import org.phellang.completion.indexing.PhelProjectSymbolScanner
 import org.phellang.language.psi.files.PhelFile
 
 object PhelProjectNamespaceFinder {
@@ -62,7 +61,7 @@ object PhelProjectNamespaceFinder {
 
         for (virtualFile in phelFiles) {
             val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
-            val fileNamespace = PhelProjectSymbolScanner.extractNamespace(psiFile) ?: continue
+            val fileNamespace = PhelNamespaceUtils.extractNamespaceFromFile(psiFile) ?: continue
             namespaces.add(fileNamespace)
         }
 

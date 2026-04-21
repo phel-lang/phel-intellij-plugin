@@ -2,7 +2,7 @@ package org.phellang.documentation
 
 import com.intellij.lang.documentation.AbstractDocumentationProvider
 import com.intellij.psi.PsiElement
-import org.phellang.core.psi.PhelPsiUtils
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.documentation.providers.PhelQuickNavigateInfoProvider
 import org.phellang.documentation.resolvers.PhelSymbolDocumentationResolver
 

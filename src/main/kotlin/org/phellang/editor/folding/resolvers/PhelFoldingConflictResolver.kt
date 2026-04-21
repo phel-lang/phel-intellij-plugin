@@ -64,11 +64,8 @@ object PhelFoldingConflictResolver {
 
     private fun isBindingConstruct(list: PhelList): Boolean {
         val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-        if (forms?.isNotEmpty() == true) {
-            val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
-            val firstSymbolText = firstSymbol?.text
-            return firstSymbolText in BINDING_FORMS
-        }
-        return false
+        if (forms == null || forms.isEmpty()) return false
+        val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
+        return firstSymbol?.text in BINDING_FORMS
     }
 }

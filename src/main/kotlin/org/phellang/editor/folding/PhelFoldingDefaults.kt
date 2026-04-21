@@ -30,11 +30,8 @@ object PhelFoldingDefaults {
 
     private fun isNamespaceDeclaration(list: PhelList): Boolean {
         val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java) ?: return false
-        if (forms.isNotEmpty()) {
-            val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
-            val firstSymbolText = firstSymbol?.text
-            return firstSymbolText == "ns"
-        }
-        return false
+        if (forms.isEmpty()) return false
+        val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
+        return firstSymbol?.text == "ns"
     }
 }

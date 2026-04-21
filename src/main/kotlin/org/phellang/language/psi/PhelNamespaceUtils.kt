@@ -9,12 +9,9 @@ object PhelNamespaceUtils {
         // (ns my-ns (:require ...) (:use ...))
         val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
         return lists.firstOrNull { list ->
-            // Get child forms properly, skipping whitespace and parentheses
-            val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-            if (forms.isNullOrEmpty()) return@firstOrNull false
+            val forms = list.forms
+            if (forms.isEmpty()) return@firstOrNull false
 
-            // First form should be "ns" symbol
-            // It could be the symbol itself OR contain a symbol (if wrapped)
             val firstForm = forms[0]
             val firstSymbol = if (firstForm is PhelSymbol) firstForm
             else PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
@@ -33,12 +30,9 @@ object PhelNamespaceUtils {
 
     fun findRequireForms(nsDeclaration: PhelList): List<PhelList> {
         return PsiTreeUtil.findChildrenOfType(nsDeclaration, PhelList::class.java).filter { list ->
-            // Get child forms properly, skipping whitespace and parentheses
-            val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-            if (forms.isNullOrEmpty()) return@filter false
+            val forms = list.forms
+            if (forms.isEmpty()) return@filter false
 
-            // First form should be the :require keyword
-            // It could be the keyword itself OR contain a keyword (if wrapped)
             val firstForm = forms[0]
             val firstKeyword = firstForm as? PhelKeyword
                 ?: PsiTreeUtil.findChildOfType(firstForm, PhelKeyword::class.java)
@@ -53,10 +47,8 @@ object PhelNamespaceUtils {
         val requireForms = findRequireForms(nsDeclaration)
 
         for (requireForm in requireForms) {
-            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
+            val forms = requireForm.forms
 
-            // Skip the :require keyword (first form)
-            // Look for pattern: namespace :as alias
             var i = 1
             while (i < forms.size) {
                 val form = forms[i]
@@ -111,16 +103,11 @@ object PhelNamespaceUtils {
     }
 
     fun extractNamespaceFromDeclaration(nsDeclaration: PhelList): String? {
-        val forms = PsiTreeUtil.getChildrenOfType(nsDeclaration, PhelForm::class.java) ?: return null
+        val forms = nsDeclaration.forms
         if (forms.size < 2) return null
 
-        // Second form should be the namespace name
-        val namespaceSymbol = if (forms[1] is PhelSymbol) {
-            forms[1] as PhelSymbol
-        } else {
-            PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
-        }
-
+        val namespaceSymbol = forms[1] as? PhelSymbol
+            ?: PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
         return namespaceSymbol?.text
     }
 
@@ -172,10 +159,8 @@ object PhelNamespaceUtils {
         val requireForms = findRequireForms(nsDeclaration)
 
         for (requireForm in requireForms) {
-            val forms = PsiTreeUtil.getChildrenOfType(requireForm, PhelForm::class.java) ?: continue
+            val forms = requireForm.forms
 
-            // Skip the :require keyword (first form)
-            // Look for pattern: namespace ... :refer [symbols]
             var i = 1
             while (i < forms.size) {
                 val form = forms[i]

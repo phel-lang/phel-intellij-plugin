@@ -4,7 +4,7 @@ import com.intellij.openapi.util.TextRange
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
-import org.phellang.core.psi.PhelPsiUtils
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.*
 
 class PhelPsiUtilsTest {
