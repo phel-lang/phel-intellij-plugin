@@ -47,7 +47,6 @@ enum class Namespace {
             "json" to JSON,
             "mock" to MOCK,
             "repl" to REPL,
-            "str" to STRING,
             "string" to STRING,
             "test" to TEST,
         )

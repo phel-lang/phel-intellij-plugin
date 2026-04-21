@@ -12,7 +12,7 @@ object PhelVendorUtils {
 
     private val NAMESPACE_TO_FILE = mapOf(
         "core" to "core.phel",
-        "str" to "str.phel",
+        "string" to "string.phel",
         "json" to "json.phel",
         "http" to "http.phel",
         "html" to "html.phel",

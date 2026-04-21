@@ -33,7 +33,6 @@ object NamespaceConfig {
         "schema\\instrument" to NamespaceInfo("registerSchemaInstrumentFunctions", "registerSchemaInstrumentFunctions.kt", "schema"),
         "schema\\registry" to NamespaceInfo("registerSchemaRegistryFunctions", "registerSchemaRegistryFunctions.kt", "schema"),
         "schema\\validator" to NamespaceInfo("registerSchemaValidatorFunctions", "registerSchemaValidatorFunctions.kt", "schema"),
-        "str" to NamespaceInfo("registerStringFunctions", "registerStringFunctions.kt"),
         "string" to NamespaceInfo("registerStringFunctions", "registerStringFunctions.kt"),
         "test" to NamespaceInfo("registerTestFunctions", "registerTestFunctions.kt", "test"),
         "test\\gen" to NamespaceInfo("registerTestGenFunctions", "registerTestGenFunctions.kt", "test"),

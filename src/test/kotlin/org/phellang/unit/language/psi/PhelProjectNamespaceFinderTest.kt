@@ -40,7 +40,7 @@ class PhelProjectNamespaceFinderTest {
 
         @Test
         fun `recognizes standard library namespaces`() {
-            assertTrue(PhelProjectNamespaceFinder.isStandardLibrary("phel\\str"))
+            assertTrue(PhelProjectNamespaceFinder.isStandardLibrary("phel\\string"))
             assertTrue(PhelProjectNamespaceFinder.isStandardLibrary("phel\\json"))
             assertTrue(PhelProjectNamespaceFinder.isStandardLibrary("phel\\core"))
             assertTrue(PhelProjectNamespaceFinder.isStandardLibrary("phel\\http"))
@@ -51,7 +51,7 @@ class PhelProjectNamespaceFinderTest {
         fun `rejects non-standard namespaces`() {
             assertFalse(PhelProjectNamespaceFinder.isStandardLibrary("phel-project\\utils"))
             assertFalse(PhelProjectNamespaceFinder.isStandardLibrary("my-app\\core"))
-            assertFalse(PhelProjectNamespaceFinder.isStandardLibrary("str"))
+            assertFalse(PhelProjectNamespaceFinder.isStandardLibrary("string"))
         }
     }
 
@@ -61,7 +61,7 @@ class PhelProjectNamespaceFinderTest {
         @Test
         fun `all expected standard library namespaces are defined`() {
             val expected = setOf(
-                "phel\\str",
+                "phel\\string",
                 "phel\\json",
                 "phel\\http",
                 "phel\\html",
@@ -78,22 +78,22 @@ class PhelProjectNamespaceFinderTest {
         @Test
         fun `short to full mapping contains all namespaces`() {
             val shortToFull = PhelProjectNamespaceFinder.STANDARD_LIBRARY_SHORT_TO_FULL
-            
-            assertEquals("phel\\str", shortToFull["str"])
+
+            assertEquals("phel\\string", shortToFull["string"])
             assertEquals("phel\\json", shortToFull["json"])
             assertEquals("phel\\core", shortToFull["core"])
         }
 
         @Test
         fun `getStandardLibraryFullNamespace returns correct namespace`() {
-            assertEquals("phel\\str", PhelProjectNamespaceFinder.getStandardLibraryFullNamespace("str"))
+            assertEquals("phel\\string", PhelProjectNamespaceFinder.getStandardLibraryFullNamespace("string"))
             assertEquals("phel\\json", PhelProjectNamespaceFinder.getStandardLibraryFullNamespace("json"))
             assertEquals("phel\\core", PhelProjectNamespaceFinder.getStandardLibraryFullNamespace("core"))
         }
 
         @Test
         fun `getStandardLibraryFullNamespace is case insensitive`() {
-            assertEquals("phel\\str", PhelProjectNamespaceFinder.getStandardLibraryFullNamespace("STR"))
+            assertEquals("phel\\string", PhelProjectNamespaceFinder.getStandardLibraryFullNamespace("STRING"))
             assertEquals("phel\\json", PhelProjectNamespaceFinder.getStandardLibraryFullNamespace("JSON"))
         }
 

@@ -265,8 +265,8 @@ class PriorityRulesTest {
     inner class NamespacePriority {
 
         @Test
-        fun `should return STRING_FUNCTIONS for str namespace`() {
-            val function = createApiFunction(namespace = "str", name = "str/join")
+        fun `should return STRING_FUNCTIONS for string namespace`() {
+            val function = createApiFunction(namespace = "string", name = "string/join")
             val priority = PriorityRules.determinePriority(function)
             assertEquals(PhelCompletionPriority.STRING_FUNCTIONS, priority)
         }

@@ -9,7 +9,7 @@ import org.phellang.language.psi.files.PhelFile
 object PhelProjectNamespaceFinder {
 
     val STANDARD_LIBRARY_SHORT_TO_FULL = mapOf(
-        "str" to "phel\\str",
+        "string" to "phel\\string",
         "json" to "phel\\json",
         "http" to "phel\\http",
         "html" to "phel\\html",

@@ -306,7 +306,7 @@ object PriorityRules {
         }
 
         // String functions get special priority
-        if (namespace == "str" || namespace == "string") {
+        if (namespace == "string") {
             return PhelCompletionPriority.STRING_FUNCTIONS
         }
 

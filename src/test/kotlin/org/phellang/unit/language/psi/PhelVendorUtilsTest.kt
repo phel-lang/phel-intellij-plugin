@@ -9,7 +9,7 @@ class PhelVendorUtilsTest {
     // Mirror of the private mapping in PhelVendorUtils
     private val namespaceToFile = mapOf(
         "core" to "core.phel",
-        "str" to "str.phel",
+        "string" to "string.phel",
         "json" to "json.phel",
         "http" to "http.phel",
         "html" to "html.phel",
@@ -26,7 +26,7 @@ class PhelVendorUtilsTest {
         @Test
         fun `all standard library namespaces have file mappings`() {
             val expectedNamespaces = setOf(
-                "core", "str", "json", "http", "html", "base64", "test", "mock", "repl", "debug"
+                "core", "string", "json", "http", "html", "base64", "test", "mock", "repl", "debug"
             )
 
             assertEquals(expectedNamespaces, namespaceToFile.keys)
@@ -38,8 +38,8 @@ class PhelVendorUtilsTest {
         }
 
         @Test
-        fun `str namespace maps to str phel`() {
-            assertEquals("str.phel", namespaceToFile["str"])
+        fun `string namespace maps to string phel`() {
+            assertEquals("string.phel", namespaceToFile["string"])
         }
 
         @Test
@@ -85,9 +85,9 @@ class PhelVendorUtilsTest {
 
         @Test
         fun `namespace can be extracted from file name`() {
-            val fileName = "str.phel"
+            val fileName = "string.phel"
             val namespace = fileName.removeSuffix(".phel")
-            assertEquals("str", namespace)
+            assertEquals("string", namespace)
         }
 
         @Test

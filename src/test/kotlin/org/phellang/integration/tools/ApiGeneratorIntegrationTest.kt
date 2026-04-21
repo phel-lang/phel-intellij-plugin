@@ -72,7 +72,7 @@ class ApiGeneratorIntegrationTest {
             val generator = KotlinCodeGenerator(tempDir)
             val functions = listOf(
                 createApiFunction("json", "json/encode"),
-                createApiFunction("str", "str/join"),
+                createApiFunction("string", "string/join"),
                 createApiFunction("html", "html/html")
             )
 
@@ -240,7 +240,7 @@ class ApiGeneratorIntegrationTest {
         @Test
         fun `should support all standard namespaces`() {
             val expectedNamespaces = listOf(
-                "ai", "base64", "core", "debug", "html", "http", "http_client", "json", "mock", "php", "repl", "str", "string", "test"
+                "ai", "base64", "core", "debug", "html", "http", "http_client", "json", "mock", "php", "repl", "string", "test"
             )
 
             expectedNamespaces.forEach { namespace ->
@@ -252,7 +252,7 @@ class ApiGeneratorIntegrationTest {
         fun `should return correct file names`() {
             assertEquals("registerJsonFunctions.kt", NamespaceConfig.getInfo("json")?.fileName)
             assertEquals("registerCoreFunctions.kt", NamespaceConfig.getInfo("core")?.fileName)
-            assertEquals("registerStringFunctions.kt", NamespaceConfig.getInfo("str")?.fileName)
+            assertEquals("registerStringFunctions.kt", NamespaceConfig.getInfo("string")?.fileName)
         }
 
         @Test

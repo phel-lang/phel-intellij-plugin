@@ -16,7 +16,7 @@ class PhelNamespaceValidatorTest {
         @Test
         fun `all standard library short names map to full namespaces`() {
             val expectedMappings = mapOf(
-                "str" to "phel\\str",
+                "string" to "phel\\string",
                 "json" to "phel\\json",
                 "http" to "phel\\http",
                 "html" to "phel\\html",
@@ -32,8 +32,8 @@ class PhelNamespaceValidatorTest {
         }
 
         @Test
-        fun `str maps to phel str`() {
-            assertEquals("phel\\str", standardLibraryShortToFull["str"])
+        fun `string maps to phel string`() {
+            assertEquals("phel\\string", standardLibraryShortToFull["string"])
         }
 
         @Test
@@ -167,7 +167,7 @@ class PhelNamespaceValidatorTest {
 
         @Test
         fun `standard library namespace should exist if starts with phel`() {
-            val fullNamespace = "phel\\str"
+            val fullNamespace = "phel\\string"
             val shortName = fullNamespace.substringAfterLast("\\")
             val isStdLib = fullNamespace.startsWith("phel\\") && standardLibraryShortToFull.containsKey(shortName)
             assertTrue(isStdLib)
@@ -175,7 +175,7 @@ class PhelNamespaceValidatorTest {
 
         @Test
         fun `project namespace should not match standard library check`() {
-            val fullNamespace = "phel-project\\str"
+            val fullNamespace = "phel-project\\string"
             val shortName = fullNamespace.substringAfterLast("\\")
             val isStdLib = fullNamespace.startsWith("phel\\") && standardLibraryShortToFull.containsKey(shortName)
             assertFalse(isStdLib) // Doesn't start with "phel\"

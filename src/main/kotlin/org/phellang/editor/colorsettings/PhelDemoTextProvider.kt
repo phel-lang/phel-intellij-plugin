@@ -18,7 +18,7 @@ class PhelDemoTextProvider {
         append("(ns src\\demo")
         append("\n  (:require phel\\core :refer [print-str str map filter])")
         append("\n  (:require phel\\http :as http)")
-        append("\n  (:require phel\\str :as s)")
+        append("\n  (:require phel\\string :as s)")
         append("\n  (:use \\DateTime \\Exception))")
         append("\n")
     }
