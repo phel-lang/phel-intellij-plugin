@@ -63,7 +63,7 @@ dependencies {
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.3")
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
-    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("com.google.code.gson:gson:2.14.0")
 }
 
 configurations.all {
