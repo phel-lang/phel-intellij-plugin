@@ -209,19 +209,32 @@ object PhelSymbolAnalyzer {
     private fun extractFunctionParameters(functionList: PhelList): Set<String> {
         val parameters = mutableSetOf<String>()
 
-        // Find parameter vector dynamically
-        val paramVec = findParameterVector(functionList) ?: return parameters
-        for (paramChild in paramVec.children) {
-            if (paramChild !is PhelSymbol && paramChild !is PhelAccess) continue
-            val paramName = paramChild.text
-            if (paramName == null || !paramName.isNotEmpty()) continue
+        // Single-arity: paramVec lives directly in the function list.
+        findParameterVector(functionList)?.let { collectParameterNames(it, parameters) }
 
-            if (paramName == "&") continue
-
-            parameters.add(paramName)
+        // Multi-arity: every child arity is a list `([params] body)` whose head is the param vec.
+        for (child in functionList.children) {
+            val arityList = (child as? PhelList)
+                ?: PsiTreeUtil.findChildOfType(child, PhelList::class.java)
+                ?: continue
+            val arityChildren = arityList.children
+            if (arityChildren.isEmpty()) continue
+            val arityHeadVec = (arityChildren[0] as? PhelVec)
+                ?: PsiTreeUtil.findChildOfType(arityChildren[0], PhelVec::class.java)
+                ?: continue
+            collectParameterNames(arityHeadVec, parameters)
         }
 
         return parameters
+    }
+
+    private fun collectParameterNames(paramVec: PhelVec, into: MutableSet<String>) {
+        for (paramChild in paramVec.children) {
+            if (paramChild !is PhelSymbol && paramChild !is PhelAccess) continue
+            val paramName = paramChild.text
+            if (paramName.isNullOrEmpty() || paramName == "&") continue
+            into.add(paramName)
+        }
     }
 
     private fun isReferenceToLetBinding(symbol: PhelSymbol, symbolText: String): Boolean {
@@ -423,36 +436,43 @@ object PhelSymbolAnalyzer {
     }
 
     private fun isParameterVectorInFunctionDefinition(paramVec: PhelVec): Boolean {
-        // Walk up to the enclosing list — paramVec's direct parent may be a Grammar-Kit
-        // form wrapper, not the list itself, so a plain cast is unsafe.
-        val containingList = PsiTreeUtil.getParentOfType(paramVec, PhelList::class.java) ?: return false
-        val forms = PsiTreeUtil.getChildrenOfType(containingList, PhelForm::class.java) ?: return false
+        val immediate = PsiTreeUtil.getParentOfType(paramVec, PhelList::class.java) ?: return false
+        val immediateForms = PsiTreeUtil.getChildrenOfType(immediate, PhelForm::class.java) ?: return false
+        val immediateHead = headSymbolText(immediateForms)
 
-        if (forms.size < 2) {
-            return false
-        }
-
-        // The first form may be a PhelSymbol/PhelAccess directly or a PhelForm wrapping one.
-        val firstSymbol = (forms[0] as? PhelSymbol)
-            ?: (forms[0] as? PhelAccess)?.children?.firstOrNull { it is PhelSymbol } as? PhelSymbol
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
-            ?: return false
-
-        val firstText = firstSymbol.text
-
-        return when {
-            firstText in FUNCTION_DEFINING_FORMS -> {
-                if (firstText == "fn") {
-                    // For (fn [params] ...), parameter vector is at forms[1] — either directly
-                    // or wrapped in a PhelForm.
-                    forms[1] === paramVec || forms[1] === paramVec.parent
-                } else {
-                    // For defn/defn-/defmacro/etc, find the first vector after the function name
-                    findParameterVectorInDefn(forms, paramVec)
-                }
+        // Direct case: paramVec lives in the function-defining list itself.
+        //   (fn [params] body)            → paramVec at forms[1]
+        //   (defn name [params] body)     → first vec after the name (skip doc/meta)
+        //   (defmacro name [params] body) → ditto
+        if (immediateHead in FUNCTION_DEFINING_FORMS) {
+            return when (immediateHead) {
+                "fn" -> immediateForms.size >= 2 && isSameOrWrapperOf(immediateForms[1], paramVec)
+                else -> findParameterVectorInDefn(immediateForms, paramVec)
             }
-
-            else -> false
         }
+
+        // Multi-arity case: paramVec is the head of an arity list, and the arity list's
+        // parent is a function-defining form.
+        //   (defn name ([] body) ([x] body))
+        //   (fn   ([] body) ([x] body))
+        if (immediateForms.isNotEmpty() && isSameOrWrapperOf(immediateForms[0], paramVec)) {
+            val outer = PsiTreeUtil.getParentOfType(immediate, PhelList::class.java) ?: return false
+            val outerForms = PsiTreeUtil.getChildrenOfType(outer, PhelForm::class.java) ?: return false
+            return headSymbolText(outerForms) in FUNCTION_DEFINING_FORMS
+        }
+
+        return false
     }
+
+    /** First-position symbol text for a list's child forms, tolerant of flat/wrapped layouts. */
+    private fun headSymbolText(forms: Array<PhelForm>): String? {
+        if (forms.isEmpty()) return null
+        return (forms[0] as? PhelSymbol)?.text
+            ?: (forms[0] as? PhelAccess)?.text
+            ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)?.text
+    }
+
+    /** True when [candidate] either IS [target] or is the PhelForm wrapper around it. */
+    private fun isSameOrWrapperOf(candidate: PsiElement?, target: PhelVec): Boolean =
+        candidate === target || candidate === target.parent
 }
