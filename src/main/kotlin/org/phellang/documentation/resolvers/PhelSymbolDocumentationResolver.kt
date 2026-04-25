@@ -1,11 +1,15 @@
 package org.phellang.documentation.resolvers
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.completion.data.PhelProjectSymbol
 import org.phellang.completion.documentation.PhelApiDocumentation
 import org.phellang.completion.documentation.PhelBasicDocumentation
 import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.core.psi.PhelSymbolAnalyzer
+import org.phellang.language.psi.PhelForm
+import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelLiteral
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelReferUtils
@@ -138,8 +142,41 @@ class PhelSymbolDocumentationResolver {
     }
 
     private fun generateBasicDocumentation(symbol: PhelSymbol, symbolName: String): String {
+        val docstring = extractDefinitionDocstring(symbol)
         val category = PhelBasicDocumentation.generateBasicDocForElement(symbol)
-        return "<h3>$symbolName</h3><br />$category<br /><br />"
+        val description = docstring?.takeIf { it.isNotBlank() } ?: category
+        return "<h3>$symbolName</h3><br />$description<br /><br />"
+    }
+
+    /**
+     * Returns the first top-level string literal that appears after the defining keyword and
+     * the defined name — skipping attribute maps and parameter vectors. Phel allows the
+     * docstring to be placed either right after the name `(defn name "doc" [x] body)` or
+     * later in the body `(defn name {:meta} [x] "doc" body)`.
+     */
+    private fun extractDefinitionDocstring(symbol: PhelSymbol): String? {
+        val containingList = PsiTreeUtil.getParentOfType(symbol, PhelList::class.java) ?: return null
+        val forms = PsiTreeUtil.getChildrenOfType(containingList, PhelForm::class.java) ?: return null
+        if (forms.size < 3) return null
+
+        // Only treat the symbol as a definition site when it sits at the name position.
+        val nameSymbol = (forms[1] as? PhelSymbol)
+            ?: PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
+        if (nameSymbol !== symbol) return null
+
+        for (i in 2 until forms.size) {
+            directStringLiteralText(forms[i])?.let { return it }
+        }
+        return null
+    }
+
+    private fun directStringLiteralText(form: PhelForm): String? {
+        val literal = (form as? PhelLiteral)
+            ?: form.children.firstOrNull { it is PhelLiteral } as? PhelLiteral
+            ?: return null
+        val raw = literal.text ?: return null
+        if (raw.length < 2 || !raw.startsWith("\"") || !raw.endsWith("\"")) return null
+        return raw.substring(1, raw.length - 1)
     }
 
     private fun formatAsHtml(content: String): String {
