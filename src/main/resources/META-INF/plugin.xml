@@ -102,5 +102,44 @@
                 description="Create new Phel file">
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewScratchFile"/>
         </action>
+
+        <group id="Phel.Paredit" text="Phel Paredit" popup="true">
+            <action id="Phel.Paredit.SlurpForward"
+                    class="org.phellang.editor.paredit.PhelSlurpForwardAction"
+                    text="Slurp Forward"
+                    description="Extend the current form to include the next sibling"/>
+            <action id="Phel.Paredit.BarfForward"
+                    class="org.phellang.editor.paredit.PhelBarfForwardAction"
+                    text="Barf Forward"
+                    description="Eject the last child of the current form"/>
+            <action id="Phel.Paredit.SlurpBackward"
+                    class="org.phellang.editor.paredit.PhelSlurpBackwardAction"
+                    text="Slurp Backward"
+                    description="Extend the current form to include the previous sibling"/>
+            <action id="Phel.Paredit.BarfBackward"
+                    class="org.phellang.editor.paredit.PhelBarfBackwardAction"
+                    text="Barf Backward"
+                    description="Eject the first child of the current form"/>
+            <action id="Phel.Paredit.WrapParen"
+                    class="org.phellang.editor.paredit.PhelWrapParenAction"
+                    text="Wrap with ( )"
+                    description="Wrap the form at caret in a list"/>
+            <action id="Phel.Paredit.WrapBracket"
+                    class="org.phellang.editor.paredit.PhelWrapBracketAction"
+                    text="Wrap with [ ]"
+                    description="Wrap the form at caret in a vector"/>
+            <action id="Phel.Paredit.WrapBrace"
+                    class="org.phellang.editor.paredit.PhelWrapBraceAction"
+                    text="Wrap with { }"
+                    description="Wrap the form at caret in a map"/>
+            <action id="Phel.Paredit.Splice"
+                    class="org.phellang.editor.paredit.PhelSpliceAction"
+                    text="Splice"
+                    description="Unwrap the enclosing form, leaving its children in place"/>
+            <action id="Phel.Paredit.Raise"
+                    class="org.phellang.editor.paredit.PhelRaiseAction"
+                    text="Raise"
+                    description="Replace the enclosing form with the form at caret"/>
+        </group>
     </actions>
 </idea-plugin>
