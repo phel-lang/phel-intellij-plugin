@@ -93,6 +93,8 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="org.phellang.inspection.deprecated.PhelDeprecatedFunctionInspection"/>
+        <formattingService implementation="org.phellang.editor.format.PhelExternalFormatter"/>
+        <notificationGroup id="Phel" displayType="BALLOON"/>
     </extensions>
 
     <actions>
