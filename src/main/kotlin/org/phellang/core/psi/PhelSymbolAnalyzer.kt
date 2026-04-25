@@ -11,6 +11,20 @@ import org.phellang.language.psi.utils.SymbolCategory
 
 object PhelSymbolAnalyzer {
 
+    /** Forms that introduce a parameter vector — used by isFunctionParameter. */
+    private val FUNCTION_DEFINING_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
+
+    /** Forms that introduce a binding vector — used by isLetBinding. */
+    private val LET_LIKE_FORMS = setOf(
+        "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "with-output-buffer", "dofor"
+    )
+
+    /** Top-level forms that bind a name in their second position (the symbol being defined). */
+    private val DEFINITION_FORMS = setOf(
+        "def", "def-", "defn", "defn-", "defmacro", "defmacro-",
+        "defstruct", "definterface", "defexception", "declare", "deftest",
+    )
+
     @JvmStatic
     fun isSymbolType(symbolText: String?, category: SymbolCategory): Boolean {
         if (symbolText == null) return false
@@ -46,7 +60,7 @@ object PhelSymbolAnalyzer {
             val firstSymbol = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java) ?: return@safeOperation false
             
             val firstSymbolText = firstSymbol.text
-            if (!isSymbolType(firstSymbolText, SymbolCategory.SPECIAL_FORMS)) {
+            if (firstSymbolText !in DEFINITION_FORMS) {
                 return@safeOperation false
             }
 
@@ -99,10 +113,10 @@ object PhelSymbolAnalyzer {
             if (forms == null || forms.size < 2) return@safeOperation false
 
             // Check if first symbol is a binding form
-            val firstSymbol =
-                PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: return@safeOperation false
-            val formType = firstSymbol.text
-            if (!isSymbolType(formType, SymbolCategory.CONTROL_FLOW)) return@safeOperation false
+            val firstSymbol = (forms[0] as? PhelSymbol)
+                ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
+                ?: return@safeOperation false
+            if (firstSymbol.text !in LET_LIKE_FORMS) return@safeOperation false
 
             // Check if binding vector is at forms[1] — either directly or via a PhelForm wrapper.
             if (forms[1] !== bindingVec && forms[1] !== bindingVec.parent) return@safeOperation false
@@ -183,7 +197,7 @@ object PhelSymbolAnalyzer {
             }
 
             val functionType = firstChild.text
-            if (isSymbolType(functionType, SymbolCategory.SPECIAL_FORMS)) {
+            if (functionType in FUNCTION_DEFINING_FORMS) {
                 return current
             }
 
@@ -232,7 +246,7 @@ object PhelSymbolAnalyzer {
             }
 
             val bindingType = firstChild.text
-            if (!isSymbolType(bindingType, SymbolCategory.CONTROL_FLOW)) {
+            if (bindingType !in LET_LIKE_FORMS) {
                 current = current.parent
                 continue
             }
@@ -285,7 +299,7 @@ object PhelSymbolAnalyzer {
             if (firstChild !is PhelSymbol && firstChild !is PhelAccess) continue
             
             val functionType = firstChild.text
-            if (!isSymbolType(functionType, SymbolCategory.SPECIAL_FORMS)) continue
+            if (functionType !in FUNCTION_DEFINING_FORMS) continue
 
             // Check if the function name matches our symbol
             if ((secondChild is PhelSymbol || secondChild is PhelAccess) && secondChild.text == symbolText) {
@@ -317,7 +331,7 @@ object PhelSymbolAnalyzer {
         if (firstChild !is PhelSymbol && firstChild !is PhelAccess) return false
         
         val functionType = firstChild.text
-        if (!isSymbolType(functionType, SymbolCategory.SPECIAL_FORMS)) return false
+        if (functionType !in DEFINITION_FORMS) return false
 
         // Check if the symbol is the function name (second child)
         // The symbol might be wrapped in PhelAccess, so check both direct and wrapped cases
@@ -427,7 +441,7 @@ object PhelSymbolAnalyzer {
         val firstText = firstSymbol.text
 
         return when {
-            isSymbolType(firstText, SymbolCategory.SPECIAL_FORMS) -> {
+            firstText in FUNCTION_DEFINING_FORMS -> {
                 if (firstText == "fn") {
                     // For (fn [params] ...), parameter vector is at forms[1] — either directly
                     // or wrapped in a PhelForm.
