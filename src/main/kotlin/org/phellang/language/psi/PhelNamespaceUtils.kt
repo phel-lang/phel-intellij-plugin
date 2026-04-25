@@ -197,4 +197,39 @@ object PhelNamespaceUtils {
     fun isReferredSymbol(file: PhelFile, symbolName: String): Boolean {
         return extractReferredSymbols(file).contains(symbolName)
     }
+
+    /**
+     * If [symbolName] is referred from a `(:require [ns :refer [...]])` clause in [file],
+     * returns the source namespace (the head of that require clause). Returns null when
+     * the symbol isn't refer'd from any require, so callers can fall back to other lookups.
+     */
+    fun findReferSource(file: PhelFile, symbolName: String): String? {
+        val nsDeclaration = findNamespaceDeclaration(file) ?: return null
+        val requireForms = findRequireForms(nsDeclaration)
+
+        for (requireForm in requireForms) {
+            val forms = requireForm.forms
+            if (forms.isEmpty()) continue
+
+            val sourceNamespace = (forms[0] as? PhelSymbol)?.text
+                ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)?.text
+                ?: continue
+
+            var i = 1
+            while (i < forms.size) {
+                val keyword = (forms[i] as? PhelKeyword)
+                    ?: PsiTreeUtil.findChildOfType(forms[i], PhelKeyword::class.java)
+                if (keyword?.text == ":refer" && i + 1 < forms.size) {
+                    val symbols = PsiTreeUtil.findChildrenOfType(forms[i + 1], PhelSymbol::class.java)
+                    if (symbols.any { it.text == symbolName }) {
+                        return sourceNamespace
+                    }
+                    i += 2
+                    continue
+                }
+                i++
+            }
+        }
+        return null
+    }
 }

@@ -100,9 +100,23 @@ class PhelSymbolDocumentationResolver {
             val projectDoc = resolveProjectSymbolDocumentation(symbol, resolvedNamespace, functionName)
             if (projectDoc != null) return projectDoc
         } else {
-            // Unqualified symbol (e.g., "map") - direct lookup
+            // Unqualified symbol (e.g., "map") - direct API lookup first
             val directDoc = PhelApiDocumentation.functionDocs[symbolName]
             if (directDoc != null) return directDoc
+
+            // Then try resolving via a `:refer` clause: if the file imports this name
+            // from another namespace, look it up by (sourceNamespace, name).
+            val file = symbol.containingFile as? PhelFile
+            if (file != null) {
+                val sourceNamespace = PhelNamespaceUtils.findReferSource(file, symbolName)
+                if (sourceNamespace != null) {
+                    val shortNamespace = PhelReferUtils.extractShortNamespace(sourceNamespace)
+                    val canonicalName = "$shortNamespace/$symbolName"
+                    PhelApiDocumentation.functionDocs[canonicalName]?.let { return it }
+                    val projectDoc = resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
+                    if (projectDoc != null) return projectDoc
+                }
+            }
         }
 
         return generateBasicDocumentation(symbol, symbolName)
