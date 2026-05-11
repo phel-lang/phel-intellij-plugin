@@ -44,16 +44,16 @@ class PhelNamespaceImporterTest {
 
         @Test
         fun `should format namespace for require form`() {
-            assertEquals("phel\\str", PhelNamespaceUtils.toPhelNamespace("str"))
-            assertEquals("phel\\json", PhelNamespaceUtils.toPhelNamespace("json"))
-            assertEquals("phel\\http", PhelNamespaceUtils.toPhelNamespace("http"))
+            assertEquals("phel.str", PhelNamespaceUtils.toPhelNamespace("str"))
+            assertEquals("phel.json", PhelNamespaceUtils.toPhelNamespace("json"))
+            assertEquals("phel.http", PhelNamespaceUtils.toPhelNamespace("http"))
         }
 
         @Test
         fun `require form syntax should be correct`() {
-            val namespace = "phel\\str"
+            val namespace = "phel.str"
             val requireForm = "(:require $namespace)"
-            assertEquals("(:require phel\\str)", requireForm)
+            assertEquals("(:require phel.str)", requireForm)
         }
     }
 }

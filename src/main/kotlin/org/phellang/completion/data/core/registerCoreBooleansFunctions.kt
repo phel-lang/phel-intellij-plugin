@@ -472,7 +472,7 @@ With 1 arg, returns true if <code>x</code> is not nil (Clojure semantics).<br />
         documentation = DocumentationInfo(
             summary = "Returns true if str contains s.",
             example = null,
-            deprecation = DeprecationInfo(version = "Use phel\\string\\contains?"),
+            deprecation = DeprecationInfo(version = "Use phel.string/contains?"),
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/booleans.phel#L269",
                 docs = "",

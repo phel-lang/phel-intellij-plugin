@@ -20,7 +20,7 @@ internal fun registerSchemaGeneratorFunctions(): List<PhelFunction> = listOf(
         documentation = DocumentationInfo(
             summary = """
 Generates one random value conforming to <code>schema</code>. Accepts the same<br />
-  <code>:size</code> and <code>:seed</code> options as <code>phel\test\gen/generate</code>.
+  <code>:size</code> and <code>:seed</code> options as <code>phel.test.gen/generate</code>.
 """,
             example = "(generate :int)",
             links = DocumentationLinks(
@@ -34,12 +34,12 @@ Generates one random value conforming to <code>schema</code>. Accepts the same<b
         name = "schema\\generator/schema->gen",
         signature = "(schema->gen schema)",
         completion = CompletionInfo(
-            tailText = "Returns a phel\\test\\gen generator for schema",
+            tailText = "Returns a phel.test.gen generator for schema",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns a <code>phel\test\gen</code> generator for <code>schema</code>. Honours a<br />
+Returns a <code>phel.test.gen</code> generator for <code>schema</code>. Honours a<br />
   <code>{:gen <gen>}</code> override in the schema options when present.
 """,
             example = "(schema-&gt;gen [:int])",

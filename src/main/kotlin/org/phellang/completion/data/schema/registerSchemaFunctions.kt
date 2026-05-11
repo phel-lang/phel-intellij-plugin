@@ -231,12 +231,12 @@ Returns <code>true</code> if a schema is registered under <code>name</code>.
         name = "schema/schema->gen",
         signature = "(schema->gen schema)",
         completion = CompletionInfo(
-            tailText = "Returns the phel\\test\\gen generator associated with schema",
+            tailText = "Returns the phel.test.gen generator associated with schema",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the <code>phel\test\gen</code> generator associated with <code>schema</code>.
+Returns the <code>phel.test.gen</code> generator associated with <code>schema</code>.
 """,
             example = "(schema-&gt;gen :int)",
             links = DocumentationLinks(

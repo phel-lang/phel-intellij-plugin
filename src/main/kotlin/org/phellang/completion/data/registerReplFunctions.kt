@@ -16,7 +16,7 @@ internal fun registerReplFunctions(): List<PhelFunction> = listOf(
 Returns a vector of symbols whose name contains the given search string.<br />
   Searches across all loaded namespaces.
 """,
-            example = "(apropos \"map\") ; =&gt; [phel\\core/flat-map phel\\core/map ...]",
+            example = "(apropos \"map\") ; =&gt; [phel.core/flat-map phel.core/map ...]",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L283",
                 docs = "",
@@ -90,7 +90,7 @@ Creates the given namespace if it does not already exist. Returns the<br />
 Prints all public definitions in the given namespace string.<br /><br />
 Returns nil. Prints one name per line, sorted alphabetically.
 """,
-            example = "(dir \"phel\\core\")",
+            example = "(dir \"phel.core\")",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L266",
                 docs = "",
@@ -124,7 +124,7 @@ Returns nil. Prints one name per line, sorted alphabetically.
         ),
         documentation = DocumentationInfo(
             summary = "Builds a searchable index of public functions in a namespace.",
-            example = "(embed-ns \"phel\\core\")",
+            example = "(embed-ns \"phel.core\")",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L676",
                 docs = "",
@@ -221,7 +221,7 @@ Evaluates a string of Phel code and returns the result.<br />
 Searches for functions whose name or docstring contains the search string.<br />
   Returns a vector of maps with :ns, :name, :doc, :private, :min-arity, :max-arity, :is-variadic.
 """,
-            example = "(find-fn \"map\") ; =&gt; [{:ns \"phel\\core\" :name \"map\" ...} ...]",
+            example = "(find-fn \"map\") ; =&gt; [{:ns \"phel.core\" :name \"map\" ...} ...]",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L301",
                 docs = "",
@@ -241,7 +241,7 @@ Searches for functions whose name or docstring contains the search string.<br />
 Returns the namespace name if it is loaded, or nil if no namespace of<br />
   that name exists.
 """,
-            example = "(find-ns \"phel\\core\") ; =&gt; \"phel\\core\"",
+            example = "(find-ns \"phel.core\") ; =&gt; \"phel.core\"",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L359",
                 docs = "",
@@ -278,7 +278,7 @@ Returns the namespace name if it is loaded, or nil if no namespace of<br />
 Returns the source code of the definition identified by namespace and name<br />
   strings, or nil if the source file cannot be found or metadata is missing.
 """,
-            example = "(get-source-code \"phel\\core\" \"map\")",
+            example = "(get-source-code \"phel.core\" \"map\")",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L333",
                 docs = "",
@@ -300,7 +300,7 @@ Returns a hash-map of structured metadata for the definition identified by<br />
 Keys: :doc, :file, :line, :column, :end-line, :end-column, :private,<br />
         :deprecated, :min-arity, :max-arity, :is-variadic, :ns, :name
 """,
-            example = "(get-symbol-info \"phel\\core\" \"map\")",
+            example = "(get-symbol-info \"phel.core\" \"map\")",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L224",
                 docs = "",
@@ -360,7 +360,7 @@ Loads and evaluates a Phel source file in the current REPL session.<br />
         ),
         documentation = DocumentationInfo(
             summary = "Returns all namespaces currently loaded in the REPL.",
-            example = "(loaded-namespaces) ; =&gt; [\"phel\\core\" \"phel\\repl\"]",
+            example = "(loaded-namespaces) ; =&gt; [\"phel.core\" \"phel.repl\"]",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L24",
                 docs = "",
@@ -463,7 +463,7 @@ Recursively expands the given form until it is no longer a macro call.<br />
 Returns a hash-map of {alias => namespace} for all require aliases in the<br />
   given namespace string.
 """,
-            example = "(ns-aliases *ns*) ; =&gt; {\"repl\" \"phel\\repl\" ...}",
+            example = "(ns-aliases *ns*) ; =&gt; {\"repl\" \"phel.repl\" ...}",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L430",
                 docs = "",
@@ -484,7 +484,7 @@ Returns a hash-map of {name => value} for every definition in the<br />
   given namespace, including private ones. Returns an empty map if the<br />
   namespace has no definitions.
 """,
-            example = "(ns-interns \"phel\\core\")",
+            example = "(ns-interns \"phel.core\")",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L400",
                 docs = "",
@@ -504,7 +504,7 @@ Returns a hash-map of {name => value} for every definition in the<br />
 Returns a sorted vector of all loaded namespace names, decoded to<br />
   human-readable form (hyphens restored instead of underscores).
 """,
-            example = "(ns-list) ; =&gt; [\"phel\\core\" \"phel\\repl\" ...]",
+            example = "(ns-list) ; =&gt; [\"phel.core\" \"phel.repl\" ...]",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L30",
                 docs = "",
@@ -524,7 +524,7 @@ Returns a sorted vector of all loaded namespace names, decoded to<br />
 Returns a hash-map of {name => value} for all public definitions in the<br />
   given namespace string. Private definitions are excluded.
 """,
-            example = "(ns-publics \"phel\\core\") ; =&gt; {\"map\" &lt;fn&gt; \"filter\" &lt;fn&gt; ...}",
+            example = "(ns-publics \"phel.core\") ; =&gt; {\"map\" &lt;fn&gt; \"filter\" &lt;fn&gt; ...}",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L414",
                 docs = "",
@@ -544,7 +544,7 @@ Returns a hash-map of {name => value} for all public definitions in the<br />
 Returns a hash-map of {name => source-namespace} for all referred symbols<br />
   in the given namespace string.
 """,
-            example = "(ns-refers *ns*) ; =&gt; {\"doc\" \"phel\\repl\" ...}",
+            example = "(ns-refers *ns*) ; =&gt; {\"doc\" \"phel.repl\" ...}",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L443",
                 docs = "",
@@ -615,7 +615,7 @@ Removes the namespace and all of its definitions from the registry.<br />
         ),
         documentation = DocumentationInfo(
             summary = "Requires a Phel module into the environment.",
-            example = "(require 'phel\\http :as http :refer [request]) ; =&gt; phel\\http",
+            example = "(require 'phel.http :as http :refer [request]) ; =&gt; phel.http",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L133",
                 docs = "",
@@ -725,7 +725,7 @@ Returns a hash-map of structured metadata for the given symbol, or nil if<br />
 Keys: :doc, :file, :line, :column, :end-line, :end-column, :private,<br />
         :deprecated, :min-arity, :max-arity, :is-variadic, :ns, :name
 """,
-            example = "(symbol-info map) ; =&gt; {:doc \"...\" :ns \"phel\\core\" :name \"map\" ...}",
+            example = "(symbol-info map) ; =&gt; {:doc \"...\" :ns \"phel.core\" :name \"map\" ...}",
             links = DocumentationLinks(
                 github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/repl.phel#L253",
                 docs = "",
