@@ -56,6 +56,7 @@ object PhelTokenClassifier {
         return tokenType == PhelTypes.NUMBER || tokenType == PhelTypes.BINNUM
                 || tokenType == PhelTypes.OCTNUM || tokenType == PhelTypes.HEXNUM
                 || tokenType == PhelTypes.RADIXNUM || tokenType == PhelTypes.SYMBOLIC_NUM
+                || tokenType == PhelTypes.RATIO
     }
 
     fun isBoolean(tokenType: IElementType): Boolean {

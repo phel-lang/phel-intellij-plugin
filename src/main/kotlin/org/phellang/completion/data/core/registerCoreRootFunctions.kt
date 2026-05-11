@@ -23,7 +23,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
   false at macroexpansion time, <code>assert</code> expands to nil and performs no<br />
   runtime check, matching Clojure's compile-time <code><em>assert</em></code> semantics.<br />
   Defaults to <code>true</code>. To disable globally, set the core binding before<br />
-  compilation via PHP: <code>\Phel::addDefinition("phel\\core", "<em>assert</em>", false)</code>.
+  compilation via PHP: <code>\Phel::addDefinition("phel.core", "<em>assert</em>", false)</code>.
 """,
             example = null,
             links = DocumentationLinks(
@@ -509,7 +509,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = """
 Defines the namespace for the current file and adds imports to the environment. Imports can either be uses or requires. The keyword :use is used to import PHP classes, the keyword :require is used to import Phel modules and the keyword :require-file is used to load php files.
 """,
-            example = "(ns my-app\\core (:require phel\\string :as str))",
+            example = "(ns my-app\\core (:require phel.string :as str))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/namespaces/#namespace-ns",

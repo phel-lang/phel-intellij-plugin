@@ -8,43 +8,53 @@ import org.phellang.language.psi.files.PhelFile
 
 object PhelProjectNamespaceFinder {
 
+    // Canonical Phel 0.35+ form is dot-separated. The legacy backslash form is still
+    // accepted on input via [normalize] but never emitted from this finder.
     val STANDARD_LIBRARY_SHORT_TO_FULL = mapOf(
-        "string" to "phel\\string",
-        "json" to "phel\\json",
-        "http" to "phel\\http",
-        "html" to "phel\\html",
-        "base64" to "phel\\base64",
-        "test" to "phel\\test",
-        "mock" to "phel\\mock",
-        "repl" to "phel\\repl",
-        "debug" to "phel\\debug",
-        "core" to "phel\\core",
+        "string" to "phel.string",
+        "json" to "phel.json",
+        "http" to "phel.http",
+        "html" to "phel.html",
+        "base64" to "phel.base64",
+        "test" to "phel.test",
+        "mock" to "phel.mock",
+        "repl" to "phel.repl",
+        "debug" to "phel.debug",
+        "core" to "phel.core",
     )
 
     val STANDARD_LIBRARY_NAMESPACES: Set<String> = STANDARD_LIBRARY_SHORT_TO_FULL.values.toSet()
 
     fun namespaceExists(project: Project, fullNamespace: String): Boolean {
-        // Check standard library first
-        if (fullNamespace in STANDARD_LIBRARY_NAMESPACES) {
+        val normalized = PhelNamespaceUtils.normalizeNamespace(fullNamespace)
+        if (normalized in STANDARD_LIBRARY_NAMESPACES) {
             return true
         }
-        
-        // Search project files
-        return findAllProjectNamespaces(project).any { it == fullNamespace }
+
+        return findAllProjectNamespaces(project).any {
+            PhelNamespaceUtils.normalizeNamespace(it) == normalized
+        }
     }
 
     fun findByShortName(project: Project, shortNamespace: String): String? {
-        return findAllProjectNamespaces(project).find { 
-            extractShortNamespace(it) == shortNamespace 
+        return findAllProjectNamespaces(project).find {
+            extractShortNamespace(it) == shortNamespace
         }
     }
 
+    /**
+     * Returns the trailing segment of a namespace regardless of whether the segments
+     * are split with the canonical `.` (Phel 0.35+) or the legacy `\`.
+     */
     fun extractShortNamespace(fullNamespace: String): String {
-        return fullNamespace.substringAfterLast("\\")
+        val lastDot = fullNamespace.lastIndexOf('.')
+        val lastBackslash = fullNamespace.lastIndexOf('\\')
+        val cut = maxOf(lastDot, lastBackslash)
+        return if (cut < 0) fullNamespace else fullNamespace.substring(cut + 1)
     }
 
     fun isStandardLibrary(fullNamespace: String): Boolean {
-        return fullNamespace in STANDARD_LIBRARY_NAMESPACES
+        return PhelNamespaceUtils.normalizeNamespace(fullNamespace) in STANDARD_LIBRARY_NAMESPACES
     }
 
     fun getStandardLibraryFullNamespace(shortName: String): String? {
