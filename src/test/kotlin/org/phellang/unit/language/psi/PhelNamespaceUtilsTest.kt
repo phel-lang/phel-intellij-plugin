@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 
 class PhelNamespaceUtilsTest {
 
@@ -36,9 +37,9 @@ class PhelNamespaceUtilsTest {
 
         @Test
         fun `should convert short namespace to Phel format`() {
-            assertEquals("phel\\str", PhelNamespaceUtils.toPhelNamespace("str"))
-            assertEquals("phel\\http", PhelNamespaceUtils.toPhelNamespace("http"))
-            assertEquals("phel\\json", PhelNamespaceUtils.toPhelNamespace("json"))
+            assertEquals("phel.str", PhelNamespaceUtils.toPhelNamespace("str"))
+            assertEquals("phel.http", PhelNamespaceUtils.toPhelNamespace("http"))
+            assertEquals("phel.json", PhelNamespaceUtils.toPhelNamespace("json"))
         }
     }
 
@@ -63,21 +64,21 @@ class PhelNamespaceUtilsTest {
     inner class ShortNamespaceExtraction {
 
         @Test
-        fun `substringAfterLast extracts short namespace from phel namespace`() {
-            assertEquals("str", "phel\\str".substringAfterLast("\\"))
-            assertEquals("http", "phel\\http".substringAfterLast("\\"))
-            assertEquals("json", "phel\\json".substringAfterLast("\\"))
+        fun `extractShortNamespace splits dot-canonical namespace`() {
+            assertEquals("str", PhelProjectNamespaceFinder.extractShortNamespace("phel.str"))
+            assertEquals("http", PhelProjectNamespaceFinder.extractShortNamespace("phel.http"))
+            assertEquals("json", PhelProjectNamespaceFinder.extractShortNamespace("phel.json"))
         }
 
         @Test
-        fun `substringAfterLast handles namespace without prefix`() {
-            assertEquals("str", "str".substringAfterLast("\\"))
-            assertEquals("core", "core".substringAfterLast("\\"))
+        fun `extractShortNamespace handles namespace without prefix`() {
+            assertEquals("str", PhelProjectNamespaceFinder.extractShortNamespace("str"))
+            assertEquals("core", PhelProjectNamespaceFinder.extractShortNamespace("core"))
         }
 
         @Test
-        fun `substringAfterLast handles nested namespaces`() {
-            assertEquals("nested", "phel\\some\\deeply\\nested".substringAfterLast("\\"))
+        fun `extractShortNamespace also accepts legacy backslash form`() {
+            assertEquals("nested", PhelProjectNamespaceFinder.extractShortNamespace("phel\\some\\deeply\\nested"))
         }
     }
 }

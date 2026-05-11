@@ -271,12 +271,13 @@ public class PhelParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // number | hexnum | binnum | octnum | radixnum | bool | nil | nan | symbolic_num | string | char | regex_literal
+  // ratio | number | hexnum | binnum | octnum | radixnum | bool | nil | nan | symbolic_num | string | char | regex_literal
   public static boolean literal(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "literal")) return false;
     boolean result_;
     Marker marker_ = enter_section_(builder_, level_, _NONE_, LITERAL, "<literal>");
-    result_ = consumeToken(builder_, NUMBER);
+    result_ = consumeToken(builder_, RATIO);
+    if (!result_) result_ = consumeToken(builder_, NUMBER);
     if (!result_) result_ = consumeToken(builder_, HEXNUM);
     if (!result_) result_ = consumeToken(builder_, BINNUM);
     if (!result_) result_ = consumeToken(builder_, OCTNUM);

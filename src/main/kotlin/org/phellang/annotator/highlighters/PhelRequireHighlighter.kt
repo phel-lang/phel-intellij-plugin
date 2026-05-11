@@ -82,8 +82,8 @@ object PhelRequireHighlighter {
     private fun isNamespaceInRequireForm(symbol: PhelSymbol): Boolean {
         val text = symbol.text ?: return false
 
-        // Must look like a namespace (contains backslash)
-        if (!text.contains("\\")) {
+        // Must look like a namespace: dot-separated (Phel 0.35+) or legacy backslash.
+        if (!text.contains('.') && !text.contains('\\')) {
             return false
         }
 
