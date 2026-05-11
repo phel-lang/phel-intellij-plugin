@@ -27,6 +27,7 @@ HEXNUM=[+-]? "0x" [\da-fA-F_]+ N?
 BINNUM=[+-]? "0b" [01_]+ N?
 OCTNUM=[+-]? "0o" [0-7_]+ N?
 RADIXNUM=[0-9]{1,2}r[0-9a-zA-Z]+
+RATIO=[+-]? [0-9]+ "/" [0-9]+
 CHARACTER=\\([btrnf]|u[0-9a-fA-F]{4}|o[0-7]{3}|backspace|tab|newline|formfeed|return|space|.)
 BAD_LITERAL=\" ([^\\\"]|\\.|\\\")*
 
@@ -90,6 +91,7 @@ TAG="#" {TAG_NAME}
   {HEXNUM}               { return PhelTypes.HEXNUM; }
   {BINNUM}               { return PhelTypes.BINNUM; }
   {OCTNUM}               { return PhelTypes.OCTNUM; }
+  {RATIO}                { return PhelTypes.RATIO; }
   {NUMBER}               { return PhelTypes.NUMBER; }
   {CHARACTER}            { return PhelTypes.CHAR; }
   {BAD_LITERAL}          { return BAD_CHARACTER; }

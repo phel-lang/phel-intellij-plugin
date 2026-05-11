@@ -6,7 +6,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 
 object PhelAnnotationConstants {
 
-    /** Namespace-qualified symbols (e.g., core\map, phel\str) */
+    /** Namespace-qualified symbols (e.g., core\map, phel\string) */
     val NAMESPACE_SYMBOL: TextAttributesKey by lazy {
         TextAttributesKey.createTextAttributesKey(
             "PHEL_NAMESPACE_SYMBOL", DefaultLanguageHighlighterColors.CLASS_REFERENCE
