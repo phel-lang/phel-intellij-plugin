@@ -12,10 +12,10 @@ class ReplacementParserTest {
 
         @Test
         fun `should parse phel namespace format`() {
-            val result = ReplacementParser.parse("phel\\str\\contains?")
+            val result = ReplacementParser.parse("phel\\string\\contains?")
 
-            assertEquals("str", result.namespace)
-            assertEquals("str/contains?", result.functionName)
+            assertEquals("string", result.namespace)
+            assertEquals("string/contains?", result.functionName)
         }
 
         @Test
@@ -44,10 +44,10 @@ class ReplacementParserTest {
 
         @Test
         fun `should handle replacement with special characters`() {
-            val result = ReplacementParser.parse("phel\\str\\starts-with?")
+            val result = ReplacementParser.parse("phel\\string\\starts-with?")
 
-            assertEquals("str", result.namespace)
-            assertEquals("str/starts-with?", result.functionName)
+            assertEquals("string", result.namespace)
+            assertEquals("string/starts-with?", result.functionName)
         }
 
         @Test
@@ -60,12 +60,39 @@ class ReplacementParserTest {
         }
 
         @Test
+        fun `should parse dot-separated phel namespace`() {
+            // Phel 0.35+ canonical form uses dots throughout.
+            val result = ReplacementParser.parse("phel.string.contains?")
+
+            assertEquals("string", result.namespace)
+            assertEquals("string/contains?", result.functionName)
+        }
+
+        @Test
+        fun `should parse dot-namespace with slash function`() {
+            // Mixed form: dot-separated namespace + slash before function name.
+            val result = ReplacementParser.parse("phel.string/contains?")
+
+            assertEquals("string", result.namespace)
+            assertEquals("string/contains?", result.functionName)
+        }
+
+        @Test
+        fun `should parse short ns slash fn form`() {
+            // Already in display shape — short-namespace + function.
+            val result = ReplacementParser.parse("string/contains?")
+
+            assertEquals("string", result.namespace)
+            assertEquals("string/contains?", result.functionName)
+        }
+
+        @Test
         fun `should handle phel prefix with only two parts`() {
             // "phel\something" without function name
-            val result = ReplacementParser.parse("phel\\str")
+            val result = ReplacementParser.parse("phel\\string")
 
             assertNull(result.namespace)
-            assertEquals("phel\\str", result.functionName)
+            assertEquals("phel\\string", result.functionName)
         }
     }
 
@@ -74,9 +101,9 @@ class ReplacementParserTest {
 
         @Test
         fun `should format phel namespace to slash notation`() {
-            val result = ReplacementParser.formatForDisplay("phel\\str\\contains?")
+            val result = ReplacementParser.formatForDisplay("phel\\string\\contains?")
 
-            assertEquals("str/contains?", result)
+            assertEquals("string/contains?", result)
         }
 
         @Test
@@ -102,9 +129,9 @@ class ReplacementParserTest {
 
         @Test
         fun `should handle special characters in function name`() {
-            val result = ReplacementParser.formatForDisplay("phel\\str\\blank?")
+            val result = ReplacementParser.formatForDisplay("phel\\string\\blank?")
 
-            assertEquals("str/blank?", result)
+            assertEquals("string/blank?", result)
         }
 
         @Test
@@ -120,18 +147,18 @@ class ReplacementParserTest {
 
         @Test
         fun `should support equality`() {
-            val r1 = ReplacementParser.ParsedReplacement("str", "str/join")
-            val r2 = ReplacementParser.ParsedReplacement("str", "str/join")
+            val r1 = ReplacementParser.ParsedReplacement("string", "string/join")
+            val r2 = ReplacementParser.ParsedReplacement("string", "string/join")
 
             assertEquals(r1, r2)
         }
 
         @Test
         fun `should support destructuring`() {
-            val (namespace, functionName) = ReplacementParser.parse("phel\\str\\join")
+            val (namespace, functionName) = ReplacementParser.parse("phel\\string\\join")
 
-            assertEquals("str", namespace)
-            assertEquals("str/join", functionName)
+            assertEquals("string", namespace)
+            assertEquals("string/join", functionName)
         }
     }
 }

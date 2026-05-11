@@ -162,6 +162,76 @@ class PhelLexerTest {
         assertEquals(PhelTypes.RADIXNUM, tokens[0].first)
     }
 
+    // --- Ratio literals ---
+
+    @Test
+    fun `simple ratio literal should tokenize as RATIO`() {
+        val tokens = tokenize("1/3")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.RATIO, tokens[0].first)
+        assertEquals("1/3", tokens[0].second)
+    }
+
+    @Test
+    fun `zero-denominator ratio should tokenize as RATIO`() {
+        val tokens = tokenize("1/0")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.RATIO, tokens[0].first)
+        assertEquals("1/0", tokens[0].second)
+    }
+
+    @Test
+    fun `zero-over-zero ratio should tokenize as RATIO`() {
+        val tokens = tokenize("0/0")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.RATIO, tokens[0].first)
+        assertEquals("0/0", tokens[0].second)
+    }
+
+    @Test
+    fun `negative ratio should tokenize as RATIO`() {
+        val tokens = tokenize("-7/2")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.RATIO, tokens[0].first)
+        assertEquals("-7/2", tokens[0].second)
+    }
+
+    @Test
+    fun `positive-signed ratio should tokenize as RATIO`() {
+        val tokens = tokenize("+5/8")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.RATIO, tokens[0].first)
+        assertEquals("+5/8", tokens[0].second)
+    }
+
+    @Test
+    fun `multi-digit ratio should tokenize as RATIO`() {
+        val tokens = tokenize("123/456")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.RATIO, tokens[0].first)
+        assertEquals("123/456", tokens[0].second)
+    }
+
+    @Test
+    fun `decimal numerator should not be ratio`() {
+        // 1.5/2 has no RATIO match (decimals not allowed); the longest-match ATOM rule
+        // captures the whole thing as a SYM. This documents that mixing a decimal with /
+        // is not a valid ratio literal — Phel readers will reject it downstream.
+        val tokens = tokenize("1.5/2")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("1.5/2", tokens[0].second)
+    }
+
+    @Test
+    fun `namespaced symbol is not a ratio`() {
+        // str/split must remain a single SYM (not split as ratio attempt)
+        val tokens = tokenize("str/split")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("str/split", tokens[0].second)
+    }
+
     // --- BigInt and BigDecimal suffixes ---
 
     @Test
@@ -230,6 +300,24 @@ class PhelLexerTest {
         assertEquals(TokenType.WHITE_SPACE, tokens[0].first)
         assertEquals(PhelTypes.SYM, tokens[1].first)
         assertEquals("x", tokens[1].second)
+    }
+
+    // --- Dot-separated namespaces (v0.32.0+): phel.core/fn, clojure.core/fn ---
+
+    @Test
+    fun `dot-separated namespace should tokenize as single SYM`() {
+        val tokens = tokenize("phel.core/map")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("phel.core/map", tokens[0].second)
+    }
+
+    @Test
+    fun `clojure-style dot namespace should tokenize as single SYM`() {
+        val tokens = tokenize("clojure.string/upper-case")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("clojure.string/upper-case", tokens[0].second)
     }
 
     // --- Tagged literal dispatch: #inst, #uuid, #regex, #php, generic #<name> ---

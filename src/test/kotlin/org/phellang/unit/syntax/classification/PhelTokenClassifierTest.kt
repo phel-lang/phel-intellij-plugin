@@ -30,6 +30,7 @@ class PhelTokenClassifierTest {
         assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.OCTNUM))
         assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.RADIXNUM))
         assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.SYMBOLIC_NUM))
+        assertEquals(TokenCategory.NUMBER, PhelTokenClassifier.classifyToken(PhelTypes.RATIO))
     }
 
     @Test
@@ -147,6 +148,7 @@ class PhelTokenClassifierTest {
         assertTrue(PhelTokenClassifier.isNumber(PhelTypes.OCTNUM))
         assertTrue(PhelTokenClassifier.isNumber(PhelTypes.RADIXNUM))
         assertTrue(PhelTokenClassifier.isNumber(PhelTypes.SYMBOLIC_NUM))
+        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.RATIO))
         assertFalse(PhelTokenClassifier.isNumber(PhelTypes.STRING))
 
         // Test boolean classification
