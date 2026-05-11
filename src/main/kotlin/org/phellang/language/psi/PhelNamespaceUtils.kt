@@ -20,11 +20,12 @@ object PhelNamespaceUtils {
     }
 
     fun isNamespaceRequired(nsDeclaration: PhelList, namespace: String): Boolean {
+        val target = normalizeNamespace(namespace)
         val requireForms = findRequireForms(nsDeclaration)
         return requireForms.any { requireForm ->
-            // Check if the require form contains the namespace
+            // Check if the require form contains the namespace (either dot or backslash form)
             val symbols = PsiTreeUtil.findChildrenOfType(requireForm, PhelSymbol::class.java)
-            symbols.any { it.text == namespace }
+            symbols.any { sym -> sym.text?.let { normalizeNamespace(it) } == target }
         }
     }
 
@@ -102,6 +103,18 @@ object PhelNamespaceUtils {
         }
     }
 
+    /**
+     * Canonicalises a namespace to dot-separated form (Phel 0.35+).
+     * Accepts the legacy backslash form so callers can compare namespaces written
+     * either way without caring which the user typed.
+     *
+     * e.g., "phel\\string" -> "phel.string"
+     *       "phel.string"  -> "phel.string"
+     */
+    fun normalizeNamespace(namespace: String): String {
+        return namespace.replace('\\', '.')
+    }
+
     fun extractNamespaceFromDeclaration(nsDeclaration: PhelList): String? {
         val forms = nsDeclaration.forms
         if (forms.size < 2) return null
@@ -122,12 +135,12 @@ object PhelNamespaceUtils {
     }
 
     /**
-     * Converts namespace to Phel format.
-     * e.g., "str" -> "phel\\str"
-     *       "http" -> "phel\\http"
+     * Converts a short namespace to its canonical Phel form (Phel 0.35+ dot-separated).
+     * e.g., "string" -> "phel.string"
+     *       "http"   -> "phel.http"
      */
     fun toPhelNamespace(shortNamespace: String): String {
-        return "phel\\$shortNamespace"
+        return "phel.$shortNamespace"
     }
 
     fun isCoreNamespace(namespace: String?): Boolean {
@@ -177,8 +190,8 @@ object PhelNamespaceUtils {
                     val symbols = PsiTreeUtil.findChildrenOfType(vectorForm, PhelSymbol::class.java)
                     for (symbol in symbols) {
                         val symbolText = symbol.text
-                        // Skip namespace-qualified symbols (those with backslash)
-                        if (symbolText != null && !symbolText.contains("\\")) {
+                        // Skip namespace-qualified symbols (either separator) and PHP FQNs.
+                        if (symbolText != null && !symbolText.contains("\\") && !symbolText.contains("/")) {
                             referredSymbols.add(symbolText)
                         }
                     }

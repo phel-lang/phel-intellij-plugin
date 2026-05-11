@@ -93,6 +93,14 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="org.phellang.inspection.deprecated.PhelDeprecatedFunctionInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelBackslashNamespace"
+                displayName="Deprecated backslash namespace separator"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="org.phellang.inspection.deprecated.PhelBackslashNamespaceInspection"/>
         <formattingService implementation="org.phellang.editor.format.PhelExternalFormatter"/>
         <notificationGroup id="Phel" displayType="BALLOON"/>
     </extensions>
