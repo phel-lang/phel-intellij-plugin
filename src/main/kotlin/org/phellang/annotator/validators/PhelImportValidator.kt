@@ -23,8 +23,8 @@ object PhelImportValidator {
     fun validateImport(namespaceSymbol: PhelSymbol): ImportValidationResult? {
         val fullNamespace = namespaceSymbol.text ?: return null
 
-        // Skip if it doesn't look like a namespace (must contain backslash)
-        if (!fullNamespace.contains("\\")) {
+        // Must look like a namespace: dot-separated (Phel 0.35+ canonical) or legacy backslash.
+        if (!looksLikeNamespace(fullNamespace)) {
             return null
         }
 
@@ -66,9 +66,14 @@ object PhelImportValidator {
         }
     }
 
+    private fun looksLikeNamespace(text: String): Boolean {
+        return text.contains('\\') || text.contains('.')
+    }
+
     private fun isDuplicateImport(file: PhelFile, currentSymbol: PhelSymbol, namespace: String): Boolean {
         val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false
         val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
+        val normalizedTarget = PhelNamespaceUtils.normalizeNamespace(namespace)
 
         var foundFirst = false
 
@@ -77,9 +82,9 @@ object PhelImportValidator {
 
             for (symbol in symbols) {
                 val symbolText = symbol.text ?: continue
-                if (!symbolText.contains("\\")) continue
+                if (!looksLikeNamespace(symbolText)) continue
 
-                if (symbolText == namespace) {
+                if (PhelNamespaceUtils.normalizeNamespace(symbolText) == normalizedTarget) {
                     if (symbol === currentSymbol) {
                         if (foundFirst) {
                             return true
@@ -100,7 +105,7 @@ object PhelImportValidator {
 
     fun isUnusedImport(namespaceSymbol: PhelSymbol): Boolean {
         val fullNamespace = namespaceSymbol.text ?: return false
-        if (!fullNamespace.contains("\\")) return false
+        if (!looksLikeNamespace(fullNamespace)) return false
 
         val containingFile = namespaceSymbol.containingFile as? PhelFile ?: return false
 

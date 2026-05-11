@@ -1,0 +1,20 @@
+<html>
+<body>
+<p>Reports use of the legacy backslash separator (<code>\</code>) in Phel namespaces inside
+    <code>(ns ...)</code>, <code>:require</code>, and <code>:use</code> clauses.</p>
+
+<p>Since Phel 0.35 the canonical namespace form is dot-separated. Backslash separators are still
+    accepted but are deprecated and emit a runtime warning when
+    <code>PHEL_WARN_DEPRECATIONS=1</code> is set.</p>
+
+<p>Example — deprecated:</p>
+<pre><code>(ns my-app\core
+  (:require phel\string :as s))</code></pre>
+
+<p>Example — preferred:</p>
+<pre><code>(ns my-app.core
+  (:require phel.string :as s))</code></pre>
+
+<p>The quick-fix rewrites the offending symbol, replacing each <code>\</code> with <code>.</code>.</p>
+</body>
+</html>

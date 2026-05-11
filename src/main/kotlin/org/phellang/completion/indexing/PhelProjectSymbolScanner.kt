@@ -160,11 +160,17 @@ object PhelProjectSymbolScanner {
     private fun extractDocstring(forms: List<PhelForm>): String? {
         if (forms.size < 3) return null
 
+        // First try the canonical position right after the name; supports the
+        // `(def name {:doc "..."} value)` style as well.
         val potentialDocstring = forms[2]
-
         extractStringLiteral(potentialDocstring)?.let { return it }
         extractDocFromMap(potentialDocstring)?.let { return it }
 
+        // Otherwise scan the rest of the body for the first top-level string literal.
+        // Covers `(defn foo [x] "doc" body)` and `(defn foo {:meta} [x] "doc" body)`.
+        for (i in 3 until forms.size) {
+            extractStringLiteral(forms[i])?.let { return it }
+        }
         return null
     }
 

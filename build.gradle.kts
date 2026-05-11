@@ -2,12 +2,12 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 group = "org.phellang"
-version = "0.3.7"
+version = "0.4.0"
 
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.3.21"
-    id("org.jetbrains.intellij.platform") version "2.14.0"
+    id("org.jetbrains.intellij.platform") version "2.15.0"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
 }
 
@@ -63,7 +63,7 @@ dependencies {
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.3")
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
-    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("com.google.code.gson:gson:2.14.0")
 }
 
 configurations.all {

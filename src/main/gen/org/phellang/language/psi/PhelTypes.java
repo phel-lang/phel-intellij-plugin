@@ -54,6 +54,7 @@ public interface PhelTypes {
   IElementType PAREN2 = new PhelTokenType(")");
   IElementType QUOTE = new PhelTokenType("'");
   IElementType RADIXNUM = new PhelTokenType("radixnum");
+  IElementType RATIO = new PhelTokenType("ratio");
   IElementType READER_COND = new PhelTokenType("#?(");
   IElementType READER_COND_SPLICE = new PhelTokenType("#?@(");
   IElementType REGEX_BODY = new PhelTokenType("REGEX_BODY");
