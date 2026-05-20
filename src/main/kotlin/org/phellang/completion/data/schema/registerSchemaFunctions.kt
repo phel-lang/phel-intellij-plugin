@@ -24,7 +24,7 @@ Walks <code>schema</code> and coerces string-shaped input into schema-required<b
 """,
             example = "(coerce :int \"42\") ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L84",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L84",
                 docs = "",
             ),
         ),
@@ -44,7 +44,7 @@ Coerces <code>value</code> against <code>schema</code>. Returns the coerced valu
 """,
             example = "(conform :int \"42\") ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L92",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L92",
                 docs = "",
             ),
         ),
@@ -63,7 +63,7 @@ Returns the schema registered under <code>name</code>, or <code>nil</code>.
 """,
             example = "(deref-ref :email)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L138",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L138",
                 docs = "",
             ),
         ),
@@ -84,7 +84,7 @@ Returns <code>nil</code> when <code>value</code> conforms to <code>schema</code>
 """,
             example = "(explain :int :oops)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L67",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L67",
                 docs = "",
             ),
         ),
@@ -104,7 +104,7 @@ Generates a single value conforming to <code>schema</code>. Accepts <code>:size<
 """,
             example = "(generate :int)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L105",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L105",
                 docs = "",
             ),
         ),
@@ -124,7 +124,7 @@ Renders an <code>explain</code> result as a multi-line human string. Returns<br 
 """,
             example = "(human-readable-explain (explain :int :oops))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L76",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L76",
                 docs = "",
             ),
         ),
@@ -144,7 +144,7 @@ Registers <code>f</code> wrapped with <code>schema</code> under <code>name</code
 """,
             example = "(instrument! :add add [:=&gt; [:int :int] :int])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L193",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L193",
                 docs = "",
             ),
         ),
@@ -163,7 +163,7 @@ Returns <code>true</code> if <code>name</code> is currently instrumented.
 """,
             example = "(instrumented? :add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L208",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L208",
                 docs = "",
             ),
         ),
@@ -183,7 +183,7 @@ Sentinel returned by <code>conform</code> when a value cannot be made to fit a<b
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L100",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L100",
                 docs = "",
             ),
         ),
@@ -202,7 +202,7 @@ Registers <code>schema</code> under <code>name</code> in the global schema regis
 """,
             example = "(register! :email [:and :string [:re \"/@/\"]])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L124",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L124",
                 docs = "",
             ),
         ),
@@ -221,7 +221,7 @@ Returns <code>true</code> if a schema is registered under <code>name</code>.
 """,
             example = "(registered? :email)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L144",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L144",
                 docs = "",
             ),
         ),
@@ -231,16 +231,16 @@ Returns <code>true</code> if a schema is registered under <code>name</code>.
         name = "schema/schema->gen",
         signature = "(schema->gen schema)",
         completion = CompletionInfo(
-            tailText = "Returns the phel.test.gen generator associated with schema",
+            tailText = "Returns the phel\\test\\gen generator associated with schema",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the <code>phel.test.gen</code> generator associated with <code>schema</code>.
+Returns the <code>phel\test\gen</code> generator associated with <code>schema</code>.
 """,
             example = "(schema-&gt;gen :int)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L113",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L113",
                 docs = "",
             ),
         ),
@@ -260,7 +260,7 @@ Returns the positional arguments of <code>schema</code> (children past the head<
 """,
             example = "(schema-args [:vector :int]) ; =&gt; [:int]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L43",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L43",
                 docs = "",
             ),
         ),
@@ -280,7 +280,7 @@ Returns <code>true</code> when runtime validation performed by the instrument<br
 """,
             example = "(schema-check?) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L154",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L154",
                 docs = "",
             ),
         ),
@@ -299,7 +299,7 @@ Returns the dispatch head (kind keyword) of <code>schema</code>.
 """,
             example = "(schema-head [:vector :int]) ; =&gt; :vector",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L37",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L37",
                 docs = "",
             ),
         ),
@@ -318,7 +318,7 @@ Returns the options map of <code>schema</code> or <code>{}</code>.
 """,
             example = "(schema-options [:map {:closed true} [:k :int]]) ; =&gt; {:closed true}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L50",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L50",
                 docs = "",
             ),
         ),
@@ -337,7 +337,7 @@ Returns <code>true</code> if <code>x</code> has the shape of a schema value.
 """,
             example = "(schema? :int) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L31",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L31",
                 docs = "",
             ),
         ),
@@ -357,7 +357,7 @@ Enables (<code>true</code>) or disables (<code>false</code>) runtime validation.
 """,
             example = "(set-schema-check! false)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L162",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L162",
                 docs = "",
             ),
         ),
@@ -376,7 +376,7 @@ Removes the schema bound to <code>name</code>. Returns <code>nil</code>.
 """,
             example = "(unregister! :email)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L131",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L131",
                 docs = "",
             ),
         ),
@@ -396,7 +396,7 @@ Removes the instrumentation registered under <code>name</code> and returns the<b
 """,
             example = "(unstrument! :add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L201",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L201",
                 docs = "",
             ),
         ),
@@ -415,7 +415,7 @@ Returns <code>true</code> if <code>value</code> conforms to <code>schema</code>,
 """,
             example = "(validate :int 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L60",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L60",
                 docs = "",
             ),
         ),
@@ -435,7 +435,7 @@ Invokes zero-arg thunk <code>f</code> with runtime validation forced to<br />
 """,
             example = "(with-schema-check false (fn [] (risky-fn)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L170",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L170",
                 docs = "",
             ),
         ),
@@ -454,7 +454,7 @@ Wraps <code>f</code> with the <code>[:=> args ret]</code> function schema.
 """,
             example = "(wrap-with-function-schema add [:=&gt; [:int :int] :int])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L186",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L186",
                 docs = "",
             ),
         ),
@@ -474,7 +474,7 @@ Wraps <code>f</code> so calls validate arguments and return values against the<b
 """,
             example = "(wrap-with-schema add [:int :int] :int)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema.phel#L178",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema.phel#L178",
                 docs = "",
             ),
         ),

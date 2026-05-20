@@ -10,8 +10,8 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 internal fun registerSchemaInstrumentFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/clear-instrumented!",
+        namespace = "schema.instrument",
+        name = "schema.instrument/clear-instrumented!",
         signature = "(clear-instrumented!)",
         completion = CompletionInfo(
             tailText = "Removes every instrumentation entry",
@@ -23,14 +23,14 @@ Removes every instrumentation entry. Returns <code>nil</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L165",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L165",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/function-schema?",
+        namespace = "schema.instrument",
+        name = "schema.instrument/function-schema?",
         signature = "(function-schema? schema)",
         completion = CompletionInfo(
             tailText = "Returns true if schema is a function schema of the shape [:=> args-schema return-schema]",
@@ -43,14 +43,14 @@ Returns <code>true</code> if <code>schema</code> is a function schema of the sha
 """,
             example = "(function-schema? [:=&gt; [:int] :int])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L62",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L62",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/instrument!",
+        namespace = "schema.instrument",
+        name = "schema.instrument/instrument!",
         signature = "(instrument! name f schema)",
         completion = CompletionInfo(
             tailText = "Registers f under name (any key) wrapped with schema",
@@ -64,14 +64,14 @@ Registers <code>f</code> under <code>name</code> (any key) wrapped with <code>sc
 """,
             example = "(def add* (instrument! :add add [:=&gt; [:int :int] :int]))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L130",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L130",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/instrumented-original",
+        namespace = "schema.instrument",
+        name = "schema.instrument/instrumented-original",
         signature = "(instrumented-original name)",
         completion = CompletionInfo(
             tailText = "Returns the original, unwrapped function associated with name, or nil if no instrumentation is re...",
@@ -84,14 +84,14 @@ Returns the original, unwrapped function associated with <code>name</code>, or<b
 """,
             example = "(instrumented-original :add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L157",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L157",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/instrumented?",
+        namespace = "schema.instrument",
+        name = "schema.instrument/instrumented?",
         signature = "(instrumented? name)",
         completion = CompletionInfo(
             tailText = "Returns true if name currently has an instrumentation entry",
@@ -103,14 +103,14 @@ Returns <code>true</code> if <code>name</code> currently has an instrumentation 
 """,
             example = "(instrumented? :add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L151",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L151",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/schema-check?",
+        namespace = "schema.instrument",
+        name = "schema.instrument/schema-check?",
         signature = "(schema-check?)",
         completion = CompletionInfo(
             tailText = "Returns true when runtime validation is enabled",
@@ -122,14 +122,14 @@ Returns <code>true</code> when runtime validation is enabled.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L27",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L27",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/schema?",
+        namespace = "schema.instrument",
+        name = "schema.instrument/schema?",
         signature = "(schema? x)",
         completion = CompletionInfo(
             tailText = "Returns true if x has the shape of a schema value (a keyword or a vector whose head is a keyword,...",
@@ -142,14 +142,14 @@ Returns <code>true</code> if <code>x</code> has the shape of a schema value (a k
 """,
             example = "(schema? :int) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L51",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L51",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/set-schema-check!",
+        namespace = "schema.instrument",
+        name = "schema.instrument/set-schema-check!",
         signature = "(set-schema-check! enabled?)",
         completion = CompletionInfo(
             tailText = "Enables (true) or disables (false) runtime validation performed by wrap-with-schema/instrument",
@@ -162,14 +162,14 @@ Enables (<code>true</code>) or disables (<code>false</code>) runtime validation 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L32",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L32",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/unstrument!",
+        namespace = "schema.instrument",
+        name = "schema.instrument/unstrument!",
         signature = "(unstrument! name)",
         completion = CompletionInfo(
             tailText = "Unregisters the instrumentation bound to name and returns the original (unwrapped) function if pr...",
@@ -182,14 +182,14 @@ Unregisters the instrumentation bound to <code>name</code> and returns the<br />
 """,
             example = "(unstrument! :add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L141",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L141",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/with-schema-check",
+        namespace = "schema.instrument",
+        name = "schema.instrument/with-schema-check",
         signature = "(with-schema-check enabled? f)",
         completion = CompletionInfo(
             tailText = "Runs thunk f with runtime validation set to enabled",
@@ -202,14 +202,14 @@ Runs thunk <code>f</code> with runtime validation set to <code>enabled?</code>, 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L38",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L38",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/wrap-with-function-schema",
+        namespace = "schema.instrument",
+        name = "schema.instrument/wrap-with-function-schema",
         signature = "(wrap-with-function-schema f schema)",
         completion = CompletionInfo(
             tailText = "Convenience: accepts a [:=> args-schema return-schema] schema vector and returns f wrapped accord...",
@@ -222,14 +222,14 @@ Convenience: accepts a <code>[:=> args-schema return-schema]</code> schema vecto
 """,
             example = "(wrap-with-function-schema add [:=&gt; [:int :int] :int])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L118",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\instrument",
-        name = "schema\\instrument/wrap-with-schema",
+        namespace = "schema.instrument",
+        name = "schema.instrument/wrap-with-schema",
         signature = "(wrap-with-schema f arg-schema return-schema)",
         completion = CompletionInfo(
             tailText = "Wraps f so each call validates its arguments against arg-schema (a vector of per-arg schemas) and...",
@@ -245,7 +245,7 @@ Wraps <code>f</code> so each call validates its arguments against <code>arg-sche
 """,
             example = "(wrap-with-schema add [:int :int] :int)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/instrument.phel#L100",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/instrument.phel#L100",
                 docs = "",
             ),
         ),

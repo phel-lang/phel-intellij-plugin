@@ -6,33 +6,31 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.intellij.psi.SmartPointerManager
+import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 
 class PhelRemoveImportQuickFix(
-    private val symbolToRemove: PhelSymbol, private val actionText: String = "Remove import"
+    symbolToRemove: PhelSymbol, private val actionText: String = "Remove import"
 ) : PsiElementBaseIntentionAction(), IntentionAction {
+
+    private val symbolPointer: SmartPsiElementPointer<PhelSymbol> =
+        SmartPointerManager.getInstance(symbolToRemove.project).createSmartPsiElementPointer(symbolToRemove)
 
     override fun getText(): String = actionText
 
     override fun getFamilyName(): String = "Phel namespace imports"
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        return symbolToRemove.isValid
+        return symbolPointer.element?.isValid == true
     }
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
+        val symbolToRemove = symbolPointer.element ?: return
         WriteCommandAction.runWriteCommandAction(project) {
-            removeRequireForm()
-        }
-    }
-
-    private fun removeRequireForm() {
-        // Find the parent (:require ...) list and remove it
-        val requireList = PsiTreeUtil.getParentOfType(symbolToRemove, PhelList::class.java)
-        if (requireList != null) {
-            // Also remove any whitespace/newline before the require form
+            val requireList = PsiTreeUtil.getParentOfType(symbolToRemove, PhelList::class.java) ?: return@runWriteCommandAction
             val prevSibling = requireList.prevSibling
             if (prevSibling != null && prevSibling.text.isBlank()) {
                 prevSibling.delete()

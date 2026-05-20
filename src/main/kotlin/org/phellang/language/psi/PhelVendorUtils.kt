@@ -10,21 +10,7 @@ object PhelVendorUtils {
 
     private const val PHEL_VENDOR_PATH = "phel-lang/phel-lang/src/phel"
 
-    private val NAMESPACE_TO_FILE = mapOf(
-        "core" to "core.phel",
-        "string" to "string.phel",
-        "json" to "json.phel",
-        "http" to "http.phel",
-        "html" to "html.phel",
-        "base64" to "base64.phel",
-        "test" to "test.phel",
-        "mock" to "mock.phel",
-        "repl" to "repl.phel",
-        "debug" to "debug.phel",
-    )
-
     fun findVendorFolder(project: Project): VirtualFile? {
-        // First try: Look for composer.json
         val composerFiles =
             FilenameIndex.getVirtualFilesByName("composer.json", GlobalSearchScope.projectScope(project))
 
@@ -36,7 +22,6 @@ object PhelVendorUtils {
             }
         }
 
-        // Second try: Check project base path
         val basePath = project.basePath ?: return null
         val projectRoot = LocalFileSystem.getInstance().findFileByPath(basePath)
         return projectRoot?.findChild("vendor")
@@ -48,9 +33,38 @@ object PhelVendorUtils {
         return if (phelFolder != null && phelFolder.isDirectory) phelFolder else null
     }
 
-    fun findStandardLibraryFile(project: Project, namespace: String): VirtualFile? {
-        val phelFolder = findPhelLibraryFolder(project) ?: return null
-        val fileName = NAMESPACE_TO_FILE[namespace] ?: return null
-        return phelFolder.findChild(fileName)
+    /**
+     * Returns every vendor `.phel` file that backs the given namespace.
+     *
+     * Phel 0.35+ splits `phel.core` into many bucket files under `core/`
+     * (e.g. `core/arrays.phel`, `core/booleans.phel`). Sub-namespaces like
+     * `schema.coercer` map to `schema/coercer.phel`.
+     */
+    fun findStandardLibraryFiles(project: Project, namespace: String): List<VirtualFile> {
+        val phelFolder = findPhelLibraryFolder(project) ?: return emptyList()
+        val normalized = namespace.replace('\\', '.').removePrefix("phel.")
+
+        val results = mutableListOf<VirtualFile>()
+
+        if (normalized.contains('.')) {
+            // Sub-namespace: schema.coercer -> schema/coercer.phel
+            val relPath = normalized.replace('.', '/') + ".phel"
+            phelFolder.findFileByRelativePath(relPath)?.let { results.add(it) }
+            return results
+        }
+
+        // Root file (e.g. core.phel, string.phel)
+        phelFolder.findChild("$normalized.phel")?.let { results.add(it) }
+
+        // Bucket files under <namespace>/ (core/* in Phel 0.35+, future-proof for other splits)
+        phelFolder.findChild(normalized)?.takeIf { it.isDirectory }?.children
+            ?.filter { !it.isDirectory && it.name.endsWith(".phel") }
+            ?.forEach { results.add(it) }
+
+        return results
     }
+
+    /** Legacy single-file lookup. Prefer [findStandardLibraryFiles]. */
+    fun findStandardLibraryFile(project: Project, namespace: String): VirtualFile? =
+        findStandardLibraryFiles(project, namespace).firstOrNull()
 }

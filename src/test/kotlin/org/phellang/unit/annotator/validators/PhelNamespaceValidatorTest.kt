@@ -16,16 +16,28 @@ class PhelNamespaceValidatorTest {
         @Test
         fun `all standard library short names map to full namespaces`() {
             val expectedMappings = mapOf(
-                "string" to "phel.string",
-                "json" to "phel.json",
-                "http" to "phel.http",
-                "html" to "phel.html",
+                "ai" to "phel.ai",
+                "async" to "phel.async",
                 "base64" to "phel.base64",
-                "test" to "phel.test",
-                "mock" to "phel.mock",
-                "repl" to "phel.repl",
+                "cli" to "phel.cli",
+                "core" to "phel.core",
                 "debug" to "phel.debug",
-                "core" to "phel.core"
+                "html" to "phel.html",
+                "http" to "phel.http",
+                "http-client" to "phel.http-client",
+                "http_client" to "phel.http_client",
+                "json" to "phel.json",
+                "match" to "phel.match",
+                "mock" to "phel.mock",
+                "pprint" to "phel.pprint",
+                "reader" to "phel.reader",
+                "repl" to "phel.repl",
+                "router" to "phel.router",
+                "schema" to "phel.schema",
+                "string" to "phel.string",
+                "test" to "phel.test",
+                "walk" to "phel.walk",
+                "watch" to "phel.watch",
             )
 
             assertEquals(expectedMappings, standardLibraryShortToFull)

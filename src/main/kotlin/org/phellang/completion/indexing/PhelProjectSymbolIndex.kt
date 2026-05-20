@@ -1,6 +1,7 @@
 package org.phellang.completion.indexing
 
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -55,9 +56,11 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     }
 
     fun refreshFile(file: VirtualFile) {
-        val psiManager = PsiManager.getInstance(project)
-        val psiFile = psiManager.findFile(file) as? PhelFile ?: return
-        refreshFileFromPsi(psiFile)
+        ReadAction.run<RuntimeException> {
+            if (project.isDisposed || !file.isValid) return@run
+            val psiFile = PsiManager.getInstance(project).findFile(file) as? PhelFile ?: return@run
+            refreshFileFromPsi(psiFile)
+        }
     }
 
     /**
@@ -119,25 +122,29 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     }
 
     private fun buildIndex() {
-        val phelFiles = FilenameIndex.getAllFilesByExt(
-            project, "phel", GlobalSearchScope.projectScope(project)
-        )
+        ReadAction.run<RuntimeException> {
+            if (project.isDisposed) return@run
+            val phelFiles = FilenameIndex.getAllFilesByExt(
+                project, "phel", GlobalSearchScope.projectScope(project)
+            )
 
-        val psiManager = PsiManager.getInstance(project)
+            val psiManager = PsiManager.getInstance(project)
 
-        for (virtualFile in phelFiles) {
-            val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
+            for (virtualFile in phelFiles) {
+                if (!virtualFile.isValid) continue
+                val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
 
-            val symbols = PhelProjectSymbolScanner.scanFile(psiFile)
+                val symbols = PhelProjectSymbolScanner.scanFile(psiFile)
 
-            if (symbols.isNotEmpty()) {
-                symbolsByFile[virtualFile.path] = symbols
+                if (symbols.isNotEmpty()) {
+                    symbolsByFile[virtualFile.path] = symbols
 
-                // Group by namespace
-                for (symbol in symbols) {
-                    val existingSymbols = symbolsByNamespace[symbol.shortNamespace]?.toMutableList() ?: mutableListOf()
-                    existingSymbols.add(symbol)
-                    symbolsByNamespace[symbol.shortNamespace] = existingSymbols
+                    for (symbol in symbols) {
+                        val existingSymbols =
+                            symbolsByNamespace[symbol.shortNamespace]?.toMutableList() ?: mutableListOf()
+                        existingSymbols.add(symbol)
+                        symbolsByNamespace[symbol.shortNamespace] = existingSymbols
+                    }
                 }
             }
         }

@@ -21,7 +21,7 @@ internal fun registerCoreStringsFunctions(): List<PhelFunction> = listOf(
             summary = "Generates a new unique symbol.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/strings.phel#L25",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/strings.phel#L80",
                 docs = "",
             ),
         ),
@@ -43,7 +43,7 @@ Otherwise, it tries to call <code>__toString</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/strings.phel#L55",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/strings.phel#L110",
                 docs = "",
             ),
         ),
@@ -53,18 +53,23 @@ Otherwise, it tries to call <code>__toString</code>.
         name = "symbol",
         signature = "(symbol name-or-ns & [name])",
         completion = CompletionInfo(
-            tailText = "Returns a new symbol for given string with optional namespace",
+            tailText = "Returns a new symbol for the given name with an optional namespace",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns a new symbol for given string with optional namespace.<br /><br />
-With one argument, creates a symbol without namespace.<br />
-  With two arguments, creates a symbol in the given namespace.
+Returns a new symbol for the given name with an optional namespace.<br /><br />
+With one argument, creates a symbol without namespace. Accepts a<br />
+  string, a keyword, another symbol, or a <code>Var</code> (in which case the<br />
+  result is a fully qualified symbol naming the var). With two<br />
+  arguments, creates a symbol in the given namespace; a <code>nil</code><br />
+  namespace yields a symbol without a namespace.<br /><br />
+Throws <code>InvalidArgumentException</code> for any other input (including<br />
+  functions, numbers, and collections).
 """,
-            example = "(symbol \"foo\") ; =&gt; foo",
+            example = "(symbol \"foo\") ; =&gt; foo\n(symbol :abc) ; =&gt; abc\n(symbol nil \"foo\") ; =&gt; foo\n(symbol #'phel.core/+) ; =&gt; phel.core/+",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/strings.phel#L14",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/strings.phel#L47",
                 docs = "",
             ),
         ),

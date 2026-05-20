@@ -14,18 +14,18 @@ internal fun registerCoreUuidFunctions(): List<PhelFunction> = listOf(
         name = "parse-uuid",
         signature = "(parse-uuid s)",
         completion = CompletionInfo(
-            tailText = "Parses s as a canonical UUID string",
+            tailText = "Parses s as a canonical UUID string and returns a Phel\\Lang\\UUID value, or nil if s is not a vali...",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Parses <code>s</code> as a canonical UUID string. Returns the lower-cased UUID<br />
-  string if valid, or nil otherwise. Since PHP has no UUID type, UUIDs<br />
-  are returned as strings.
+Parses <code>s</code> as a canonical UUID string and returns a <code>Phel\Lang\UUID</code><br />
+  value, or nil if <code>s</code> is not a valid canonical UUID. Already-typed<br />
+  <code>UUID</code> values pass through unchanged.
 """,
-            example = "(parse-uuid \"550E8400-E29B-41D4-A716-446655440000\")\n  ; =&gt; \"550e8400-e29b-41d4-a716-446655440000\"",
+            example = "(parse-uuid \"550E8400-E29B-41D4-A716-446655440000\")\n  ; =&gt; #uuid \"550e8400-e29b-41d4-a716-446655440000\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L43",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/uuid.phel#L29",
                 docs = "",
             ),
         ),
@@ -35,31 +35,16 @@ Parses <code>s</code> as a canonical UUID string. Returns the lower-cased UUID<b
         name = "random-uuid",
         signature = "(random-uuid)",
         completion = CompletionInfo(
-            tailText = "Returns a random UUID v4 string",
+            tailText = "Returns a random version 4 UUID as a Phel\\Lang\\UUID value",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Returns a random UUID v4 string.",
-            example = "(random-uuid) ; =&gt; \"550e8400-e29b-41d4-a716-446655440000\"",
+            summary = """
+Returns a random version 4 UUID as a <code>Phel\Lang\UUID</code> value.
+""",
+            example = "(random-uuid) ; =&gt; #uuid \"550e8400-e29b-41d4-a716-446655440000\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L25",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "core",
-        name = "uuid-nil-value",
-        signature = "",
-        completion = CompletionInfo(
-            tailText = "",
-            priority = PhelCompletionPriority.CORE_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = "",
-            example = null,
-            links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L54",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/uuid.phel#L22",
                 docs = "",
             ),
         ),
@@ -76,26 +61,9 @@ Parses <code>s</code> as a canonical UUID string. Returns the lower-cased UUID<b
             summary = """
 Returns true if <code>x</code> is the nil UUID (all zeros), false otherwise.
 """,
-            example = "(uuid-nil? \"00000000-0000-0000-0000-000000000000\") ; =&gt; true",
+            example = "(uuid-nil? #uuid \"00000000-0000-0000-0000-000000000000\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L69",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "core",
-        name = "uuid-regex",
-        signature = "",
-        completion = CompletionInfo(
-            tailText = "",
-            priority = PhelCompletionPriority.CORE_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = "",
-            example = null,
-            links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L12",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/uuid.phel#L54",
                 docs = "",
             ),
         ),
@@ -112,11 +80,11 @@ Returns true if <code>x</code> is the nil UUID (all zeros), false otherwise.
             summary = """
 Returns a keyword describing the variant field of UUID <code>x</code>: <code>:ncs</code>,<br />
   <code>:rfc-4122</code>, <code>:microsoft</code>, or <code>:reserved</code>. Returns nil if <code>x</code> is not a<br />
-  canonical UUID.
+  <code>UUID</code> value.
 """,
-            example = "(uuid-variant \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; :rfc-4122",
+            example = "(uuid-variant #uuid \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; :rfc-4122",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L86",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/uuid.phel#L71",
                 docs = "",
             ),
         ),
@@ -126,17 +94,17 @@ Returns a keyword describing the variant field of UUID <code>x</code>: <code>:nc
         name = "uuid-version",
         signature = "(uuid-version x)",
         completion = CompletionInfo(
-            tailText = "Returns the version digit (1-5) encoded in UUID x, or nil if x is not a canonical UUID",
+            tailText = "Returns the version digit (1-5) encoded in UUID x, or nil if x is not a UUID value",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
 Returns the version digit (1-5) encoded in UUID <code>x</code>, or nil if <code>x</code> is<br />
-  not a canonical UUID.
+  not a <code>UUID</code> value.
 """,
-            example = "(uuid-version \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; 4",
+            example = "(uuid-version #uuid \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; 4",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L77",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/uuid.phel#L62",
                 docs = "",
             ),
         ),
@@ -146,18 +114,18 @@ Returns the version digit (1-5) encoded in UUID <code>x</code>, or nil if <code>
         name = "uuid=",
         signature = "(uuid= a b)",
         completion = CompletionInfo(
-            tailText = "Returns true if a and b are canonical UUID strings that compare equal case-insensitively",
+            tailText = "Returns true if a and b are Phel\\Lang\\UUID values with the same canonical form",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if <code>a</code> and <code>b</code> are canonical UUID strings that compare<br />
-  equal case-insensitively. Returns false if either argument is not a<br />
-  valid UUID.
+Returns true if <code>a</code> and <code>b</code> are <code>Phel\Lang\UUID</code> values with the<br />
+  same canonical form. Strings (or anything else) are rejected even if<br />
+  their textual content would match — coerce with <code>parse-uuid</code> first.
 """,
-            example = "(uuid= \"550E8400-E29B-41D4-A716-446655440000\"\n         \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; true",
+            example = "(uuid= #uuid \"550e8400-e29b-41d4-a716-446655440000\"\n         #uuid \"550E8400-E29B-41D4-A716-446655440000\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L57",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/uuid.phel#L44",
                 docs = "",
             ),
         ),
@@ -167,18 +135,18 @@ Returns true if <code>a</code> and <code>b</code> are canonical UUID strings tha
         name = "uuid?",
         signature = "(uuid? x)",
         completion = CompletionInfo(
-            tailText = "Returns true if x is a canonical UUID string (36 characters, 8-4-4-4-12 hexadecimal groups), fals...",
+            tailText = "Returns true if x is a Phel\\Lang\\UUID value, false otherwise",
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if <code>x</code> is a canonical UUID string (36 characters,<br />
-  <code>8-4-4-4-12</code> hexadecimal groups), false otherwise. PHP has no UUID<br />
-  type, so UUIDs are represented as strings.
+Returns true if <code>x</code> is a <code>Phel\Lang\UUID</code> value, false otherwise.<br />
+  Canonical UUID strings are rejected — wrap them with <code>parse-uuid</code> (or<br />
+  the <code>#uuid "..."</code> literal) to obtain a typed value.
 """,
-            example = "(uuid? \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; true",
+            example = "(uuid? #uuid \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/uuid.phel#L15",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/uuid.phel#L13",
                 docs = "",
             ),
         ),

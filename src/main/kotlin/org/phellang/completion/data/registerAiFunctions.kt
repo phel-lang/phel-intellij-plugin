@@ -13,11 +13,12 @@ internal fun registerAiFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-HTTP POST seam. Rebind with <code>binding</code> in tests to inject a fake transport.
+HTTP POST seam. Rebind with <code>binding</code> in tests to inject a fake transport.<br />
+  Tagged <code>^:dynamic</code> so concurrent tests rebinding it stay isolated per fiber.
 """,
             example = "(binding [*http-post* (fn [url opts] {:status 200 :body \"...\"})] ...)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L24",
                 docs = "",
             ),
         ),
@@ -39,7 +40,7 @@ Options are passed through to <code>embed</code>.
 """,
             example = "(build-index [\"hello\" \"world\"])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L603",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L706",
                 docs = "",
             ),
         ),
@@ -47,7 +48,7 @@ Options are passed through to <code>embed</code>.
     PhelFunction(
         namespace = "ai",
         name = "ai/chat",
-        signature = "(chat messages & [opts])",
+        signature = "(chat messages & [{:keys [system], :as opts}])",
         completion = CompletionInfo(
             tailText = "Sends a chat completion request with a list of message maps",
             priority = PhelCompletionPriority.AI_FUNCTIONS,
@@ -68,7 +69,7 @@ Accepts an optional options map:<br />
 """,
             example = "(chat [{:role \"user\" :content \"Hello!\"}])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L261",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L294",
                 docs = "",
             ),
         ),
@@ -89,7 +90,7 @@ Useful for building multi-turn conversations.
 """,
             example = "(chat-with-history [{:role \"user\" :content \"Hi\"}\n                              {:role \"assistant\" :content \"Hello!\"}]\n                             \"How are you?\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L298",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L330",
                 docs = "",
             ),
         ),
@@ -97,7 +98,7 @@ Useful for building multi-turn conversations.
     PhelFunction(
         namespace = "ai",
         name = "ai/chat-with-tools",
-        signature = "(chat-with-tools messages tools & [opts])",
+        signature = "(chat-with-tools messages tools & [{:keys [system], :as opts}])",
         completion = CompletionInfo(
             tailText = "Sends a chat request with tool definitions",
             priority = PhelCompletionPriority.AI_FUNCTIONS,
@@ -114,7 +115,7 @@ Options map accepts the same keys as <code>chat</code>.
 """,
             example = "(chat-with-tools [{:role \"user\" :content \"What's the weather?\"}]\n                             [(tool \"get-weather\" \"Gets weather\" {:city {:type \"string\"}})])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L438",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L494",
                 docs = "",
             ),
         ),
@@ -135,7 +136,7 @@ Takes a prompt string and returns the assistant's text response.<br />
 """,
             example = "(complete \"Explain monads in one sentence\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L288",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L320",
                 docs = "",
             ),
         ),
@@ -154,7 +155,7 @@ Current AI configuration atom. Use <code>configure</code> to update.
 """,
             example = "@ai/config",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L19",
                 docs = "",
             ),
         ),
@@ -179,9 +180,9 @@ Supported keys:<br />
     :timeout     - HTTP timeout in seconds (default 120)<br />
     :max-retries - Retry attempts on 429/5xx (default 2)
 """,
-            example = "(configure {:api-key \"sk-ant-...\" :model \"claude-sonnet-4-20250514\"})",
+            example = "(configure {:api-key \"sk-ant-...\" :model \"claude-sonnet-4-5\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L29",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L30",
                 docs = "",
             ),
         ),
@@ -201,7 +202,7 @@ Computes the cosine similarity between two numeric vectors.<br />
 """,
             example = "(cosine-similarity [1 0] [0 1]) ; =&gt; 0.0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L524",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L627",
                 docs = "",
             ),
         ),
@@ -218,7 +219,7 @@ Computes the cosine similarity between two numeric vectors.<br />
             summary = "Computes the dot product of two numeric vectors.",
             example = "(dot-product [1 2 3] [4 5 6]) ; =&gt; 32",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L508",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L611",
                 docs = "",
             ),
         ),
@@ -226,7 +227,7 @@ Computes the cosine similarity between two numeric vectors.<br />
     PhelFunction(
         namespace = "ai",
         name = "ai/embed",
-        signature = "(embed texts & [{:model model, :provider provider}])",
+        signature = "(embed texts & [{:keys [model provider], :or {provider :openai}}])",
         completion = CompletionInfo(
             tailText = "Generates embeddings for one or more text strings",
             priority = PhelCompletionPriority.AI_FUNCTIONS,
@@ -242,7 +243,7 @@ Options:<br />
 """,
             example = "(embed [\"hello world\"]) ; =&gt; [[0.123 -0.456 ...]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L561",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L664",
                 docs = "",
             ),
         ),
@@ -262,7 +263,7 @@ Generates an embedding for a single text string.<br />
 """,
             example = "(embed-one \"hello world\") ; =&gt; [0.123 -0.456 ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L575",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L678",
                 docs = "",
             ),
         ),
@@ -288,7 +289,7 @@ Options:<br />
 """,
             example = "(extract {:name \"string\" :age \"integer\"} \"John is 30 years old\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L366",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L437",
                 docs = "",
             ),
         ),
@@ -309,7 +310,7 @@ Similar to <code>extract</code>, but returns a vector of maps when the text<br /
 """,
             example = "(extract-many {:name \"string\" :role \"string\"} \"Alice is CEO, Bob is CTO\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L391",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L459",
                 docs = "",
             ),
         ),
@@ -326,7 +327,7 @@ Similar to <code>extract</code>, but returns a vector of maps when the text<br /
             summary = "Computes the magnitude (L2 norm) of a numeric vector.",
             example = "(magnitude [3 4]) ; =&gt; 5.0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L517",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L620",
                 docs = "",
             ),
         ),
@@ -348,7 +349,36 @@ Finds the k nearest items to a query embedding from an index.<br /><br />
 """,
             example = "(nearest query-embedding index 5)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L587",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L690",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "ai",
+        name = "ai/run-tools",
+        signature = "(run-tools messages tools handlers & [opts])",
+        completion = CompletionInfo(
+            tailText = "Drives a tool-calling loop: repeatedly sends messages with tools, resolves any tool calls via han...",
+            priority = PhelCompletionPriority.AI_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Drives a tool-calling loop: repeatedly sends <code>messages</code> with <code>tools</code>,<br />
+  resolves any tool calls via <code>handlers</code>, and feeds the results back in<br />
+  until the model returns a final text response (or <code>:max-turns</code> is hit).<br /><br />
+- <code>messages</code>: initial conversation (vector of role/content maps)<br />
+  - <code>tools</code>: tool definitions built with <code>tool</code><br />
+  - <code>handlers</code>: map of tool-name (string) -> fn taking the call's :input map<br />
+                and returning a value (stringified into the tool result)<br />
+  - <code>opts</code>: same keys as <code>chat-with-tools</code>, plus <code>:max-turns</code> (default 5)<br /><br />
+Returns the assistant's final text. Throws if a tool name has no handler<br />
+  or if <code>:max-turns</code> is reached without a final response. Anthropic-only;<br />
+  OpenAI tool loops require a different message shape and are not handled.
+""",
+            example = "(run-tools [{:role \"user\" :content \"weather?\"}]\n                       [(tool \"get-weather\" \"...\" {:city \"string\"})]\n                       {\"get-weather\" (fn [args] \"72F\")})",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L566",
                 docs = "",
             ),
         ),
@@ -356,7 +386,7 @@ Finds the k nearest items to a query embedding from an index.<br /><br />
     PhelFunction(
         namespace = "ai",
         name = "ai/search",
-        signature = "(search query index & [{:k k, :model model, :provider provider}])",
+        signature = "(search query index & [{:keys [k model provider], :or {k 5}}])",
         completion = CompletionInfo(
             tailText = "Semantic search: embeds a query and finds the k nearest matches in a pre-built index",
             priority = PhelCompletionPriority.AI_FUNCTIONS,
@@ -369,7 +399,7 @@ Returns a vector of {:text, :embedding, :similarity} maps.
 """,
             example = "(search \"greeting\" my-index 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L618",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L721",
                 docs = "",
             ),
         ),
@@ -393,7 +423,7 @@ The returned map is provider-agnostic; <code>chat-with-tools</code> converts it 
 """,
             example = "(tool \"get-weather\" \"Gets weather for a city\" {:location {:type \"string\"}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L422",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L478",
                 docs = "",
             ),
         ),
@@ -414,7 +444,7 @@ Accepts either a raw provider response body or a map produced by<br />
 """,
             example = "(tool-calls response)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L470",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L525",
                 docs = "",
             ),
         ),
@@ -436,7 +466,28 @@ Optional <code>opts</code> can set :provider (defaults to current config).
 """,
             example = "(tool-result \"call_abc\" \"72F sunny\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/ai.phel#L483",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L538",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "ai",
+        name = "ai/with-config",
+        signature = "(with-config opts & body)",
+        completion = CompletionInfo(
+            tailText = "Temporarily merges opts into the global config for the duration of body, then restores the previo...",
+            priority = PhelCompletionPriority.MACROS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Temporarily merges <code>opts</code> into the global config for the duration of <code>body</code>,<br />
+  then restores the previous config. Safer than <code>configure</code> for embedded use,<br />
+  since it won't leave global state mutated when <code>body</code> throws.
+""",
+            example = "(with-config {:provider :openai :model \"gpt-4o\"} (complete \"hi\"))",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L46",
                 docs = "",
             ),
         ),

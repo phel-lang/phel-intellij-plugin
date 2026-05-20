@@ -24,7 +24,29 @@ Adds a watch function to a variable. The watch fn is called when the variable<br
 """,
             example = "(add-watch my-var :logger (fn [key ref old new] (println old \"-&gt;\" new)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L106",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L101",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "alter-meta!",
+        signature = "(alter-meta! r f & args)",
+        completion = CompletionInfo(
+            tailText = "Replaces the metadata on r with (apply f current-meta args)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Replaces the metadata on <code>r</code> with <code>(apply f current-meta args)</code>.<br />
+  Works on <code>Var</code> handles (mutates per-var metadata, surviving subsequent<br />
+  <code>def</code> redefinitions) and on atoms (mutates the atom's own meta map).<br />
+  Returns the new metadata map.
+""",
+            example = "(alter-meta! #'my-var assoc :tag :int)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L161",
                 docs = "",
             ),
         ),
@@ -32,23 +54,20 @@ Adds a watch function to a variable. The watch fn is called when the variable<br
     PhelFunction(
         namespace = "core",
         name = "alter-var-root",
-        signature = "(alter-var-root & _)",
+        signature = "(alter-var-root v f & args)",
         completion = CompletionInfo(
-            tailText = "Clojure's alter-var-root is out of scope in Phel: there are no first-class vars whose root bindin...",
+            tailText = "Replaces the root binding of v with (apply f current-root args)",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Clojure's <code>alter-var-root</code> is out of scope in Phel: there are no first-class<br />
-  vars whose root binding could be swapped. Reaching for this function in<br />
-  <code>.cljc</code> code is nearly always a bug; prefer an <code>atom</code> and <code>swap!</code> for mutable<br />
-  state, or redefine the top-level binding with <code>def</code> if the intent was to<br />
-  replace it at load time. Calling <code>alter-var-root</code> at runtime throws to make<br />
-  the mismatch obvious instead of silently no-oping.
+Replaces the root binding of <code>v</code> with <code>(apply f current-root args)</code>.<br />
+  Returns the new root value. <code>v</code> must be a <code>Var</code>; pass an atom and you get a<br />
+  clear error pointing at <code>swap!</code> instead.
 """,
-            example = null,
+            example = "(def counter 0)\n(alter-var-root #'counter inc) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L115",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L110",
                 docs = "",
             ),
         ),
@@ -56,7 +75,7 @@ Clojure's <code>alter-var-root</code> is out of scope in Phel: there are no firs
     PhelFunction(
         namespace = "core",
         name = "atom",
-        signature = "(atom value)",
+        signature = "(atom value & opts)",
         completion = CompletionInfo(
             tailText = "Creates a new atom with the given value",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -65,11 +84,13 @@ Clojure's <code>alter-var-root</code> is out of scope in Phel: there are no firs
             summary = """
 Creates a new atom with the given value.<br /><br />
 Atoms provide a way to manage mutable state. Use <code>reset!</code> to set a new value<br />
-  and <code>swap!</code> to update based on the current value.
+  and <code>swap!</code> to update based on the current value.<br /><br />
+Optional <code>:meta</code> and <code>:validator</code> keyword arguments may follow the value in<br />
+  any order. The validator is applied to the initial value when set.
 """,
-            example = "(def counter (atom 0))",
+            example = "(def counter (atom 0))\n(atom 0 :meta {:tag :counter} :validator number?)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L20",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L22",
                 docs = "",
             ),
         ),
@@ -86,7 +107,27 @@ Atoms provide a way to manage mutable state. Use <code>reset!</code> to set a ne
             summary = "Returns true if the given value is an atom.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L39",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L40",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "bound?",
+        signature = "(bound? v)",
+        completion = CompletionInfo(
+            tailText = "Returns true when v has a current root binding in the namespace registry",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true when <code>v</code> has a current root binding in the namespace<br />
+  registry. <code>v</code> must be a <code>Var</code>.
+""",
+            example = "(bound? #'phel.core/map) ; =&gt; true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L122",
                 docs = "",
             ),
         ),
@@ -96,19 +137,21 @@ Atoms provide a way to manage mutable state. Use <code>reset!</code> to set a ne
         name = "deref",
         signature = "(deref variable & args)",
         completion = CompletionInfo(
-            tailText = "Returns the current value inside the variable",
+            tailText = "Returns the current value inside an atom or var",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the current value inside the variable.<br /><br />
+Returns the current value inside an atom or var.<br /><br />
+For atoms returns the current cell value; for <code>Var</code> instances returns the<br />
+  current root binding from the namespace registry.<br /><br />
 With three arguments, and when <code>variable</code> is a future or promise, blocks<br />
   for at most <code>timeout-ms</code> milliseconds waiting for it to resolve. If the<br />
   awaitable has not completed within the timeout, returns <code>timeout-val</code>.
 """,
-            example = "(deref (atom 42)) ; =&gt; 42",
+            example = "(deref (atom 42)) ; =&gt; 42\n(deref #'phel.core/map) ; =&gt; &lt;fn&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L67",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L59",
                 docs = "",
             ),
         ),
@@ -128,7 +171,7 @@ Repeatedly executes body for side effects with bindings and modifiers as<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L266",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L328",
                 docs = "",
             ),
         ),
@@ -151,7 +194,7 @@ Repeatedly executes body for side effects with Clojure-style bindings.<br />
 """,
             example = "(doseq [x [1 2 3]] (println x))\n(doseq [[k v] {:a 1 :b 2}] (println k v))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L320",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L382",
                 docs = "",
             ),
         ),
@@ -173,7 +216,7 @@ Internal helper used by the <code>doseq</code> macro expansion. Returns a value<
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L279",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L341",
                 docs = "",
             ),
         ),
@@ -208,7 +251,7 @@ Finally, additional options can be set:<br /><br />
 """,
             example = "(for [x :in [1 2 3]] (* x 2)) ; =&gt; [2 4 6]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L226",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L288",
                 docs = "",
             ),
         ),
@@ -225,7 +268,7 @@ Finally, additional options can be set:<br /><br />
             summary = "Returns the validator function of a variable, or nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L144",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L206",
                 docs = "",
             ),
         ),
@@ -242,7 +285,7 @@ Finally, additional options can be set:<br /><br />
             summary = "Returns its argument.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L331",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L393",
                 docs = "",
             ),
         ),
@@ -263,7 +306,7 @@ Creates a lazy sequence of numbers. With no arguments returns an infinite<br />
 """,
             example = "(range 5) ; =&gt; (0 1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L163",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L225",
                 docs = "",
             ),
         ),
@@ -280,7 +323,7 @@ Creates a lazy sequence of numbers. With no arguments returns an infinite<br />
             summary = "Removes a watch function from a variable by key.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L127",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L189",
                 docs = "",
             ),
         ),
@@ -297,25 +340,27 @@ Creates a lazy sequence of numbers. With no arguments returns an infinite<br />
             summary = "Sets a new value on the given atom. Returns the new value.",
             example = "(def x (atom 10))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L51",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L52",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
         namespace = "core",
-        name = "set!",
-        signature = "(set! variable value)",
+        name = "reset-meta!",
+        signature = "(reset-meta! r meta-map)",
         completion = CompletionInfo(
-            tailText = "Sets a new value to the given variable",
-            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
+            tailText = "Installs meta-map as the metadata on r, replacing any prior metadata",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Sets a new value to the given variable.",
-            example = "(def x (var 10))",
-            deprecation = DeprecationInfo(version = "0.32.0", replacement = "reset!"),
+            summary = """
+Installs <code>meta-map</code> as the metadata on <code>r</code>, replacing any prior metadata.<br />
+  Works on <code>Var</code> handles and on atoms. Returns the installed map.
+""",
+            example = "(reset-meta! #'my-var {:tag :int})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L58",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L177",
                 docs = "",
             ),
         ),
@@ -336,7 +381,7 @@ Sets a validator function on a variable. The validator is called before any<br /
 """,
             example = "(set-validator! my-var pos?)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L134",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L196",
                 docs = "",
             ),
         ),
@@ -356,25 +401,48 @@ Returns the new value after the swap.
 """,
             example = "(def counter (atom 0))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L91",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L86",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
         namespace = "core",
-        name = "var",
-        signature = "(var value)",
+        name = "thread-bound?",
+        signature = "(thread-bound? v)",
         completion = CompletionInfo(
-            tailText = "Creates a new variable with the given value",
-            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
+            tailText = "Returns true when a fiber-local binding (or with-bindings) frame currently overrides the value of...",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Creates a new variable with the given value.",
-            example = "(def counter (var 0))",
-            deprecation = DeprecationInfo(version = "0.32.0", replacement = "atom"),
+            summary = """
+Returns true when a fiber-local <code>binding</code> (or <code>with-bindings</code>) frame<br />
+  currently overrides the value of <code>v</code> on the calling fiber.
+""",
+            example = "(binding [*foo* 1] (thread-bound? #'*foo*)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L134",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "var-set",
+        signature = "(var-set v val)",
+        completion = CompletionInfo(
+            tailText = "Sets the value of the topmost active fiber-local binding frame for v to val",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Sets the value of the topmost active fiber-local binding frame for<br />
+  <code>v</code> to <code>val</code>. Throws when no <code>binding</code> (or <code>with-bindings</code>) frame is<br />
+  currently overriding <code>v</code>. Returns <code>val</code>.
+""",
+            example = "(def ^:dynamic *x* 0)\n(binding [*x* 1] (var-set #'*x* 2) *x*) ; =&gt; 2",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L147",
                 docs = "",
             ),
         ),
@@ -384,15 +452,17 @@ Returns the new value after the swap.
         name = "var?",
         signature = "(var? x)",
         completion = CompletionInfo(
-            tailText = "Checks if the given value is a variable",
-            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
+            tailText = "Returns true if the given value is a Var, the first-class handle to a global definition produced ...",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Checks if the given value is a variable.",
+            summary = """
+Returns true if the given value is a <code>Var</code>, the first-class handle to a<br />
+  global definition produced by <code>(var sym)</code> and <code>#'sym</code>.
+""",
             example = null,
-            deprecation = DeprecationInfo(version = "0.32.0", replacement = "atom?"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/atoms.phel#L44",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/atoms.phel#L45",
                 docs = "",
             ),
         ),

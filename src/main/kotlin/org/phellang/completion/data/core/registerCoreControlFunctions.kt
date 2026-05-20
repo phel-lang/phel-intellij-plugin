@@ -23,7 +23,7 @@ Evaluates expression and matches it against constant test values, returning the 
 """,
             example = "(case x 1 \"one\" 2 \"two\" \"other\") ; =&gt; \"one\" (when x is 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L45",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/control.phel#L57",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ Evaluates expression and matches it against constant test values, returning the 
             summary = "Evaluates test/expression pairs, returning the first matching expression.",
             example = "(cond (&lt; x 0) \"negative\" (&gt; x 0) \"positive\" \"zero\") ; =&gt; \"negative\", \"positive\", or \"zero\" depending on x",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L31",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/control.phel#L32",
                 docs = "",
             ),
         ),
@@ -68,7 +68,7 @@ Takes a binary predicate, an expression, and a set of clauses.<br />
 """,
             example = "(condp = 1 1 \"one\" 2 \"two\" \"other\") ; =&gt; \"one\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L76",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/control.phel#L88",
                 docs = "",
             ),
         ),
@@ -85,7 +85,7 @@ Takes a binary predicate, an expression, and a set of clauses.<br />
             summary = "Evaluates then if test is false, else otherwise.",
             example = "(if-not (&lt; 5 3) \"not less\" \"less\") ; =&gt; \"not less\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L13",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/control.phel#L14",
                 docs = "",
             ),
         ),
@@ -102,7 +102,7 @@ Takes a binary predicate, an expression, and a set of clauses.<br />
             summary = "Evaluates body if test is true, otherwise returns nil.",
             example = "(when (&gt; 10 5) \"greater\") ; =&gt; \"greater\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/control.phel#L20",
                 docs = "",
             ),
         ),
@@ -119,7 +119,7 @@ Takes a binary predicate, an expression, and a set of clauses.<br />
             summary = "Evaluates body if test is false, otherwise returns nil.",
             example = "(when-not (empty? [1 2 3]) \"has items\") ; =&gt; \"has items\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/control.phel#L25",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/control.phel#L26",
                 docs = "",
             ),
         ),

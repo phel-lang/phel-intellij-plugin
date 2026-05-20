@@ -15,7 +15,7 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
             summary = "Returns an HTML doctype declaration.",
             example = "(doctype :html5) ; =&gt; \"&lt;!DOCTYPE html&gt;\\n\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L167",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/html.phel#L167",
                 docs = "",
             ),
         ),
@@ -32,7 +32,7 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
             summary = "Escapes HTML special characters to prevent XSS.",
             example = "(escape-html \"&lt;div&gt;\") ; =&gt; \"&amp;lt;div&amp;gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L6",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/html.phel#L6",
                 docs = "",
             ),
         ),
@@ -49,7 +49,7 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
             summary = "Compiles Phel vectors to HTML strings.",
             example = "(html [:div \"Hello\"]) ; =&gt; \"&lt;div&gt;Hello&lt;/div&gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L152",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/html.phel#L152",
                 docs = "",
             ),
         ),
@@ -66,7 +66,7 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
             summary = "Creates a new raw-string struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/html.phel#L4",
                 docs = "",
             ),
         ),
@@ -85,7 +85,7 @@ Checks if <code>x</code> is an instance of the raw-string struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/html.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/html.phel#L4",
                 docs = "",
             ),
         ),

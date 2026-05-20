@@ -12,10 +12,13 @@ internal fun registerStringFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "True if s is nil, empty, or contains only whitespace.",
+            summary = """
+True if s is nil, empty, or contains only whitespace. Non-breaking<br />
+  separators (<code>U+00A0</code>, <code>U+2007</code>, <code>U+202F</code>) are not treated as whitespace.
+""",
             example = "(blank? \"   \") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L136",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L136",
                 docs = "",
             ),
         ),
@@ -32,7 +35,7 @@ internal fun registerStringFunctions(): List<PhelFunction> = listOf(
             summary = "Converts first character to upper-case and all other characters to lower-case.",
             example = "(capitalize \"hELLO wORLD\") ; =&gt; \"Hello world\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L97",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L97",
                 docs = "",
             ),
         ),
@@ -53,7 +56,7 @@ This is a convenience function for converting strings to character sequences.<br
 """,
             example = "(chars \"hello\") ; =&gt; [\"h\" \"e\" \"l\" \"l\" \"o\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L11",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L11",
                 docs = "",
             ),
         ),
@@ -70,7 +73,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "True if s contains substr.",
             example = "(contains? \"hello world\" \"lo wo\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L156",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L159",
                 docs = "",
             ),
         ),
@@ -87,7 +90,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "True if s ends with substr.",
             example = "(ends-with? \"hello world\" \"world\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L150",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L153",
                 docs = "",
             ),
         ),
@@ -104,7 +107,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns a new string with each character escaped according to cmap.",
             example = "(escape \"hello\" {\"h\" \"H\" \"o\" \"O\"}) ; =&gt; \"HellO\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L174",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L177",
                 docs = "",
             ),
         ),
@@ -121,7 +124,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "True if s includes substr.",
             example = "(includes? \"hello world\" \"world\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L162",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L165",
                 docs = "",
             ),
         ),
@@ -138,7 +141,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns the index of value in s, or nil if not found.",
             example = "(index-of \"hello world\" \"world\") ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L182",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L185",
                 docs = "",
             ),
         ),
@@ -155,7 +158,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns a string of all elements in coll, separated by an optional separator.",
             example = "(join \", \" [\"apple\" \"banana\" \"cherry\"]) ; =&gt; \"apple, banana, cherry\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L21",
                 docs = "",
             ),
         ),
@@ -172,7 +175,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns the last index of value in s, or nil if not found.",
             example = "(last-index-of \"hello world world\" \"world\") ; =&gt; 12",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L197",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L200",
                 docs = "",
             ),
         ),
@@ -189,7 +192,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Converts string to all lower-case.",
             example = "(lower-case \"HELLO World\") ; =&gt; \"hello world\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L106",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L106",
                 docs = "",
             ),
         ),
@@ -206,7 +209,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns a string padded on both sides to length len.",
             example = "(pad-both \"hello\" 11) ; =&gt; \"   hello   \"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L238",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L241",
                 docs = "",
             ),
         ),
@@ -223,7 +226,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns a string padded on the left side to length len.",
             example = "(pad-left \"hello\" 10) ; =&gt; \"     hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L226",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L229",
                 docs = "",
             ),
         ),
@@ -240,7 +243,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns a string padded on the right side to length len.",
             example = "(pad-right \"hello\" 10) ; =&gt; \"hello     \"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L232",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L235",
                 docs = "",
             ),
         ),
@@ -257,7 +260,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Escapes special characters in a replacement string for literal use.",
             example = "(re-quote-replacement \"\$1.00\") ; =&gt; \"\\\$1.00\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L168",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L171",
                 docs = "",
             ),
         ),
@@ -274,7 +277,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns a string containing n copies of s.",
             example = "(repeat \"ha\" 3) ; =&gt; \"hahaha\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L45",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L45",
                 docs = "",
             ),
         ),
@@ -291,7 +294,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Replaces all instances of match with replacement in s.",
             example = "(replace \"hello world\" \"world\" \"there\") ; =&gt; \"hello there\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L63",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L63",
                 docs = "",
             ),
         ),
@@ -308,7 +311,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Replaces the first instance of match with replacement in s.",
             example = "(replace-first \"hello world world\" \"world\" \"there\") ; =&gt; \"hello there world\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L74",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L74",
                 docs = "",
             ),
         ),
@@ -325,7 +328,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns s with its characters reversed.",
             example = "(reverse \"hello\") ; =&gt; \"olleh\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L38",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L38",
                 docs = "",
             ),
         ),
@@ -342,7 +345,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Splits string on a regular expression, returning a vector of parts.",
             example = "(split \"hello world foo bar\" #\"\\s+\") ; =&gt; [\"hello\" \"world\" \"foo\" \"bar\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L5",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L5",
                 docs = "",
             ),
         ),
@@ -359,7 +362,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Splits s on \\n or \\r\\n. Trailing empty lines are not returned.",
             example = "(split-lines \"hello\\nworld\\ntest\") ; =&gt; [\"hello\" \"world\" \"test\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L220",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L223",
                 docs = "",
             ),
         ),
@@ -376,7 +379,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "True if s starts with substr.",
             example = "(starts-with? \"hello world\" \"hello\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L144",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L147",
                 docs = "",
             ),
         ),
@@ -393,7 +396,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Returns the substring of s from start (inclusive) to end (exclusive).",
             example = "(subs \"hello world\" 0 5) ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L28",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L28",
                 docs = "",
             ),
         ),
@@ -410,7 +413,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Removes whitespace from both ends of string.",
             example = "(trim \"  hello  \") ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L118",
                 docs = "",
             ),
         ),
@@ -427,7 +430,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Removes all trailing newline or return characters from string.",
             example = "(trim-newline \"hello\\n\\n\") ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L85",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L85",
                 docs = "",
             ),
         ),
@@ -444,7 +447,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Removes whitespace from the left side of string.",
             example = "(triml \"  hello  \") ; =&gt; \"hello  \"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L124",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L124",
                 docs = "",
             ),
         ),
@@ -461,7 +464,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Removes whitespace from the right side of string.",
             example = "(trimr \"  hello  \") ; =&gt; \"  hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L130",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L130",
                 docs = "",
             ),
         ),
@@ -478,7 +481,7 @@ This is a convenience function for converting strings to character sequences.<br
             summary = "Converts string to all upper-case.",
             example = "(upper-case \"hello World\") ; =&gt; \"HELLO WORLD\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/string.phel#L112",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/string.phel#L112",
                 docs = "",
             ),
         ),
