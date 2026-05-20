@@ -23,28 +23,11 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
   false at macroexpansion time, <code>assert</code> expands to nil and performs no<br />
   runtime check, matching Clojure's compile-time <code><em>assert</em></code> semantics.<br />
   Defaults to <code>true</code>. To disable globally, set the core binding before<br />
-  compilation via PHP: <code>\Phel::addDefinition("phel.core", "<em>assert</em>", false)</code>.
+  compilation via PHP: <code>\Phel::addDefinition("phel\\core", "<em>assert</em>", false)</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L17",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "core",
-        name = "*build-mode*",
-        signature = "",
-        completion = CompletionInfo(
-            tailText = "",
-            priority = PhelCompletionPriority.CORE_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = "",
-            example = null,
-            links = DocumentationLinks(
-                github = "",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L21",
                 docs = "",
             ),
         ),
@@ -76,7 +59,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
         ),
         documentation = DocumentationInfo(
             summary = "Returns the namespace in the current scope.",
-            example = "(println *ns*) ; =&gt; \"my-app\\core\"",
+            example = "(println *ns*) ; =&gt; \"my-app.core\"",
             links = DocumentationLinks(
                 github = "",
                 docs = "",
@@ -95,7 +78,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
             summary = "The script path or namespace being executed.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L145",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L199",
                 docs = "",
             ),
         ),
@@ -134,7 +117,7 @@ Vector of user arguments passed to the script (excludes program name).<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L150",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L204",
                 docs = "",
             ),
         ),
@@ -157,7 +140,7 @@ Constructs a map from the given key/value pairs. If any keys are<br />
 """,
             example = "(array-map :a 1 :b 2) ; =&gt; {:a 1 :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L47",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L59",
                 docs = "",
             ),
         ),
@@ -212,7 +195,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             summary = "Declare a global symbol before it is defined.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L135",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L187",
                 docs = "",
             ),
         ),
@@ -338,13 +321,13 @@ Evaluate expressions after the try body and all matching catches have completed.
         documentation = DocumentationInfo(
             summary = """
 Returns the first element of a sequence, or nil if empty.<br /><br />
-Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns the<br />
-  first <code>[:a 1]</code> vector. Strings are treated as sequences of multibyte<br />
-  characters.
+Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns a<br />
+  typed <code>MapEntry</code> equal by value to <code>[:a 1]</code>. Strings are treated as<br />
+  sequences of multibyte characters.
 """,
             example = "(first [1 2 3]) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L95",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L146",
                 docs = "",
             ),
         ),
@@ -492,7 +475,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = "Returns the sequence after the first element, or nil if empty.",
             example = "(next [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core.phel#L58",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L94",
                 docs = "",
             ),
         ),
@@ -509,10 +492,31 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = """
 Defines the namespace for the current file and adds imports to the environment. Imports can either be uses or requires. The keyword :use is used to import PHP classes, the keyword :require is used to import Phel modules and the keyword :require-file is used to load php files.
 """,
-            example = "(ns my-app\\core (:require phel.string :as str))",
+            example = "(ns my-app\\core (:require phel\\string :as str))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/namespaces/#namespace-ns",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "queue",
+        signature = "",
+        completion = CompletionInfo(
+            tailText = "Creates a persistent FIFO queue",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Creates a persistent FIFO queue. With no arguments returns an empty<br />
+  queue; with arguments returns a queue with the values pushed in order so<br />
+  that the first argument is at the front.
+""",
+            example = "(queue 1 2 3) ; =&gt; first 1, then 2, then 3",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L45",
+                docs = "",
             ),
         ),
     ),

@@ -1,13 +1,14 @@
 package org.phellang.completion.indexing
 
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.BulkFileListener
 import com.intellij.openapi.vfs.newvfs.events.*
 import com.intellij.psi.PsiManager
-import com.intellij.util.FileContentUtilCore
 
 class PhelFileChangeListener(private val project: Project) : BulkFileListener {
 
@@ -52,7 +53,6 @@ class PhelFileChangeListener(private val project: Project) : BulkFileListener {
             }
         }
 
-        // Trigger re-highlighting of open editors if needed
         if (needsReparse) {
             triggerRehighlight()
         }
@@ -68,15 +68,16 @@ class PhelFileChangeListener(private val project: Project) : BulkFileListener {
         ApplicationManager.getApplication().invokeLater {
             if (project.isDisposed) return@invokeLater
 
-            val fileEditorManager = FileEditorManager.getInstance(project)
-            val psiManager = PsiManager.getInstance(project)
-            
-            val openPhelFiles = fileEditorManager.openFiles
-                .filter { it.extension == "phel" }
-                .mapNotNull { psiManager.findFile(it)?.virtualFile }
-            
-            if (openPhelFiles.isNotEmpty()) {
-                FileContentUtilCore.reparseFiles(openPhelFiles)
+            ReadAction.run<RuntimeException> {
+                if (project.isDisposed) return@run
+                val fileEditorManager = FileEditorManager.getInstance(project)
+                val psiManager = PsiManager.getInstance(project)
+                val daemon = DaemonCodeAnalyzer.getInstance(project)
+
+                fileEditorManager.openFiles
+                    .filter { it.extension == "phel" }
+                    .mapNotNull { psiManager.findFile(it) }
+                    .forEach { daemon.restart(it) }
             }
         }
     }

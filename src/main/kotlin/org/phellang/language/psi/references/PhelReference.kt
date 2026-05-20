@@ -202,18 +202,20 @@ class PhelReference @JvmOverloads constructor(
     private fun resolveInVendor(project: com.intellij.openapi.project.Project, namespace: String): List<PsiElement> {
         val results: MutableList<PsiElement> = ArrayList()
 
-        // Find the vendor file for this namespace
-        val vendorFile = PhelVendorUtils.findStandardLibraryFile(project, namespace) ?: return results
-        
-        val psiManager = PsiManager.getInstance(project)
-        val psiFile = psiManager.findFile(vendorFile) as? PhelFile ?: return results
+        // Phel 0.35+: a namespace may be backed by multiple vendor files
+        // (e.g. phel.core spans core.phel + core/*.phel)
+        val vendorFiles = PhelVendorUtils.findStandardLibraryFiles(project, namespace)
+        if (vendorFiles.isEmpty()) return results
 
-        // Search for definitions in the vendor file
-        val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
-        for (list in lists) {
-            val definition = findDefinitionInList(list)
-            if (definition != null) {
-                results.add(definition)
+        val psiManager = PsiManager.getInstance(project)
+        for (vendorFile in vendorFiles) {
+            val psiFile = psiManager.findFile(vendorFile) as? PhelFile ?: continue
+            val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
+            for (list in lists) {
+                val definition = findDefinitionInList(list)
+                if (definition != null) {
+                    results.add(definition)
+                }
             }
         }
 

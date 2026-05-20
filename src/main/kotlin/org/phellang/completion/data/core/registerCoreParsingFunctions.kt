@@ -19,11 +19,14 @@ internal fun registerCoreParsingFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Parses a string as a boolean. Returns true for "true", false for "false", nil otherwise.
+Parses a string as a boolean. Returns <code>true</code> for the exact string<br />
+  <code>"true"</code>, <code>false</code> for <code>"false"</code>, and <code>nil</code> for any other input.<br />
+  The match is case-sensitive and does not tolerate surrounding<br />
+  whitespace.
 """,
-            example = "(parse-boolean \"true\") ; =&gt; true",
+            example = "(parse-boolean \"true\") ; =&gt; true\n(parse-boolean \"True\") ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/parsing.phel#L36",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/parsing.phel#L36",
                 docs = "",
             ),
         ),
@@ -44,7 +47,7 @@ Parses a string as a float. Returns <code>nil</code> for non-numeric input or fo
 """,
             example = "(parse-double \"3.14\") ; =&gt; 3.14\n(parse-double \"Infinity\") ; =&gt; INF",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/parsing.phel#L20",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/parsing.phel#L20",
                 docs = "",
             ),
         ),
@@ -61,7 +64,7 @@ Parses a string as a float. Returns <code>nil</code> for non-numeric input or fo
             summary = "Parses a string as an integer. Returns nil if parsing fails.",
             example = "(parse-long \"123\") ; =&gt; 123",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/parsing.phel#L10",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/parsing.phel#L10",
                 docs = "",
             ),
         ),

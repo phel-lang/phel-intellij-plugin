@@ -10,8 +10,8 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 internal fun registerTestSelectorFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/has-selectors?",
+        namespace = "test.selector",
+        name = "test.selector/has-selectors?",
         signature = "(has-selectors? options)",
         completion = CompletionInfo(
             tailText = "Returns true when options contains at least one non-empty selector key",
@@ -24,14 +24,14 @@ Returns <code>true</code> when <code>options</code> contains at least one non-em
 """,
             example = "(has-selectors? {:include [:integration]})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L225",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L225",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/has-tag?",
+        namespace = "test.selector",
+        name = "test.selector/has-tag?",
         signature = "(has-tag? meta tag)",
         completion = CompletionInfo(
             tailText = "Returns true when meta carries tag (a keyword or a string treated as a keyword)",
@@ -46,14 +46,14 @@ Returns <code>true</code> when <code>meta</code> carries <code>tag</code> (a key
 """,
             example = "(has-tag? {:integration true} :integration)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L57",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L57",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/keep-test?",
+        namespace = "test.selector",
+        name = "test.selector/keep-test?",
         signature = "(keep-test? options ns-name meta)",
         completion = CompletionInfo(
             tailText = "Returns true when the test described by meta and ns-name should be run under options",
@@ -69,14 +69,14 @@ Returns <code>true</code> when the test described by <code>meta</code> and <code
 """,
             example = "(keep-test? {:include [:integration]} \"my.ns\" {:integration true :test-name \"t\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L204",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L204",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/matches-exclude?",
+        namespace = "test.selector",
+        name = "test.selector/matches-exclude?",
         signature = "(matches-exclude? excludes meta)",
         completion = CompletionInfo(
             tailText = "Returns true when any tag in excludes is truthy on meta",
@@ -90,14 +90,14 @@ Returns <code>true</code> when any tag in <code>excludes</code> is truthy on <co
 """,
             example = "(matches-exclude? [:slow] {:slow true})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L85",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L85",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/matches-filter?",
+        namespace = "test.selector",
+        name = "test.selector/matches-filter?",
         signature = "(matches-filter? patterns test-name)",
         completion = CompletionInfo(
             tailText = "Returns true when patterns is empty (no restriction) or when any entry in patterns matches test-name",
@@ -110,14 +110,14 @@ Returns <code>true</code> when <code>patterns</code> is empty (no restriction) o
 """,
             example = "(matches-filter? [\"add-\"] \"test-add-one\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L191",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L191",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/matches-include?",
+        namespace = "test.selector",
+        name = "test.selector/matches-include?",
         signature = "(matches-include? includes meta)",
         completion = CompletionInfo(
             tailText = "Returns true when includes is empty (no restriction) or when any tag in includes is truthy on meta",
@@ -130,14 +130,14 @@ Returns <code>true</code> when <code>includes</code> is empty (no restriction) o
 """,
             example = "(matches-include? [:integration] {:integration true})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L76",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L76",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/matches-ns?",
+        namespace = "test.selector",
+        name = "test.selector/matches-ns?",
         signature = "(matches-ns? patterns ns-name)",
         completion = CompletionInfo(
             tailText = "Returns true when patterns is empty (no restriction) or when any glob in patterns matches ns-name",
@@ -150,14 +150,14 @@ Returns <code>true</code> when <code>patterns</code> is empty (no restriction) o
 """,
             example = "(matches-ns? [\"phel.http.*\"] \"phel.http.client\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L156",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L156",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/name-matches?",
+        namespace = "test.selector",
+        name = "test.selector/name-matches?",
         signature = "(name-matches? pattern test-name)",
         completion = CompletionInfo(
             tailText = "Returns true when pattern (a PCRE /",
@@ -170,14 +170,14 @@ Returns <code>true</code> when <code>pattern</code> (a PCRE <code>/.../</code> s
 """,
             example = "(name-matches? \"add-\" \"test-add-one\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L181",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L181",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\selector",
-        name = "test\\selector/ns-matches?",
+        namespace = "test.selector",
+        name = "test.selector/ns-matches?",
         signature = "(ns-matches? pattern ns-name)",
         completion = CompletionInfo(
             tailText = "Returns true when ns-name matches the glob pattern",
@@ -192,7 +192,7 @@ Returns <code>true</code> when <code>ns-name</code> matches the glob <code>patte
 """,
             example = "(ns-matches? \"phel.http.*\" \"phel\\\\http\\\\client\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/selector.phel#L143",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L143",
                 docs = "",
             ),
         ),

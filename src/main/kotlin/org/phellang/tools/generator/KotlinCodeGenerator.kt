@@ -10,7 +10,10 @@ import java.io.File
 class KotlinCodeGenerator(private val outputDirectory: File) {
 
     fun generate(apiFunctions: List<ApiFunction>) {
-        apiFunctions.groupBy { it.namespace }.forEach { (namespace, functions) ->
+        val filtered = apiFunctions.filterNot { it.signatures.isEmpty() && it.description.isBlank() }
+        val skipped = apiFunctions.size - filtered.size
+        if (skipped > 0) println("Skipping $skipped function(s) with no signature and no doc")
+        filtered.groupBy { it.namespace }.forEach { (namespace, functions) ->
             if (namespace == "core") {
                 generateCoreNamespace(functions)
                 return@forEach

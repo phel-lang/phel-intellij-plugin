@@ -24,7 +24,7 @@ Takes a body of expressions and yields a Delay object that will invoke the<br />
 """,
             example = "(def d (delay (println \"computing\") 42))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/lazy.phel#L12",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/lazy.phel#L12",
                 docs = "",
             ),
         ),
@@ -41,7 +41,7 @@ Takes a body of expressions and yields a Delay object that will invoke the<br />
             summary = "Returns true if x is a Delay.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/lazy.phel#L29",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/lazy.phel#L29",
                 docs = "",
             ),
         ),
@@ -58,7 +58,7 @@ Takes a body of expressions and yields a Delay object that will invoke the<br />
             summary = "If x is a Delay, forces it and returns its cached value. Otherwise returns x.",
             example = "(force (delay 42)) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/lazy.phel#L20",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/lazy.phel#L20",
                 docs = "",
             ),
         ),
@@ -84,7 +84,7 @@ Options map keys:<br />
 """,
             example = "(iteration fetch-page {:kf :next-token :vf :items :initk nil})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/lazy.phel#L37",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/lazy.phel#L37",
                 docs = "",
             ),
         ),

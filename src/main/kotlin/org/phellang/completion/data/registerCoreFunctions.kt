@@ -1,6 +1,7 @@
 package org.phellang.completion.data
 
 import org.phellang.completion.data.core.registerCoreArraysFunctions
+import org.phellang.completion.data.core.registerCoreAsyncFunctions
 import org.phellang.completion.data.core.registerCoreAtomsFunctions
 import org.phellang.completion.data.core.registerCoreBooleansFunctions
 import org.phellang.completion.data.core.registerCoreCollectionsFunctions
@@ -8,12 +9,14 @@ import org.phellang.completion.data.core.registerCoreControlFunctions
 import org.phellang.completion.data.core.registerCoreDefsFunctions
 import org.phellang.completion.data.core.registerCoreExceptionsFunctions
 import org.phellang.completion.data.core.registerCoreFnsSetsFunctions
+import org.phellang.completion.data.core.registerCoreFuturesFunctions
 import org.phellang.completion.data.core.registerCoreIoFunctions
 import org.phellang.completion.data.core.registerCoreLazyFunctions
 import org.phellang.completion.data.core.registerCoreLoopsFunctions
 import org.phellang.completion.data.core.registerCoreMacroexpandFunctions
 import org.phellang.completion.data.core.registerCoreMathFunctions
 import org.phellang.completion.data.core.registerCoreMetaFunctions
+import org.phellang.completion.data.core.registerCoreNsFunctions
 import org.phellang.completion.data.core.registerCoreParsingFunctions
 import org.phellang.completion.data.core.registerCorePredicatesFunctions
 import org.phellang.completion.data.core.registerCoreProtocolsFunctions
@@ -29,6 +32,7 @@ import org.phellang.completion.data.core.registerCoreUuidFunctions
 
 internal fun registerCoreFunctions(): List<PhelFunction> =
     registerCoreArraysFunctions() +
+        registerCoreAsyncFunctions() +
         registerCoreAtomsFunctions() +
         registerCoreBooleansFunctions() +
         registerCoreCollectionsFunctions() +
@@ -36,12 +40,14 @@ internal fun registerCoreFunctions(): List<PhelFunction> =
         registerCoreDefsFunctions() +
         registerCoreExceptionsFunctions() +
         registerCoreFnsSetsFunctions() +
+        registerCoreFuturesFunctions() +
         registerCoreIoFunctions() +
         registerCoreLazyFunctions() +
         registerCoreLoopsFunctions() +
         registerCoreMacroexpandFunctions() +
         registerCoreMathFunctions() +
         registerCoreMetaFunctions() +
+        registerCoreNsFunctions() +
         registerCoreParsingFunctions() +
         registerCorePredicatesFunctions() +
         registerCoreProtocolsFunctions() +

@@ -1,17 +1,21 @@
 package org.phellang.completion.indexing
 
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.PsiTreeChangeAdapter
 import com.intellij.psi.PsiTreeChangeEvent
-import com.intellij.util.FileContentUtilCore
 import org.phellang.language.psi.files.PhelFile
 
 class PhelPsiChangeListener(private val project: Project) : PsiTreeChangeAdapter() {
 
-    private var pendingRefresh: PhelFile? = null
+    @Volatile
+    private var pendingRefresh: VirtualFile? = null
+
+    @Volatile
     private var refreshScheduled = false
 
     override fun childAdded(event: PsiTreeChangeEvent) {
@@ -34,44 +38,28 @@ class PhelPsiChangeListener(private val project: Project) : PsiTreeChangeAdapter
         if (project.isDisposed) return
 
         val psiFile = event.file as? PhelFile ?: return
-        if (psiFile.virtualFile == null) return
+        val virtualFile = psiFile.virtualFile ?: return
 
-        // Debounce: schedule refresh after a short delay to batch rapid changes
-        pendingRefresh = psiFile
+        // Debounce: store VirtualFile (stable across reparse) and resolve PSI freshly later
+        pendingRefresh = virtualFile
 
         if (!refreshScheduled) {
             refreshScheduled = true
             ApplicationManager.getApplication().invokeLater {
-                if (project.isDisposed) return@invokeLater
-
                 refreshScheduled = false
                 val fileToRefresh = pendingRefresh ?: return@invokeLater
                 pendingRefresh = null
 
-                if (fileToRefresh.virtualFile == null) return@invokeLater
+                if (project.isDisposed || !fileToRefresh.isValid) return@invokeLater
 
-                // Refresh the index with the current PSI state
-                val index = PhelProjectSymbolIndex.getInstance(project)
-                index.refreshFileFromPsi(fileToRefresh)
-
-                // Trigger re-highlighting of open editors
-                triggerRehighlight()
+                ReadAction.run<RuntimeException> {
+                    if (project.isDisposed) return@run
+                    val freshPsi = PsiManager.getInstance(project).findFile(fileToRefresh) as? PhelFile
+                        ?: return@run
+                    PhelProjectSymbolIndex.getInstance(project).refreshFileFromPsi(freshPsi)
+                    DaemonCodeAnalyzer.getInstance(project).restart(freshPsi)
+                }
             }
-        }
-    }
-
-    private fun triggerRehighlight() {
-        if (project.isDisposed) return
-
-        val fileEditorManager = FileEditorManager.getInstance(project)
-        val psiManager = PsiManager.getInstance(project)
-        
-        val openPhelFiles = fileEditorManager.openFiles
-            .filter { it.extension == "phel" }
-            .mapNotNull { psiManager.findFile(it)?.virtualFile }
-        
-        if (openPhelFiles.isNotEmpty()) {
-            FileContentUtilCore.reparseFiles(openPhelFiles)
         }
     }
 }

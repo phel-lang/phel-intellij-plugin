@@ -10,8 +10,8 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 internal fun registerSchemaExplainerFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
-        namespace = "schema\\explainer",
-        name = "schema\\explainer/explain",
+        namespace = "schema.explainer",
+        name = "schema.explainer/explain",
         signature = "(explain schema value)",
         completion = CompletionInfo(
             tailText = "Returns nil if value conforms to schema, otherwise a map describing the violations",
@@ -24,14 +24,14 @@ Returns <code>nil</code> if <code>value</code> conforms to <code>schema</code>, 
 """,
             example = "(explain :int :oops)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/explainer.phel#L216",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/explainer.phel#L216",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\explainer",
-        name = "schema\\explainer/human-readable-explain",
+        namespace = "schema.explainer",
+        name = "schema.explainer/human-readable-explain",
         signature = "(human-readable-explain result)",
         completion = CompletionInfo(
             tailText = "Renders an explain result as a multi-line human string suitable for REPL or CI output",
@@ -44,7 +44,7 @@ Renders an explain result as a multi-line human string suitable for<br />
 """,
             example = "(human-readable-explain (explain :int :oops))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/explainer.phel#L237",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/explainer.phel#L237",
                 docs = "",
             ),
         ),

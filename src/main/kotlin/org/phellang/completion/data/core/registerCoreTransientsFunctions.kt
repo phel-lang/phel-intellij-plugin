@@ -21,14 +21,14 @@ internal fun registerCoreTransientsFunctions(): List<PhelFunction> = listOf(
             summary = """
 Associates one or more key-value pairs with a transient collection,<br />
    mutating it in place. Works on transient hash-maps and transient vectors.<br />
-   Variadic forms apply each <code>key-value</code> pair in order. Raises<br />
+   Variadic forms apply each <code>key-value</code> pair in order. A trailing key<br />
+   without a value is associated with <code>nil</code>. Raises<br />
    <code>InvalidArgumentException</code> when <code>tcoll</code> is not a supported transient<br />
-   collection or when an odd number of extra arguments is provided.<br />
-   Matches Clojure's <code>assoc!</code> semantics.
+   collection. Matches Clojure's <code>assoc!</code> semantics.
 """,
             example = "(persistent! (assoc! (transient {}) :a 1 :b 2)) ; =&gt; {:a 1 :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L108",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L114",
                 docs = "",
             ),
         ),
@@ -56,7 +56,7 @@ Adds <code>value</code> to the transient collection <code>tcoll</code>, mutating
 """,
             example = "(persistent (conj! (transient [1 2]) 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L76",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L82",
                 docs = "",
             ),
         ),
@@ -77,7 +77,7 @@ Removes one or more elements from a transient set, mutating it in place.<br />
 """,
             example = "(persistent! (disj! (transient #{1 2 3}) 2)) ; =&gt; #{1 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L160",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L166",
                 docs = "",
             ),
         ),
@@ -98,7 +98,7 @@ Dissociates one or more keys from a transient map, mutating it in place.<br />
 """,
             example = "(persistent! (dissoc! (transient {:a 1 :b 2}) :a)) ; =&gt; {:b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L139",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L145",
                 docs = "",
             ),
         ),
@@ -115,7 +115,7 @@ Dissociates one or more keys from a transient map, mutating it in place.<br />
             summary = "Converts a transient collection back to a persistent collection.",
             example = "(def t (transient {}))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L27",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L28",
                 docs = "",
             ),
         ),
@@ -135,7 +135,7 @@ Converts a transient collection back to a persistent collection.<br />
 """,
             example = "(persistent! (conj! (transient []) 1 2 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L34",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L35",
                 docs = "",
             ),
         ),
@@ -156,7 +156,7 @@ Removes the last element from a transient vector, mutating it in place.<br />
 """,
             example = "(persistent! (pop! (transient [1 2 3]))) ; =&gt; [1 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L171",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L177",
                 docs = "",
             ),
         ),
@@ -177,7 +177,7 @@ Transient collections provide faster performance for multiple sequential updates
 """,
             example = "(def t (transient []))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/transients.phel#L17",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L18",
                 docs = "",
             ),
         ),

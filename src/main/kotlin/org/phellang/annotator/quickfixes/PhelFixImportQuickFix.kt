@@ -7,39 +7,33 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
+import com.intellij.psi.SmartPointerManager
+import com.intellij.psi.SmartPsiElementPointer
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.infrastructure.PhelLanguage
 import org.phellang.language.psi.PhelSymbol
 
 class PhelFixImportQuickFix(
-    private val symbolToFix: PhelSymbol, private val correctNamespace: String
+    symbolToFix: PhelSymbol, private val correctNamespace: String
 ) : PsiElementBaseIntentionAction(), IntentionAction {
+
+    private val symbolPointer: SmartPsiElementPointer<PhelSymbol> =
+        SmartPointerManager.getInstance(symbolToFix.project).createSmartPsiElementPointer(symbolToFix)
 
     override fun getText(): String = "Change to '$correctNamespace'"
 
     override fun getFamilyName(): String = "Phel namespace imports"
 
     override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
-        return symbolToFix.isValid
+        return symbolPointer.element?.isValid == true
     }
 
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
+        val symbolToFix = symbolPointer.element ?: return
         WriteCommandAction.runWriteCommandAction(project) {
-            replaceNamespace()
-        }
-    }
-
-    private fun replaceNamespace() {
-        val project = symbolToFix.project
-
-        // Create a temporary file with just the namespace symbol
-        val tempFile =
-            PsiFileFactory.getInstance(project).createFileFromText("temp.phel", PhelLanguage, correctNamespace)
-
-        // Extract the symbol from the temporary file
-        val newSymbol = PsiTreeUtil.findChildOfType(tempFile, PhelSymbol::class.java)
-
-        if (newSymbol != null) {
+            val tempFile =
+                PsiFileFactory.getInstance(project).createFileFromText("temp.phel", PhelLanguage, correctNamespace)
+            val newSymbol = PsiTreeUtil.findChildOfType(tempFile, PhelSymbol::class.java) ?: return@runWriteCommandAction
             symbolToFix.replace(newSymbol)
         }
     }

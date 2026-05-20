@@ -21,7 +21,7 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
             summary = "Returns the cause of an exception, or nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/exceptions.phel#L34",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/exceptions.phel#L33",
                 docs = "",
             ),
         ),
@@ -31,16 +31,14 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
         name = "ex-data",
         signature = "(ex-data ex)",
         completion = CompletionInfo(
-            tailText = "Returns the data map from an ex-info exception, or nil if not an ExInfoException",
+            tailText = "Returns the data map from an ex-info exception, or nil if not an ExceptionInfo",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """
-Returns the data map from an ex-info exception, or nil if not an ExInfoException.
-""",
+            summary = "Returns the data map from an ex-info exception, or nil if not an ExceptionInfo.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/exceptions.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/exceptions.phel#L20",
                 docs = "",
             ),
         ),
@@ -57,7 +55,7 @@ Returns the data map from an ex-info exception, or nil if not an ExInfoException
             summary = "Creates an exception with a message and a data map. Optionally takes a cause.",
             example = "(throw (ex-info \"Invalid input\" {:field :email}))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/exceptions.phel#L12",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/exceptions.phel#L11",
                 docs = "",
             ),
         ),
@@ -74,7 +72,7 @@ Returns the data map from an ex-info exception, or nil if not an ExInfoException
             summary = "Returns the message of an exception.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/core/exceptions.phel#L28",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/exceptions.phel#L27",
                 docs = "",
             ),
         ),

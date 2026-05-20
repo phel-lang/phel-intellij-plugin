@@ -10,8 +10,8 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 internal fun registerTestRoseFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/int-rose-tree",
+        namespace = "test.rose",
+        name = "test.rose/int-rose-tree",
         signature = "(int-rose-tree n)",
         completion = CompletionInfo(
             tailText = "Rose tree for an integer n that shrinks toward zero",
@@ -23,14 +23,14 @@ Rose tree for an integer <code>n</code> that shrinks toward zero.
 """,
             example = "(int-rose-tree 10)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L225",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L225",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/int-rose-tree-towards",
+        namespace = "test.rose",
+        name = "test.rose/int-rose-tree-towards",
         signature = "(int-rose-tree-towards target n)",
         completion = CompletionInfo(
             tailText = "Rose tree for n whose children shrink strictly toward target",
@@ -42,14 +42,14 @@ Rose tree for <code>n</code> whose children shrink strictly toward <code>target<
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L232",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L232",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-bind",
+        namespace = "test.rose",
+        name = "test.rose/rose-bind",
         signature = "(rose-bind t f)",
         completion = CompletionInfo(
             tailText = "Monadic bind",
@@ -63,14 +63,14 @@ Monadic bind. <code>f</code> takes a value and returns a rose tree; the resultin
 """,
             example = "(rose-bind (rose-pure 1) (fn [n] (rose-pure (inc n))))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L109",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L109",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-children",
+        namespace = "test.rose",
+        name = "test.rose/rose-children",
         signature = "(rose-children t)",
         completion = CompletionInfo(
             tailText = "Returns the lazy sequence of immediate child rose trees",
@@ -80,14 +80,14 @@ Monadic bind. <code>f</code> takes a value and returns a rose tree; the resultin
             summary = "Returns the lazy sequence of immediate child rose trees.",
             example = "(rose-children (rose-pure 1)) ; =&gt; ()",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L74",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L74",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-filter",
+        namespace = "test.rose",
+        name = "test.rose/rose-filter",
         signature = "(rose-filter pred t)",
         completion = CompletionInfo(
             tailText = "Returns the subtree consisting only of nodes whose value satisfies pred",
@@ -101,14 +101,14 @@ Returns the subtree consisting only of nodes whose value satisfies<br />
 """,
             example = "(rose-filter pos? (rose-pure 1))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L125",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L125",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-fmap",
+        namespace = "test.rose",
+        name = "test.rose/rose-fmap",
         signature = "(rose-fmap f t)",
         completion = CompletionInfo(
             tailText = "Applies f to every value in rose tree t (the root and, lazily, every descendant)",
@@ -121,14 +121,14 @@ Applies <code>f</code> to every value in rose tree <code>t</code> (the root and,
 """,
             example = "(rose-fmap inc (rose-pure 1)) ; root = 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L99",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L99",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-join",
+        namespace = "test.rose",
+        name = "test.rose/rose-join",
         signature = "(rose-join t)",
         completion = CompletionInfo(
             tailText = "Flattens a rose tree of rose trees into a single rose tree",
@@ -138,14 +138,14 @@ Applies <code>f</code> to every value in rose tree <code>t</code> (the root and,
             summary = "Flattens a rose tree of rose trees into a single rose tree.",
             example = "(rose-join (rose-pure (rose-pure 1)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L138",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L138",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-map",
+        namespace = "test.rose",
+        name = "test.rose/rose-map",
         signature = "(rose-map entry-trees)",
         completion = CompletionInfo(
             tailText = "Rose tree for a hash-map",
@@ -159,14 +159,14 @@ Rose tree for a hash-map. <code>entry-trees</code> is a vector of rose trees of<
 """,
             example = "(rose-map [...])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L313",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L313",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-pure",
+        namespace = "test.rose",
+        name = "test.rose/rose-pure",
         signature = "(rose-pure x)",
         completion = CompletionInfo(
             tailText = "Leaf rose tree: value x with no shrink candidates",
@@ -178,14 +178,14 @@ Leaf rose tree: value <code>x</code> with no shrink candidates.
 """,
             example = "(rose-pure 42)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L52",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L52",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-root",
+        namespace = "test.rose",
+        name = "test.rose/rose-root",
         signature = "(rose-root t)",
         completion = CompletionInfo(
             tailText = "Returns the root value of rose tree t",
@@ -197,14 +197,14 @@ Returns the root value of rose tree <code>t</code>.
 """,
             example = "(rose-root (rose-pure 42)) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L67",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L67",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-shrinks",
+        namespace = "test.rose",
+        name = "test.rose/rose-shrinks",
         signature = "(rose-shrinks t)",
         completion = CompletionInfo(
             tailText = "Alias for rose-children: the lazy sequence of immediate smaller variants of the current root",
@@ -217,14 +217,14 @@ Alias for <code>rose-children</code>: the lazy sequence of immediate smaller<br 
 """,
             example = "(rose-shrinks (rose-pure 1)) ; =&gt; ()",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L81",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L81",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-string",
+        namespace = "test.rose",
+        name = "test.rose/rose-string",
         signature = "(rose-string char-trees)",
         completion = CompletionInfo(
             tailText = "Rose tree for a string whose elements are char rose trees",
@@ -234,14 +234,14 @@ Alias for <code>rose-children</code>: the lazy sequence of immediate smaller<br 
             summary = "Rose tree for a string whose elements are char rose trees.",
             example = "(rose-string [(rose-pure \" \")])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L296",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L296",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-tree",
+        namespace = "test.rose",
+        name = "test.rose/rose-tree",
         signature = "(rose-tree root children)",
         completion = CompletionInfo(
             tailText = "Rose tree constructor",
@@ -254,14 +254,14 @@ Rose tree constructor. <code>children</code> should be a lazy sequence of rose<b
 """,
             example = "(rose-tree 1 (list (rose-pure 0)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L59",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L59",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-vector",
+        namespace = "test.rose",
+        name = "test.rose/rose-vector",
         signature = "(rose-vector element-trees)",
         completion = CompletionInfo(
             tailText = "Rose tree for a vector whose children are built from the rose trees of its elements",
@@ -275,14 +275,14 @@ Rose tree for a vector whose children are built from the rose trees<br />
 """,
             example = "(rose-vector [(int-rose-tree 3) (int-rose-tree 5)])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L266",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L266",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-vector-lax",
+        namespace = "test.rose",
+        name = "test.rose/rose-vector-lax",
         signature = "(rose-vector-lax element-trees)",
         completion = CompletionInfo(
             tailText = "Like rose-vector but preserves original length; only shrinks each element in place (no removal)",
@@ -295,14 +295,14 @@ Like <code>rose-vector</code> but preserves original length; only shrinks each<b
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L281",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L281",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose-zip",
+        namespace = "test.rose",
+        name = "test.rose/rose-zip",
         signature = "(rose-zip trees)",
         completion = CompletionInfo(
             tailText = "Takes a vector of rose trees and returns a rose tree whose root is the vector of roots and whose ...",
@@ -315,14 +315,14 @@ Takes a vector of rose trees and returns a rose tree whose root is<br />
 """,
             example = "(rose-zip [(rose-pure 1) (rose-pure 2)])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L170",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L170",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/rose?",
+        namespace = "test.rose",
+        name = "test.rose/rose?",
         signature = "(rose? x)",
         completion = CompletionInfo(
             tailText = "Returns true if x looks like a rose tree",
@@ -334,14 +334,14 @@ Returns <code>true</code> if <code>x</code> looks like a rose tree.
 """,
             example = "(rose? (rose-pure 1)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L89",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L89",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/shrink-int",
+        namespace = "test.rose",
+        name = "test.rose/shrink-int",
         signature = "(shrink-int n)",
         completion = CompletionInfo(
             tailText = "Shrink strategy toward zero: halving steps (n/2, n/4, …) and then decrement toward zero",
@@ -354,14 +354,14 @@ Shrink strategy toward zero: halving steps (<code>n/2</code>, <code>n/4</code>, 
 """,
             example = "(shrink-int 8)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L211",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L211",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "test\\rose",
-        name = "test\\rose/shrink-int-towards",
+        namespace = "test.rose",
+        name = "test.rose/shrink-int-towards",
         signature = "(shrink-int-towards target n)",
         completion = CompletionInfo(
             tailText = "Returns a seq of integer candidates strictly closer to target than n",
@@ -374,7 +374,7 @@ Returns a seq of integer candidates strictly closer to <code>target</code> than<
 """,
             example = "(shrink-int-towards 0 10) ; =&gt; (0 5 7 8 9)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/test/rose.phel#L191",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/rose.phel#L191",
                 docs = "",
             ),
         ),

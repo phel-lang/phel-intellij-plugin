@@ -10,8 +10,8 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 internal fun registerSchemaValidatorFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/map-entry-optional?",
+        namespace = "schema.validator",
+        name = "schema.validator/map-entry-optional?",
         signature = "(map-entry-optional? entry)",
         completion = CompletionInfo(
             tailText = "Returns true when a [:map",
@@ -24,14 +24,14 @@ Returns <code>true</code> when a <code>[:map ...]</code> entry is declared with<
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L209",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L209",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/map-entry-options",
+        namespace = "schema.validator",
+        name = "schema.validator/map-entry-options",
         signature = "(map-entry-options entry)",
         completion = CompletionInfo(
             tailText = "Options map for a [:map",
@@ -44,14 +44,14 @@ Options map for a <code>[:map ...]</code> entry <code>[key opts? schema]</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L193",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L193",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/map-entry-schema",
+        namespace = "schema.validator",
+        name = "schema.validator/map-entry-schema",
         signature = "(map-entry-schema entry)",
         completion = CompletionInfo(
             tailText = "Inner schema of a [:map",
@@ -64,14 +64,14 @@ Inner schema of a <code>[:map ...]</code> entry, skipping the options map when<b
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L201",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L201",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/resolve-or-default",
+        namespace = "schema.validator",
+        name = "schema.validator/resolve-or-default",
         signature = "(resolve-or-default head f default)",
         completion = CompletionInfo(
             tailText = "Like resolve-or-throw, but returns default when head is not registered instead of throwing",
@@ -86,14 +86,14 @@ Like <code>resolve-or-throw</code>, but returns <code>default</code> when <code>
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L39",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L39",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/resolve-or-throw",
+        namespace = "schema.validator",
+        name = "schema.validator/resolve-or-throw",
         signature = "(resolve-or-throw label head f)",
         completion = CompletionInfo(
             tailText = "Resolves an unknown head by looking it up in the registry",
@@ -110,14 +110,14 @@ Every head-dispatching caller uses this so the error shape is<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L25",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L25",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/schema-args",
+        namespace = "schema.validator",
+        name = "schema.validator/schema-args",
         signature = "(schema-args schema)",
         completion = CompletionInfo(
             tailText = "Returns the positional arguments of schema (children past the head and optional options map)",
@@ -130,14 +130,14 @@ Returns the positional arguments of <code>schema</code> (children past the<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L73",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L73",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/schema-head",
+        namespace = "schema.validator",
+        name = "schema.validator/schema-head",
         signature = "(schema-head schema)",
         completion = CompletionInfo(
             tailText = "Returns the head (kind keyword) of schema",
@@ -150,14 +150,14 @@ Returns the head (kind keyword) of <code>schema</code>. Keyword schemas are<br /
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L53",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L53",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/schema-options",
+        namespace = "schema.validator",
+        name = "schema.validator/schema-options",
         signature = "(schema-options schema)",
         completion = CompletionInfo(
             tailText = "Returns the options map of schema or {} if none",
@@ -169,14 +169,14 @@ Returns the options map of <code>schema</code> or <code>{}</code> if none.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L83",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L83",
                 docs = "",
             ),
         ),
     ),
     PhelFunction(
-        namespace = "schema\\validator",
-        name = "schema\\validator/valid?",
+        namespace = "schema.validator",
+        name = "schema.validator/valid?",
         signature = "(valid? schema value)",
         completion = CompletionInfo(
             tailText = "Returns true if value conforms to schema, otherwise false",
@@ -188,7 +188,7 @@ Returns <code>true</code> if <code>value</code> conforms to <code>schema</code>,
 """,
             example = "(valid? :int 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/main/src/phel/schema/validator.phel#L313",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/validator.phel#L313",
                 docs = "",
             ),
         ),

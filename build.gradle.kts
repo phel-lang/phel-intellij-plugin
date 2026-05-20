@@ -2,12 +2,12 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 group = "org.phellang"
-version = "0.4.0"
+version = "0.4.1"
 
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.3.21"
-    id("org.jetbrains.intellij.platform") version "2.15.0"
+    id("org.jetbrains.intellij.platform") version "2.16.0"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
 }
 
@@ -47,7 +47,7 @@ sourceSets {
 // Configure IntelliJ Platform Dependencies
 dependencies {
     intellijPlatform {
-        intellijIdea("2025.1") {
+        intellijIdea("2025.2.6") {
             type.set(org.jetbrains.intellij.platform.gradle.IntelliJPlatformType.IntellijIdeaCommunity)
         }
         bundledPlugin("com.intellij.java")
@@ -56,11 +56,11 @@ dependencies {
         zipSigner()
     }
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.3")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.3")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.0.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.1.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:6.1.0")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.1.0")
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
     implementation("com.google.code.gson:gson:2.14.0")
@@ -173,12 +173,13 @@ tasks {
                 create("IC", "2024.3")
                 create("IC", "2025.1")
                 create("IC", "2025.2")
+                create("IC", "2025.2.6")
             }
         }
 
         patchPluginXml {
             sinceBuild.set("242")
-            untilBuild.set("261.*")
+            untilBuild.set("262.*")
         }
 
         signPlugin {
