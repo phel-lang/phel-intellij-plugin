@@ -19,6 +19,9 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     /** Cache: shortNamespace -> List of symbols */
     private val symbolsByNamespace = ConcurrentHashMap<String, List<PhelProjectSymbol>>()
 
+    /** Cache: simple name -> List of symbols. Used for fast cross-namespace lookups by name. */
+    private val symbolsByName = ConcurrentHashMap<String, List<PhelProjectSymbol>>()
+
     /** Cache: file path -> List of symbols */
     private val symbolsByFile = ConcurrentHashMap<String, List<PhelProjectSymbol>>()
 
@@ -37,7 +40,13 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
 
     override fun dispose() {
         symbolsByNamespace.clear()
+        symbolsByName.clear()
         symbolsByFile.clear()
+    }
+
+    fun findByName(name: String): List<PhelProjectSymbol> {
+        ensureIndexBuilt()
+        return symbolsByName[name] ?: emptyList()
     }
 
     fun getSymbolsForNamespace(shortNamespace: String): List<PhelProjectSymbol> {
@@ -72,41 +81,48 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
 
         val oldSymbols = symbolsByFile[filePath] ?: emptyList()
 
-        // Remove old symbols from namespace index
+        // Remove old symbols from namespace + name indices
         for (symbol in oldSymbols) {
-            val namespaceSymbols = symbolsByNamespace[symbol.shortNamespace]?.toMutableList()
-            namespaceSymbols?.removeIf { it.file.path == filePath }
-            if (namespaceSymbols != null) {
-                symbolsByNamespace[symbol.shortNamespace] = namespaceSymbols
-            }
+            removeFromMap(symbolsByNamespace, symbol.shortNamespace, filePath)
+            removeFromMap(symbolsByName, symbol.name, filePath)
         }
 
         // Scan file for new symbols from the current PSI state
         val newSymbols = PhelProjectSymbolScanner.scanFile(psiFile)
         symbolsByFile[filePath] = newSymbols
 
-        // Add new symbols to namespace index
+        // Add new symbols to namespace + name indices
         for (symbol in newSymbols) {
-            val existingSymbols = symbolsByNamespace[symbol.shortNamespace]?.toMutableList() ?: mutableListOf()
-            existingSymbols.add(symbol)
-            symbolsByNamespace[symbol.shortNamespace] = existingSymbols
+            addToMap(symbolsByNamespace, symbol.shortNamespace, symbol)
+            addToMap(symbolsByName, symbol.name, symbol)
         }
+    }
+
+    private fun addToMap(
+        map: ConcurrentHashMap<String, List<PhelProjectSymbol>>,
+        key: String,
+        symbol: PhelProjectSymbol,
+    ) {
+        val existing = map[key]?.toMutableList() ?: mutableListOf()
+        existing.add(symbol)
+        map[key] = existing
+    }
+
+    private fun removeFromMap(
+        map: ConcurrentHashMap<String, List<PhelProjectSymbol>>,
+        key: String,
+        filePath: String,
+    ) {
+        val current = map[key]?.toMutableList() ?: return
+        current.removeIf { it.file.path == filePath }
+        if (current.isEmpty()) map.remove(key) else map[key] = current
     }
 
     fun removeFile(file: VirtualFile) {
         val oldSymbols = symbolsByFile.remove(file.path) ?: return
-
-        // Remove symbols from namespace index
         for (symbol in oldSymbols) {
-            val namespaceSymbols = symbolsByNamespace[symbol.shortNamespace]?.toMutableList()
-            namespaceSymbols?.removeIf { it.file.path == file.path }
-            if (namespaceSymbols != null) {
-                if (namespaceSymbols.isEmpty()) {
-                    symbolsByNamespace.remove(symbol.shortNamespace)
-                } else {
-                    symbolsByNamespace[symbol.shortNamespace] = namespaceSymbols
-                }
-            }
+            removeFromMap(symbolsByNamespace, symbol.shortNamespace, file.path)
+            removeFromMap(symbolsByName, symbol.name, file.path)
         }
     }
 
@@ -138,12 +154,9 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
 
                 if (symbols.isNotEmpty()) {
                     symbolsByFile[virtualFile.path] = symbols
-
                     for (symbol in symbols) {
-                        val existingSymbols =
-                            symbolsByNamespace[symbol.shortNamespace]?.toMutableList() ?: mutableListOf()
-                        existingSymbols.add(symbol)
-                        symbolsByNamespace[symbol.shortNamespace] = existingSymbols
+                        addToMap(symbolsByNamespace, symbol.shortNamespace, symbol)
+                        addToMap(symbolsByName, symbol.name, symbol)
                     }
                 }
             }

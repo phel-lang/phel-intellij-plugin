@@ -134,7 +134,7 @@ class PhelFoldingIntegrationTest {
             val result = foldingBuilder.buildFoldRegions(nsNode, mockDocument)
 
             Assertions.assertEquals(1, result.size)
-            Assertions.assertTrue(foldingBuilder.isCollapsedByDefault(result[0].element))
+            Assertions.assertFalse(foldingBuilder.isCollapsedByDefault(result[0].element))
             Assertions.assertTrue(result[0].placeholderText?.startsWith("(ns") == true)
         }
     }

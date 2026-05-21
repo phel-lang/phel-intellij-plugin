@@ -157,28 +157,13 @@ class PhelFoldingBuilderTest {
     }
 
     @Test
-    fun `isCollapsedByDefault should return true for namespace declarations`() {
+    fun `isCollapsedByDefault should return false for namespace declarations`() {
         val list = Mockito.mock(PhelList::class.java)
-        val form = Mockito.mock(PhelForm::class.java)
-        val symbol = Mockito.mock(PhelSymbol::class.java)
         val node = createMockNode(list, TextRange(0, 50))
 
-        Mockito.`when`(symbol.text).thenReturn("ns")
-        Mockito.`when`(form.children).thenReturn(arrayOf(symbol))
-        Mockito.`when`(list.children).thenReturn(arrayOf(form))
+        val result = foldingBuilder.isCollapsedByDefault(node)
 
-        Mockito.mockStatic(PsiTreeUtil::class.java).use { mockedPsiTreeUtil ->
-            mockedPsiTreeUtil.`when`<Array<PhelForm>> {
-                PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-            }.thenReturn(arrayOf(form))
-
-            mockedPsiTreeUtil.`when`<PhelSymbol> {
-                PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-            }.thenReturn(symbol)
-
-            val result = foldingBuilder.isCollapsedByDefault(node)
-            Assertions.assertTrue(result)
-        }
+        Assertions.assertFalse(result)
     }
 
     @Test

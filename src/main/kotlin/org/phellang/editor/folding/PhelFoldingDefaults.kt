@@ -1,21 +1,14 @@
 package org.phellang.editor.folding
 
 import com.intellij.lang.ASTNode
-import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.language.psi.*
+import org.phellang.language.psi.PhelFormCommentMacro
+import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelMap
+import org.phellang.language.psi.PhelVec
 
 object PhelFoldingDefaults {
 
-    fun isCollapsedByDefault(node: ASTNode): Boolean {
-        val psi = node.psi
-
-        // Auto-collapse namespace declarations by default
-        if (psi is PhelList) {
-            return isNamespaceDeclaration(psi)
-        }
-
-        return false
-    }
+    fun isCollapsedByDefault(): Boolean = false
 
     fun getDefaultPlaceholderText(node: ASTNode): String? {
         val psi = node.psi
@@ -28,10 +21,4 @@ object PhelFoldingDefaults {
         }
     }
 
-    private fun isNamespaceDeclaration(list: PhelList): Boolean {
-        val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java) ?: return false
-        if (forms.isEmpty()) return false
-        val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
-        return firstSymbol?.text == "ns"
-    }
 }
