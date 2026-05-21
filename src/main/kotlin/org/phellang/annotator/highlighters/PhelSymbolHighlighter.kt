@@ -26,12 +26,6 @@ object PhelSymbolHighlighter {
     fun annotateSymbol(symbol: PhelSymbol, text: String, holder: AnnotationHolder) {
         if (!PhelAnnotationUtils.isValidText(text)) return
 
-        // Check for deprecated functions first - applies strikethrough
-        if (PhelFunctionRegistry.isDeprecated(text)) {
-            PhelAnnotationUtils.createAnnotation(holder, symbol, DEPRECATED_SYMBOL)
-            return
-        }
-
         // Variadic parameter marker (&) - check before other parameter checks
         if (text == "&") {
             if (PhelSymbolAnalyzer.isInParameterVector(symbol)) {
@@ -40,12 +34,20 @@ object PhelSymbolHighlighter {
             }
         }
 
-        // Function parameters and let bindings (check early, before other classifications)
+        // Function parameters and let bindings shadow same-named core fns. Classify
+        // them first so the deprecated check below does not paint local bindings
+        // with strikethrough.
         if (PhelSymbolAnalyzer.isParameterReference(symbol)
             || PhelSymbolAnalyzer.isFunctionParameter(symbol)
             || PhelSymbolAnalyzer.isLetBinding(symbol)
         ) {
             PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_PARAMETER)
+            return
+        }
+
+        // Deprecated core functions - applies strikethrough.
+        if (PhelFunctionRegistry.isDeprecated(text)) {
+            PhelAnnotationUtils.createAnnotation(holder, symbol, DEPRECATED_SYMBOL)
             return
         }
 
