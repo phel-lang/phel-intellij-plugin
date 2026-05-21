@@ -10,7 +10,6 @@ import com.intellij.psi.PsiManager
 import org.phellang.language.infrastructure.PhelFileType
 import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelCompletionPriority
-import org.phellang.language.psi.utils.SymbolCategory
 import org.phellang.completion.infrastructure.PhelCompletionUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.core.utils.PhelErrorHandler
@@ -21,6 +20,8 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.impl.PhelAccessImpl
 import javax.swing.Icon
+
+private val FUNCTION_INTRO_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
 
 object PhelLocalSymbolCompletions {
     val PARAMETER_ICON = AllIcons.Nodes.Parameter
@@ -88,7 +89,7 @@ object PhelLocalSymbolCompletions {
                     if (firstChild is PhelSymbol || firstChild is PhelAccessImpl) {
                         val functionType = firstChild.text
 
-                        if (PhelSymbolAnalyzer.isSymbolType(functionType, SymbolCategory.SPECIAL_FORMS)) {
+                        if (functionType in FUNCTION_INTRO_FORMS) {
                             val paramVec = PhelSymbolAnalyzer.findParameterVector(current) ?: break
                             // Extract parameters from the vector
                             val paramChildren = paramVec.children

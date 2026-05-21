@@ -10,6 +10,7 @@ import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.completion.data.accepts
 import org.phellang.completion.data.describe
 import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
@@ -31,6 +32,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
 
                 if (isInQuoteContext(o)) return
                 if (isThreadedArgList(o)) return
+                if (resolvesToLocalBinding(head, name)) return
 
                 val arities = resolveArities(head, name) ?: return
                 if (arities.isEmpty()) return
@@ -108,11 +110,61 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
         return null
     }
 
+    /**
+     * True when [name] resolves to a local binding (let/loop/for/binding, or `fn`/`defn`
+     * parameter) visible at [head]. Such a name shadows any same-named core fn, so
+     * the registry arity must not be applied.
+     */
+    private fun resolvesToLocalBinding(head: PhelSymbol, name: String): Boolean {
+        var current: PsiElement? = head.parent
+        while (current != null) {
+            if (current is PhelList) {
+                val parentForms = current.forms
+                val parentHead = (parentForms.firstOrNull() as? PhelSymbol)?.text
+                if (parentHead != null) {
+                    if (parentHead in BINDING_INTRO_FORMS && bindingVecContains(parentForms, name)) return true
+                    if (parentHead in FUNCTION_INTRO_FORMS && paramVecContains(parentForms, name)) return true
+                }
+            }
+            current = current.parent
+        }
+        return false
+    }
+
+    private fun bindingVecContains(forms: List<PhelForm>, name: String): Boolean {
+        val vec = forms.getOrNull(1) as? org.phellang.language.psi.PhelVec ?: return false
+        val bindings = vec.forms
+        var i = 0
+        while (i < bindings.size) {
+            if ((bindings[i] as? PhelSymbol)?.text == name) return true
+            i += 2
+        }
+        return false
+    }
+
+    private fun paramVecContains(forms: List<PhelForm>, name: String): Boolean {
+        for (form in forms.drop(1)) {
+            if (form is org.phellang.language.psi.PhelVec) {
+                for (p in form.forms) {
+                    if ((p as? PhelSymbol)?.text == name) return true
+                }
+                return false
+            }
+        }
+        return false
+    }
+
 }
 
 private val THREADING_HEADS = setOf(
     "->", "->>", "as->", "some->", "some->>", "cond->", "cond->>", "doto",
 )
+
+private val BINDING_INTRO_FORMS = setOf(
+    "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor",
+)
+
+private val FUNCTION_INTRO_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
 
 // Special forms / macros that legitimately accept variable arg shapes.
 // Skipping avoids false positives.
