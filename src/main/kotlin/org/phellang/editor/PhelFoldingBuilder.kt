@@ -23,6 +23,6 @@ class PhelFoldingBuilder : FoldingBuilder {
     }
 
     override fun isCollapsedByDefault(node: ASTNode): Boolean {
-        return PhelFoldingDefaults.isCollapsedByDefault(node)
+        return PhelFoldingDefaults.isCollapsedByDefault()
     }
 }

@@ -101,7 +101,40 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="org.phellang.inspection.deprecated.PhelBackslashNamespaceInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelArityMismatch"
+                displayName="Function arity mismatch"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="org.phellang.inspection.PhelArityMismatchInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelUnusedLetBinding"
+                displayName="Unused let binding"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="org.phellang.inspection.PhelUnusedLetBindingInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelShadowedLetBinding"
+                displayName="Shadowed let binding"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="org.phellang.inspection.PhelShadowedLetBindingInspection"/>
         <formattingService implementation="org.phellang.editor.format.PhelExternalFormatter"/>
+        <lang.refactoringSupport
+                language="Phel"
+                implementationClass="org.phellang.refactoring.PhelRefactoringSupportProvider"/>
+        <lang.namesValidator
+                language="Phel"
+                implementationClass="org.phellang.refactoring.PhelNamesValidator"/>
+        <codeInsight.parameterNameHints
+                language="Phel"
+                implementationClass="org.phellang.inlay.PhelParameterHintsProvider"/>
         <notificationGroup id="Phel" displayType="BALLOON"/>
     </extensions>
 

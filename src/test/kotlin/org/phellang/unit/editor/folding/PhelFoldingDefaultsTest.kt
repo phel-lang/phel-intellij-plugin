@@ -2,7 +2,8 @@ package org.phellang.unit.editor.folding
 
 import com.intellij.lang.ASTNode
 import com.intellij.psi.util.PsiTreeUtil
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -12,37 +13,19 @@ import org.phellang.language.psi.*
 
 class PhelFoldingDefaultsTest {
 
-    @Test
-    fun `isCollapsedByDefault should return true for namespace declarations`() {
-        val list = mock(PhelList::class.java)
-        val form = mock(PhelForm::class.java)
-        val symbol = mock(PhelSymbol::class.java)
-        val node = createMockNode(list)
-
-        `when`(symbol.text).thenReturn("ns")
-        `when`(form.children).thenReturn(arrayOf(symbol))
-        `when`(list.children).thenReturn(arrayOf(form))
-
-        withMockedPsiTreeUtil(list, form, symbol) {
-            val result = PhelFoldingDefaults.isCollapsedByDefault(node)
-            assertTrue(result)
-        }
-    }
-
     @ParameterizedTest
     @ValueSource(strings = ["defn", "def", "let", "if", "when", "for"])
     fun `isCollapsedByDefault should return false for non-namespace forms`(formName: String) {
         val list = mock(PhelList::class.java)
         val form = mock(PhelForm::class.java)
         val symbol = mock(PhelSymbol::class.java)
-        val node = createMockNode(list)
 
         `when`(symbol.text).thenReturn(formName)
         `when`(form.children).thenReturn(arrayOf(symbol))
         `when`(list.children).thenReturn(arrayOf(form))
 
         withMockedPsiTreeUtil(list, form, symbol) {
-            val result = PhelFoldingDefaults.isCollapsedByDefault(node)
+            val result = PhelFoldingDefaults.isCollapsedByDefault()
             assertFalse(result)
         }
     }
@@ -51,19 +34,8 @@ class PhelFoldingDefaultsTest {
     fun `isCollapsedByDefault should return false for empty list`() {
         val list = mock(PhelList::class.java)
         `when`(list.children).thenReturn(emptyArray())
-        val node = createMockNode(list)
 
-        val result = PhelFoldingDefaults.isCollapsedByDefault(node)
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `isCollapsedByDefault should return false for non-list elements`() {
-        val vector = mock(PhelVec::class.java)
-        val node = createMockNode(vector)
-
-        val result = PhelFoldingDefaults.isCollapsedByDefault(node)
+        val result = PhelFoldingDefaults.isCollapsedByDefault()
 
         assertFalse(result)
     }
@@ -120,24 +92,13 @@ class PhelFoldingDefaultsTest {
 
     @Test
     fun `defaults should be consistent across multiple calls`() {
-        val list = mock(PhelList::class.java)
-        val form = mock(PhelForm::class.java)
-        val symbol = mock(PhelSymbol::class.java)
-        val node = createMockNode(list)
+        val result1 = PhelFoldingDefaults.isCollapsedByDefault()
+        val result2 = PhelFoldingDefaults.isCollapsedByDefault()
+        val result3 = PhelFoldingDefaults.isCollapsedByDefault()
 
-        `when`(symbol.text).thenReturn("ns")
-        `when`(form.children).thenReturn(arrayOf(symbol))
-        `when`(list.children).thenReturn(arrayOf(form))
-
-        withMockedPsiTreeUtil(list, form, symbol) {
-            val result1 = PhelFoldingDefaults.isCollapsedByDefault(node)
-            val result2 = PhelFoldingDefaults.isCollapsedByDefault(node)
-            val result3 = PhelFoldingDefaults.isCollapsedByDefault(node)
-
-            assertEquals(result1, result2)
-            assertEquals(result2, result3)
-            assertTrue(result1) // Should be collapsed by default
-        }
+        assertEquals(result1, result2)
+        assertEquals(result2, result3)
+        assertFalse(result1) // Nothing is collapsed by default anymore.
     }
 
     @Test
@@ -170,17 +131,6 @@ class PhelFoldingDefaultsTest {
             val result = PhelFoldingDefaults.getDefaultPlaceholderText(node)
             assertEquals(expectedPlaceholder, result, "Failed for ${element::class.simpleName}")
         }
-    }
-
-    @Test
-    fun `isCollapsedByDefault should handle null children gracefully`() {
-        val list = mock(PhelList::class.java)
-        // Don't mock children to return null, just let it return the default empty array
-        val node = createMockNode(list)
-
-        val result = PhelFoldingDefaults.isCollapsedByDefault(node)
-
-        assertFalse(result) // Should handle empty children gracefully
     }
 
     private fun createMockNode(psiElement: com.intellij.psi.PsiElement): ASTNode {

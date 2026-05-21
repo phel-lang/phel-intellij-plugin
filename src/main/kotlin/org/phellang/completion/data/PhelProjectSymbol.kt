@@ -11,6 +11,7 @@ data class PhelProjectSymbol(
     val type: SymbolType,
     val file: VirtualFile,
     val docstring: String? = null,
+    val arities: List<PhelArity> = PhelArity.parseAll(signature),
 )
 
 enum class SymbolType(val keyword: String) {

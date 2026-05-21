@@ -7,11 +7,12 @@ import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.PsiReference
 import com.intellij.util.IncorrectOperationException
 import org.jetbrains.annotations.NonNls
-import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
+import org.phellang.language.psi.PhelPsiFactory
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.navigation.PhelItemPresentation
 import org.phellang.language.psi.references.PhelReference
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Base implementation for named Phel elements that can be referenced and renamed.
@@ -23,9 +24,9 @@ abstract class PhelNamedElementImpl(node: ASTNode) : PhelSFormImpl(node), PsiNam
 
     @Throws(IncorrectOperationException::class)
     override fun setName(name: @NonNls String): PsiElement {
-        // Rename not yet supported -- returns element unchanged.
-        // Implementing this requires creating a replacement PSI node via PhelPsiFactory.
-        return this
+        if (this !is PhelSymbol) return this
+        val newSymbol = PhelPsiFactory.createSymbol(project, name)
+        return this.replace(newSymbol)
     }
 
     override fun getNameIdentifier(): PsiElement? = this
