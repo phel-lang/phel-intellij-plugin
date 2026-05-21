@@ -9,6 +9,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelLiteral
 import org.phellang.language.psi.PhelMap
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.files.PhelFile
@@ -19,7 +20,7 @@ object PhelProjectSymbolScanner {
 
     fun scanFile(psiFile: PhelFile): List<PhelProjectSymbol> {
         val namespace = PhelNamespaceUtils.extractNamespaceFromFile(psiFile) ?: return emptyList()
-        val shortNamespace = namespace.substringAfterLast("\\")
+        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
         val virtualFile = psiFile.virtualFile ?: return emptyList()
 
         val symbols = mutableListOf<PhelProjectSymbol>()
