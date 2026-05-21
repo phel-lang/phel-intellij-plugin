@@ -6,6 +6,7 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import org.phellang.completion.data.DeprecationInfo
 import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVisitor
 
@@ -15,6 +16,15 @@ class PhelDeprecatedFunctionInspection : LocalInspectionTool() {
         return object : PhelVisitor() {
             override fun visitSymbol(symbol: PhelSymbol) {
                 val text = symbol.text ?: return
+
+                // Skip binding occurrences and references to local bindings.
+                // A name introduced by a fn/defn parameter vector or a let-like
+                // binding shadows any same-named core fn; usages of that local
+                // must not be flagged as a deprecated core-fn reference.
+                if (PhelSymbolAnalyzer.isParameterReference(symbol)) return
+                if (PhelSymbolAnalyzer.isFunctionParameter(symbol)) return
+                if (PhelSymbolAnalyzer.isLetBinding(symbol)) return
+                if (PhelSymbolAnalyzer.isDefinition(symbol)) return
 
                 if (PhelFunctionRegistry.isDeprecated(text)) {
                     val deprecation = getDeprecationInfo(text)
