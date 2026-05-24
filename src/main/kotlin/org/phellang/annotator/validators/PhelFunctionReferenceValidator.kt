@@ -3,6 +3,7 @@ package org.phellang.annotator.validators
 import org.phellang.completion.documentation.PhelApiDocumentation
 import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
@@ -33,6 +34,14 @@ object PhelFunctionReferenceValidator {
         }
 
         val containingFile = symbol.containingFile as? PhelFile ?: return null
+
+        // Skip PHP-class interop shorthands (e.g. `DateTime/createFromFormat`,
+        // `\Foo\Bar/CONST`). The qualifier is a PHP class, not a Phel namespace,
+        // so the regular function lookup can't validate it.
+        val usedClasses = PhelNamespaceUtils.extractUsedClasses(containingFile)
+        if (PhelInteropShorthands.isInteropShorthand(text, usedClasses)) {
+            return null
+        }
 
         // Get alias map to resolve the actual namespace
         val aliasMap = PhelNamespaceUtils.extractAliasMap(containingFile)

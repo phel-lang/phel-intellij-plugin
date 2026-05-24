@@ -16,6 +16,7 @@ import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
+import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
@@ -67,6 +68,29 @@ object PhelSymbolHighlighter {
             return
         }
 
+        // PHP interop shorthands: `Class.`, `.method`, `.-field`, `Class/method`,
+        // `Class/CONST`, bare `new`, and `\Foo` / `\Foo\Bar` class references.
+        val containingFile = symbol.containingFile as? PhelFile
+        val usedClasses = if (containingFile != null) {
+            PhelNamespaceUtils.extractUsedClasses(containingFile)
+        } else {
+            emptySet()
+        }
+        if (PhelInteropShorthands.isInteropShorthand(text, usedClasses)) {
+            PhelAnnotationUtils.createAnnotation(holder, symbol, PHP_INTEROP)
+            return
+        }
+
+        // ClassName argument of `(new ClassName ...)` / `(php/new ClassName ...)`.
+        // We only colour it when the text actually looks like a PHP class — otherwise
+        // we'd paint user-defined macros that happen to be called `new`.
+        if (PhelInteropShorthands.isInteropClassName(text)
+            && PhelSymbolPositionAnalyzer.isConstructorClassArgument(symbol)
+        ) {
+            PhelAnnotationUtils.createAnnotation(holder, symbol, PHP_INTEROP)
+            return
+        }
+
         // Namespace-qualified function calls - use "/" as separator
         if (text.contains("/") && !text.startsWith("/") && !text.endsWith("/")) {
             // First, validate the namespace itself
@@ -105,7 +129,6 @@ object PhelSymbolHighlighter {
         // Function call position
         if (PhelSymbolPositionAnalyzer.isInFunctionCallPosition(symbol)) {
             // Check if this is an imported function via :refer - use FUNCTION_CALL color
-            val containingFile = symbol.containingFile as? PhelFile
             if (containingFile != null && PhelNamespaceUtils.isReferredSymbol(containingFile, text)) {
                 PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_CALL)
                 return

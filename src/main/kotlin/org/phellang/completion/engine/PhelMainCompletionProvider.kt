@@ -9,6 +9,7 @@ import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelProjectCompletionHelper
 import org.phellang.completion.infrastructure.PhelReferCompletionHelper
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
+import org.phellang.completion.infrastructure.PhelUsedClassCompletionHelper
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.language.psi.PhelNamespaceUtils
@@ -134,6 +135,7 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
             // Project symbols (functions from other project files)
             if (psiFile != null) {
                 PhelProjectCompletionHelper.addProjectCompletions(result, psiFile, aliasMap)
+                PhelUsedClassCompletionHelper.addUsedClassCompletions(result, psiFile)
             }
         }
     }

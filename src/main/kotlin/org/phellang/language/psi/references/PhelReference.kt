@@ -132,6 +132,21 @@ class PhelReference @JvmOverloads constructor(
                 results.add(PsiElementResolveResult(def))
             }
         }
+
+        // 5. PHP interop fall-through. Only runs when nothing Phel-side resolved AND the
+        //    text looks like an interop shorthand — keeps the cost off the hot path for
+        //    ordinary Phel symbols and is a no-op when the PHP plugin isn't installed.
+        if (results.isEmpty()) {
+            addPhpClassResults(results)
+        }
+    }
+
+    private fun addPhpClassResults(results: MutableList<ResolveResult>) {
+        val element = myElement ?: return
+        val phpTargets = PhpClassResolver.resolveAsPhpClass(element)
+        for (target in phpTargets) {
+            results.add(PsiElementResolveResult(target))
+        }
     }
 
     /**
@@ -146,6 +161,14 @@ class PhelReference @JvmOverloads constructor(
         val results: MutableList<PsiElement> = ArrayList()
         val containingFile = myElement!!.containingFile as? PhelFile ?: return results
         val project = myElement!!.project
+
+        // PHP interop static call (`ClassName/method`, `\Foo\Bar/CONST`, …) —
+        // resolve to the PHP class, when the PHP plugin is available.
+        val phpTargets = PhpClassResolver.resolveAsPhpClass(myElement!!)
+        if (phpTargets.isNotEmpty()) {
+            results.addAll(phpTargets)
+            return results
+        }
 
         // First, try to resolve the qualifier via imports (handles aliases)
         val targetNamespace = resolveQualifierToNamespace(containingFile, qualifier)
