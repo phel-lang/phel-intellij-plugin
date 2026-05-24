@@ -12,15 +12,7 @@ internal fun registerPhpInteropFunctions(): List<PhelFunction> = listOf(
             priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
         documentation = DocumentationInfo(
-            summary = """
-Access to an object property or result of chained calls.
-<br><br>
-Shorthands:
-<ul>
-<li><code>(.method obj args)</code> &rarr; <code>(php/-&gt; obj (method args))</code></li>
-<li><code>(.-field obj)</code> &rarr; <code>(php/-&gt; obj field)</code></li>
-</ul>
-""",
+            summary = "Access to an object property or result of chained calls.",
             example = "(php/-&gt; date (format \"Y-m-d\"))",
             links = DocumentationLinks(
                 github = "",
@@ -39,12 +31,6 @@ Shorthands:
         documentation = DocumentationInfo(
             summary = """
 Calls a static method or property from a PHP class. Both method-name and property must be symbols and cannot be an evaluated value.
-<br><br>
-Shorthands:
-<ul>
-<li><code>(ClassName/method args)</code> &rarr; <code>(php/:: ClassName (method args))</code></li>
-<li><code>ClassName/MEMBER</code> &rarr; <code>(php/:: ClassName MEMBER)</code></li>
-</ul>
 """,
             example = "(php/:: DateTime (createFromFormat \"Y-m-d\" \"2024-01-01\"))",
             links = DocumentationLinks(
@@ -214,12 +200,6 @@ Equivalent to PHP's <code>unset(arr[k1][k2][k...])</code>.
         documentation = DocumentationInfo(
             summary = """
 Evaluates expr and creates a new PHP class using the arguments. The instance of the class is returned.
-<br><br>
-Shorthands:
-<ul>
-<li><code>(ClassName. args)</code> &rarr; <code>(php/new ClassName args)</code></li>
-<li><code>(new ClassName args)</code> &rarr; <code>(php/new ClassName args)</code></li>
-</ul>
 """,
             example = "(php/new DateTime \"2024-01-01\")",
             links = DocumentationLinks(
