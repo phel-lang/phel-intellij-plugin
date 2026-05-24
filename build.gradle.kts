@@ -2,7 +2,7 @@ import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 group = "org.phellang"
-version = "0.4.2"
+version = "0.4.3"
 
 plugins {
     id("java")
