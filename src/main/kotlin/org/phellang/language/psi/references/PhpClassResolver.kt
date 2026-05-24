@@ -3,6 +3,7 @@ package org.phellang.language.psi.references
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
@@ -11,7 +12,8 @@ import org.phellang.language.psi.files.PhelFile
 /**
  * Reflection-based bridge to the JetBrains PHP plugin (PhpStorm / Ultimate with
  * the PHP plugin installed). Resolves a Phel interop symbol to its underlying
- * PHP class so go-to-definition jumps straight into the class source.
+ * PHP class — or, where applicable, a specific class member — so go-to-definition
+ * jumps straight into the PHP source.
  *
  * The PHP plugin is **not** a compile-time dependency — we never want to break
  * Phel support in IDEA Community / WebStorm / Rider just because PHP isn't on
@@ -25,52 +27,99 @@ object PhpClassResolver {
     private val LOG = Logger.getInstance(PhpClassResolver::class.java)
 
     /**
-     * Memoised reflective handle to `PhpIndex`. `NotLoaded` means we tried and
-     * couldn't find the class (PHP plugin missing); `null` means we haven't
-     * tried yet.
+     * Member kinds we surface from a PHP class. We deliberately exclude private/
+     * protected members from completion and resolution since Phel can only call
+     * what's public from outside the class.
      */
+    enum class MemberKind { METHOD, CONSTANT, FIELD }
+
+    data class PhpMemberInfo(
+        val name: String,
+        val kind: MemberKind,
+        val isStatic: Boolean,
+        val signature: String,
+        val element: PsiElement,
+    )
+
     @Volatile
     private var phpIndexClass: Class<*>? = null
 
     @Volatile
     private var checkedForPhpPlugin: Boolean = false
 
+    // ──────────────────────────────────────────────────────────────────────────
+    // Class-level resolution (existing API; unchanged surface)
+    // ──────────────────────────────────────────────────────────────────────────
+
     fun resolveAsPhpClass(symbol: PhelSymbol): List<PsiElement> {
         if (!checkedForPhpPlugin) loadPhpIndexClass()
-        val phpIndex = phpIndexClass ?: return emptyList()
+        if (phpIndexClass == null) return emptyList()
+        val fqn = computeTargetFqn(symbol) ?: return emptyList()
+        return findClassesByFqn(symbol.project, fqn).mapNotNull { it as? PsiElement }
+    }
+
+    /**
+     * Resolves to a specific member (`Foo/method`, `Foo/CONST`, `\Foo\Bar/m`) or to
+     * the constructor when the symbol is the `(Class. ...)` head. Falls back to an
+     * empty list when the PHP plugin isn't available or the member can't be found —
+     * callers should then call [resolveAsPhpClass] for the class-level fallback.
+     */
+    fun resolveAsPhpMember(symbol: PhelSymbol): List<PsiElement> {
+        if (!checkedForPhpPlugin) loadPhpIndexClass()
+        if (phpIndexClass == null) return emptyList()
 
         val text = symbol.text ?: return emptyList()
-        val fqn = resolveTargetFqn(symbol, text) ?: return emptyList()
+        val classFqn = computeTargetFqn(symbol) ?: return emptyList()
+        val memberName = extractMemberName(text) ?: return emptyList()
+        val classes = findClassesByFqn(symbol.project, classFqn)
+        if (classes.isEmpty()) return emptyList()
 
-        return try {
-            val instanceMethod = phpIndex.getMethod("getInstance", Project::class.java)
-            val instance = instanceMethod.invoke(null, symbol.project)
-
-            val getByFqn = phpIndex.getMethod("getClassesByFQN", String::class.java)
-            @Suppress("UNCHECKED_CAST")
-            val classes = getByFqn.invoke(instance, fqn) as? Collection<Any> ?: return emptyList()
-            classes.mapNotNull { it as? PsiElement }
-        } catch (t: Throwable) {
-            LOG.debug("PHP class resolution failed for '$fqn'", t)
-            emptyList()
+        return classes.flatMap { phpClass ->
+            findMemberInClass(phpClass, memberName)
         }
     }
 
     /**
-     * Computes the PHP FQN we want to look up for [text] in [symbol]'s file.
+     * Enumerates the public, *statically reachable* members of [classFqn] for use
+     * in completion. Inherited members are included. Returns an empty list when
+     * the PHP plugin isn't available.
+     */
+    fun listMembers(project: Project, classFqn: String): List<PhpMemberInfo> {
+        if (!checkedForPhpPlugin) loadPhpIndexClass()
+        if (phpIndexClass == null) return emptyList()
+
+        val classes = findClassesByFqn(project, classFqn)
+        if (classes.isEmpty()) return emptyList()
+
+        val seen = mutableSetOf<String>()
+        val result = mutableListOf<PhpMemberInfo>()
+        for (phpClass in classes) {
+            for (info in collectMembers(phpClass)) {
+                val key = "${info.kind}:${info.name}"
+                if (seen.add(key)) result.add(info)
+            }
+        }
+        return result
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // FQN derivation (shared)
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Computes the PHP FQN we want to look up for [symbol]'s text.
      *
      * * `\Foo\Bar`     -> `\Foo\Bar`
-     * * `Foo` (in :use)-> the `:use` clause's full FQN (e.g. `\Foo\Bar`)
+     * * `Foo` (in :use)-> the `:use` clause's full FQN
      * * `Foo.`         -> same as `Foo`
-     * * `Foo/method`   -> same as `Foo`
+     * * `Foo/method`   -> same as `Foo` (class part of static member access)
      * * any other      -> null (let Phel-only resolution stay authoritative)
      */
-    private fun resolveTargetFqn(symbol: PhelSymbol, text: String): String? {
+    private fun computeTargetFqn(symbol: PhelSymbol): String? {
+        val text = symbol.text ?: return null
         val file = symbol.containingFile as? PhelFile ?: return null
 
-        if (text.startsWith("\\") && !text.contains("/")) {
-            return text
-        }
+        if (text.startsWith("\\") && !text.contains("/")) return text
 
         if (!PhelInteropShorthands.isInteropShorthand(text, PhelNamespaceUtils.extractUsedClasses(file))) {
             return null
@@ -85,13 +134,22 @@ object PhpClassResolver {
 
         if (rawQualifier.startsWith("\\")) return rawQualifier
 
-        // Bare short name like `DateTime`. Try to find the matching `:use` FQN
-        // (e.g. `(:use \DateTime)` -> `\DateTime`, `(:use \Foo\Bar)` -> `\Foo\Bar`).
         val useFqn = findUseFqn(file, rawQualifier)
         if (useFqn != null) return useFqn
 
-        // Fallback: ask PhpIndex for the bare name at the global namespace.
         return "\\$rawQualifier"
+    }
+
+    /**
+     * For `Foo/method` returns `method`; for `Foo.` returns `__construct` (the
+     * canonical PHP constructor name). Returns null when the text doesn't address
+     * a specific member.
+     */
+    private fun extractMemberName(text: String): String? {
+        if (text.endsWith(".") && text.length > 1) return CONSTRUCTOR_NAME
+        if (!text.contains("/")) return null
+        val tail = text.substringAfterLast('/')
+        return tail.ifEmpty { null }
     }
 
     private fun findUseFqn(file: PhelFile, shortName: String): String? {
@@ -101,8 +159,7 @@ object PhpClassResolver {
             val forms = useForm.forms
             for (i in 1 until forms.size) {
                 val form = forms[i]
-                val sym = form as? PhelSymbol
-                    ?: com.intellij.psi.util.PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+                val sym = form as? PhelSymbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
                 val raw = sym?.text ?: continue
                 val candidateShort = raw.trimStart('\\').substringAfterLast('\\')
                 if (candidateShort == shortName) {
@@ -111,6 +168,134 @@ object PhpClassResolver {
             }
         }
         return null
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // PhpIndex reflection
+    // ──────────────────────────────────────────────────────────────────────────
+
+    private fun findClassesByFqn(project: Project, fqn: String): List<Any> {
+        val phpIndex = phpIndexClass ?: return emptyList()
+        return try {
+            val instance = phpIndex.getMethod("getInstance", Project::class.java).invoke(null, project)
+            val getByFqn = phpIndex.getMethod("getClassesByFQN", String::class.java)
+            @Suppress("UNCHECKED_CAST")
+            val classes = getByFqn.invoke(instance, fqn) as? Collection<Any> ?: return emptyList()
+            classes.toList()
+        } catch (t: Throwable) {
+            LOG.debug("PHP class lookup failed for '$fqn'", t)
+            emptyList()
+        }
+    }
+
+    private fun findMemberInClass(phpClass: Any, memberName: String): List<PsiElement> {
+        val cls = phpClass::class.java
+        val results = mutableListOf<PsiElement>()
+
+        // Methods (including the constructor when memberName == "__construct").
+        tryInvokeCollection(cls, phpClass, "getMethods")?.let { methods ->
+            for (method in methods) {
+                if (readStringProperty(method, "getName") == memberName) {
+                    (method as? PsiElement)?.let { results.add(it) }
+                }
+            }
+        }
+
+        // Fields (which in the PHP plugin model also covers constants).
+        tryInvokeCollection(cls, phpClass, "getFields")?.let { fields ->
+            for (field in fields) {
+                if (readStringProperty(field, "getName") == memberName) {
+                    (field as? PsiElement)?.let { results.add(it) }
+                }
+            }
+        }
+
+        return results
+    }
+
+    private fun collectMembers(phpClass: Any): List<PhpMemberInfo> {
+        val cls = phpClass::class.java
+        val out = mutableListOf<PhpMemberInfo>()
+
+        tryInvokeCollection(cls, phpClass, "getMethods")?.forEach { method ->
+            val name = readStringProperty(method, "getName") ?: return@forEach
+            if (name == CONSTRUCTOR_NAME) return@forEach // surfaced via `Class.` shorthand, not `Class/`
+            if (!isAccessible(method)) return@forEach
+            val element = method as? PsiElement ?: return@forEach
+            val isStatic = readBoolProperty(method, "isStatic") ?: false
+            val signature = methodSignature(method, name)
+            out.add(PhpMemberInfo(name, MemberKind.METHOD, isStatic, signature, element))
+        }
+
+        tryInvokeCollection(cls, phpClass, "getFields")?.forEach { field ->
+            val name = readStringProperty(field, "getName") ?: return@forEach
+            if (!isAccessible(field)) return@forEach
+            val element = field as? PsiElement ?: return@forEach
+            val isConstant = readBoolProperty(field, "isConstant") ?: false
+            val isStatic = readBoolProperty(field, "isStatic") ?: isConstant
+            val kind = if (isConstant) MemberKind.CONSTANT else MemberKind.FIELD
+            out.add(PhpMemberInfo(name, kind, isStatic, name, element))
+        }
+
+        return out
+    }
+
+    private fun methodSignature(method: Any?, name: String): String {
+        if (method == null) return "$name(...)"
+        return try {
+            val getParameters = method.javaClass.getMethod("getParameters")
+            val params = getParameters.invoke(method) as? Array<*> ?: return "$name(...)"
+            val rendered = params.joinToString(", ") { p ->
+                readStringProperty(p, "getName")?.let { "$$it" } ?: "?"
+            }
+            "$name($rendered)"
+        } catch (_: Throwable) {
+            "$name(...)"
+        }
+    }
+
+    private fun isAccessible(member: Any?): Boolean {
+        if (member == null) return false
+        // Access object lives on Method/Field via `getModifier().getAccess()`.
+        // Anything that isn't explicitly private/protected is considered callable
+        // from Phel.
+        return try {
+            val getModifier = member.javaClass.getMethod("getModifier")
+            val modifier = getModifier.invoke(member) ?: return true
+            val getAccess = modifier.javaClass.getMethod("getAccess")
+            val access = getAccess.invoke(modifier) ?: return true
+            val name = (access.javaClass.getMethod("name").invoke(access) as? String)?.uppercase()
+            name == null || name == "PUBLIC"
+        } catch (_: Throwable) {
+            true
+        }
+    }
+
+    private fun tryInvokeCollection(cls: Class<*>, target: Any, name: String): Collection<*>? {
+        return try {
+            val m = cls.methods.firstOrNull { it.name == name && it.parameterCount == 0 } ?: return null
+            m.invoke(target) as? Collection<*>
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
+    private fun readStringProperty(target: Any?, methodName: String): String? {
+        if (target == null) return null
+        return try {
+            target.javaClass.getMethod(methodName).invoke(target) as? String
+        } catch (_: Throwable) {
+            null
+        }
+    }
+
+    private fun readBoolProperty(target: Any?, methodName: String): Boolean? {
+        if (target == null) return null
+        return try {
+            target.javaClass.getMethod(methodName).invoke(target) as? Boolean
+        } catch (_: Throwable) {
+            null
+        }
     }
 
     private fun loadPhpIndexClass() {
@@ -127,4 +312,6 @@ object PhpClassResolver {
             }
         }
     }
+
+    private const val CONSTRUCTOR_NAME = "__construct"
 }

@@ -143,10 +143,15 @@ class PhelReference @JvmOverloads constructor(
 
     private fun addPhpClassResults(results: MutableList<ResolveResult>) {
         val element = myElement ?: return
-        val phpTargets = PhpClassResolver.resolveAsPhpClass(element)
-        for (target in phpTargets) {
-            results.add(PsiElementResolveResult(target))
+        // Prefer specific members (e.g. `Class.` -> __construct method) so go-to-def
+        // lands on the precise PHP node; fall back to the class otherwise.
+        val memberTargets = PhpClassResolver.resolveAsPhpMember(element)
+        if (memberTargets.isNotEmpty()) {
+            for (target in memberTargets) results.add(PsiElementResolveResult(target))
+            return
         }
+        val phpTargets = PhpClassResolver.resolveAsPhpClass(element)
+        for (target in phpTargets) results.add(PsiElementResolveResult(target))
     }
 
     /**
@@ -162,8 +167,15 @@ class PhelReference @JvmOverloads constructor(
         val containingFile = myElement!!.containingFile as? PhelFile ?: return results
         val project = myElement!!.project
 
-        // PHP interop static call (`ClassName/method`, `\Foo\Bar/CONST`, …) —
-        // resolve to the PHP class, when the PHP plugin is available.
+        // PHP interop static call (`ClassName/method`, `\Foo\Bar/CONST`, …).
+        // Try the specific member (method/constant) first so go-to-def lands on
+        // the precise PHP node; fall back to the class if the member lookup
+        // misses (or when the PHP plugin isn't available).
+        val memberTargets = PhpClassResolver.resolveAsPhpMember(myElement!!)
+        if (memberTargets.isNotEmpty()) {
+            results.addAll(memberTargets)
+            return results
+        }
         val phpTargets = PhpClassResolver.resolveAsPhpClass(myElement!!)
         if (phpTargets.isNotEmpty()) {
             results.addAll(phpTargets)
