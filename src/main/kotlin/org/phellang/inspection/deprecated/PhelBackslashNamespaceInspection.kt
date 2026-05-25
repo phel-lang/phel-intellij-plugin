@@ -17,10 +17,14 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVisitor
 
 /**
- * Flags backslash-separated namespaces inside `(ns ...)`, `:require`, and `:use`
- * clauses. Phel 0.35 made dot-separation the canonical form and accepts backslashes
- * only for back-compat (with `PHEL_WARN_DEPRECATIONS=1`). This mirrors that warning
- * inside the IDE so projects can migrate.
+ * Flags backslash-separated namespaces inside `(ns ...)` and `:require` clauses.
+ * Phel 0.35 made dot-separation the canonical form for Phel namespaces and accepts
+ * backslashes only for back-compat (with `PHEL_WARN_DEPRECATIONS=1`). This mirrors
+ * that warning inside the IDE so projects can migrate.
+ *
+ * `:use` is intentionally excluded: it brings PHP classes into scope and PHP FQNs
+ * are always backslash-separated, so `(:use \DateTimeImmutable)` is the correct
+ * Phel form — not a deprecation.
  */
 class PhelBackslashNamespaceInspection : LocalInspectionTool() {
 
@@ -46,10 +50,12 @@ class PhelBackslashNamespaceInspection : LocalInspectionTool() {
         val forms = enclosingList.forms
         if (forms.isEmpty()) return false
 
-        // (:require ns ...) / (:use ns ...) — first form is the keyword.
+        // (:require ns ...) — first form is the keyword.
+        // `:use` is deliberately excluded: it imports PHP classes, whose FQNs must
+        // use backslashes (e.g. `(:use \DateTimeImmutable)`).
         val firstKeyword = forms[0] as? PhelKeyword
             ?: PsiTreeUtil.findChildOfType(forms[0], PhelKeyword::class.java)
-        if (firstKeyword != null && (firstKeyword.text == ":require" || firstKeyword.text == ":use")) {
+        if (firstKeyword?.text == ":require") {
             return true
         }
 

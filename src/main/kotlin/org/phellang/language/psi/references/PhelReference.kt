@@ -132,6 +132,26 @@ class PhelReference @JvmOverloads constructor(
                 results.add(PsiElementResolveResult(def))
             }
         }
+
+        // 5. PHP interop fall-through. Only runs when nothing Phel-side resolved AND the
+        //    text looks like an interop shorthand — keeps the cost off the hot path for
+        //    ordinary Phel symbols and is a no-op when the PHP plugin isn't installed.
+        if (results.isEmpty()) {
+            addPhpClassResults(results)
+        }
+    }
+
+    private fun addPhpClassResults(results: MutableList<ResolveResult>) {
+        val element = myElement ?: return
+        // Prefer specific members (e.g. `Class.` -> __construct method) so go-to-def
+        // lands on the precise PHP node; fall back to the class otherwise.
+        val memberTargets = PhpClassResolver.resolveAsPhpMember(element)
+        if (memberTargets.isNotEmpty()) {
+            for (target in memberTargets) results.add(PsiElementResolveResult(target))
+            return
+        }
+        val phpTargets = PhpClassResolver.resolveAsPhpClass(element)
+        for (target in phpTargets) results.add(PsiElementResolveResult(target))
     }
 
     /**
@@ -146,6 +166,21 @@ class PhelReference @JvmOverloads constructor(
         val results: MutableList<PsiElement> = ArrayList()
         val containingFile = myElement!!.containingFile as? PhelFile ?: return results
         val project = myElement!!.project
+
+        // PHP interop static call (`ClassName/method`, `\Foo\Bar/CONST`, …).
+        // Try the specific member (method/constant) first so go-to-def lands on
+        // the precise PHP node; fall back to the class if the member lookup
+        // misses (or when the PHP plugin isn't available).
+        val memberTargets = PhpClassResolver.resolveAsPhpMember(myElement!!)
+        if (memberTargets.isNotEmpty()) {
+            results.addAll(memberTargets)
+            return results
+        }
+        val phpTargets = PhpClassResolver.resolveAsPhpClass(myElement!!)
+        if (phpTargets.isNotEmpty()) {
+            results.addAll(phpTargets)
+            return results
+        }
 
         // First, try to resolve the qualifier via imports (handles aliases)
         val targetNamespace = resolveQualifierToNamespace(containingFile, qualifier)

@@ -30,6 +30,20 @@ object PhelNamespaceUtils {
     }
 
     fun findRequireForms(nsDeclaration: PhelList): List<PhelList> {
+        return findNsClauseForms(nsDeclaration, ":require")
+    }
+
+    /**
+     * Finds `(:use ...)` clauses inside an `(ns ...)` declaration. Phel's `:use`
+     * brings PHP classes (not Phel namespaces) into scope so they can be referenced
+     * without the leading `\`, e.g. `(:use \DateTime \Exception)` enables
+     * `DateTime/createFromFormat`, `(DateTime. ...)`, etc.
+     */
+    fun findUseForms(nsDeclaration: PhelList): List<PhelList> {
+        return findNsClauseForms(nsDeclaration, ":use")
+    }
+
+    private fun findNsClauseForms(nsDeclaration: PhelList, clauseKeyword: String): List<PhelList> {
         return PsiTreeUtil.findChildrenOfType(nsDeclaration, PhelList::class.java).filter { list ->
             val forms = list.forms
             if (forms.isEmpty()) return@filter false
@@ -37,8 +51,41 @@ object PhelNamespaceUtils {
             val firstForm = forms[0]
             val firstKeyword = firstForm as? PhelKeyword
                 ?: PsiTreeUtil.findChildOfType(firstForm, PhelKeyword::class.java)
-            firstKeyword?.text == ":require"
+            firstKeyword?.text == clauseKeyword
         }
+    }
+
+    /**
+     * Extracts PHP class short names declared via `(:use ...)` in the file's `ns` form.
+     *
+     * Both `\Foo\Bar` and `Foo\Bar` produce the short name `Bar`. The short name is
+     * what users actually type in interop shorthands such as `(Bar. arg)`,
+     * `(.method bar)`, or `Bar/static-fn`.
+     */
+    fun extractUsedClasses(file: PhelFile): Set<String> {
+        val nsDeclaration = findNamespaceDeclaration(file) ?: return emptySet()
+        val useForms = findUseForms(nsDeclaration)
+        if (useForms.isEmpty()) return emptySet()
+
+        val classes = mutableSetOf<String>()
+        for (useForm in useForms) {
+            val forms = useForm.forms
+            for (i in 1 until forms.size) {
+                val form = forms[i]
+                val symbol = form as? PhelSymbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+                val text = symbol?.text ?: continue
+                val shortName = extractShortClassName(text) ?: continue
+                classes.add(shortName)
+            }
+        }
+        return classes
+    }
+
+    private fun extractShortClassName(text: String): String? {
+        val trimmed = text.trimStart('\\')
+        if (trimmed.isEmpty()) return null
+        val short = trimmed.substringAfterLast('\\')
+        return short.ifEmpty { null }
     }
 
     fun extractAliasMap(file: PhelFile): Map<String, String> {

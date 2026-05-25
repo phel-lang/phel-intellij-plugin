@@ -30,6 +30,21 @@ Phel is a functional programming language that transpiles to PHP. It is a dialec
 - Instance calls: `(php/-> object method)`
 - Operators: `php/+`, `php/-`, `php/&&`, `php/||`, `php/!==`, `php/@`, `php/^`, `php/~`
 
+### Interop shorthands
+
+Terse forms that expand to verbose `php/*`:
+
+| Shorthand                 | Expands to                         |
+|---------------------------|------------------------------------|
+| `(ClassName. args)`       | `(php/new ClassName args)`         |
+| `(new ClassName args)`    | `(php/new ClassName args)`         |
+| `(.method obj args)`      | `(php/-> obj (method args))`       |
+| `(.-field obj)`           | `(php/-> obj field)`               |
+| `(ClassName/method args)` | `(php/:: ClassName (method args))` |
+| `ClassName/MEMBER`        | `(php/:: ClassName MEMBER)`        |
+
+Classes are brought into scope via `(:use \DateTime \Exception)` in the `ns` form.
+
 ## File Structure
 - Every file starts with `(ns namespace\name)`
 - Top-level forms: `def`, `defn`, `defmacro`, comments

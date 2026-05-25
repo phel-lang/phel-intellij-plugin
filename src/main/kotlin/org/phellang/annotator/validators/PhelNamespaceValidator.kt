@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelForm
+import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
@@ -34,6 +35,14 @@ object PhelNamespaceValidator {
         }
 
         val containingFile = symbol.containingFile as? PhelFile ?: return null
+
+        // Skip PHP-class interop shorthands like `DateTime/createFromFormat` or
+        // `\Foo\Bar/CONST`. These look namespaced but the qualifier is a PHP class,
+        // not a Phel namespace, so the regular import lookup would always fail.
+        val usedClasses = PhelNamespaceUtils.extractUsedClasses(containingFile)
+        if (PhelInteropShorthands.isInteropShorthand(text, usedClasses)) {
+            return null
+        }
 
         // Check if the qualifier is imported or aliased AND the namespace exists
         val importStatus = checkImportStatus(containingFile, qualifier)
