@@ -54,6 +54,17 @@ class PhelReference @JvmOverloads constructor(
     }
 
     private fun findDefinitions(results: MutableList<ResolveResult>) {
+        // Namespace reference inside an `(ns ... (:require foo\bar))` clause.
+        // Go-to-definition should jump to the required module's `(ns ...)` form,
+        // mirroring how IntelliJ resolves imports in other languages.
+        val namespaceTargets = resolveRequireNamespace()
+        if (namespaceTargets.isNotEmpty()) {
+            for (target in namespaceTargets) {
+                results.add(PsiElementResolveResult(target))
+            }
+            return
+        }
+
         // Check if this is a namespace-qualified symbol (e.g., utils/greet, m/square)
         val qualifier = PhelPsiUtils.getQualifier(myElement!!)
         if (qualifier != null) {
@@ -152,6 +163,104 @@ class PhelReference @JvmOverloads constructor(
         }
         val phpTargets = PhpClassResolver.resolveAsPhpClass(element)
         for (target in phpTargets) results.add(PsiElementResolveResult(target))
+    }
+
+    /**
+     * Resolves a namespace symbol that appears as the head of a `(:require ...)` spec
+     * to the `(ns ...)` declaration of the module it imports. Returns an empty list when
+     * the symbol isn't a require namespace head, so the caller falls through to ordinary
+     * symbol resolution.
+     *
+     * Handles both layouts Phel allows:
+     * * `(:require foo\bar baz\qux)`            — namespace directly under the clause
+     * * `(:require [foo\bar :as fb :refer […]])` — namespace as the head of a vector spec
+     */
+    private fun resolveRequireNamespace(): List<PsiElement> {
+        val symbol = myElement ?: return emptyList()
+        if (!isRequireNamespaceHead(symbol)) return emptyList()
+
+        val namespaceText = symbol.text ?: return emptyList()
+        if (namespaceText.isEmpty()) return emptyList()
+
+        val project = symbol.project
+        val target = PhelNamespaceUtils.normalizeNamespace(namespaceText)
+        val psiManager = PsiManager.getInstance(project)
+        val results: MutableList<PsiElement> = ArrayList()
+
+        // 1. Project files
+        val phelFiles = FilenameIndex.getAllFilesByExt(
+            project, "phel", GlobalSearchScope.projectScope(project)
+        )
+        for (virtualFile in phelFiles) {
+            val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
+            val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(psiFile) ?: continue
+            val fileNamespace = PhelNamespaceUtils.extractNamespaceFromDeclaration(nsDeclaration) ?: continue
+            if (PhelNamespaceUtils.normalizeNamespace(fileNamespace) == target) {
+                results.add(namespaceNavigationTarget(nsDeclaration))
+            }
+        }
+        if (results.isNotEmpty()) return results
+
+        // 2. Phel standard library (vendor folder), e.g. (:require phel\str)
+        val vendorFiles = PhelVendorUtils.findStandardLibraryFiles(project, namespaceText)
+        for (vendorFile in vendorFiles) {
+            val psiFile = psiManager.findFile(vendorFile) as? PhelFile ?: continue
+            val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(psiFile)
+            if (nsDeclaration != null &&
+                PhelNamespaceUtils.extractNamespaceFromDeclaration(nsDeclaration)
+                    ?.let(PhelNamespaceUtils::normalizeNamespace) == target
+            ) {
+                results.add(namespaceNavigationTarget(nsDeclaration))
+            }
+        }
+        // Fall back to the first vendor file's ns form when none matched exactly
+        // (e.g. phel\core is split across many bucket files).
+        if (results.isEmpty()) {
+            for (vendorFile in vendorFiles) {
+                val psiFile = psiManager.findFile(vendorFile) as? PhelFile ?: continue
+                val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(psiFile) ?: continue
+                results.add(namespaceNavigationTarget(nsDeclaration))
+                break
+            }
+        }
+
+        return results
+    }
+
+    /** True when [symbol] is the namespace head of a `(:require ...)` spec. */
+    private fun isRequireNamespaceHead(symbol: PhelSymbol): Boolean {
+        // A dot-separated namespace like `phel.string` parses as a PhelAccess form
+        // (the `.` is interop-access syntax), so the form node under the clause may be
+        // that wrapper rather than the symbol itself.
+        val node: PsiElement = if (symbol.parent is org.phellang.language.psi.PhelAccess) symbol.parent else symbol
+        val parent = node.parent
+        // (:require foo\bar) / (:require phel.string) — namespace directly under the clause
+        if (parent is PhelList && isRequireClause(parent)) {
+            return true
+        }
+        // (:require [foo\bar :as fb]) — namespace is the vector spec's head
+        if (parent is PhelVec) {
+            val grandParent = parent.parent
+            if (grandParent is PhelList && isRequireClause(grandParent) && parent.forms.firstOrNull() === node) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun isRequireClause(list: PhelList): Boolean {
+        val head = list.forms.firstOrNull() ?: return false
+        val keyword = head as? org.phellang.language.psi.PhelKeyword
+            ?: PsiTreeUtil.findChildOfType(head, org.phellang.language.psi.PhelKeyword::class.java)
+        return keyword?.text == ":require"
+    }
+
+    /** The `(ns <name> ...)` name symbol to navigate to, falling back to the whole form. */
+    private fun namespaceNavigationTarget(nsDeclaration: PhelList): PsiElement {
+        val nameForm = nsDeclaration.forms.getOrNull(1)
+        val nameSymbol = nameForm as? PhelSymbol
+            ?: nameForm?.let { PsiTreeUtil.findChildOfType(it, PhelSymbol::class.java) }
+        return nameSymbol ?: nsDeclaration
     }
 
     /**

@@ -54,6 +54,7 @@ dependencies {
 
         pluginVerifier()
         zipSigner()
+        testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
     }
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.1.0")
@@ -61,6 +62,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.0")
     testImplementation("org.junit.jupiter:junit-jupiter-params:6.1.0")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.1.0")
+    testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
     implementation("com.google.code.gson:gson:2.14.0")
@@ -135,7 +137,7 @@ tasks {
 
     test {
         useJUnitPlatform {
-            includeEngines("junit-jupiter")
+            includeEngines("junit-jupiter", "junit-vintage")
         }
         testLogging {
             events("passed", "skipped", "failed")

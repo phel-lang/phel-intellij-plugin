@@ -368,4 +368,64 @@ class PhelLexerTest {
         val tokens = tokenize("; a comment")
         assertEquals(PhelTypes.LINE_COMMENT, tokens[0].first)
     }
+
+    // --- PHP interop operators (names contain reader-macro chars ^ ~ @) ---
+
+    @Test
+    fun `php caret operator should tokenize as single SYM not HAT`() {
+        val tokens = tokenize("php/^")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("php/^", tokens[0].second)
+    }
+
+    @Test
+    fun `php caret in a call keeps operator and args separate`() {
+        val tokens = tokenize("(php/^ 1 2)")
+        assertEquals(PhelTypes.PAREN1, tokens[0].first)
+        assertEquals(PhelTypes.SYM, tokens[1].first)
+        assertEquals("php/^", tokens[1].second)
+        // No stray HAT token — the ^ stayed inside the symbol
+        assertEquals(false, tokens.any { it.first == PhelTypes.HAT })
+        assertEquals(PhelTypes.PAREN2, tokens.last().first)
+    }
+
+    @Test
+    fun `php tilde operator should tokenize as single SYM not TILDE`() {
+        val tokens = tokenize("php/~")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("php/~", tokens[0].second)
+    }
+
+    @Test
+    fun `php at operator should tokenize as single SYM not DEREF`() {
+        val tokens = tokenize("php/@")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("php/@", tokens[0].second)
+    }
+
+    @Test
+    fun `php logical and operator should tokenize as single SYM`() {
+        val tokens = tokenize("php/&&")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("php/&&", tokens[0].second)
+    }
+
+    @Test
+    fun `php strict-not-equals operator should tokenize as single SYM`() {
+        val tokens = tokenize("php/!==")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("php/!==", tokens[0].second)
+    }
+
+    @Test
+    fun `leading caret is still HAT for metadata`() {
+        val tokens = tokenize("^:foo")
+        assertEquals(PhelTypes.HAT, tokens[0].first)
+        assertEquals("^", tokens[0].second)
+    }
 }
