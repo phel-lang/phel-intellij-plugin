@@ -39,6 +39,10 @@ ATOM={ATOM_START}{ATOM_CONT}*
 
 KEYWORD_TAIL={ATOM} ("/" {ATOM})? (":" {ATOM}+)?
 
+// PHP interop operators whose names contain reader-macro chars (^ ~ @),
+// e.g. php/^ php/~ php/@ php/&& php/|| php/!== php/+ php/-
+PHP_INTEROP_OP="php/" [+\-*/%&|!=<>\^~@.]+
+
 // Tagged literal dispatch: #inst, #uuid, #regex, #php, #cpp, etc.
 // Must start with a letter so #_ still matches the form-comment rule via first-match-wins.
 TAG_NAME=[a-zA-Z] [a-zA-Z0-9_\-]*
@@ -61,6 +65,9 @@ TAG="#" {TAG_NAME}
   "#_"                   { return PhelTypes.FORM_COMMENT; }
   "#{"                   { return PhelTypes.HASH_BRACE; }
   {TAG}                  { return PhelTypes.TAG; }
+
+  // PHP interop operators (php/^ php/~ php/@ ...) — before reader macros so ^ ~ @ stay in the symbol
+  {PHP_INTEROP_OP}       { return PhelTypes.SYM; }
 
   // Reader macros
   "^"                    { return PhelTypes.HAT; }
