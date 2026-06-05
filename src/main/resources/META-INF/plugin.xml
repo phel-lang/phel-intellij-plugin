@@ -76,6 +76,9 @@
         <lang.findUsagesProvider
                 language="Phel"
                 implementationClass="org.phellang.language.psi.navigation.PhelFindUsagesProvider"/>
+        <psi.referenceContributor
+                language="Phel"
+                implementation="org.phellang.language.psi.references.PhelFilePathReferenceContributor"/>
         <lang.foldingBuilder
                 language="Phel"
                 implementationClass="org.phellang.editor.PhelFoldingBuilder"/>
