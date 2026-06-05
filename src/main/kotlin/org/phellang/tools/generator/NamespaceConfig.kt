@@ -15,6 +15,7 @@ object NamespaceConfig {
         "cli" to NamespaceInfo("registerCliFunctions", "registerCliFunctions.kt"),
         "core" to NamespaceInfo("registerCoreFunctions", "registerCoreFunctions.kt"),
         "debug" to NamespaceInfo("registerDebugFunctions", "registerDebugFunctions.kt"),
+        "edn" to NamespaceInfo("registerEdnFunctions", "registerEdnFunctions.kt"),
         "html" to NamespaceInfo("registerHtmlFunctions", "registerHtmlFunctions.kt"),
         "http" to NamespaceInfo("registerHttpFunctions", "registerHttpFunctions.kt"),
         "http_client" to NamespaceInfo("registerHttpClientFunctions", "registerHttpClientFunctions.kt"),
@@ -24,6 +25,7 @@ object NamespaceConfig {
         "php" to NamespaceInfo("registerPhpInteropFunctions", "registerPhpInteropFunctions.kt"),
         "pprint" to NamespaceInfo("registerPprintFunctions", "registerPprintFunctions.kt"),
         "reader" to NamespaceInfo("registerReaderFunctions", "registerReaderFunctions.kt"),
+        "reflect" to NamespaceInfo("registerReflectFunctions", "registerReflectFunctions.kt"),
         "repl" to NamespaceInfo("registerReplFunctions", "registerReplFunctions.kt"),
         "router" to NamespaceInfo("registerRouterFunctions", "registerRouterFunctions.kt"),
         "schema" to NamespaceInfo("registerSchemaFunctions", "registerSchemaFunctions.kt", "schema"),
@@ -39,6 +41,7 @@ object NamespaceConfig {
         "test.rose" to NamespaceInfo("registerTestRoseFunctions", "registerTestRoseFunctions.kt", "test"),
         "test.selector" to NamespaceInfo("registerTestSelectorFunctions", "registerTestSelectorFunctions.kt", "test"),
         "test.shrink" to NamespaceInfo("registerTestShrinkFunctions", "registerTestShrinkFunctions.kt", "test"),
+        "transit" to NamespaceInfo("registerTransitFunctions", "registerTransitFunctions.kt"),
         "walk" to NamespaceInfo("registerWalkFunctions", "registerWalkFunctions.kt"),
         "watch" to NamespaceInfo("registerWatchFunctions", "registerWatchFunctions.kt")
     )

@@ -27,7 +27,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L21",
                 docs = "",
             ),
         ),
@@ -78,7 +78,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
             summary = "The script path or namespace being executed.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L199",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L199",
                 docs = "",
             ),
         ),
@@ -117,7 +117,7 @@ Vector of user arguments passed to the script (excludes program name).<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L204",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L204",
                 docs = "",
             ),
         ),
@@ -140,7 +140,7 @@ Constructs a map from the given key/value pairs. If any keys are<br />
 """,
             example = "(array-map :a 1 :b 2) ; =&gt; {:a 1 :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L59",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L59",
                 docs = "",
             ),
         ),
@@ -195,7 +195,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             summary = "Declare a global symbol before it is defined.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L187",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L187",
                 docs = "",
             ),
         ),
@@ -250,6 +250,25 @@ An interface in Phel defines an abstract set of functions. It is directly mapped
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/interfaces/#defining-interfaces",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "defonce",
+        signature = "(defonce name meta? value)",
+        completion = CompletionInfo(
+            tailText = "Like def, but only binds the value when name is not already defined",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Like <code>def</code>, but only binds the value when <code>name</code> is not already defined.
+""",
+            example = "(defonce app-state (atom {}))",
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/global-and-local-bindings/#definition-def",
             ),
         ),
     ),
@@ -327,7 +346,7 @@ Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns a
 """,
             example = "(first [1 2 3]) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L146",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L146",
                 docs = "",
             ),
         ),
@@ -475,7 +494,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = "Returns the sequence after the first element, or nil if empty.",
             example = "(next [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L94",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L94",
                 docs = "",
             ),
         ),
@@ -515,7 +534,7 @@ Creates a persistent FIFO queue. With no arguments returns an empty<br />
 """,
             example = "(queue 1 2 3) ; =&gt; first 1, then 2, then 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core.phel#L45",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L45",
                 docs = "",
             ),
         ),

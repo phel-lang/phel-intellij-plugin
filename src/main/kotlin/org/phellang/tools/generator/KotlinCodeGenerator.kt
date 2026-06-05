@@ -79,7 +79,7 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
                 appendLine("$prefix$name()$suffix")
             }
         }
-        File(outputDirectory, "registerCoreFunctions.kt").writeText(content)
+        writeFile(File(outputDirectory, "registerCoreFunctions.kt"), content)
     }
 
     private fun writeFunctionsFile(
@@ -103,6 +103,11 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
             }
             appendLine(")")
         }
+        writeFile(file, content)
+    }
+
+    private fun writeFile(file: File, content: String) {
+        file.parentFile?.mkdirs()
         file.writeText(content)
     }
 
@@ -171,7 +176,7 @@ internal object PhelFunctionRenderer {
 
     private fun renderDeprecation(apiFunction: ApiFunction): String? {
         val deprecated = apiFunction.meta?.deprecated ?: return null
-        val supersededBy = apiFunction.meta?.supersededBy
+        val supersededBy = apiFunction.meta.supersededBy
 
         return if (supersededBy != null) {
             "DeprecationInfo(version = ${StringEscaper.toKotlinString(deprecated)}, replacement = ${

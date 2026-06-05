@@ -21,7 +21,7 @@ internal fun registerCoreStringsFunctions(): List<PhelFunction> = listOf(
             summary = "Generates a new unique symbol.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/strings.phel#L80",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/strings.phel#L80",
                 docs = "",
             ),
         ),
@@ -43,7 +43,7 @@ Otherwise, it tries to call <code>__toString</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/strings.phel#L110",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/strings.phel#L110",
                 docs = "",
             ),
         ),
@@ -69,7 +69,7 @@ Throws <code>InvalidArgumentException</code> for any other input (including<br /
 """,
             example = "(symbol \"foo\") ; =&gt; foo\n(symbol :abc) ; =&gt; abc\n(symbol nil \"foo\") ; =&gt; foo\n(symbol #'phel.core/+) ; =&gt; phel.core/+",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/strings.phel#L47",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/strings.phel#L47",
                 docs = "",
             ),
         ),

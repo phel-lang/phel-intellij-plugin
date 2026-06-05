@@ -24,7 +24,7 @@ Returns <code>true</code> when <code>options</code> contains at least one non-em
 """,
             example = "(has-selectors? {:include [:integration]})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L225",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L225",
                 docs = "",
             ),
         ),
@@ -46,7 +46,7 @@ Returns <code>true</code> when <code>meta</code> carries <code>tag</code> (a key
 """,
             example = "(has-tag? {:integration true} :integration)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L57",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L57",
                 docs = "",
             ),
         ),
@@ -69,7 +69,7 @@ Returns <code>true</code> when the test described by <code>meta</code> and <code
 """,
             example = "(keep-test? {:include [:integration]} \"my.ns\" {:integration true :test-name \"t\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L204",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L204",
                 docs = "",
             ),
         ),
@@ -90,7 +90,7 @@ Returns <code>true</code> when any tag in <code>excludes</code> is truthy on <co
 """,
             example = "(matches-exclude? [:slow] {:slow true})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L85",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L85",
                 docs = "",
             ),
         ),
@@ -110,7 +110,7 @@ Returns <code>true</code> when <code>patterns</code> is empty (no restriction) o
 """,
             example = "(matches-filter? [\"add-\"] \"test-add-one\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L191",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L191",
                 docs = "",
             ),
         ),
@@ -130,7 +130,7 @@ Returns <code>true</code> when <code>includes</code> is empty (no restriction) o
 """,
             example = "(matches-include? [:integration] {:integration true})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L76",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L76",
                 docs = "",
             ),
         ),
@@ -150,7 +150,7 @@ Returns <code>true</code> when <code>patterns</code> is empty (no restriction) o
 """,
             example = "(matches-ns? [\"phel.http.*\"] \"phel.http.client\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L156",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L156",
                 docs = "",
             ),
         ),
@@ -170,7 +170,7 @@ Returns <code>true</code> when <code>pattern</code> (a PCRE <code>/.../</code> s
 """,
             example = "(name-matches? \"add-\" \"test-add-one\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L181",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L181",
                 docs = "",
             ),
         ),
@@ -192,7 +192,7 @@ Returns <code>true</code> when <code>ns-name</code> matches the glob <code>patte
 """,
             example = "(ns-matches? \"phel.http.*\" \"phel\\\\http\\\\client\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/selector.phel#L143",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L143",
                 docs = "",
             ),
         ),

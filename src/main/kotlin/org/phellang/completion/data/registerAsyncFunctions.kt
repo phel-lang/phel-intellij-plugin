@@ -29,7 +29,7 @@ At the top level this behaves like <code>php/sleep</code> / <code>php/usleep</co
 """,
             example = "(delay 0.5) ; suspends current fiber for 500ms\n  (async (delay 1.0) :done) ; =&gt; future that resolves after 1s\n  (delay (/ 1 1000)) ; ratio collapses to a float",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/async.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/async.phel#L19",
                 docs = "",
             ),
         ),

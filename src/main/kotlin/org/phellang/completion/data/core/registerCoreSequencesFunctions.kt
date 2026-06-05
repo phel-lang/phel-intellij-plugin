@@ -25,7 +25,7 @@ Associates one or more key-value pairs with a collection.<br />
 """,
             example = "(assoc {:a 1} :b 2) ; =&gt; {:a 1 :b 2}\n(assoc {:a 1} :b 2 :c 3) ; =&gt; {:a 1 :b 2 :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L250",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L285",
                 docs = "",
             ),
         ),
@@ -44,7 +44,7 @@ Returns <code>ds</code> without the given keys. With no keys returns <code>ds</c
 """,
             example = "(dissoc {:a 1 :b 2} :b) ; =&gt; {:a 1}\n(dissoc {:a 1 :b 2 :c 3} :a :c) ; =&gt; {:b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L292",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L327",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Returns <code>ds</code> without the given keys. With no keys returns <code>ds</c
             summary = "Gets the value at key in a collection. Returns default if not found.",
             example = "(get {:a 1} :a) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L77",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L94",
                 docs = "",
             ),
         ),
@@ -83,7 +83,7 @@ Returns the value at <code>index</code> in <code>coll</code>. Throws an<br />
 """,
             example = "(nth [1 2 3] 1) ; =&gt; 2\n(nth [1 2 3] 5 :default) ; =&gt; :default",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L126",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L139",
                 docs = "",
             ),
         ),
@@ -103,7 +103,7 @@ Returns the nth next of <code>coll</code>, <code>(seq coll)</code> when <code>n<
 """,
             example = "(nthnext [1 2 3 4 5] 2) ; =&gt; (3 4 5)\n(nthnext [1 2] 5) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L192",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L211",
                 docs = "",
             ),
         ),
@@ -123,7 +123,7 @@ Returns the nth rest of <code>coll</code>, <code>coll</code> when <code>n</code>
 """,
             example = "(nthrest [1 2 3 4 5] 2) ; =&gt; (3 4 5)\n(nthrest [1 2] 5) ; =&gt; ()\n(nthrest nil 0) ; =&gt; nil\n(nthrest nil 3) ; =&gt; ()",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L178",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L197",
                 docs = "",
             ),
         ),
@@ -144,7 +144,7 @@ Returns the head of a vector / PHP array (the last element) or the<br />
 """,
             example = "(peek [1 2 3]) ; =&gt; 3\n(peek '(:a :b :c)) ; =&gt; :a",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L26",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L27",
                 docs = "",
             ),
         ),
@@ -161,7 +161,7 @@ Returns the head of a vector / PHP array (the last element) or the<br />
             summary = "Removes the last element of a collection. Returns nil for nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L68",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L69",
                 docs = "",
             ),
         ),
@@ -181,7 +181,7 @@ Inserts <code>x</code> at the end of the sequence <code>coll</code>.
             example = null,
             deprecation = DeprecationInfo(version = "0.25.0", replacement = "conj"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L52",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L53",
                 docs = "",
             ),
         ),
@@ -201,7 +201,7 @@ Puts <code>value</code> mapped to <code>key</code> on the datastructure <code>ds
             example = null,
             deprecation = DeprecationInfo(version = "0.25.0", replacement = "assoc"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L267",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L302",
                 docs = "",
             ),
         ),
@@ -221,7 +221,7 @@ Returns <code>ds</code> without <code>key</code>.
             example = null,
             deprecation = DeprecationInfo(version = "0.25.0", replacement = "dissoc"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/sequences.phel#L302",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/sequences.phel#L337",
                 docs = "",
             ),
         ),

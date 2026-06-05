@@ -31,7 +31,7 @@ Must be called from inside a fiber context (e.g. the AMPHP event<br />
 """,
             example = "(let [f (future (expensive-computation))] @f)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/futures.phel#L9",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/futures.phel#L9",
                 docs = "",
             ),
         ),

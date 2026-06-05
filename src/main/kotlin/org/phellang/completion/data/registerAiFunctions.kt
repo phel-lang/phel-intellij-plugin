@@ -18,7 +18,7 @@ HTTP POST seam. Rebind with <code>binding</code> in tests to inject a fake trans
 """,
             example = "(binding [*http-post* (fn [url opts] {:status 200 :body \"...\"})] ...)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L24",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ Options are passed through to <code>embed</code>.
 """,
             example = "(build-index [\"hello\" \"world\"])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L706",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L706",
                 docs = "",
             ),
         ),
@@ -69,7 +69,7 @@ Accepts an optional options map:<br />
 """,
             example = "(chat [{:role \"user\" :content \"Hello!\"}])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L294",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L294",
                 docs = "",
             ),
         ),
@@ -90,7 +90,7 @@ Useful for building multi-turn conversations.
 """,
             example = "(chat-with-history [{:role \"user\" :content \"Hi\"}\n                              {:role \"assistant\" :content \"Hello!\"}]\n                             \"How are you?\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L330",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L330",
                 docs = "",
             ),
         ),
@@ -115,7 +115,7 @@ Options map accepts the same keys as <code>chat</code>.
 """,
             example = "(chat-with-tools [{:role \"user\" :content \"What's the weather?\"}]\n                             [(tool \"get-weather\" \"Gets weather\" {:city {:type \"string\"}})])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L494",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L494",
                 docs = "",
             ),
         ),
@@ -136,7 +136,7 @@ Takes a prompt string and returns the assistant's text response.<br />
 """,
             example = "(complete \"Explain monads in one sentence\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L320",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L320",
                 docs = "",
             ),
         ),
@@ -155,7 +155,7 @@ Current AI configuration atom. Use <code>configure</code> to update.
 """,
             example = "@ai/config",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L19",
                 docs = "",
             ),
         ),
@@ -182,7 +182,7 @@ Supported keys:<br />
 """,
             example = "(configure {:api-key \"sk-ant-...\" :model \"claude-sonnet-4-5\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L30",
                 docs = "",
             ),
         ),
@@ -202,7 +202,7 @@ Computes the cosine similarity between two numeric vectors.<br />
 """,
             example = "(cosine-similarity [1 0] [0 1]) ; =&gt; 0.0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L627",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L627",
                 docs = "",
             ),
         ),
@@ -219,7 +219,7 @@ Computes the cosine similarity between two numeric vectors.<br />
             summary = "Computes the dot product of two numeric vectors.",
             example = "(dot-product [1 2 3] [4 5 6]) ; =&gt; 32",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L611",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L611",
                 docs = "",
             ),
         ),
@@ -243,7 +243,7 @@ Options:<br />
 """,
             example = "(embed [\"hello world\"]) ; =&gt; [[0.123 -0.456 ...]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L664",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L664",
                 docs = "",
             ),
         ),
@@ -263,7 +263,7 @@ Generates an embedding for a single text string.<br />
 """,
             example = "(embed-one \"hello world\") ; =&gt; [0.123 -0.456 ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L678",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L678",
                 docs = "",
             ),
         ),
@@ -289,7 +289,7 @@ Options:<br />
 """,
             example = "(extract {:name \"string\" :age \"integer\"} \"John is 30 years old\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L437",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L437",
                 docs = "",
             ),
         ),
@@ -310,7 +310,7 @@ Similar to <code>extract</code>, but returns a vector of maps when the text<br /
 """,
             example = "(extract-many {:name \"string\" :role \"string\"} \"Alice is CEO, Bob is CTO\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L459",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L459",
                 docs = "",
             ),
         ),
@@ -327,7 +327,7 @@ Similar to <code>extract</code>, but returns a vector of maps when the text<br /
             summary = "Computes the magnitude (L2 norm) of a numeric vector.",
             example = "(magnitude [3 4]) ; =&gt; 5.0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L620",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L620",
                 docs = "",
             ),
         ),
@@ -349,7 +349,7 @@ Finds the k nearest items to a query embedding from an index.<br /><br />
 """,
             example = "(nearest query-embedding index 5)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L690",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L690",
                 docs = "",
             ),
         ),
@@ -378,7 +378,7 @@ Returns the assistant's final text. Throws if a tool name has no handler<br />
 """,
             example = "(run-tools [{:role \"user\" :content \"weather?\"}]\n                       [(tool \"get-weather\" \"...\" {:city \"string\"})]\n                       {\"get-weather\" (fn [args] \"72F\")})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L566",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L566",
                 docs = "",
             ),
         ),
@@ -399,7 +399,7 @@ Returns a vector of {:text, :embedding, :similarity} maps.
 """,
             example = "(search \"greeting\" my-index 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L721",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L721",
                 docs = "",
             ),
         ),
@@ -423,7 +423,7 @@ The returned map is provider-agnostic; <code>chat-with-tools</code> converts it 
 """,
             example = "(tool \"get-weather\" \"Gets weather for a city\" {:location {:type \"string\"}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L478",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L478",
                 docs = "",
             ),
         ),
@@ -444,7 +444,7 @@ Accepts either a raw provider response body or a map produced by<br />
 """,
             example = "(tool-calls response)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L525",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L525",
                 docs = "",
             ),
         ),
@@ -466,7 +466,7 @@ Optional <code>opts</code> can set :provider (defaults to current config).
 """,
             example = "(tool-result \"call_abc\" \"72F sunny\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L538",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L538",
                 docs = "",
             ),
         ),
@@ -487,7 +487,7 @@ Temporarily merges <code>opts</code> into the global config for the duration of 
 """,
             example = "(with-config {:provider :openai :model \"gpt-4o\"} (complete \"hi\"))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/ai.phel#L46",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/ai.phel#L46",
                 docs = "",
             ),
         ),

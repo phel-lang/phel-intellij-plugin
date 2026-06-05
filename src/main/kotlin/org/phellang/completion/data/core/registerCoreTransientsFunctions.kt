@@ -28,7 +28,7 @@ Associates one or more key-value pairs with a transient collection,<br />
 """,
             example = "(persistent! (assoc! (transient {}) :a 1 :b 2)) ; =&gt; {:a 1 :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L114",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L114",
                 docs = "",
             ),
         ),
@@ -56,7 +56,7 @@ Adds <code>value</code> to the transient collection <code>tcoll</code>, mutating
 """,
             example = "(persistent (conj! (transient [1 2]) 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L82",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L82",
                 docs = "",
             ),
         ),
@@ -77,7 +77,7 @@ Removes one or more elements from a transient set, mutating it in place.<br />
 """,
             example = "(persistent! (disj! (transient #{1 2 3}) 2)) ; =&gt; #{1 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L166",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L166",
                 docs = "",
             ),
         ),
@@ -98,7 +98,7 @@ Dissociates one or more keys from a transient map, mutating it in place.<br />
 """,
             example = "(persistent! (dissoc! (transient {:a 1 :b 2}) :a)) ; =&gt; {:b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L145",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L145",
                 docs = "",
             ),
         ),
@@ -115,7 +115,7 @@ Dissociates one or more keys from a transient map, mutating it in place.<br />
             summary = "Converts a transient collection back to a persistent collection.",
             example = "(def t (transient {}))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L28",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L28",
                 docs = "",
             ),
         ),
@@ -135,7 +135,7 @@ Converts a transient collection back to a persistent collection.<br />
 """,
             example = "(persistent! (conj! (transient []) 1 2 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L35",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L35",
                 docs = "",
             ),
         ),
@@ -156,7 +156,7 @@ Removes the last element from a transient vector, mutating it in place.<br />
 """,
             example = "(persistent! (pop! (transient [1 2 3]))) ; =&gt; [1 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L177",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L177",
                 docs = "",
             ),
         ),
@@ -177,7 +177,7 @@ Transient collections provide faster performance for multiple sequential updates
 """,
             example = "(def t (transient []))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/transients.phel#L18",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L18",
                 docs = "",
             ),
         ),

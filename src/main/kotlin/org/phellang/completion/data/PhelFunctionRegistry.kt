@@ -44,6 +44,7 @@ object PhelFunctionRegistry {
         functions[Namespace.CLI] = registerCliFunctions()
         functions[Namespace.CORE] = registerCoreFunctions()
         functions[Namespace.DEBUG] = registerDebugFunctions()
+        functions[Namespace.EDN] = registerEdnFunctions()
         functions[Namespace.HTML] = registerHtmlFunctions()
         functions[Namespace.HTTP] = registerHttpFunctions()
         functions[Namespace.HTTP_CLIENT] = registerHttpClientFunctions()
@@ -53,6 +54,7 @@ object PhelFunctionRegistry {
         functions[Namespace.PHP_INTEROP] = registerPhpInteropFunctions()
         functions[Namespace.PPRINT] = registerPprintFunctions()
         functions[Namespace.READER] = registerReaderFunctions()
+        functions[Namespace.REFLECT] = registerReflectFunctions()
         functions[Namespace.REPL] = registerReplFunctions()
         functions[Namespace.ROUTER] = registerRouterFunctions()
         functions[Namespace.SCHEMA] = registerSchemaFunctions()
@@ -68,6 +70,7 @@ object PhelFunctionRegistry {
         functions[Namespace.TEST_ROSE] = registerTestRoseFunctions()
         functions[Namespace.TEST_SELECTOR] = registerTestSelectorFunctions()
         functions[Namespace.TEST_SHRINK] = registerTestShrinkFunctions()
+        functions[Namespace.TRANSIT] = registerTransitFunctions()
         functions[Namespace.WALK] = registerWalkFunctions()
         functions[Namespace.WATCH] = registerWatchFunctions()
     }

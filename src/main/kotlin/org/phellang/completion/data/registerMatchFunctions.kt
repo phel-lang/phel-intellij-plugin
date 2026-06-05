@@ -15,7 +15,7 @@ internal fun registerMatchFunctions(): List<PhelFunction> = listOf(
             summary = "Pattern matching over a vector of targets.",
             example = "(match [x y] [0 _] :zero-x [_ 0] :zero-y [a b] [:both a b])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/match.phel#L287",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/match.phel#L287",
                 docs = "",
             ),
         ),

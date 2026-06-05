@@ -25,7 +25,7 @@ Converts a Phel function to a PHP Closure.<br />
 """,
             example = "(-&gt;closure (fn [x] (* x 2)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L19",
                 docs = "",
             ),
         ),
@@ -47,7 +47,7 @@ Captures the caller's dynamic bindings and reinstalls them inside<br />
 """,
             example = "(async (do-something))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L27",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L27",
                 docs = "",
             ),
         ),
@@ -67,7 +67,7 @@ Blocks the current fiber until the Future resolves and returns its value.<br />
 """,
             example = "(await (async (+ 1 2)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L49",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L49",
                 docs = "",
             ),
         ),
@@ -87,7 +87,7 @@ Awaits all Futures in the given collection. Returns a vector of results.<br />
 """,
             example = "(await-all [(async 1) (async 2)])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L57",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L57",
                 docs = "",
             ),
         ),
@@ -107,7 +107,7 @@ Awaits the first Future to resolve. Returns its value.<br />
 """,
             example = "(await-any [(async 1) (async 2)])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L67",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L67",
                 docs = "",
             ),
         ),
@@ -127,7 +127,7 @@ Delivers <code>value</code> to <code>p</code> if it is still unrealized. Returns
 """,
             example = "(deliver (promise) 7)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L151",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L151",
                 docs = "",
             ),
         ),
@@ -151,7 +151,7 @@ Captures the caller's dynamic bindings and reinstalls them inside<br />
 """,
             example = "(future-call (fn [] 42))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L159",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L159",
                 docs = "",
             ),
         ),
@@ -175,7 +175,7 @@ Signals the future's internal cancellation token, causing any pending<br />
 """,
             example = "(future-cancel (future (expensive-call)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L96",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L96",
                 docs = "",
             ),
         ),
@@ -194,7 +194,7 @@ Returns <code>true</code> if <code>future-cancel</code> was called on <code>f</c
 """,
             example = "(future-cancelled? f)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L108",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L108",
                 docs = "",
             ),
         ),
@@ -218,7 +218,7 @@ Dispatches on type: for a <code>\Phel\Fiber\Domain\Future</code> (fiber-backed)<
 """,
             example = "(future-done? f)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L115",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L115",
                 docs = "",
             ),
         ),
@@ -241,7 +241,7 @@ Runs <code>body</code> in a new fiber via the cooperative scheduler. Returns a<b
 """,
             example = "@(future-fiber (+ 1 2))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L175",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L175",
                 docs = "",
             ),
         ),
@@ -261,7 +261,7 @@ Returns true if <code>x</code> is a fiber-future (from <code>future-call</code>/
 """,
             example = "(future? (future-call (fn [] 1))) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L186",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L186",
                 docs = "",
             ),
         ),
@@ -288,7 +288,7 @@ PHP fibers are cooperative on a single thread, so <code>pmap</code> overlaps<br 
 """,
             example = "(pmap inc [1 2 3]) ; =&gt; [2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L76",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L76",
                 docs = "",
             ),
         ),
@@ -312,7 +312,7 @@ Once delivered the value is frozen; subsequent <code>deliver</code> calls are<br
 """,
             example = "(let [p (promise)] (deliver p 42) @p) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/async.phel#L138",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/async.phel#L138",
                 docs = "",
             ),
         ),

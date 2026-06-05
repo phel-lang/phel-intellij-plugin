@@ -24,7 +24,7 @@ Returns <code>nil</code> if <code>value</code> conforms to <code>schema</code>, 
 """,
             example = "(explain :int :oops)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/explainer.phel#L216",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/explainer.phel#L216",
                 docs = "",
             ),
         ),
@@ -44,7 +44,7 @@ Renders an explain result as a multi-line human string suitable for<br />
 """,
             example = "(human-readable-explain (explain :int :oops))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/explainer.phel#L237",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/explainer.phel#L237",
                 docs = "",
             ),
         ),

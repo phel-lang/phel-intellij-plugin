@@ -21,7 +21,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Ignores the body of the comment.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L144",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L144",
                 docs = "",
             ),
         ),
@@ -38,7 +38,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a private value that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L97",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L97",
                 docs = "",
             ),
         ),
@@ -55,7 +55,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a new exception.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L130",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L130",
                 docs = "",
             ),
         ),
@@ -72,7 +72,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a macro.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L102",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L102",
                 docs = "",
             ),
         ),
@@ -89,7 +89,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a private macro that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L112",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L112",
                 docs = "",
             ),
         ),
@@ -106,7 +106,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a new global function.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L92",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L92",
                 docs = "",
             ),
         ),
@@ -123,7 +123,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a private function that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L107",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L107",
                 docs = "",
             ),
         ),
@@ -142,7 +142,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L117",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L117",
                 docs = "",
             ),
         ),
@@ -159,7 +159,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
             summary = "Creates a PHP Array from a sequential data structure.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/core/defs.phel#L22",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/defs.phel#L22",
                 docs = "",
             ),
         ),

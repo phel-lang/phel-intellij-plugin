@@ -7,6 +7,7 @@ enum class Namespace {
     CLI,
     CORE,
     DEBUG,
+    EDN,
     HTML,
     HTTP,
     HTTP_CLIENT,
@@ -16,6 +17,7 @@ enum class Namespace {
     PHP_INTEROP,
     PPRINT,
     READER,
+    REFLECT,
     REPL,
     ROUTER,
     SCHEMA,
@@ -31,6 +33,7 @@ enum class Namespace {
     TEST_ROSE,
     TEST_SELECTOR,
     TEST_SHRINK,
+    TRANSIT,
     WALK,
     WATCH;
 
@@ -40,15 +43,18 @@ enum class Namespace {
             "base64" to BASE64,
             "core" to CORE,
             "debug" to DEBUG,
+            "edn" to EDN,
             "html" to HTML,
             "http" to HTTP,
             "http-client" to HTTP_CLIENT,
             "http_client" to HTTP_CLIENT,
             "json" to JSON,
             "mock" to MOCK,
+            "reflect" to REFLECT,
             "repl" to REPL,
             "string" to STRING,
             "test" to TEST,
+            "transit" to TRANSIT,
         )
 
         /** Maps a short/alias namespace token (case-insensitive) to a [Namespace], or null if unknown. */

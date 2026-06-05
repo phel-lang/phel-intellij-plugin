@@ -26,7 +26,7 @@ Rose tree whose root is <code>args</code> and children shrink each positional<br
 """,
             example = "(args-&gt;rose [10])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/shrink.phel#L108",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/shrink.phel#L108",
                 docs = "",
             ),
         ),
@@ -47,7 +47,7 @@ Walks rose tree <code>tree</code> depth-first, greedily descending into any<br /
 """,
             example = "(shrink pred (value-&gt;rose failing-value))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/shrink.phel#L89",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/shrink.phel#L89",
                 docs = "",
             ),
         ),
@@ -68,7 +68,7 @@ Shrinks a failing args vector using <code>property</code>. Returns<br />
 """,
             example = "(shrink-args property [10])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/shrink.phel#L119",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/shrink.phel#L119",
                 docs = "",
             ),
         ),
@@ -90,7 +90,7 @@ Builds a rose tree for <code>v</code> using the built-in shrink strategy that<br
 """,
             example = "(value-&gt;rose 10)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/test/shrink.phel#L49",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/shrink.phel#L49",
                 docs = "",
             ),
         ),

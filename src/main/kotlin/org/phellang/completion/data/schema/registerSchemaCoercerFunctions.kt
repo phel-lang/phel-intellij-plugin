@@ -26,7 +26,7 @@ Walks <code>schema</code> and returns <code>value</code> with string-typed input
 """,
             example = "(coerce :int \"42\") ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/coercer.phel#L201",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/coercer.phel#L201",
                 docs = "",
             ),
         ),
@@ -46,7 +46,7 @@ Coerces <code>value</code> against <code>schema</code>. Returns the coerced valu
 """,
             example = "(conform :int \"42\") ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.39.0/src/phel/schema/coercer.phel#L214",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/coercer.phel#L214",
                 docs = "",
             ),
         ),
