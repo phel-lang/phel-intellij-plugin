@@ -1,6 +1,7 @@
 package org.phellang.completion.data
 
 enum class Namespace {
+    // region GENERATED — updatePhelRegistry; do not edit by hand
     AI,
     ASYNC,
     BASE64,
@@ -35,7 +36,9 @@ enum class Namespace {
     TEST_SHRINK,
     TRANSIT,
     WALK,
-    WATCH;
+    WATCH,
+    // endregion GENERATED — updatePhelRegistry
+    ;
 
     companion object {
         private val ALIASES: Map<String, Namespace> = mapOf(

@@ -49,4 +49,7 @@ object NamespaceConfig {
     fun getInfo(namespace: String): NamespaceInfo? = config[namespace]
 
     fun isSupported(namespace: String): Boolean = config.containsKey(namespace)
+
+    /** All configured namespaces, source of truth for registry/enum wiring. */
+    fun all(): Map<String, NamespaceInfo> = config
 }

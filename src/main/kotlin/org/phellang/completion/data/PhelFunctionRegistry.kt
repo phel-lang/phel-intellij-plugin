@@ -1,5 +1,6 @@
 package org.phellang.completion.data
 
+// region GENERATED IMPORTS — updatePhelRegistry; do not edit by hand
 import org.phellang.completion.data.schema.registerSchemaCoercerFunctions
 import org.phellang.completion.data.schema.registerSchemaExplainerFunctions
 import org.phellang.completion.data.schema.registerSchemaFunctions
@@ -12,6 +13,7 @@ import org.phellang.completion.data.test.registerTestGenFunctions
 import org.phellang.completion.data.test.registerTestRoseFunctions
 import org.phellang.completion.data.test.registerTestSelectorFunctions
 import org.phellang.completion.data.test.registerTestShrinkFunctions
+// endregion GENERATED IMPORTS — updatePhelRegistry
 import org.phellang.completion.infrastructure.PhelCompletionPriority
 
 /**
@@ -38,6 +40,7 @@ object PhelFunctionRegistry {
     }
 
     init {
+        // region GENERATED INIT — updatePhelRegistry; do not edit by hand
         functions[Namespace.AI] = registerAiFunctions()
         functions[Namespace.ASYNC] = registerAsyncFunctions()
         functions[Namespace.BASE64] = registerBase64Functions()
@@ -73,6 +76,7 @@ object PhelFunctionRegistry {
         functions[Namespace.TRANSIT] = registerTransitFunctions()
         functions[Namespace.WALK] = registerWalkFunctions()
         functions[Namespace.WATCH] = registerWatchFunctions()
+        // endregion GENERATED INIT — updatePhelRegistry
     }
 
     fun getFunctions(namespace: Namespace): List<PhelFunction> {

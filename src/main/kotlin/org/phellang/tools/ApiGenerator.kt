@@ -1,6 +1,7 @@
 package org.phellang.tools
 
 import org.phellang.tools.generator.KotlinCodeGenerator
+import org.phellang.tools.generator.RegistryWiringGenerator
 import org.phellang.tools.http.ApiFetcher
 import java.io.File
 import kotlin.system.exitProcess
@@ -44,6 +45,9 @@ fun main() {
         println("Generating Kotlin files...")
         val generator = KotlinCodeGenerator(outputDir)
         generator.generate(apiFunctions)
+
+        // Sync the hand-wired enum + registry to NamespaceConfig (kills the bootstrap deadlock).
+        RegistryWiringGenerator(outputDir).generate()
 
         println()
         println("=".repeat(60))
