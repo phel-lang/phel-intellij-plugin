@@ -135,9 +135,15 @@
         <lang.namesValidator
                 language="Phel"
                 implementationClass="org.phellang.refactoring.PhelNamesValidator"/>
-        <codeInsight.parameterNameHints
+        <codeInsight.declarativeInlayProvider
                 language="Phel"
-                implementationClass="org.phellang.inlay.PhelParameterHintsProvider"/>
+                implementationClass="org.phellang.inlay.PhelParameterHintsProvider"
+                isEnabledByDefault="true"
+                group="PARAMETERS_GROUP"
+                providerId="phel.parameter.hints"
+                bundle="messages.PhelBundle"
+                nameKey="inlay.phel.parameter.hints.name"
+                descriptionKey="inlay.phel.parameter.hints.description"/>
         <notificationGroup id="Phel" displayType="BALLOON"/>
     </extensions>
 
