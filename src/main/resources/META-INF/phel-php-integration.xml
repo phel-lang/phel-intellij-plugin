@@ -1,0 +1,9 @@
+<!--
+  Optional dependency descriptor, loaded only when the JetBrains PHP plugin
+  (com.jetbrains.php) is present. It carries no extra extensions: declaring the
+  <depends optional> in plugin.xml is enough to make com.jetbrains.php.* visible
+  to this plugin's classloader, which is all PhpClassResolver needs to reach
+  PhpIndex by reflection and resolve PHP classes used via interop / (:use ...).
+-->
+<idea-plugin>
+</idea-plugin>

@@ -119,6 +119,9 @@ object PhpClassResolver {
         val text = symbol.text ?: return null
         val file = symbol.containingFile as? PhelFile ?: return null
 
+        // A class entry inside `(:use ...)` — resolve its full path to the PHP class.
+        if (PhelNamespaceUtils.isUseClassSymbol(symbol)) return phpFqnFromUseEntry(text)
+
         if (text.startsWith("\\") && !text.contains("/")) return text
 
         if (!PhelInteropShorthands.isInteropShorthand(text, PhelNamespaceUtils.extractUsedClasses(file))) {
@@ -138,6 +141,24 @@ object PhpClassResolver {
         if (useFqn != null) return useFqn
 
         return "\\$rawQualifier"
+    }
+
+    /**
+     * Normalises a `(:use ...)` class entry to its PHP fully-qualified name.
+     *
+     * Accepts the three spellings Phel allows and folds them to PHP's `\`-separated
+     * absolute FQN:
+     * * `Phel.Compiler.CompilerFacade`  -> `\Phel\Compiler\CompilerFacade` (modern dot form)
+     * * `Phel\Compiler\CompilerFacade`  -> `\Phel\Compiler\CompilerFacade` (legacy form)
+     * * `\Phel\Compiler\CompilerFacade` -> `\Phel\Compiler\CompilerFacade`
+     * * `Countable`                     -> `\Countable`
+     *
+     * Returns null for blank input.
+     */
+    fun phpFqnFromUseEntry(text: String): String? {
+        val body = text.trim().trimStart('\\').replace('.', '\\')
+        if (body.isEmpty()) return null
+        return "\\$body"
     }
 
     /**
@@ -178,12 +199,14 @@ object PhpClassResolver {
         val phpIndex = phpIndexClass ?: return emptyList()
         return try {
             val instance = phpIndex.getMethod("getInstance", Project::class.java).invoke(null, project)
-            val getByFqn = phpIndex.getMethod("getClassesByFQN", String::class.java)
+            // `getAnyByFQN` resolves classes, interfaces, traits and enums alike — using
+            // `getClassesByFQN` would miss interfaces such as `PersistentMapInterface`.
+            val getByFqn = phpIndex.getMethod("getAnyByFQN", String::class.java)
             @Suppress("UNCHECKED_CAST")
-            val classes = getByFqn.invoke(instance, fqn) as? Collection<Any> ?: return emptyList()
-            classes.toList()
+            val phpTypes = getByFqn.invoke(instance, fqn) as? Collection<Any> ?: return emptyList()
+            phpTypes.toList()
         } catch (t: Throwable) {
-            LOG.debug("PHP class lookup failed for '$fqn'", t)
+            LOG.debug("PHP type lookup failed for '$fqn'", t)
             emptyList()
         }
     }

@@ -35,6 +35,13 @@
   ]]></description>
     <depends>com.intellij.modules.platform</depends>
 
+    <!-- Optional integration with the JetBrains PHP plugin (PhpStorm / IDEA Ultimate).
+         Declaring the dependency gives our plugin classloader visibility of
+         com.jetbrains.php.* so PhpClassResolver can reflectively reach PhpIndex and
+         resolve PHP interop / (:use ...) classes to their declarations. When the PHP
+         plugin is absent the optional dependency is simply skipped. -->
+    <depends optional="true" config-file="phel-php-integration.xml">com.jetbrains.php</depends>
+
     <!-- Extension points - https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <fileType

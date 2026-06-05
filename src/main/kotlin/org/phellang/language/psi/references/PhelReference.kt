@@ -65,6 +65,14 @@ class PhelReference @JvmOverloads constructor(
             return
         }
 
+        // A PHP class entry inside `(:use ...)` resolves only to its PHP declaration.
+        // Short-circuit here so Phel-side lookups can't false-match a bare class name
+        // (e.g. `InvalidArgumentException`) against its own in-file usages.
+        if (PhelNamespaceUtils.isUseClassSymbol(myElement!!)) {
+            addPhpClassResults(results)
+            return
+        }
+
         // Check if this is a namespace-qualified symbol (e.g., utils/greet, m/square)
         val qualifier = PhelPsiUtils.getQualifier(myElement!!)
         if (qualifier != null) {

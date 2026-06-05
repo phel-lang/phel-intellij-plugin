@@ -88,7 +88,9 @@ class PhelCompletionContextTest {
 
     @Test
     fun `should be thread-safe for class loading`() {
-        val results = mutableListOf<Class<*>>()
+        // Thread-safe collection: the assertion is about class loading, not about
+        // racing on an unsynchronized list (which would drop concurrent adds).
+        val results = java.util.concurrent.CopyOnWriteArrayList<Class<*>>()
         val threads = mutableListOf<Thread>()
 
         repeat(5) {

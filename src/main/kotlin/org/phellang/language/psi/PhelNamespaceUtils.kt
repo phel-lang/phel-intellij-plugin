@@ -81,6 +81,29 @@ object PhelNamespaceUtils {
         return classes
     }
 
+    /**
+     * True when [symbol] is one of the PHP class entries inside a `(:use ...)` clause
+     * (i.e. not the `:use` keyword itself). Used to wire go-to-definition from the
+     * imported class name straight to its PHP class declaration.
+     *
+     * Handles every spelling Phel accepts for the entry — bare (`Countable`),
+     * dot-separated (`Phel.Compiler.CompilerFacade`, the modern form) and the legacy
+     * backslash form (`Phel\Compiler\CompilerFacade`) — since each lexes as a single
+     * symbol.
+     */
+    fun isUseClassSymbol(symbol: PhelSymbol): Boolean {
+        val clause = PsiTreeUtil.getParentOfType(symbol, PhelList::class.java) ?: return false
+        val forms = clause.forms
+        if (forms.isEmpty()) return false
+
+        val firstKeyword = forms[0] as? PhelKeyword
+            ?: PsiTreeUtil.findChildOfType(forms[0], PhelKeyword::class.java)
+        if (firstKeyword?.text != ":use") return false
+
+        // Reject the keyword form itself; accept any class-entry form (forms[1..n]).
+        return forms.drop(1).any { it === symbol || PsiTreeUtil.isAncestor(it, symbol, false) }
+    }
+
     private fun extractShortClassName(text: String): String? {
         val trimmed = text.trimStart('\\')
         if (trimmed.isEmpty()) return null
