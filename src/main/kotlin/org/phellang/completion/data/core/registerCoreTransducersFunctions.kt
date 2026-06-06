@@ -19,12 +19,11 @@ internal fun registerCoreTransducersFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for transduce<br />
-  by adding a 1-arity (completion) that calls <code>cf</code> (default: identity).
+Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for transduce by adding a 1-arity (completion) that calls <code>cf</code> (default: identity).
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L74",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L73",
                 docs = "",
             ),
         ),
@@ -39,12 +38,11 @@ Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for
         ),
         documentation = DocumentationInfo(
             summary = """
-Reduces collection to a single value by repeatedly applying function to accumulator and elements.<br />
-  Respects early termination via <code>(reduced val)</code>.
+Reduces collection to a single value by repeatedly applying function to accumulator and elements. Respects early termination via <code>(reduced val)</code>.
 """,
             example = "(reduce + [1 2 3 4]) ; =&gt; 10",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L50",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L50",
                 docs = "",
             ),
         ),
@@ -63,7 +61,7 @@ Wraps <code>x</code> in a Reduced, signaling early termination from reduce/trans
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L18",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L18",
                 docs = "",
             ),
         ),
@@ -82,7 +80,7 @@ Returns true if <code>x</code> is a Reduced value.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L24",
                 docs = "",
             ),
         ),
@@ -103,7 +101,7 @@ Reduce with a transformation of <code>f</code> (xf). If init is not supplied,<br
 """,
             example = "(transduce (map inc) + [1 2 3]) ; =&gt; 9",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L86",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L84",
                 docs = "",
             ),
         ),
@@ -122,7 +120,7 @@ If <code>x</code> is Reduced, returns the unwrapped value; otherwise returns <co
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L30",
                 docs = "",
             ),
         ),
@@ -137,12 +135,11 @@ If <code>x</code> is Reduced, returns the unwrapped value; otherwise returns <co
         ),
         documentation = DocumentationInfo(
             summary = """
-Creates a volatile mutable reference with initial value <code>val</code>.<br />
-  Use for transducer state that needs fast mutation without watches.
+Creates a volatile mutable reference with initial value <code>val</code>. Use for transducer state that needs fast mutation without watches.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L103",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L101",
                 docs = "",
             ),
         ),
@@ -161,7 +158,7 @@ Returns true if <code>x</code> is a Volatile.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L123",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L119",
                 docs = "",
             ),
         ),
@@ -180,7 +177,7 @@ Sets the value of volatile <code>vol</code> to <code>val</code>. Returns <code>v
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L110",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L107",
                 docs = "",
             ),
         ),
@@ -195,12 +192,11 @@ Sets the value of volatile <code>vol</code> to <code>val</code>. Returns <code>v
         ),
         documentation = DocumentationInfo(
             summary = """
-Applies <code>f</code> to the current value of volatile <code>vol</code> plus <code>args</code>,<br />
-  and sets the new value. Returns the new value.
+Applies <code>f</code> to the current value of volatile <code>vol</code> plus <code>args</code>, and sets the new value. Returns the new value.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transducers.phel#L116",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L113",
                 docs = "",
             ),
         ),

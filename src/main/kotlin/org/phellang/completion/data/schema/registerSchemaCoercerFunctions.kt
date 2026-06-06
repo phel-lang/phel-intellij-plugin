@@ -19,14 +19,11 @@ internal fun registerSchemaCoercerFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Walks <code>schema</code> and returns <code>value</code> with string-typed inputs coerced<br />
-  into their schema-required types. Already-typed values pass through.<br />
-  Unknown or untranslatable values are returned unchanged so validation<br />
-  can report the real failure.
+Walks <code>schema</code> and returns <code>value</code> with string-typed inputs coerced into their schema-required types. Already-typed values pass through. Unknown or untranslatable values are returned unchanged so validation can report the real failure.
 """,
             example = "(coerce :int \"42\") ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/coercer.phel#L201",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/coercer.phel#L221",
                 docs = "",
             ),
         ),
@@ -41,12 +38,30 @@ Walks <code>schema</code> and returns <code>value</code> with string-typed input
         ),
         documentation = DocumentationInfo(
             summary = """
-Coerces <code>value</code> against <code>schema</code>. Returns the coerced value if it<br />
-  then validates, otherwise the invalid marker <code>:phel.schema/invalid</code>.
+Coerces <code>value</code> against <code>schema</code>. Returns the coerced value if it then validates, otherwise the invalid marker <code>:phel.schema/invalid</code>.
 """,
             example = "(conform :int \"42\") ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/coercer.phel#L214",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/coercer.phel#L231",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "schema.coercer",
+        name = "schema.coercer/invalid-marker",
+        signature = "",
+        completion = CompletionInfo(
+            tailText = "Sentinel keyword returned by coercion when a value cannot be coerced to the target schema",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Sentinel keyword returned by coercion when a value cannot be coerced to the target schema. Re-exported as <code>phel.schema/invalid-marker</code>.
+""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/coercer.phel#L15",
                 docs = "",
             ),
         ),

@@ -24,7 +24,7 @@ Returns <code>true</code> when a <code>[:map ...]</code> entry is declared with<
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L209",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L177",
                 docs = "",
             ),
         ),
@@ -39,12 +39,11 @@ Returns <code>true</code> when a <code>[:map ...]</code> entry is declared with<
         ),
         documentation = DocumentationInfo(
             summary = """
-Options map for a <code>[:map ...]</code> entry <code>[key opts? schema]</code>. Returns an<br />
-  empty map when the entry has no options position.
+Options map for a <code>[:map ...]</code> entry <code>[key opts? schema]</code>. Returns an empty map when the entry has no options position.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L193",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L163",
                 docs = "",
             ),
         ),
@@ -59,12 +58,11 @@ Options map for a <code>[:map ...]</code> entry <code>[key opts? schema]</code>.
         ),
         documentation = DocumentationInfo(
             summary = """
-Inner schema of a <code>[:map ...]</code> entry, skipping the options map when<br />
-  present.
+Inner schema of a <code>[:map ...]</code> entry, skipping the options map when present.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L201",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L170",
                 docs = "",
             ),
         ),
@@ -79,14 +77,11 @@ Inner schema of a <code>[:map ...]</code> entry, skipping the options map when<b
         ),
         documentation = DocumentationInfo(
             summary = """
-Like <code>resolve-or-throw</code>, but returns <code>default</code> when <code>head</code> is not<br />
-  registered instead of throwing. Used by <code>coerce</code> where unknown heads<br />
-  are intentionally passed through unchanged for downstream validation<br />
-  to flag.
+Like <code>resolve-or-throw</code>, but returns <code>default</code> when <code>head</code> is not registered instead of throwing. Used by <code>coerce</code> where unknown heads are intentionally passed through unchanged for downstream validation to flag.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L39",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L38",
                 docs = "",
             ),
         ),
@@ -110,7 +105,7 @@ Every head-dispatching caller uses this so the error shape is<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L25",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L24",
                 docs = "",
             ),
         ),
@@ -125,12 +120,11 @@ Every head-dispatching caller uses this so the error shape is<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the positional arguments of <code>schema</code> (children past the<br />
-  head and optional options map).
+Returns the positional arguments of <code>schema</code> (children past the head and optional options map).
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L73",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L65",
                 docs = "",
             ),
         ),
@@ -145,12 +139,11 @@ Returns the positional arguments of <code>schema</code> (children past the<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the head (kind keyword) of <code>schema</code>. Keyword schemas are<br />
-  their own head; vector schemas use their first element.
+Returns the head (kind keyword) of <code>schema</code>. Keyword schemas are their own head; vector schemas use their first element.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L53",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L49",
                 docs = "",
             ),
         ),
@@ -169,7 +162,7 @@ Returns the options map of <code>schema</code> or <code>{}</code> if none.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L83",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L74",
                 docs = "",
             ),
         ),
@@ -188,7 +181,7 @@ Returns <code>true</code> if <code>value</code> conforms to <code>schema</code>,
 """,
             example = "(valid? :int 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/validator.phel#L313",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/validator.phel#L280",
                 docs = "",
             ),
         ),

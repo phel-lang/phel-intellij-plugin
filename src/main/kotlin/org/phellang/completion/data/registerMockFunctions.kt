@@ -15,7 +15,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             summary = "Returns the number of times the mock was called.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L106",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L107",
                 docs = "",
             ),
         ),
@@ -32,7 +32,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             summary = "Returns true if the mock was called exactly once.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L125",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L126",
                 docs = "",
             ),
         ),
@@ -49,7 +49,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             summary = "Returns true if the mock was called exactly n times.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L131",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L132",
                 docs = "",
             ),
         ),
@@ -66,7 +66,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             summary = "Returns true if the mock was called with the exact arguments.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L119",
                 docs = "",
             ),
         ),
@@ -83,7 +83,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             summary = "Returns true if the mock was called at least once.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L112",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L113",
                 docs = "",
             ),
         ),
@@ -100,7 +100,7 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
             summary = "Returns a list of all argument lists the mock was called with.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L97",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L98",
                 docs = "",
             ),
         ),
@@ -115,12 +115,11 @@ internal fun registerMockFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Clears the entire mock registry.<br />
-  Useful for cleanup between test suites in long-running processes.
+Clears the entire mock registry. Useful for cleanup between test suites in long-running processes.
 """,
             example = "(clear-all-mocks!) ; All mocks removed from registry",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L168",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L168",
                 docs = "",
             ),
         ),
@@ -137,7 +136,7 @@ Clears the entire mock registry.<br />
             summary = "Returns the arguments from the first call.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L149",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L150",
                 docs = "",
             ),
         ),
@@ -154,7 +153,7 @@ Clears the entire mock registry.<br />
             summary = "Returns the arguments from the most recent call.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L143",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L144",
                 docs = "",
             ),
         ),
@@ -171,7 +170,7 @@ Clears the entire mock registry.<br />
             summary = "Creates a mock function that returns a fixed value and tracks all calls.",
             example = "(def my-mock (mock :return-value))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L29",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L30",
                 docs = "",
             ),
         ),
@@ -188,7 +187,7 @@ Clears the entire mock registry.<br />
             summary = "Creates a mock function with custom behavior that tracks all calls.",
             example = "(def my-mock (mock-fn (fn [x] (* x 2))))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L40",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L41",
                 docs = "",
             ),
         ),
@@ -203,12 +202,11 @@ Clears the entire mock registry.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Creates a mock that returns different values for consecutive calls.<br />
-  After exhausting values, returns the last value.
+Creates a mock that returns different values for consecutive calls. After exhausting values, returns the last value.
 """,
             example = "(def my-mock (mock-returning [1 2 3]))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L57",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L59",
                 docs = "",
             ),
         ),
@@ -225,7 +223,7 @@ Creates a mock that returns different values for consecutive calls.<br />
             summary = "Creates a mock that throws an exception when called.",
             example = "(def my-mock (mock-throwing (php/new \\RuntimeException \"API unavailable\")))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L77",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L78",
                 docs = "",
             ),
         ),
@@ -242,7 +240,7 @@ Creates a mock that returns different values for consecutive calls.<br />
             summary = "Returns true if the function is a mock.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L92",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L93",
                 docs = "",
             ),
         ),
@@ -259,7 +257,7 @@ Creates a mock that returns different values for consecutive calls.<br />
             summary = "Returns true if the mock was never called.",
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L137",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L138",
                 docs = "",
             ),
         ),
@@ -274,12 +272,11 @@ Creates a mock that returns different values for consecutive calls.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Resets the call history of a mock without removing it from the registry.<br />
-  The mock can continue to be used and track new calls.
+Resets the call history of a mock without removing it from the registry. The mock can continue to be used and track new calls.
 """,
             example = "(def my-mock (mock :result))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L155",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L156",
                 docs = "",
             ),
         ),
@@ -293,10 +290,12 @@ Resets the call history of a mock without removing it from the registry.<br />
             priority = PhelCompletionPriority.MOCK_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Wraps an existing function to track calls while preserving original behavior.",
+            summary = """
+Wraps an existing function to track calls while preserving original behavior. Alias for <code>mock-fn</code>.
+""",
             example = "(def original-fn (fn [x] (* x 2)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L51",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L52",
                 docs = "",
             ),
         ),
@@ -327,7 +326,7 @@ Multiple wrappers:<br />
 """,
             example = "(with-mock-wrapper [http mock-http identity] (http \"test\"))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L215",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L214",
                 docs = "",
             ),
         ),
@@ -366,7 +365,7 @@ If you need to wrap the mock in a function (e.g., to adapt arguments),<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/mock.phel#L179",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/mock.phel#L178",
                 docs = "",
             ),
         ),

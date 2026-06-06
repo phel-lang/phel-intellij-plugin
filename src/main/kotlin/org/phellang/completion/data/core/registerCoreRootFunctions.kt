@@ -19,15 +19,11 @@ internal fun registerCoreRootFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Controls whether <code>assert</code> expands to a runtime check. When logical<br />
-  false at macroexpansion time, <code>assert</code> expands to nil and performs no<br />
-  runtime check, matching Clojure's compile-time <code><em>assert</em></code> semantics.<br />
-  Defaults to <code>true</code>. To disable globally, set the core binding before<br />
-  compilation via PHP: <code>\Phel::addDefinition("phel\\core", "<em>assert</em>", false)</code>.
+Controls whether <code>assert</code> expands to a runtime check. When logical false at macroexpansion time, <code>assert</code> expands to nil and performs no runtime check, matching Clojure's compile-time <code><em>assert</em></code> semantics. Defaults to <code>true</code>. To disable globally, set the core binding before compilation via PHP: <code>\Phel::addDefinition("phel\\core", "<em>assert</em>", false)</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L21",
                 docs = "",
             ),
         ),
@@ -78,7 +74,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical<br
             summary = "The script path or namespace being executed.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L199",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L187",
                 docs = "",
             ),
         ),
@@ -112,12 +108,11 @@ Calls the function with the given arguments. The last argument must be a list of
         ),
         documentation = DocumentationInfo(
             summary = """
-Vector of user arguments passed to the script (excludes program name).<br />
-  Use <em>program</em> to get the script path or namespace.
+Vector of user arguments passed to the script (excludes program name). Use <em>program</em> to get the script path or namespace.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L204",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L192",
                 docs = "",
             ),
         ),
@@ -132,15 +127,11 @@ Vector of user arguments passed to the script (excludes program name).<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Constructs a map from the given key/value pairs. If any keys are<br />
-  equal, later values replace earlier ones, as if by repeated <code>assoc</code>.<br />
-  Phel has no distinct array-map type, so the result is the same<br />
-  persistent map as <code>hash-map</code> — <code>array-map</code> exists for <code>.cljc</code> interop<br />
-  with Clojure sources.
+Constructs a map from the given key/value pairs. If any keys are equal, later values replace earlier ones, as if by repeated <code>assoc</code>. Phel has no distinct array-map type, so the result is the same persistent map as <code>hash-map</code> — <code>array-map</code> exists for <code>.cljc</code> interop with Clojure sources.
 """,
             example = "(array-map :a 1 :b 2) ; =&gt; {:a 1 :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L59",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L53",
                 docs = "",
             ),
         ),
@@ -195,7 +186,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             summary = "Declare a global symbol before it is defined.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L187",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L175",
                 docs = "",
             ),
         ),
@@ -222,12 +213,12 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
         name = "defexception*",
         signature = "(defexception name)",
         completion = CompletionInfo(
-            tailText = "Defines a new exception",
+            tailText = "Defines a new exception, optionally extending a custom parent class",
             priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
         documentation = DocumentationInfo(
-            summary = "Defines a new exception.",
-            example = "(defexception my-error)",
+            summary = "Defines a new exception, optionally extending a custom parent class.",
+            example = "(defexception my-error \\RuntimeException)",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/exceptions",
@@ -340,13 +331,11 @@ Evaluate expressions after the try body and all matching catches have completed.
         documentation = DocumentationInfo(
             summary = """
 Returns the first element of a sequence, or nil if empty.<br /><br />
-Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns a<br />
-  typed <code>MapEntry</code> equal by value to <code>[:a 1]</code>. Strings are treated as<br />
-  sequences of multibyte characters.
+Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns a typed <code>MapEntry</code> equal by value to <code>[:a 1]</code>. Strings are treated as sequences of multibyte characters.
 """,
             example = "(first [1 2 3]) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L146",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L136",
                 docs = "",
             ),
         ),
@@ -429,6 +418,23 @@ A control flow structure. First evaluates test. If test evaluates to true, only 
     ),
     PhelFunction(
         namespace = "core",
+        name = "in-ns",
+        signature = "(in-ns namespace)",
+        completion = CompletionInfo(
+            tailText = "Switches to an existing namespace without creating it (REPL-oriented)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "Switches to an existing namespace without creating it (REPL-oriented).",
+            example = "(in-ns my-app\\core)",
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/namespaces/",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
         name = "let",
         signature = "(let [bindings*] expr*)",
         completion = CompletionInfo(
@@ -465,6 +471,25 @@ Creates a new lexical context with assignments defined in bindings. Afterwards t
     ),
     PhelFunction(
         namespace = "core",
+        name = "load",
+        signature = "(load path)",
+        completion = CompletionInfo(
+            tailText = "Loads a Phel source file into the caller namespace at runtime, resolving the path relative to the...",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Loads a Phel source file into the caller namespace at runtime, resolving the path relative to the caller file or against the configured classpath roots.
+""",
+            example = "(load \"core/meta\") ; loads and evaluates core/meta into the current namespace",
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/namespaces/",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
         name = "loop",
         signature = "(loop [bindings*] expr*)",
         completion = CompletionInfo(
@@ -494,7 +519,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = "Returns the sequence after the first element, or nil if empty.",
             example = "(next [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L94",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L84",
                 docs = "",
             ),
         ),
@@ -528,13 +553,11 @@ Defines the namespace for the current file and adds imports to the environment. 
         ),
         documentation = DocumentationInfo(
             summary = """
-Creates a persistent FIFO queue. With no arguments returns an empty<br />
-  queue; with arguments returns a queue with the values pushed in order so<br />
-  that the first argument is at the front.
+Creates a persistent FIFO queue. With no arguments returns an empty queue; with arguments returns a queue with the values pushed in order so that the first argument is at the front.
 """,
             example = "(queue 1 2 3) ; =&gt; first 1, then 2, then 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core.phel#L45",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L41",
                 docs = "",
             ),
         ),
@@ -665,6 +688,40 @@ Values that should be evaluated in a macro are marked with the unquote function.
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/macros/#quasiquote",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "use",
+        signature = "(use ClassName & options)",
+        completion = CompletionInfo(
+            tailText = "Registers PHP class aliases in the current namespace (compile-time only)",
+            priority = PhelCompletionPriority.SPECIAL_FORMS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "Registers PHP class aliases in the current namespace (compile-time only).",
+            example = "(use \\DateTimeImmutable :as Date)",
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/namespaces/",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "var",
+        signature = "(var sym)",
+        completion = CompletionInfo(
+            tailText = "Returns the Var handle for a global definition; reader shorthand is #'sym",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = "Returns the Var handle for a global definition; reader shorthand is #'sym.",
+            example = "(var map) ; resolves to the Var for phel.core/map",
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/global-and-local-bindings/#variables",
             ),
         ),
     ),

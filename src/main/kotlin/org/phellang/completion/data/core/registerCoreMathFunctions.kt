@@ -24,7 +24,7 @@ Alias for <code>rem</code>. Returns the truncated remainder of <code>dividend</c
 """,
             example = "(% 11 2) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L180",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L202",
                 docs = "",
             ),
         ),
@@ -39,12 +39,11 @@ Alias for <code>rem</code>. Returns the truncated remainder of <code>dividend</c
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the product of all elements in <code>xs</code>. All elements in <code>xs</code> must be<br />
-numbers. If <code>xs</code> is empty, return 1.
+Returns the product of all elements in <code>xs</code>. All elements in <code>xs</code> must be numbers. If <code>xs</code> is empty, return 1.
 """,
-            example = null,
+            example = "(* 2 3 4) ; =&gt; 24",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L125",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L147",
                 docs = "",
             ),
         ),
@@ -62,9 +61,9 @@ numbers. If <code>xs</code> is empty, return 1.
 Auto-promoting variant of <code>*</code>. Integer results are returned as<br />
   <code>BigInt</code>; floats and rationals pass through unchanged.
 """,
-            example = "(*' 2 3) ; =&gt; 6N",
+            example = "(*' 2 3) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L231",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L259",
                 docs = "",
             ),
         ),
@@ -81,9 +80,9 @@ Auto-promoting variant of <code>*</code>. Integer results are returned as<br />
             summary = """
 Return <code>a</code> to the power of <code>x</code>.
 """,
-            example = null,
+            example = "(** 2 8) ; =&gt; 256",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L188",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L210",
                 docs = "",
             ),
         ),
@@ -98,12 +97,11 @@ Return <code>a</code> to the power of <code>x</code>.
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the sum of all elements in <code>xs</code>. All elements <code>xs</code> must be numbers.<br />
-  If <code>xs</code> is empty, return 0.
+Returns the sum of all elements in <code>xs</code>. All elements <code>xs</code> must be numbers. If <code>xs</code> is empty, return 0.
 """,
-            example = null,
+            example = "(+ 1 2 3) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L103",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L123",
                 docs = "",
             ),
         ),
@@ -124,9 +122,9 @@ Auto-promoting variant of <code>+</code>. Integer results are returned as<br />
   protection (Phel's <code>+</code> already auto-promotes on overflow), kept for<br />
   <code>.cljc</code> interop.
 """,
-            example = "(+' 1 2) ; =&gt; 3N",
+            example = "(+' 1 2) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L212",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L240",
                 docs = "",
             ),
         ),
@@ -141,12 +139,11 @@ Auto-promoting variant of <code>+</code>. Integer results are returned as<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the difference of all elements in <code>xs</code>. If <code>xs</code> is empty, return 0. If <code>xs</code><br />
-  has one element, return the negative value of that element.
+Returns the difference of all elements in <code>xs</code>. If <code>xs</code> is empty, return 0. If <code>xs</code> has one element, return the negative value of that element.
 """,
-            example = null,
+            example = "(- 10 3 2) ; =&gt; 5\n(- 4) ; =&gt; -4",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L114",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L135",
                 docs = "",
             ),
         ),
@@ -164,9 +161,9 @@ Returns the difference of all elements in <code>xs</code>. If <code>xs</code> is
 Auto-promoting variant of <code>-</code>. Integer results are returned as<br />
   <code>BigInt</code>; floats and rationals pass through unchanged.
 """,
-            example = "(-' 5 2) ; =&gt; 3N",
+            example = "(-' 5 2) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L223",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L251",
                 docs = "",
             ),
         ),
@@ -187,9 +184,9 @@ Integer division with a non-zero remainder returns a <code>Ratio</code><br />
   (e.g. <code>(/ 1 2) => 1/2</code>). Use <code>(/ 1.0 2)</code> or <code>(double ...)</code> for float<br />
   division.
 """,
-            example = null,
+            example = "(/ 1 2) ; =&gt; 1/2\n(/ 10 2) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L136",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L159",
                 docs = "",
             ),
         ),
@@ -206,7 +203,7 @@ Integer division with a non-zero remainder returns a <code>Ratio</code><br />
             summary = "Constant for Not a Number (NAN) values.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L99",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L119",
                 docs = "",
             ),
         ),
@@ -223,9 +220,9 @@ Integer division with a non-zero remainder returns a <code>Ratio</code><br />
             summary = """
 Checks if <code>x</code> is not a number. Alias for <code>nan?</code>, matching Clojure's <code>NaN?</code>.
 """,
-            example = null,
+            example = "(NaN? ##NaN) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L292",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L334",
                 docs = "",
             ),
         ),
@@ -246,7 +243,7 @@ Returns the absolute value of <code>x</code>.<br />
 """,
             example = "(abs -5) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L305",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L348",
                 docs = "",
             ),
         ),
@@ -261,15 +258,11 @@ Returns the absolute value of <code>x</code>.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Coerces <code>x</code> to a <code>Phel\Lang\BigDecimal</code>. Accepts <code>BigDecimal</code> (returned<br />
-  as-is), ints, floats (via the shortest round-trip decimal of the<br />
-  float), <code>BigInt</code>, <code>Ratio</code> (computed via exact decimal division;<br />
-  throws <code>ArithmeticError</code> when the expansion does not terminate,<br />
-  matching <code>(bigdec 1/3)</code>), and numeric strings.
+Coerces <code>x</code> to a <code>Phel\Lang\BigDecimal</code>. Accepts <code>BigDecimal</code> (returned as-is), ints, floats (via the shortest round-trip decimal of the float), <code>BigInt</code>, <code>Ratio</code> (computed via exact decimal division; throws <code>ArithmeticError</code> when the expansion does not terminate, matching <code>(bigdec 1/3)</code>), and numeric strings.
 """,
             example = "(bigdec 1.5) ; =&gt; 1.5M\n(bigdec 1/2) ; =&gt; 0.5M\n(bigdec \"3.14\") ; =&gt; 3.14M",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L571",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L612",
                 docs = "",
             ),
         ),
@@ -288,7 +281,7 @@ Returns true when <code>x</code> is a <code>Phel\Lang\BigDecimal</code> value.
 """,
             example = "(bigdec? 1.5M) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L557",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L598",
                 docs = "",
             ),
         ),
@@ -307,9 +300,9 @@ Coerces <code>x</code> to a <code>Phel\Lang\BigInt</code>. Accepts ints, floats<
   (truncated toward zero, rejecting <code>NaN</code>/<code>Inf</code>), numeric strings, and<br />
   <code>BigInt</code> values.
 """,
-            example = "(bigint 42) ; =&gt; 42N\n(bigint 1.9) ; =&gt; 1N\n(bigint \"123\") ; =&gt; 123N",
+            example = "(bigint 42) ; =&gt; 42\n(bigint 1.9) ; =&gt; 1\n(bigint \"123\") ; =&gt; 123",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L703",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L730",
                 docs = "",
             ),
         ),
@@ -328,7 +321,7 @@ Returns true when <code>x</code> is a <code>Phel\Lang\BigInt</code> value.
 """,
             example = "(bigint? (php/:: \\Phel\\Lang\\BigInt (fromInt 1))) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L550",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L591",
                 docs = "",
             ),
         ),
@@ -345,9 +338,9 @@ Returns true when <code>x</code> is a <code>Phel\Lang\BigInt</code> value.
             summary = """
 Alias for <code>bigint</code>. Coerces <code>x</code> to a <code>Phel\Lang\BigInt</code>.
 """,
-            example = "(biginteger 42) ; =&gt; 42N",
+            example = "(biginteger 42) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L719",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L746",
                 docs = "",
             ),
         ),
@@ -362,9 +355,9 @@ Alias for <code>bigint</code>. Coerces <code>x</code> to a <code>Phel\Lang\BigIn
         ),
         documentation = DocumentationInfo(
             summary = "Bitwise and.",
-            example = null,
+            example = "(bit-and 12 10) ; =&gt; 8",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L30",
                 docs = "",
             ),
         ),
@@ -374,16 +367,16 @@ Alias for <code>bigint</code>. Coerces <code>x</code> to a <code>Phel\Lang\BigIn
         name = "bit-clear",
         signature = "(bit-clear x n)",
         completion = CompletionInfo(
-            tailText = "Clear bit an index n",
+            tailText = "Returns the integer x with the bit at index n (0-based, least significant first) cleared to 0",
             priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Clear bit an index <code>n</code>.
+Returns the integer <code>x</code> with the bit at index <code>n</code> (0-based, least significant first) cleared to 0.
 """,
-            example = null,
+            example = "(bit-clear 7 1) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L80",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L94",
                 docs = "",
             ),
         ),
@@ -393,16 +386,16 @@ Clear bit an index <code>n</code>.
         name = "bit-flip",
         signature = "(bit-flip x n)",
         completion = CompletionInfo(
-            tailText = "Flip bit at index n",
+            tailText = "Returns the integer x with the bit at index n (0-based, least significant first) toggled",
             priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Flip bit at index <code>n</code>.
+Returns the integer <code>x</code> with the bit at index <code>n</code> (0-based, least significant first) toggled.
 """,
-            example = null,
+            example = "(bit-flip 5 1) ; =&gt; 7",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L85",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L101",
                 docs = "",
             ),
         ),
@@ -417,9 +410,9 @@ Flip bit at index <code>n</code>.
         ),
         documentation = DocumentationInfo(
             summary = "Bitwise complement.",
-            example = null,
+            example = "(bit-not 0) ; =&gt; -1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L54",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L60",
                 docs = "",
             ),
         ),
@@ -434,9 +427,9 @@ Flip bit at index <code>n</code>.
         ),
         documentation = DocumentationInfo(
             summary = "Bitwise or.",
-            example = null,
+            example = "(bit-or 12 10) ; =&gt; 14",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L38",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L40",
                 docs = "",
             ),
         ),
@@ -446,16 +439,16 @@ Flip bit at index <code>n</code>.
         name = "bit-set",
         signature = "(bit-set x n)",
         completion = CompletionInfo(
-            tailText = "Set bit an index n",
+            tailText = "Returns the integer x with the bit at index n (0-based, least significant first) set to 1",
             priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Set bit an index <code>n</code>.
+Returns the integer <code>x</code> with the bit at index <code>n</code> (0-based, least significant first) set to 1.
 """,
-            example = null,
+            example = "(bit-set 0 2) ; =&gt; 4",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L75",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L87",
                 docs = "",
             ),
         ),
@@ -470,9 +463,9 @@ Set bit an index <code>n</code>.
         ),
         documentation = DocumentationInfo(
             summary = "Bitwise shift left.",
-            example = null,
+            example = "(bit-shift-left 1 4) ; =&gt; 16",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L61",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L69",
                 docs = "",
             ),
         ),
@@ -487,9 +480,9 @@ Set bit an index <code>n</code>.
         ),
         documentation = DocumentationInfo(
             summary = "Bitwise shift right.",
-            example = null,
+            example = "(bit-shift-right 16 2) ; =&gt; 4",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L68",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L78",
                 docs = "",
             ),
         ),
@@ -499,16 +492,16 @@ Set bit an index <code>n</code>.
         name = "bit-test",
         signature = "(bit-test x n)",
         completion = CompletionInfo(
-            tailText = "Test bit at index n",
+            tailText = "Returns true if the bit at index n (0-based, least significant first) of the integer x is set, fa...",
             priority = PhelCompletionPriority.ARITHMETIC_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Test bit at index <code>n</code>.
+Returns <code>true</code> if the bit at index <code>n</code> (0-based, least significant first) of the integer <code>x</code> is set, <code>false</code> otherwise.
 """,
-            example = null,
+            example = "(bit-test 5 0) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L90",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L108",
                 docs = "",
             ),
         ),
@@ -523,9 +516,9 @@ Test bit at index <code>n</code>.
         ),
         documentation = DocumentationInfo(
             summary = "Bitwise xor.",
-            example = null,
+            example = "(bit-xor 12 10) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L46",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L50",
                 docs = "",
             ),
         ),
@@ -540,15 +533,11 @@ Test bit at index <code>n</code>.
         ),
         documentation = DocumentationInfo(
             summary = """
-Coerces <code>x</code> to a signed 8-bit integer in the range <code>-128..127</code>.<br />
-   Decimal values are truncated toward zero. <code>Ratio</code> and <code>BigInt</code><br />
-   values are accepted (truncate toward zero, then range-check). Values<br />
-   outside the range or non-numeric inputs raise <code>InvalidArgumentException</code>.<br />
-   Phel has no dedicated byte type, so the result is a plain PHP int.
+Coerces <code>x</code> to a signed 8-bit integer in the range <code>-128..127</code>. Decimal values are truncated toward zero. <code>Ratio</code> and <code>BigInt</code> values are accepted (truncate toward zero, then range-check). Values outside the range or non-numeric inputs raise <code>InvalidArgumentException</code>. Phel has no dedicated byte type, so the result is a plain PHP int.
 """,
             example = "(byte 127) ; =&gt; 127\n(byte 1.9) ; =&gt; 1\n(byte -128) ; =&gt; -128",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L389",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L433",
                 docs = "",
             ),
         ),
@@ -563,13 +552,11 @@ Coerces <code>x</code> to a signed 8-bit integer in the range <code>-128..127</c
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the smallest integer not less than <code>x</code>. Ints and <code>BigInt</code><br />
-  values are returned unchanged. Ratios collapse via ceiling division.<br />
-  Floats route through PHP's <code>ceil</code>.
+Returns the smallest integer not less than <code>x</code>. Ints and <code>BigInt</code> values are returned unchanged. Ratios collapse via ceiling division. Floats route through PHP's <code>ceil</code>.
 """,
-            example = "(ceil 1.2) ; =&gt; 2.0\n(ceil -1.7) ; =&gt; -1.0\n(ceil 7/3) ; =&gt; 3",
+            example = "(ceil 1.2) ; =&gt; 2\n(ceil -1.7) ; =&gt; -1\n(ceil 7/3) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L761",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L786",
                 docs = "",
             ),
         ),
@@ -584,18 +571,11 @@ Returns the smallest integer not less than <code>x</code>. Ints and <code>BigInt
         ),
         documentation = DocumentationInfo(
             summary = """
-Coerces <code>x</code> to a single-character string representing the given<br />
-   Unicode code point. Accepts a non-negative integer (the code point,<br />
-   converted via <code>mb_chr</code>) or a single-character string, which is<br />
-   returned as-is. Phel has no dedicated char type — character literals<br />
-   such as <code>\A</code> are already single-character strings — so the result<br />
-   is always a plain string. Matches Clojure's <code>char</code> for <code>.cljc</code><br />
-   interop; raises <code>InvalidArgumentException</code> on negative ints,<br />
-   non-single-character strings, and all other inputs.
+Coerces <code>x</code> to a single-character string representing the given Unicode code point. Accepts a non-negative integer (the code point, converted via <code>mb_chr</code>) or a single-character string, which is returned as-is. Phel has no dedicated char type — character literals such as <code>\A</code> are already single-character strings — so the result is always a plain string. Matches Clojure's <code>char</code> for <code>.cljc</code> interop; raises <code>InvalidArgumentException</code> on negative ints, non-single-character strings, and all other inputs.
 """,
             example = "(char 65) ; =&gt; \"A\"\n(char 32) ; =&gt; \" \"\n(char \\A) ; =&gt; \"A\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L406",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L440",
                 docs = "",
             ),
         ),
@@ -612,9 +592,9 @@ Coerces <code>x</code> to a single-character string representing the given<br />
             summary = """
 Returns <code>v</code> if it is in the range, or <code>min</code> if <code>v</code> is less than <code>min</code>, or <code>max</code> if <code>v</code> is greater than <code>max</code>.
 """,
-            example = null,
+            example = "(coerce-in 5 0 10) ; =&gt; 5\n(coerce-in 15 0 10) ; =&gt; 10",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L515",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L549",
                 docs = "",
             ),
         ),
@@ -631,9 +611,9 @@ Returns <code>v</code> if it is in the range, or <code>min</code> if <code>v</co
             summary = """
 Decrements <code>x</code> by one.
 """,
-            example = null,
+            example = "(dec 5) ; =&gt; 4",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L200",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L226",
                 docs = "",
             ),
         ),
@@ -651,9 +631,9 @@ Decrements <code>x</code> by one.
 Auto-promoting variant of <code>dec</code>. Integer results are returned as<br />
   <code>BigInt</code>; floats and rationals pass through unchanged.
 """,
-            example = "(dec' 1) ; =&gt; 0N",
+            example = "(dec' 1) ; =&gt; 0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L247",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L275",
                 docs = "",
             ),
         ),
@@ -672,7 +652,7 @@ Alias for <code>bigdec?</code>. Returns true when <code>x</code> is a <code>Phel
 """,
             example = "(decimal? 1.5M) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L564",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L605",
                 docs = "",
             ),
         ),
@@ -687,12 +667,11 @@ Alias for <code>bigdec?</code>. Returns true when <code>x</code> is a <code>Phel
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the denominator of <code>r</code>. For rationals the denominator collapses<br />
-  to a PHP int when it fits; integers and <code>BigInt</code> values report <code>1</code>.
+Returns the denominator of <code>r</code>. For rationals the denominator collapses to a PHP int when it fits; integers and <code>BigInt</code> values report <code>1</code>.
 """,
             example = "(denominator 1/2) ; =&gt; 2\n(denominator 5) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L615",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L650",
                 docs = "",
             ),
         ),
@@ -707,12 +686,11 @@ Returns the denominator of <code>r</code>. For rationals the denominator collaps
         ),
         documentation = DocumentationInfo(
             summary = """
-Coerces <code>x</code> to a double. In PHP there is no distinction between float and<br />
-   double; both map to the same native PHP float type. Alias for <code>float</code>.
+Coerces <code>x</code> to a double. In PHP there is no distinction between float and double; both map to the same native PHP float type. Alias for <code>float</code>.
 """,
-            example = "(double 1) ; =&gt; 1.0",
+            example = "(double 1) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L356",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L399",
                 docs = "",
             ),
         ),
@@ -729,9 +707,9 @@ Coerces <code>x</code> to a double. In PHP there is no distinction between float
             summary = """
 Checks if <code>x</code> is even.
 """,
-            example = null,
+            example = "(even? 4) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L255",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L283",
                 docs = "",
             ),
         ),
@@ -748,9 +726,9 @@ Checks if <code>x</code> is even.
             summary = """
 Returns the most extreme value in <code>args</code> based on the binary <code>order</code> function.
 """,
-            example = null,
+            example = "(extreme &gt; [1 5 2]) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L460",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L490",
                 docs = "",
             ),
         ),
@@ -773,9 +751,9 @@ Coerces <code>x</code> to a float. In PHP there is no distinction between float 
    keywords, vectors, or maps raise <code>InvalidArgumentException</code> instead of<br />
    leaking a raw PHP float-coercion warning.
 """,
-            example = "(float 1) ; =&gt; 1.0\n(float 1/2) ; =&gt; 0.5",
+            example = "(float 1) ; =&gt; 1\n(float 1/2) ; =&gt; 0.5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L337",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L380",
                 docs = "",
             ),
         ),
@@ -790,13 +768,11 @@ Coerces <code>x</code> to a float. In PHP there is no distinction between float 
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the largest integer not greater than <code>x</code>. Ints and <code>BigInt</code><br />
-  values are returned unchanged. Ratios collapse via floor division.<br />
-  Floats route through PHP's <code>floor</code>.
+Returns the largest integer not greater than <code>x</code>. Ints and <code>BigInt</code> values are returned unchanged. Ratios collapse via floor division. Floats route through PHP's <code>floor</code>.
 """,
-            example = "(floor 1.7) ; =&gt; 1.0\n(floor -1.2) ; =&gt; -2.0\n(floor 7/3) ; =&gt; 2",
+            example = "(floor 1.7) ; =&gt; 1\n(floor -1.2) ; =&gt; -2\n(floor 7/3) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L744",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L771",
                 docs = "",
             ),
         ),
@@ -813,9 +789,9 @@ Returns the largest integer not greater than <code>x</code>. Ints and <code>BigI
             summary = """
 Increments <code>x</code> by one.
 """,
-            example = null,
+            example = "(inc 1) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L194",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L218",
                 docs = "",
             ),
         ),
@@ -833,9 +809,9 @@ Increments <code>x</code> by one.
 Auto-promoting variant of <code>inc</code>. Integer results are returned as<br />
   <code>BigInt</code>; floats and rationals pass through unchanged.
 """,
-            example = "(inc' 1) ; =&gt; 2N",
+            example = "(inc' 1) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L239",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L267",
                 docs = "",
             ),
         ),
@@ -854,7 +830,7 @@ Checks if <code>x</code> is infinite.
 """,
             example = "(inf? php/INF) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L298",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L341",
                 docs = "",
             ),
         ),
@@ -880,7 +856,7 @@ Coerces <code>x</code> to an integer. <code>Ratio</code> and <code>BigDecimal</c
 """,
             example = "(int 1.9) ; =&gt; 1\n(int \"42\") ; =&gt; 42\n(int 1/10) ; =&gt; 0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L316",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L359",
                 docs = "",
             ),
         ),
@@ -895,12 +871,11 @@ Coerces <code>x</code> to an integer. <code>Ratio</code> and <code>BigDecimal</c
         ),
         documentation = DocumentationInfo(
             summary = """
-Coerces <code>x</code> to a long integer. In PHP there is no distinction between int<br />
-   and long; both map to the same native PHP int type. Alias for <code>int</code>.
+Coerces <code>x</code> to a long integer. In PHP there is no distinction between int and long; both map to the same native PHP int type. Alias for <code>int</code>.
 """,
             example = "(long 1.9) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L364",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L406",
                 docs = "",
             ),
         ),
@@ -915,12 +890,11 @@ Coerces <code>x</code> to a long integer. In PHP there is no distinction between
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the maximum of all arguments. Returns <code>##NaN</code> whenever any<br />
-  numeric argument is <code>##NaN</code>.
+Returns the maximum of all arguments. Returns <code>##NaN</code> whenever any numeric argument is <code>##NaN</code>.
 """,
-            example = null,
+            example = "(max 3 1 2) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L478",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L511",
                 docs = "",
             ),
         ),
@@ -939,7 +913,7 @@ Returns the arg for which (k arg) is largest. On ties, returns the latest argume
 """,
             example = "(max-key count \"bb\" \"aaa\" \"b\") ; =&gt; \"aaa\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L501",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L535",
                 docs = "",
             ),
         ),
@@ -956,9 +930,9 @@ Returns the arg for which (k arg) is largest. On ties, returns the latest argume
             summary = """
 Returns the mean of <code>xs</code> as a float.
 """,
-            example = null,
+            example = "(mean [1 2 3]) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L527",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L565",
                 docs = "",
             ),
         ),
@@ -973,12 +947,11 @@ Returns the mean of <code>xs</code> as a float.
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the median of <code>xs</code>. With an even-sized collection the result is<br />
-  the float average of the two middle elements.
+Returns the median of <code>xs</code>. With an even-sized collection the result is the float average of the two middle elements.
 """,
-            example = null,
+            example = "(median [3 1 2]) ; =&gt; 2\n(median [1 2 3 4]) ; =&gt; 2.5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L532",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L572",
                 docs = "",
             ),
         ),
@@ -993,12 +966,11 @@ Returns the median of <code>xs</code>. With an even-sized collection the result 
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the minimum of all arguments. Returns <code>##NaN</code> whenever any<br />
-  numeric argument is <code>##NaN</code>.
+Returns the minimum of all arguments. Returns <code>##NaN</code> whenever any numeric argument is <code>##NaN</code>.
 """,
-            example = null,
+            example = "(min 3 1 2) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L469",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L501",
                 docs = "",
             ),
         ),
@@ -1017,7 +989,7 @@ Returns the arg for which (k arg) is smallest. On ties, returns the latest argum
 """,
             example = "(min-key count \"bb\" \"aaa\" \"b\") ; =&gt; \"b\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L487",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L521",
                 docs = "",
             ),
         ),
@@ -1038,7 +1010,7 @@ Returns the floor remainder of <code>dividend</code> / <code>divisor</code>. The
 """,
             example = "(mod 7 3) ; =&gt; 1\n(mod -7 3) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L170",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L192",
                 docs = "",
             ),
         ),
@@ -1055,9 +1027,9 @@ Returns the floor remainder of <code>dividend</code> / <code>divisor</code>. The
             summary = """
 Checks if <code>x</code> is not a number.
 """,
-            example = null,
+            example = "(nan? ##NaN) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L285",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L325",
                 docs = "",
             ),
         ),
@@ -1074,9 +1046,9 @@ Checks if <code>x</code> is not a number.
             summary = """
 Checks if <code>x</code> is smaller than zero.
 """,
-            example = null,
+            example = "(neg? -2) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L280",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L318",
                 docs = "",
             ),
         ),
@@ -1091,13 +1063,11 @@ Checks if <code>x</code> is smaller than zero.
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the numerator of <code>r</code>. For rationals the numerator collapses to a<br />
-  PHP int when it fits; for plain ints and <code>BigInt</code> values <code>r</code> is returned<br />
-  unchanged.
+Returns the numerator of <code>r</code>. For rationals the numerator collapses to a PHP int when it fits; for plain ints and <code>BigInt</code> values <code>r</code> is returned unchanged.
 """,
             example = "(numerator 1/2) ; =&gt; 1\n(numerator 5) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L593",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L630",
                 docs = "",
             ),
         ),
@@ -1114,9 +1084,9 @@ Returns the numerator of <code>r</code>. For rationals the numerator collapses t
             summary = """
 Checks if <code>x</code> is odd.
 """,
-            example = null,
+            example = "(odd? 3) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L260",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L290",
                 docs = "",
             ),
         ),
@@ -1133,9 +1103,9 @@ Checks if <code>x</code> is odd.
             summary = """
 Checks if <code>x</code> is one.
 """,
-            example = null,
+            example = "(one? 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L270",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L304",
                 docs = "",
             ),
         ),
@@ -1152,9 +1122,9 @@ Checks if <code>x</code> is one.
             summary = """
 Checks if <code>x</code> is greater than zero.
 """,
-            example = null,
+            example = "(pos? 3) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L275",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L311",
                 docs = "",
             ),
         ),
@@ -1169,13 +1139,11 @@ Checks if <code>x</code> is greater than zero.
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the truncated integer quotient of <code>dividend</code> / <code>divisor</code>.<br />
-  Truncates toward zero. Throws <code>\DivisionByZeroError</code> when <code>divisor</code><br />
-  is zero.
+Returns the truncated integer quotient of <code>dividend</code> / <code>divisor</code>. Truncates toward zero. Throws <code>\DivisionByZeroError</code> when <code>divisor</code> is zero.
 """,
             example = "(quot 7 3) ; =&gt; 2\n(quot -7 3) ; =&gt; -2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L151",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L176",
                 docs = "",
             ),
         ),
@@ -1190,12 +1158,11 @@ Returns the truncated integer quotient of <code>dividend</code> / <code>divisor<
         ),
         documentation = DocumentationInfo(
             summary = """
-Without arguments, returns a random number in <code>[0, 1)</code>. With one<br />
-  argument <code>n</code>, returns a random number in <code>[0, n)</code>.
+Without arguments, returns a random number in <code>[0, 1)</code>. With one argument <code>n</code>, returns a random number in <code>[0, n)</code>.
 """,
             example = "(rand) ; =&gt; 0.42\n(rand 100) ; =&gt; 73.2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L439",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L466",
                 docs = "",
             ),
         ),
@@ -1212,9 +1179,9 @@ Without arguments, returns a random number in <code>[0, 1)</code>. With one<br /
             summary = """
 Returns a random number between 0 and <code>n</code>.
 """,
-            example = null,
+            example = "(rand-int 100) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L449",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L475",
                 docs = "",
             ),
         ),
@@ -1229,9 +1196,9 @@ Returns a random number between 0 and <code>n</code>.
         ),
         documentation = DocumentationInfo(
             summary = "Returns a random item from xs.",
-            example = null,
+            example = "(rand-nth [:a :b :c]) ; =&gt; :b",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L454",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L482",
                 docs = "",
             ),
         ),
@@ -1246,16 +1213,11 @@ Returns a random number between 0 and <code>n</code>.
         ),
         documentation = DocumentationInfo(
             summary = """
-Converts <code>x</code> to a <code>Ratio</code>. Floats use the shortest decimal expansion<br />
-  that round-trips back to the same float, so <code>(rationalize 0.1)</code> is <code>1/10</code><br />
-  rather than the float-noise denominator. Ints, <code>BigInt</code>, and<br />
-  integer-valued <code>BigDecimal</code> values become <code>n/1</code> and auto-collapse, so<br />
-  they are returned as the integer value. <code>BigDecimal</code> with a fractional<br />
-  part rationalizes through its canonical decimal form.
+Converts <code>x</code> to a <code>Ratio</code>. Floats use the shortest decimal expansion that round-trips back to the same float, so <code>(rationalize 0.1)</code> is <code>1/10</code> rather than the float-noise denominator. Ints, <code>BigInt</code>, and integer-valued <code>BigDecimal</code> values become <code>n/1</code> and auto-collapse, so they are returned as the integer value. <code>BigDecimal</code> with a fractional part rationalizes through its canonical decimal form.
 """,
             example = "(rationalize 0.5) ; =&gt; 1/2\n(rationalize 3) ; =&gt; 3\n(rationalize 1M) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L683",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L715",
                 docs = "",
             ),
         ),
@@ -1270,12 +1232,11 @@ Converts <code>x</code> to a <code>Ratio</code>. Floats use the shortest decimal
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the truncated remainder of <code>dividend</code> / <code>divisor</code>. The result<br />
-  has the same sign as <code>dividend</code> (matches PHP's <code>%</code>).
+Returns the truncated remainder of <code>dividend</code> / <code>divisor</code>. The result has the same sign as <code>dividend</code> (matches PHP's <code>%</code>).
 """,
             example = "(rem 7 3) ; =&gt; 1\n(rem -7 3) ; =&gt; -1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L161",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L184",
                 docs = "",
             ),
         ),
@@ -1290,13 +1251,11 @@ Returns the truncated remainder of <code>dividend</code> / <code>divisor</code>.
         ),
         documentation = DocumentationInfo(
             summary = """
-Rounds <code>x</code> to the nearest integer using PHP's <code>round</code> (half away from<br />
-  zero). Ints and <code>BigInt</code> values are returned unchanged. Ratios<br />
-  and floats return floats.
+Rounds <code>x</code> to the nearest integer using PHP's <code>round</code> (half away from zero). Ints and <code>BigInt</code> values are returned unchanged. Ratios and floats return floats.
 """,
-            example = "(round 1.5) ; =&gt; 2.0\n(round -1.5) ; =&gt; -2.0\n(round 5) ; =&gt; 5",
+            example = "(round 1.5) ; =&gt; 2\n(round -1.5) ; =&gt; -2\n(round 5) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L778",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L801",
                 docs = "",
             ),
         ),
@@ -1311,15 +1270,11 @@ Rounds <code>x</code> to the nearest integer using PHP's <code>round</code> (hal
         ),
         documentation = DocumentationInfo(
             summary = """
-Coerces <code>x</code> to a signed 16-bit integer in the range <code>-32768..32767</code>.<br />
-   Decimal values are truncated toward zero. <code>Ratio</code> and <code>BigInt</code><br />
-   values are accepted (truncate toward zero, then range-check). Values<br />
-   outside the range or non-numeric inputs raise <code>InvalidArgumentException</code>.<br />
-   Phel has no dedicated short type, so the result is a plain PHP int.
+Coerces <code>x</code> to a signed 16-bit integer in the range <code>-32768..32767</code>. Decimal values are truncated toward zero. <code>Ratio</code> and <code>BigInt</code> values are accepted (truncate toward zero, then range-check). Values outside the range or non-numeric inputs raise <code>InvalidArgumentException</code>. Phel has no dedicated short type, so the result is a plain PHP int.
 """,
             example = "(short 32767) ; =&gt; 32767\n(short 1.9) ; =&gt; 1\n(short -32768) ; =&gt; -32768",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L372",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L426",
                 docs = "",
             ),
         ),
@@ -1337,9 +1292,9 @@ Coerces <code>x</code> to a signed 16-bit integer in the range <code>-32768..327
 Returns the square root of <code>x</code> as a float. Negative inputs return<br />
   <code>##NaN</code> (matches PHP's <code>sqrt</code>).
 """,
-            example = "(sqrt 9) ; =&gt; 3.0\n(sqrt 2) ; =&gt; 1.4142135623730951",
+            example = "(sqrt 9) ; =&gt; 3\n(sqrt 2) ; =&gt; 1.4142135623731",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L791",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L812",
                 docs = "",
             ),
         ),
@@ -1356,9 +1311,9 @@ Returns the square root of <code>x</code> as a float. Negative inputs return<br 
             summary = """
 Returns the sum of all elements is <code>xs</code>.
 """,
-            example = null,
+            example = "(sum [1 2 3]) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L522",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L558",
                 docs = "",
             ),
         ),
@@ -1375,9 +1330,9 @@ Returns the sum of all elements is <code>xs</code>.
             summary = """
 Checks if <code>x</code> is zero.
 """,
-            example = null,
+            example = "(zero? 0) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/math.phel#L265",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/math.phel#L297",
                 docs = "",
             ),
         ),

@@ -15,7 +15,7 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             summary = "Decodes a JSON string to a Phel value.",
             example = "(decode \"{\\\"name\\\":\\\"Alice\\\"}\") ; =&gt; {:name \"Alice\"}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/json.phel#L55",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/json.phel#L57",
                 docs = "",
             ),
         ),
@@ -32,7 +32,7 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             summary = "Converts a JSON value to Phel format.",
             example = "(decode-value [1 2 3]) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/json.phel#L43",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/json.phel#L44",
                 docs = "",
             ),
         ),
@@ -49,7 +49,7 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             summary = "Encodes a Phel value to a JSON string.",
             example = "(encode {:name \"Alice\"}) ; =&gt; \"{\\\"name\\\":\\\"Alice\\\"}\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/json.phel#L31",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/json.phel#L32",
                 docs = "",
             ),
         ),
@@ -66,7 +66,7 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             summary = "Converts a Phel value to JSON-compatible format.",
             example = "(encode-value :name) ; =&gt; \"name\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/json.phel#L20",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/json.phel#L20",
                 docs = "",
             ),
         ),
@@ -83,7 +83,7 @@ internal fun registerJsonFunctions(): List<PhelFunction> = listOf(
             summary = "Checks if a value can be used as a JSON key.",
             example = "(valid-key? :name) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/json.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/json.phel#L4",
                 docs = "",
             ),
         ),

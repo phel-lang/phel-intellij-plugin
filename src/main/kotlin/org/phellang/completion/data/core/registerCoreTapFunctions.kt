@@ -19,12 +19,11 @@ internal fun registerCoreTapFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Registers <code>f</code> as a tap. Every call to <code>tap></code> invokes each registered tap<br />
-  with the tapped value. Returns nil.
+Registers <code>f</code> as a tap. Every call to <code>tap></code> invokes each registered tap with the tapped value. Returns nil.
 """,
             example = "(add-tap println)\n(tap&gt; 42) ; prints 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/tap.phel#L15",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/tap.phel#L15",
                 docs = "",
             ),
         ),
@@ -43,7 +42,7 @@ Removes <code>f</code> from the tap set. Returns nil.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/tap.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/tap.phel#L23",
                 docs = "",
             ),
         ),
@@ -58,12 +57,11 @@ Removes <code>f</code> from the tap set. Returns nil.
         ),
         documentation = DocumentationInfo(
             summary = """
-Sends <code>x</code> to every registered tap. Exceptions thrown by individual taps are<br />
-  swallowed so one misbehaving tap does not affect the others. Returns true.
+Sends <code>x</code> to every registered tap. Exceptions thrown by individual taps are swallowed so one misbehaving tap does not affect the others. Returns true.
 """,
             example = "(add-tap println)\n(tap&gt; {:event :login :user \"alice\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/tap.phel#L31",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/tap.phel#L30",
                 docs = "",
             ),
         ),

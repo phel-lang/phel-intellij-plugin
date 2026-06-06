@@ -19,12 +19,11 @@ internal fun registerTestSelectorFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>true</code> when <code>options</code> contains at least one non-empty<br />
-  selector key.
+Returns <code>true</code> when <code>options</code> contains at least one non-empty selector key.
 """,
             example = "(has-selectors? {:include [:integration]})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L225",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L205",
                 docs = "",
             ),
         ),
@@ -39,14 +38,11 @@ Returns <code>true</code> when <code>options</code> contains at least one non-em
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>true</code> when <code>meta</code> carries <code>tag</code> (a keyword or a string<br />
-  treated as a keyword). Single-keyword metadata (<code>^:integration</code>) and<br />
-  map-based multi-tag metadata (<code>^{:tags [:integration :slow]}</code>) both<br />
-  match.
+Returns <code>true</code> when <code>meta</code> carries <code>tag</code> (a keyword or a string treated as a keyword). Single-keyword metadata (<code>^:integration</code>) and map-based multi-tag metadata (<code>^{:tags [:integration :slow]}</code>) both match.
 """,
             example = "(has-tag? {:integration true} :integration)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L57",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L54",
                 docs = "",
             ),
         ),
@@ -61,15 +57,11 @@ Returns <code>true</code> when <code>meta</code> carries <code>tag</code> (a key
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>true</code> when the test described by <code>meta</code> and <code>ns-name</code><br />
-  should be run under <code>options</code>. <code>options</code> is a map that may carry any<br />
-  of <code>:include</code>, <code>:exclude</code>, <code>:ns-patterns</code>, <code>:filters</code>. Selectors that<br />
-  are absent or empty impose no restriction; specified selectors are<br />
-  AND'd together.
+Returns <code>true</code> when the test described by <code>meta</code> and <code>ns-name</code> should be run under <code>options</code>. <code>options</code> is a map that may carry any of <code>:include</code>, <code>:exclude</code>, <code>:ns-patterns</code>, <code>:filters</code>. Selectors that are absent or empty impose no restriction; specified selectors are AND'd together.
 """,
             example = "(keep-test? {:include [:integration]} \"my.ns\" {:integration true :test-name \"t\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L204",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L188",
                 docs = "",
             ),
         ),
@@ -84,13 +76,11 @@ Returns <code>true</code> when the test described by <code>meta</code> and <code
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>true</code> when any tag in <code>excludes</code> is truthy on <code>meta</code>. An<br />
-  empty or nil <code>excludes</code> vector always returns <code>false</code> (nothing<br />
-  excluded).
+Returns <code>true</code> when any tag in <code>excludes</code> is truthy on <code>meta</code>. An empty or nil <code>excludes</code> vector always returns <code>false</code> (nothing excluded).
 """,
             example = "(matches-exclude? [:slow] {:slow true})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L85",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L78",
                 docs = "",
             ),
         ),
@@ -105,12 +95,11 @@ Returns <code>true</code> when any tag in <code>excludes</code> is truthy on <co
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>true</code> when <code>patterns</code> is empty (no restriction) or when any<br />
-  entry in <code>patterns</code> matches <code>test-name</code>.
+Returns <code>true</code> when <code>patterns</code> is empty (no restriction) or when any entry in <code>patterns</code> matches <code>test-name</code>.
 """,
             example = "(matches-filter? [\"add-\"] \"test-add-one\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L191",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L176",
                 docs = "",
             ),
         ),
@@ -125,12 +114,11 @@ Returns <code>true</code> when <code>patterns</code> is empty (no restriction) o
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>true</code> when <code>includes</code> is empty (no restriction) or when any<br />
-  tag in <code>includes</code> is truthy on <code>meta</code>.
+Returns <code>true</code> when <code>includes</code> is empty (no restriction) or when any tag in <code>includes</code> is truthy on <code>meta</code>.
 """,
             example = "(matches-include? [:integration] {:integration true})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L76",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L70",
                 docs = "",
             ),
         ),
@@ -145,12 +133,11 @@ Returns <code>true</code> when <code>includes</code> is empty (no restriction) o
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>true</code> when <code>patterns</code> is empty (no restriction) or when any<br />
-  glob in <code>patterns</code> matches <code>ns-name</code>.
+Returns <code>true</code> when <code>patterns</code> is empty (no restriction) or when any glob in <code>patterns</code> matches <code>ns-name</code>.
 """,
             example = "(matches-ns? [\"phel.http.*\"] \"phel.http.client\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L156",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L145",
                 docs = "",
             ),
         ),
@@ -165,12 +152,11 @@ Returns <code>true</code> when <code>patterns</code> is empty (no restriction) o
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>true</code> when <code>pattern</code> (a PCRE <code>/.../</code> string or a plain<br />
-  substring) matches <code>test-name</code>.
+Returns <code>true</code> when <code>pattern</code> (a PCRE <code>/.../</code> string or a plain substring) matches <code>test-name</code>.
 """,
             example = "(name-matches? \"add-\" \"test-add-one\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L181",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L167",
                 docs = "",
             ),
         ),
@@ -192,7 +178,7 @@ Returns <code>true</code> when <code>ns-name</code> matches the glob <code>patte
 """,
             example = "(ns-matches? \"phel.http.*\" \"phel\\\\http\\\\client\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test/selector.phel#L143",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test/selector.phel#L132",
                 docs = "",
             ),
         ),

@@ -17,7 +17,7 @@ Removes every hook registered for <code>namespace</code>.
 """,
             example = "(clear-on-reload \"my-app\\core\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/watch.phel#L18",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/watch.phel#L16",
                 docs = "",
             ),
         ),
@@ -32,13 +32,11 @@ Removes every hook registered for <code>namespace</code>.
         ),
         documentation = DocumentationInfo(
             summary = """
-Registers a zero-arg function to run every time <code>namespace</code> is<br />
-  reloaded by the watcher. Replaces any previously registered hook<br />
-  with the same <code>name</code>.
+Registers a zero-arg function to run every time <code>namespace</code> is reloaded by the watcher. Replaces any previously registered hook with the same <code>name</code>.
 """,
             example = "(register-on-reload \"my-app\\core\" :refresh (fn [] (println \"reloaded\")))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/watch.phel#L7",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/watch.phel#L7",
                 docs = "",
             ),
         ),
@@ -53,12 +51,11 @@ Registers a zero-arg function to run every time <code>namespace</code> is<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Executes every hook registered for <code>namespace</code>. Returns the<br />
-  number of hooks that fired.
+Executes every hook registered for <code>namespace</code>. Returns the number of hooks that fired.
 """,
             example = "(run-on-reload-hooks \"my-app\\core\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/watch.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/watch.phel#L22",
                 docs = "",
             ),
         ),
@@ -73,13 +70,11 @@ Executes every hook registered for <code>namespace</code>. Returns the<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Starts the file watcher on the given vector of paths. Blocks until<br />
-  the watcher is stopped (e.g. Ctrl+C). Reloads changed namespaces in<br />
-  dependency order and runs any hooks registered with <code>register-on-reload</code>.
+Starts the file watcher on the given vector of paths. Blocks until the watcher is stopped (e.g. Ctrl+C). Reloads changed namespaces in dependency order and runs any hooks registered with <code>register-on-reload</code>.
 """,
             example = "(watch! [\"src/\" \"tests/\"])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/watch.phel#L36",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/watch.phel#L33",
                 docs = "",
             ),
         ),

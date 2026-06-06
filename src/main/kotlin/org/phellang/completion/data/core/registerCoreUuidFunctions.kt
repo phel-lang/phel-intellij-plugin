@@ -25,7 +25,7 @@ Parses <code>s</code> as a canonical UUID string and returns a <code>Phel\Lang\U
 """,
             example = "(parse-uuid \"550E8400-E29B-41D4-A716-446655440000\")\n  ; =&gt; #uuid \"550e8400-e29b-41d4-a716-446655440000\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/uuid.phel#L29",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/uuid.phel#L27",
                 docs = "",
             ),
         ),
@@ -44,7 +44,7 @@ Returns a random version 4 UUID as a <code>Phel\Lang\UUID</code> value.
 """,
             example = "(random-uuid) ; =&gt; #uuid \"550e8400-e29b-41d4-a716-446655440000\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/uuid.phel#L22",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/uuid.phel#L20",
                 docs = "",
             ),
         ),
@@ -63,7 +63,7 @@ Returns true if <code>x</code> is the nil UUID (all zeros), false otherwise.
 """,
             example = "(uuid-nil? #uuid \"00000000-0000-0000-0000-000000000000\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/uuid.phel#L54",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/uuid.phel#L50",
                 docs = "",
             ),
         ),
@@ -84,7 +84,7 @@ Returns a keyword describing the variant field of UUID <code>x</code>: <code>:nc
 """,
             example = "(uuid-variant #uuid \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; :rfc-4122",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/uuid.phel#L71",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/uuid.phel#L66",
                 docs = "",
             ),
         ),
@@ -99,12 +99,11 @@ Returns a keyword describing the variant field of UUID <code>x</code>: <code>:nc
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the version digit (1-5) encoded in UUID <code>x</code>, or nil if <code>x</code> is<br />
-  not a <code>UUID</code> value.
+Returns the version digit (1-5) encoded in UUID <code>x</code>, or nil if <code>x</code> is not a <code>UUID</code> value.
 """,
             example = "(uuid-version #uuid \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; 4",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/uuid.phel#L62",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/uuid.phel#L58",
                 docs = "",
             ),
         ),
@@ -119,13 +118,11 @@ Returns the version digit (1-5) encoded in UUID <code>x</code>, or nil if <code>
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if <code>a</code> and <code>b</code> are <code>Phel\Lang\UUID</code> values with the<br />
-  same canonical form. Strings (or anything else) are rejected even if<br />
-  their textual content would match — coerce with <code>parse-uuid</code> first.
+Returns true if <code>a</code> and <code>b</code> are <code>Phel\Lang\UUID</code> values with the same canonical form. Strings (or anything else) are rejected even if their textual content would match — coerce with <code>parse-uuid</code> first.
 """,
             example = "(uuid= #uuid \"550e8400-e29b-41d4-a716-446655440000\"\n         #uuid \"550E8400-E29B-41D4-A716-446655440000\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/uuid.phel#L44",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/uuid.phel#L42",
                 docs = "",
             ),
         ),
@@ -140,13 +137,11 @@ Returns true if <code>a</code> and <code>b</code> are <code>Phel\Lang\UUID</code
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if <code>x</code> is a <code>Phel\Lang\UUID</code> value, false otherwise.<br />
-  Canonical UUID strings are rejected — wrap them with <code>parse-uuid</code> (or<br />
-  the <code>#uuid "..."</code> literal) to obtain a typed value.
+Returns true if <code>x</code> is a <code>Phel\Lang\UUID</code> value, false otherwise. Canonical UUID strings are rejected — wrap them with <code>parse-uuid</code> (or the <code>#uuid "..."</code> literal) to obtain a typed value.
 """,
             example = "(uuid? #uuid \"550e8400-e29b-41d4-a716-446655440000\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/uuid.phel#L13",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/uuid.phel#L13",
                 docs = "",
             ),
         ),

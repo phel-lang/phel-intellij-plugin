@@ -19,12 +19,11 @@ internal fun registerCoreLoopsFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Evaluates body <code>n</code> times with <code>binding</code> bound to integers from 0 to n-1.<br />
-  Returns nil.
+Evaluates body <code>n</code> times with <code>binding</code> bound to integers from 0 to n-1. Returns nil.
 """,
             example = "(dotimes [i 5] (println i))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/loops.phel#L17",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/loops.phel#L16",
                 docs = "",
             ),
         ),
@@ -43,7 +42,7 @@ Calls <code>(f x)</code> for each element in <code>coll</code> for side effects.
 """,
             example = "(run! println [1 2 3])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/loops.phel#L9",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/loops.phel#L8",
                 docs = "",
             ),
         ),

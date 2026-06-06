@@ -8,14 +8,17 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
         name = "html/doctype",
         signature = "(doctype type)",
         completion = CompletionInfo(
-            tailText = "Returns an HTML doctype declaration",
+            tailText = "Returns an HTML doctype declaration for the given type",
             priority = PhelCompletionPriority.HTML_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Returns an HTML doctype declaration.",
+            summary = """
+Returns an HTML doctype declaration for the given type. Supports <code>:html4</code>,<br />
+  <code>:xhtml-strict</code>, <code>:xhtml-transitional</code>, and <code>:html5</code>. Defaults to <code>:html5</code>.
+""",
             example = "(doctype :html5) ; =&gt; \"&lt;!DOCTYPE html&gt;\\n\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/html.phel#L167",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L172",
                 docs = "",
             ),
         ),
@@ -32,7 +35,7 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
             summary = "Escapes HTML special characters to prevent XSS.",
             example = "(escape-html \"&lt;div&gt;\") ; =&gt; \"&amp;lt;div&amp;gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/html.phel#L6",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L6",
                 docs = "",
             ),
         ),
@@ -42,14 +45,20 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
         name = "html/html",
         signature = "(html & content)",
         completion = CompletionInfo(
-            tailText = "Compiles Phel vectors to HTML strings",
+            tailText = "Compiles nested Phel vectors to HTML strings at compile-time",
             priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
-            summary = "Compiles Phel vectors to HTML strings.",
+            summary = """
+Compiles nested Phel vectors to HTML strings at compile-time. A vector<br />
+  <code>[tag attrs? children*]</code> becomes an element; <code>tag</code> is a keyword or string,<br />
+  the optional <code>attrs</code> is a map, and children are strings, keywords, raw<br />
+  strings, or nested vectors. Special list forms <code>for</code>, <code>if</code>, <code>when</code>, and<br />
+  <code>when-not</code> are supported for dynamic content.
+""",
             example = "(html [:div \"Hello\"]) ; =&gt; \"&lt;div&gt;Hello&lt;/div&gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/html.phel#L152",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L152",
                 docs = "",
             ),
         ),
@@ -66,7 +75,7 @@ internal fun registerHtmlFunctions(): List<PhelFunction> = listOf(
             summary = "Creates a new raw-string struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/html.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L4",
                 docs = "",
             ),
         ),
@@ -85,7 +94,7 @@ Checks if <code>x</code> is an instance of the raw-string struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/html.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L4",
                 docs = "",
             ),
         ),

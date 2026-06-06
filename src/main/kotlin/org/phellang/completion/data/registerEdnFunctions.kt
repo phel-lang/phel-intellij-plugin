@@ -20,9 +20,9 @@ Options:<br />
     :readers  map of tag (symbol, keyword, or string) to 1-arg handler fn<br />
     :eof      value returned for empty input
 """,
-            example = "(read-string \"{:a 1 :b 2}\") ; =&gt; {:a 1 :b 2}",
+            example = "(read-string \"{:a 1 :b 2}\") ; =&gt; {:a 1, :b 2}\n(read-string \"\" {:eof :default}) ; =&gt; :default",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/edn.phel#L112",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/edn.phel#L105",
                 docs = "",
             ),
         ),
@@ -43,7 +43,7 @@ Options:<br />
 """,
             example = "(read-string-all \"1 2 3\") ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/edn.phel#L130",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/edn.phel#L123",
                 docs = "",
             ),
         ),
@@ -58,15 +58,11 @@ Options:<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Serialises <code>value</code> to its EDN string representation. Uses Phel's<br />
-  readable printer so the output round-trips through <code>read-string</code> for<br />
-  all EDN-compatible values (nil, booleans, numbers, strings, keywords,<br />
-  symbols, lists, vectors, maps, sets, and built-in tagged literals<br />
-  such as <code>#uuid</code>).
+Serialises <code>value</code> to its EDN string representation. Uses Phel's readable printer so the output round-trips through <code>read-string</code> for all EDN-compatible values (nil, booleans, numbers, strings, keywords, symbols, lists, vectors, maps, sets, and built-in tagged literals such as <code>#uuid</code>).
 """,
             example = "(write-string {:a 1}) ; =&gt; \"{:a 1}\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/edn.phel#L144",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/edn.phel#L137",
                 docs = "",
             ),
         ),
@@ -81,12 +77,11 @@ Serialises <code>value</code> to its EDN string representation. Uses Phel's<br /
         ),
         documentation = DocumentationInfo(
             summary = """
-Serialises a sequence of values to EDN, separating top-level forms<br />
-  with a single space. Inverse of <code>read-string-all</code>.
+Serialises a sequence of values to EDN, separating top-level forms with a single space. Inverse of <code>read-string-all</code>.
 """,
-            example = "(write-string-all [1 2 3]) ; =&gt; \"1 2 3\"",
+            example = "(write-string-all [1 2 3]) ; =&gt; \"1 2 3\"\n(write-string-all [1 \"hi\" :kw]) ; =&gt; \"1 \\\"hi\\\" :kw\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/edn.phel#L155",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/edn.phel#L144",
                 docs = "",
             ),
         ),

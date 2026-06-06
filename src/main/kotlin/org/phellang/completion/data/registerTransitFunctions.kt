@@ -21,9 +21,9 @@ Options:<br />
                       the bare tag name (e.g. "point", ":", "~") and<br />
                       the already-decoded representation.
 """,
-            example = "(read-string \"[\\\"~:foo\\\", 1]\") ; =&gt; [:foo 1]",
+            example = "(read-string \"[\\\"~:foo\\\", 1]\") ; =&gt; [:foo 1]\n(read-string \"[\\\"~#point\\\", [1, 2]]\" {:handlers {\"point\" (fn [v] v)}}) ; =&gt; [1 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/transit.phel#L180",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/transit.phel#L175",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Serialises <code>value</code> to a Transit+JSON-Verbose string.
 """,
             example = "(write-string {:a 1}) ; =&gt; \"[\\\"~#cmap\\\",[\\\"~:a\\\",1]]\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/transit.phel#L284",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/transit.phel#L273",
                 docs = "",
             ),
         ),

@@ -226,5 +226,22 @@ Use <code>php/oset</code> to set a value to a class/object property.
                 docs = "/documentation/php-interop/#php-set-object-properties",
             ),
         ),
+    ),
+    PhelFunction(
+        namespace = "php",
+        name = "php/ref",
+        signature = "(php/ref local)",
+        completion = CompletionInfo(
+            tailText = "Passes a local variable by reference into a PHP interop call",
+            priority = PhelCompletionPriority.PHP_INTEROP,
+        ),
+        documentation = DocumentationInfo(
+            summary = "Passes a local variable by reference into a PHP interop call.",
+            example = "(php/-&gt; stmt (bindColumn 1 (php/ref out)))",
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/",
+            ),
+        ),
     )
 )

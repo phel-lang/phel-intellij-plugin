@@ -24,7 +24,7 @@ Generates one random value conforming to <code>schema</code>. Accepts the same<b
 """,
             example = "(generate :int)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/generator.phel#L186",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/generator.phel#L184",
                 docs = "",
             ),
         ),
@@ -44,7 +44,7 @@ Returns a <code>phel\test\gen</code> generator for <code>schema</code>. Honours 
 """,
             example = "(schema-&gt;gen [:int])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/generator.phel#L169",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/generator.phel#L167",
                 docs = "",
             ),
         ),

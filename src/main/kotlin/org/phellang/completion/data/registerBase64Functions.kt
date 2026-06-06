@@ -13,11 +13,11 @@ internal fun registerBase64Functions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Decodes a Base64 string. Optional <code>strict?</code> flag validates characters.
+Decodes a Base64 string. When <code>strict?</code> is true, validates that the input contains only characters from the Base64 alphabet and returns false on invalid input (defaults to false).
 """,
             example = "(decode \"SGVsbG8=\") ; =&gt; \"Hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/base64.phel#L10",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/base64.phel#L10",
                 docs = "",
             ),
         ),
@@ -27,14 +27,18 @@ Decodes a Base64 string. Optional <code>strict?</code> flag validates characters
         name = "base64/decode-url",
         signature = "(decode-url s & [strict?])",
         completion = CompletionInfo(
-            tailText = "Decodes a URL-safe Base64 string",
+            tailText = "Decodes a URL-safe Base64 string, adding padding automatically",
             priority = PhelCompletionPriority.BASE64_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Decodes a URL-safe Base64 string. Adds padding automatically.",
+            summary = """
+Decodes a URL-safe Base64 string, adding padding automatically. When<br />
+  <code>strict?</code> is true, validates that the input contains only valid Base64<br />
+  characters (defaults to false).
+""",
             example = "(decode-url \"SGVsbG8\") ; =&gt; \"Hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/base64.phel#L25",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/base64.phel#L25",
                 docs = "",
             ),
         ),
@@ -51,7 +55,7 @@ Decodes a Base64 string. Optional <code>strict?</code> flag validates characters
             summary = "Encodes a string to Base64.",
             example = "(encode \"Hello\") ; =&gt; \"SGVsbG8=\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/base64.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/base64.phel#L4",
                 docs = "",
             ),
         ),
@@ -68,7 +72,7 @@ Decodes a Base64 string. Optional <code>strict?</code> flag validates characters
             summary = "Encodes a string to URL-safe Base64 (no padding).",
             example = "(encode-url \"Hello\") ; =&gt; \"SGVsbG8\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/base64.phel#L16",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/base64.phel#L16",
                 docs = "",
             ),
         ),

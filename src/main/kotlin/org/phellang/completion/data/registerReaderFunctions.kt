@@ -13,15 +13,12 @@ internal fun registerReaderFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Registers a handler for reader tag <code>tag-name</code> (a string without the<br />
-  leading <code>#</code>). The handler <code>f</code> is a 1-arg function receiving the<br />
-  already-read form value and returning the value that should replace<br />
-  the tagged literal.<br /><br />
+Registers a handler for reader tag <code>tag-name</code> (a string without the leading <code>#</code>). The handler <code>f</code> is a 1-arg function receiving the already-read form value and returning the value that should replace the tagged literal.<br /><br />
 Re-registering an existing tag overwrites the previous handler.
 """,
             example = "(register-tag \"date\" my-ns/parse-date)\n  ; later: #date \"2026-04-20\" =&gt; (my-ns/parse-date \"2026-04-20\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/reader.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reader.phel#L19",
                 docs = "",
             ),
         ),
@@ -35,13 +32,10 @@ Re-registering an existing tag overwrites the previous handler.
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = """
-Returns a sorted vector of the currently registered reader tag<br />
-  names.
-""",
+            summary = "Returns a sorted vector of the currently registered reader tag names.",
             example = "(registered-tags) ; =&gt; [\"inst\" \"regex\" \"uuid\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/reader.phel#L50",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reader.phel#L45",
                 docs = "",
             ),
         ),
@@ -60,7 +54,7 @@ Returns true if a handler is registered for reader tag <code>tag-name</code>.
 """,
             example = "(tag-registered? \"inst\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/reader.phel#L33",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reader.phel#L30",
                 docs = "",
             ),
         ),
@@ -75,13 +69,11 @@ Returns true if a handler is registered for reader tag <code>tag-name</code>.
         ),
         documentation = DocumentationInfo(
             summary = """
-Removes any handler registered for reader tag <code>tag-name</code>. Built-in<br />
-  tags can be unregistered but are re-installed on the next reader<br />
-  bootstrap.
+Removes any handler registered for reader tag <code>tag-name</code>. Built-in tags can be unregistered but are re-installed on the next reader bootstrap.
 """,
             example = "(unregister-tag \"date\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/reader.phel#L40",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reader.phel#L37",
                 docs = "",
             ),
         ),

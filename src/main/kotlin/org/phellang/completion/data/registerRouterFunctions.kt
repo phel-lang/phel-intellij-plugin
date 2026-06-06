@@ -15,7 +15,7 @@ internal fun registerRouterFunctions(): List<PhelFunction> = listOf(
             summary = "Creates a new CompiledSymfonyRouter struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L221",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L219",
                 docs = "",
             ),
         ),
@@ -34,7 +34,7 @@ Checks if <code>x</code> is an instance of the CompiledSymfonyRouter struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L221",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L219",
                 docs = "",
             ),
         ),
@@ -51,7 +51,7 @@ Checks if <code>x</code> is an instance of the CompiledSymfonyRouter struct.
             summary = "Creates a new SymfonyRouter struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L179",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L177",
                 docs = "",
             ),
         ),
@@ -70,7 +70,7 @@ Checks if <code>x</code> is an instance of the SymfonyRouter struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L179",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L177",
                 docs = "",
             ),
         ),
@@ -85,17 +85,12 @@ Checks if <code>x</code> is an instance of the SymfonyRouter struct.
         ),
         documentation = DocumentationInfo(
             summary = """
-Like <code>router</code> but performs Symfony's route compilation at macro-expansion<br />
-  time. The resulting router uses Symfony's <code>CompiledUrlMatcher</code>/<code>Generator</code><br />
-  which are ~3x faster than their dynamic counterparts for large route<br />
-  tables.<br /><br />
-Because compilation runs during macro expansion, <code>raw-routes</code> must be a<br />
-  literal vector at the call site — it cannot be built from runtime values.<br />
-  Use <code>router</code> if your routes are dynamic.
+Like <code>router</code> but performs Symfony's route compilation at macro-expansion time. The resulting router uses Symfony's <code>CompiledUrlMatcher</code>/<code>Generator</code> which are ~3x faster than their dynamic counterparts for large route tables.<br /><br />
+Because compilation runs during macro expansion, <code>raw-routes</code> must be a literal vector at the call site — it cannot be built from runtime values. Use <code>router</code> if your routes are dynamic.
 """,
             example = "(compiled-router [[\"/ping\" {:get {:handler pong}}]])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L231",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L229",
                 docs = "",
             ),
         ),
@@ -118,7 +113,7 @@ Parent paths are concatenated with their children's paths and parent data<br />
 """,
             example = "(flatten-routes [\"/api\" {:middleware [:auth]}\n                 [\"/ping\" {:handler :ping}]] \"\" {})\n; =&gt; [[\"/api/ping\" {:middleware [:auth] :handler :ping}]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L39",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L39",
                 docs = "",
             ),
         ),
@@ -135,7 +130,7 @@ Parent paths are concatenated with their children's paths and parent data<br />
             summary = "Generate a url for a route",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L117",
                 docs = "",
             ),
         ),
@@ -171,7 +166,7 @@ Dispatch is precompiled at handler construction time, so per-request work<br />
 """,
             example = "(handler (router [[\"/ping\" {:get {:handler pong}}]])\n         {:middleware [logging-mw]\n          :not-found  (fn [_] {:status 404 :body \"nope\"})})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L260",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L253",
                 docs = "",
             ),
         ),
@@ -188,7 +183,7 @@ Dispatch is precompiled at handler construction time, so per-request work<br />
             summary = "Matches a route given a route name. Returns nil if route can't be found.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L117",
                 docs = "",
             ),
         ),
@@ -205,7 +200,7 @@ Dispatch is precompiled at handler construction time, so per-request work<br />
             summary = "Matches a route given a path. Returns nil if path doesn't match.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L117",
                 docs = "",
             ),
         ),
@@ -234,7 +229,7 @@ Routes are described as <code>[path data children*]</code> where <code>data</cod
 """,
             example = "(router [[\"/ping\" {:get {:handler pong}}]])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L195",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L193",
                 docs = "",
             ),
         ),
@@ -251,7 +246,7 @@ Routes are described as <code>[path data children*]</code> where <code>data</cod
             summary = "Returns all registered routes as a vector of [path data] tuples.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/router.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L117",
                 docs = "",
             ),
         ),

@@ -15,7 +15,7 @@ internal fun registerPprintFunctions(): List<PhelFunction> = listOf(
             summary = "Pretty-print a data structure to stdout with line breaks and indentation.",
             example = "(pprint {:a [1 2 3] :b {:c 4 :d 5}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/pprint.phel#L92",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/pprint.phel#L91",
                 docs = "",
             ),
         ),
@@ -32,7 +32,7 @@ internal fun registerPprintFunctions(): List<PhelFunction> = listOf(
             summary = "Pretty-print a data structure to a string with line breaks and indentation.",
             example = "(pprint-str {:a [1 2 3] :b {:c 4 :d 5}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/pprint.phel#L83",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/pprint.phel#L82",
                 docs = "",
             ),
         ),

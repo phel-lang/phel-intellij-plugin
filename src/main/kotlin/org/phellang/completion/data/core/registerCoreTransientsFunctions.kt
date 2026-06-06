@@ -26,9 +26,9 @@ Associates one or more key-value pairs with a transient collection,<br />
    <code>InvalidArgumentException</code> when <code>tcoll</code> is not a supported transient<br />
    collection. Matches Clojure's <code>assoc!</code> semantics.
 """,
-            example = "(persistent! (assoc! (transient {}) :a 1 :b 2)) ; =&gt; {:a 1 :b 2}",
+            example = "(persistent! (assoc! (transient {}) :a 1 :b 2)) ; =&gt; {:a 1, :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L114",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transients.phel#L103",
                 docs = "",
             ),
         ),
@@ -43,20 +43,11 @@ Associates one or more key-value pairs with a transient collection,<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Adds <code>value</code> to the transient collection <code>tcoll</code>, mutating it in place,<br />
-   and returns <code>tcoll</code>. The 'addition' may happen at different 'places'<br />
-   depending on the concrete transient type: transient vectors append at<br />
-   the tail, transient hash-sets add the element (no-op if already<br />
-   present), and transient hash-maps treat <code>value</code> as a <code>[key value]</code><br />
-   pair (or an associative collection of entries).<br />
-   With zero arguments returns a new empty transient vector. With one<br />
-   argument returns <code>tcoll</code> unchanged. Variadic forms reduce <code>conj!</code> over<br />
-   the remaining values. Raises <code>InvalidArgumentException</code> when <code>tcoll</code><br />
-   is not a transient collection. Matches Clojure's <code>conj!</code> semantics.
+Adds <code>value</code> to the transient collection <code>tcoll</code>, mutating it in place, and returns <code>tcoll</code>. The 'addition' may happen at different 'places' depending on the concrete transient type: transient vectors append at the tail, transient hash-sets add the element (no-op if already present), and transient hash-maps treat <code>value</code> as a <code>[key value]</code> pair (or an associative collection of entries). With zero arguments returns a new empty transient vector. With one argument returns <code>tcoll</code> unchanged. Variadic forms reduce <code>conj!</code> over the remaining values. Raises <code>InvalidArgumentException</code> when <code>tcoll</code> is not a transient collection. Matches Clojure's <code>conj!</code> semantics.
 """,
             example = "(persistent (conj! (transient [1 2]) 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L82",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transients.phel#L80",
                 docs = "",
             ),
         ),
@@ -71,13 +62,11 @@ Adds <code>value</code> to the transient collection <code>tcoll</code>, mutating
         ),
         documentation = DocumentationInfo(
             summary = """
-Removes one or more elements from a transient set, mutating it in place.<br />
-   Raises <code>InvalidArgumentException</code> when <code>tcoll</code> is not a transient set.<br />
-   Matches Clojure's <code>disj!</code> semantics.
+Removes one or more elements from a transient set, mutating it in place. Raises <code>InvalidArgumentException</code> when <code>tcoll</code> is not a transient set. Matches Clojure's <code>disj!</code> semantics.
 """,
             example = "(persistent! (disj! (transient #{1 2 3}) 2)) ; =&gt; #{1 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L166",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transients.phel#L153",
                 docs = "",
             ),
         ),
@@ -92,13 +81,11 @@ Removes one or more elements from a transient set, mutating it in place.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Dissociates one or more keys from a transient map, mutating it in place.<br />
-   Raises <code>InvalidArgumentException</code> when <code>tcoll</code> is not a transient map.<br />
-   Matches Clojure's <code>dissoc!</code> semantics.
+Dissociates one or more keys from a transient map, mutating it in place. Raises <code>InvalidArgumentException</code> when <code>tcoll</code> is not a transient map. Matches Clojure's <code>dissoc!</code> semantics.
 """,
             example = "(persistent! (dissoc! (transient {:a 1 :b 2}) :a)) ; =&gt; {:b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L145",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transients.phel#L134",
                 docs = "",
             ),
         ),
@@ -115,7 +102,7 @@ Dissociates one or more keys from a transient map, mutating it in place.<br />
             summary = "Converts a transient collection back to a persistent collection.",
             example = "(def t (transient {}))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L28",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transients.phel#L27",
                 docs = "",
             ),
         ),
@@ -130,12 +117,11 @@ Dissociates one or more keys from a transient map, mutating it in place.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Converts a transient collection back to a persistent collection.<br />
-   Alias for <code>persistent</code>, matching Clojure's <code>persistent!</code> naming.
+Converts a transient collection back to a persistent collection. Alias for <code>persistent</code>, matching Clojure's <code>persistent!</code> naming.
 """,
             example = "(persistent! (conj! (transient []) 1 2 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L35",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transients.phel#L34",
                 docs = "",
             ),
         ),
@@ -150,13 +136,11 @@ Converts a transient collection back to a persistent collection.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Removes the last element from a transient vector, mutating it in place.<br />
-   Raises <code>InvalidArgumentException</code> when <code>tcoll</code> is not a transient vector.<br />
-   Matches Clojure's <code>pop!</code> semantics.
+Removes the last element from a transient vector, mutating it in place. Raises <code>InvalidArgumentException</code> when <code>tcoll</code> is not a transient vector. Matches Clojure's <code>pop!</code> semantics.
 """,
             example = "(persistent! (pop! (transient [1 2 3]))) ; =&gt; [1 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L177",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transients.phel#L162",
                 docs = "",
             ),
         ),
@@ -172,12 +156,11 @@ Removes the last element from a transient vector, mutating it in place.<br />
         documentation = DocumentationInfo(
             summary = """
 Converts a persistent collection to a transient collection for efficient updates.<br /><br />
-Transient collections provide faster performance for multiple sequential updates.<br />
-  Use <code>persistent</code> to convert back.
+Transient collections provide faster performance for multiple sequential updates. Use <code>persistent</code> to convert back.
 """,
             example = "(def t (transient []))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/transients.phel#L18",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transients.phel#L18",
                 docs = "",
             ),
         ),

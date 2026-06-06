@@ -23,7 +23,7 @@ Removes every instrumentation entry. Returns <code>nil</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L165",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L160",
                 docs = "",
             ),
         ),
@@ -43,7 +43,7 @@ Returns <code>true</code> if <code>schema</code> is a function schema of the sha
 """,
             example = "(function-schema? [:=&gt; [:int] :int])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L62",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L60",
                 docs = "",
             ),
         ),
@@ -58,13 +58,11 @@ Returns <code>true</code> if <code>schema</code> is a function schema of the sha
         ),
         documentation = DocumentationInfo(
             summary = """
-Registers <code>f</code> under <code>name</code> (any key) wrapped with <code>schema</code>. Returns<br />
-  the wrapped fn. Subsequent calls to <code>unstrument!</code> with the same name<br />
-  can restore the original via <code>(instrumented-original name)</code>.
+Registers <code>f</code> under <code>name</code> (any key) wrapped with <code>schema</code>. Returns the wrapped fn. Subsequent calls to <code>unstrument!</code> with the same name can restore the original via <code>(instrumented-original name)</code>.
 """,
             example = "(def add* (instrument! :add add [:=&gt; [:int :int] :int]))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L130",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L128",
                 docs = "",
             ),
         ),
@@ -84,7 +82,7 @@ Returns the original, unwrapped function associated with <code>name</code>, or<b
 """,
             example = "(instrumented-original :add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L157",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L152",
                 docs = "",
             ),
         ),
@@ -103,7 +101,7 @@ Returns <code>true</code> if <code>name</code> currently has an instrumentation 
 """,
             example = "(instrumented? :add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L151",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L146",
                 docs = "",
             ),
         ),
@@ -122,7 +120,7 @@ Returns <code>true</code> when runtime validation is enabled.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L27",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L26",
                 docs = "",
             ),
         ),
@@ -142,7 +140,7 @@ Returns <code>true</code> if <code>x</code> has the shape of a schema value (a k
 """,
             example = "(schema? :int) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L51",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L49",
                 docs = "",
             ),
         ),
@@ -162,7 +160,7 @@ Enables (<code>true</code>) or disables (<code>false</code>) runtime validation 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L32",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L31",
                 docs = "",
             ),
         ),
@@ -177,12 +175,11 @@ Enables (<code>true</code>) or disables (<code>false</code>) runtime validation 
         ),
         documentation = DocumentationInfo(
             summary = """
-Unregisters the instrumentation bound to <code>name</code> and returns the<br />
-  original (unwrapped) function if present, otherwise <code>nil</code>.
+Unregisters the instrumentation bound to <code>name</code> and returns the original (unwrapped) function if present, otherwise <code>nil</code>.
 """,
             example = "(unstrument! :add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L141",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L137",
                 docs = "",
             ),
         ),
@@ -197,12 +194,11 @@ Unregisters the instrumentation bound to <code>name</code> and returns the<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Runs thunk <code>f</code> with runtime validation set to <code>enabled?</code>, restoring<br />
-  the previous value even if <code>f</code> throws.
+Runs thunk <code>f</code> with runtime validation set to <code>enabled?</code>, restoring the previous value even if <code>f</code> throws.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L38",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L37",
                 docs = "",
             ),
         ),
@@ -222,7 +218,7 @@ Convenience: accepts a <code>[:=> args-schema return-schema]</code> schema vecto
 """,
             example = "(wrap-with-function-schema add [:=&gt; [:int :int] :int])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L116",
                 docs = "",
             ),
         ),
@@ -245,7 +241,7 @@ Wraps <code>f</code> so each call validates its arguments against <code>arg-sche
 """,
             example = "(wrap-with-schema add [:int :int] :int)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/instrument.phel#L100",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/instrument.phel#L98",
                 docs = "",
             ),
         ),

@@ -19,14 +19,11 @@ internal fun registerCoreIoFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Threads the expr through the forms. Inserts <code>x</code> as the second item<br />
-  in the first form, making a list of it if it is not a list already.<br />
-  If there are more forms, insert the first form as the second item in<br />
-  the second form, etc.
+Threads the expr through the forms. Inserts <code>x</code> as the second item in the first form, making a list of it if it is not a list already. If there are more forms, insert the first form as the second item in the second form, etc.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L184",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L180",
                 docs = "",
             ),
         ),
@@ -41,14 +38,11 @@ Threads the expr through the forms. Inserts <code>x</code> as the second item<br
         ),
         documentation = DocumentationInfo(
             summary = """
-Threads the expr through the forms. Inserts <code>x</code> as the<br />
-  last item in the first form, making a list of it if it is not a<br />
-  list already. If there are more forms, insert the first form as the<br />
-  last item in the second form, etc.
+Threads the expr through the forms. Inserts <code>x</code> as the last item in the first form, making a list of it if it is not a list already. If there are more forms, insert the first form as the last item in the second form, etc.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L200",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L193",
                 docs = "",
             ),
         ),
@@ -63,13 +57,11 @@ Threads the expr through the forms. Inserts <code>x</code> as the<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Binds <code>name</code> to <code>expr</code>, evaluates the first form in the lexical context<br />
-  of that binding, then binds name to that result, repeating for each<br />
-  successive form, returning the result of the last form.
+Binds <code>name</code> to <code>expr</code>, evaluates the first form in the lexical context of that binding, then binds name to that result, repeating for each successive form, returning the result of the last form.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L264",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L254",
                 docs = "",
             ),
         ),
@@ -95,7 +87,7 @@ Throws at runtime if any var in the bindings vector is not<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L405",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L380",
                 docs = "",
             ),
         ),
@@ -110,14 +102,11 @@ Throws at runtime if any var in the bindings vector is not<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via <code>-></code>)<br />
-  through each form for which the corresponding test expression is true.<br />
-  Note that, unlike <code>cond</code> branching, <code>cond-></code> threading does not short-circuit<br />
-  after the first true test expression.
+Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via <code>-></code>) through each form for which the corresponding test expression is true. Note that, unlike <code>cond</code> branching, <code>cond-></code> threading does not short-circuit after the first true test expression.
 """,
             example = "(cond-&gt; 1 true inc false (* 42) true (* 3)) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L288",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L273",
                 docs = "",
             ),
         ),
@@ -132,14 +121,11 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
         ),
         documentation = DocumentationInfo(
             summary = """
-Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via <code>->></code>)<br />
-  through each form for which the corresponding test expression is true.<br />
-  Note that, unlike <code>cond</code> branching, <code>cond->></code> threading does not short-circuit<br />
-  after the first true test expression.
+Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via <code>->></code>) through each form for which the corresponding test expression is true. Note that, unlike <code>cond</code> branching, <code>cond->></code> threading does not short-circuit after the first true test expression.
 """,
-            example = "(cond-&gt;&gt; [1 2 3] true (map inc) false (filter odd?)) ; =&gt; [2 3 4]",
+            example = "(cond-&gt;&gt; [1 2 3] true (map inc) false (filter odd?)) ; =&gt; @[2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L305",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L287",
                 docs = "",
             ),
         ),
@@ -156,7 +142,7 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
             summary = "Returns a lazy sequence of rows from a CSV file.",
             example = "(take 10 (csv-seq \"data.csv\")) ; =&gt; [[\"col1\" \"col2\"] [\"val1\" \"val2\"] ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L163",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L159",
                 docs = "",
             ),
         ),
@@ -171,13 +157,11 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
         ),
         documentation = DocumentationInfo(
             summary = """
-Evaluates x then calls all of the methods and functions with the<br />
-  value of x supplied at the front of the given arguments. The forms<br />
-  are evaluated in order. Returns x.
+Evaluates x then calls all of the methods and functions with the value of x supplied at the front of the given arguments. The forms are evaluated in order. Returns x.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L274",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L261",
                 docs = "",
             ),
         ),
@@ -194,7 +178,7 @@ Evaluates x then calls all of the methods and functions with the<br />
             summary = "Returns a lazy sequence of all files and directories in a directory tree.",
             example = "(filter #(php/str_ends_with % \".phel\") (file-seq \"src/\")) ; =&gt; [\"src/file1.phel\" \"src/file2.phel\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L137",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L133",
                 docs = "",
             ),
         ),
@@ -213,7 +197,7 @@ Returns a formatted string. See PHP's <a href="https://www.php.net/manual/en/fun
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L57",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L56",
                 docs = "",
             ),
         ),
@@ -230,7 +214,7 @@ Returns a formatted string. See PHP's <a href="https://www.php.net/manual/en/fun
             summary = "Returns a lazy sequence of lines from a file.",
             example = "(take 10 (line-seq \"large-file.txt\")) ; =&gt; [\"line1\" \"line2\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L125",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L121",
                 docs = "",
             ),
         ),
@@ -247,7 +231,7 @@ Returns a formatted string. See PHP's <a href="https://www.php.net/manual/en/fun
             summary = "Prints the given values to the default output stream. Returns nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L44",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L43",
                 docs = "",
             ),
         ),
@@ -266,7 +250,7 @@ Same as print. But instead of writing it to an output stream, the resulting stri
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L29",
                 docs = "",
             ),
         ),
@@ -285,7 +269,7 @@ Output a formatted string. See PHP's <a href="https://www.php.net/manual/en/func
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L62",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L61",
                 docs = "",
             ),
         ),
@@ -302,7 +286,7 @@ Output a formatted string. See PHP's <a href="https://www.php.net/manual/en/func
             summary = "Same as print followed by a newline.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L50",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L49",
                 docs = "",
             ),
         ),
@@ -317,12 +301,11 @@ Output a formatted string. See PHP's <a href="https://www.php.net/manual/en/func
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the first match of pattern in string, or nil if no match.<br />
-  If the pattern has groups, returns a vector of [full-match group1 group2 ...].
+Returns the first match of pattern in string, or nil if no match. If the pattern has groups, returns a vector of [full-match group1 group2 ...].
 """,
             example = "(re-find #\"\\d+\" \"abc123def\") ; =&gt; \"123\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L351",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L329",
                 docs = "",
             ),
         ),
@@ -337,13 +320,11 @@ Returns the first match of pattern in string, or nil if no match.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the match, if any, of string to pattern. If the pattern has groups,<br />
-  returns a vector of [full-match group1 group2 ...]. Returns nil if no match.<br />
-  Unlike re-find, the entire string must match.
+Returns the match, if any, of string to pattern. If the pattern has groups, returns a vector of [full-match group1 group2 ...]. Returns nil if no match. Unlike re-find, the entire string must match.
 """,
             example = "(re-matches #\"(\\d+)-(\\d+)\" \"12-34\") ; =&gt; [\"12-34\" \"12\" \"34\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L365",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L342",
                 docs = "",
             ),
         ),
@@ -358,12 +339,11 @@ Returns the match, if any, of string to pattern. If the pattern has groups,<br /
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already delimited,<br />
-  returns it as-is. Otherwise wraps in <code>/</code> delimiters.
+Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already delimited, returns it as-is. Otherwise wraps in <code>/</code> delimiters.
 """,
             example = "(re-pattern \"\\\\d+\") ; =&gt; \"/\\\\d+/\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L326",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L305",
                 docs = "",
             ),
         ),
@@ -380,7 +360,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Returns a sequence of successive matches of pattern in string.",
             example = "(re-seq #\"\\d+\" \"a1b2c3\") ; =&gt; [\"1\" \"2\" \"3\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L339",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L317",
                 docs = "",
             ),
         ),
@@ -397,7 +377,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Returns a lazy sequence of byte chunks from a file.",
             example = "(take 5 (read-file-lazy \"large-file.bin\" 1024)) ; =&gt; [\"chunk1\" \"chunk2\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L149",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L145",
                 docs = "",
             ),
         ),
@@ -414,7 +394,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Reads entire file or URL into a string.",
             example = "(slurp \"file.txt\") ; =&gt; \"file contents\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L81",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L79",
                 docs = "",
             ),
         ),
@@ -433,7 +413,7 @@ Threads <code>x</code> through the forms like <code>-></code> but stops when a f
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L216",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L206",
                 docs = "",
             ),
         ),
@@ -452,7 +432,7 @@ Threads <code>x</code> through the forms like <code>->></code> but stops when a 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L240",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L230",
                 docs = "",
             ),
         ),
@@ -462,19 +442,17 @@ Threads <code>x</code> through the forms like <code>->></code> but stops when a 
         name = "spit",
         signature = "(spit filename data & [opts])",
         completion = CompletionInfo(
-            tailText = "Writes data to file, returning number of bytest that were written or nil on failure",
+            tailText = "Writes data to file, returning number of bytes that were written or nil on failure",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Writes data to file, returning number of bytest that were written or <code>nil</code><br />
-  on failure. Accepts <code>opts</code> map for overriding default PHP file_put_contents<br />
-  arguments, as example to append to file use <code>{:flags php/FILE_APPEND}</code>.<br /><br />
+Writes data to file, returning number of bytes that were written or <code>nil</code> on failure. Accepts <code>opts</code> map for overriding default PHP file_put_contents arguments, as example to append to file use <code>{:flags php/FILE_APPEND}</code>.<br /><br />
 See PHP's <a href="https://www.php.net/manual/en/function.file-put-contents.php">file_put_contents</a> for more information.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L109",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L107",
                 docs = "",
             ),
         ),
@@ -489,13 +467,11 @@ See PHP's <a href="https://www.php.net/manual/en/function.file-put-contents.php"
         ),
         documentation = DocumentationInfo(
             summary = """
-Like <code>binding</code> but takes a map of <code>Var -> value</code> instead of a binding<br />
-  vector. Same dynamic-only enforcement: throws when any key resolves<br />
-  to a non-dynamic var.
+Like <code>binding</code> but takes a map of <code>Var -> value</code> instead of a binding vector. Same dynamic-only enforcement: throws when any key resolves to a non-dynamic var.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L432",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L407",
                 docs = "",
             ),
         ),
@@ -510,12 +486,11 @@ Like <code>binding</code> but takes a map of <code>Var -> value</code> instead o
         ),
         documentation = DocumentationInfo(
             summary = """
-Everything that is printed inside the body will be stored in a buffer.<br />
-   The result of the buffer is returned.
+Everything that is printed inside the body will be stored in a buffer. The result of the buffer is returned.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L18",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L18",
                 docs = "",
             ),
         ),
@@ -541,7 +516,7 @@ Accepts any var, dynamic or not. The previous root values are<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/io.phel#L419",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/io.phel#L394",
                 docs = "",
             ),
         ),

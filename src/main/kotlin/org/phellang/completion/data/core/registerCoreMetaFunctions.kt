@@ -19,13 +19,11 @@ internal fun registerCoreMetaFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Gets the metadata attached to a value.<br />
-  For a quoted symbol (<code>(meta 'foo)</code>) the definition metadata registered via <code>def</code> is returned.<br />
-  For any other expression the value is looked up at runtime and its <code>MetaInterface</code> metadata returned.
+Gets the metadata attached to a value. For a quoted symbol (<code>(meta 'foo)</code>) the definition metadata registered via <code>def</code> is returned. For any other expression the value is looked up at runtime and its <code>MetaInterface</code> metadata returned.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/meta.phel#L23",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/meta.phel#L23",
                 docs = "",
             ),
         ),
@@ -43,7 +41,7 @@ Gets the metadata attached to a value.<br />
             example = null,
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "with-meta"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/meta.phel#L70",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/meta.phel#L68",
                 docs = "",
             ),
         ),
@@ -60,7 +58,7 @@ Gets the metadata attached to a value.<br />
             summary = "Returns an object with (apply f (meta obj) args) as its new metadata.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/meta.phel#L77",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/meta.phel#L75",
                 docs = "",
             ),
         ),
@@ -79,7 +77,7 @@ Returns <code>obj</code> with the given metadata <code>meta</code> attached.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/meta.phel#L64",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/meta.phel#L62",
                 docs = "",
             ),
         ),

@@ -21,7 +21,7 @@ internal fun registerCoreBooleansFunctions(): List<PhelFunction> = listOf(
             summary = "Checks if each argument is strictly less than the following argument.",
             example = "(&lt; 1 2 3 4) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L199",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L196",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ Checks if each argument is less than or equal to the following argument. Returns
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L210",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L207",
                 docs = "",
             ),
         ),
@@ -55,13 +55,11 @@ Checks if each argument is less than or equal to the following argument. Returns
         ),
         documentation = DocumentationInfo(
             summary = """
-Alias for the spaceship PHP operator in ascending order. Returns an int.<br />
-  Dispatches on <code>Ratio</code> and <code>BigInt</code> so numeric ordering stays correct<br />
-  for those types.
+Alias for the spaceship PHP operator in ascending order. Returns an int. Dispatches on <code>Ratio</code> and <code>BigInt</code> so numeric ordering stays correct for those types.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L241",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L238",
                 docs = "",
             ),
         ),
@@ -78,7 +76,7 @@ Alias for the spaceship PHP operator in ascending order. Returns an int.<br />
             summary = "Checks if all values are equal (value equality, not identity).",
             example = "(= [1 2 3] [1 2 3]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L104",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L104",
                 docs = "",
             ),
         ),
@@ -100,7 +98,7 @@ Numeric equality comparison. Returns true if all arguments have the same<br />
 """,
             example = "(== 1 1.0) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L131",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L131",
                 docs = "",
             ),
         ),
@@ -117,7 +115,7 @@ Numeric equality comparison. Returns true if all arguments have the same<br />
             summary = "Checks if each argument is strictly greater than the following argument.",
             example = "(&gt; 4 3 2 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L220",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L217",
                 docs = "",
             ),
         ),
@@ -136,7 +134,7 @@ Checks if each argument is greater than or equal to the following argument. Retu
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L231",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L228",
                 docs = "",
             ),
         ),
@@ -153,7 +151,7 @@ Checks if each argument is greater than or equal to the following argument. Retu
             summary = "Alias for the spaceship PHP operator in descending order. Returns an int.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L250",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L245",
                 docs = "",
             ),
         ),
@@ -172,7 +170,7 @@ Returns true if predicate is true for every element in collection, false otherwi
 """,
             example = "(all? even? [2 4 6 8]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L259",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L254",
                 docs = "",
             ),
         ),
@@ -191,7 +189,7 @@ Evaluates expressions left to right, returning the first falsy value or the last
 """,
             example = "(and true 1 \"hello\") ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L49",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L49",
                 docs = "",
             ),
         ),
@@ -209,13 +207,14 @@ Evaluates expressions left to right, returning the first falsy value or the last
 Compares <code>x</code> and <code>y</code>, returning a negative<br />
   integer, zero, or a positive integer when <code>x</code> is less than, equal to, or<br />
   greater than <code>y</code>.<br /><br />
-<code>nil</code> is less than every non-nil value and equal to itself. Throws<br />
-  <code>InvalidArgumentException</code> when <code>x</code> and <code>y</code> come from mutually incomparable<br />
-  categories (e.g. <code>(compare 1 [])</code>).
+<code>nil</code> is less than every non-nil value and equal to itself. Numbers are<br />
+  compared across the numeric tower (int, float, <code>Ratio</code>, <code>BigInt</code>,<br />
+  <code>BigDecimal</code>). Throws <code>InvalidArgumentException</code> when <code>x</code> and <code>y</code> come from<br />
+  mutually incomparable categories (e.g. <code>(compare 1 [])</code>).
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L435",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L425",
                 docs = "",
             ),
         ),
@@ -232,7 +231,7 @@ Compares <code>x</code> and <code>y</code>, returning a negative<br />
             summary = "Returns true if key is present in collection (checks keys/indices, not values).",
             example = "(contains? [10 20 30] 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L345",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L337",
                 docs = "",
             ),
         ),
@@ -247,12 +246,11 @@ Compares <code>x</code> and <code>y</code>, returning a negative<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if predicate is true for every element in collection, false otherwise.<br />
-  Alias for <code>all?</code>.
+Returns true if predicate is true for every element in collection, false otherwise. Alias for <code>all?</code>.
 """,
             example = "(every? even? [2 4 6 8]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L268",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L263",
                 docs = "",
             ),
         ),
@@ -269,7 +267,7 @@ Returns true if predicate is true for every element in collection, false otherwi
             summary = "Checks if value is exactly false (not just falsy).",
             example = "(false? nil) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L327",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L319",
                 docs = "",
             ),
         ),
@@ -289,7 +287,7 @@ Checks if all values are identical. Same as <code>a === b</code> in PHP.
             example = null,
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "identical?"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L97",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L97",
                 docs = "",
             ),
         ),
@@ -308,7 +306,7 @@ Checks if all values are identical. Same as <code>a === b</code> in PHP.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L87",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L87",
                 docs = "",
             ),
         ),
@@ -331,7 +329,7 @@ Arity-2 builds a namespaced keyword from the namespace and name parts; returns<b
 """,
             example = "(keyword \"name\") ; =&gt; :name\n(keyword :abc) ; =&gt; :abc\n(keyword \"ns\" \"name\") ; =&gt; :ns/name",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L60",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L60",
                 docs = "",
             ),
         ),
@@ -348,7 +346,7 @@ Arity-2 builds a namespaced keyword from the namespace and name parts; returns<b
             summary = "Returns true if value is nil, false otherwise.",
             example = "(nil? (get {:a 1} :b)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L333",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L325",
                 docs = "",
             ),
         ),
@@ -365,7 +363,7 @@ Arity-2 builds a namespaced keyword from the namespace and name parts; returns<b
             summary = "Returns true if value is falsy (nil or false), false otherwise.",
             example = "(not nil) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L146",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L146",
                 docs = "",
             ),
         ),
@@ -380,12 +378,11 @@ Arity-2 builds a namespaced keyword from the namespace and name parts; returns<b
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if <code>(pred x)</code> is logical false for every <code>x</code> in <code>coll</code><br />
-   or if <code>coll</code> is empty. Otherwise returns false.
+Returns true if <code>(pred x)</code> is logical false for every <code>x</code> in <code>coll</code> or if <code>coll</code> is empty. Otherwise returns false.
 """,
-            example = null,
+            example = "(not-any? even? [1 3 5]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L299",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L290",
                 docs = "",
             ),
         ),
@@ -400,12 +397,11 @@ Returns true if <code>(pred x)</code> is logical false for every <code>x</code> 
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns false if <code>(pred x)</code> is logical true for every <code>x</code> in collection <code>coll</code><br />
-   or if <code>coll</code> is empty. Otherwise returns true.
+Returns false if <code>(pred x)</code> is logical true for every <code>x</code> in collection <code>coll</code> or if <code>coll</code> is empty. Otherwise returns true.
 """,
-            example = null,
+            example = "(not-every? even? [2 3 4]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L279",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L270",
                 docs = "",
             ),
         ),
@@ -424,7 +420,7 @@ Checks if all values are unequal. Same as <code>a != b</code> in PHP.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L152",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L152",
                 docs = "",
             ),
         ),
@@ -443,7 +439,7 @@ Evaluates expressions left to right, returning the first truthy value or the las
 """,
             example = "(or false nil 42 100) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L38",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L38",
                 docs = "",
             ),
         ),
@@ -462,7 +458,7 @@ Returns the first truthy value of applying predicate to elements, or nil if none
 """,
             example = "(some #(when (&gt; % 10) %) [5 15 8]) ; =&gt; 15",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L305",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L297",
                 docs = "",
             ),
         ),
@@ -477,12 +473,11 @@ Returns the first truthy value of applying predicate to elements, or nil if none
         ),
         documentation = DocumentationInfo(
             summary = """
-With 1 arg, returns true if <code>x</code> is not nil (Clojure semantics).<br />
-   With 2 args, returns true if <code>pred</code> is true for at least one element in <code>coll</code>.
+With 1 arg, returns true if <code>x</code> is not nil (Clojure semantics). With 2 args, returns true if <code>pred</code> is true for at least one element in <code>coll</code>.
 """,
             example = "(some? 1) ; =&gt; true\n(some? even? [1 3 5 6 7]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L288",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L280",
                 docs = "",
             ),
         ),
@@ -500,7 +495,7 @@ With 1 arg, returns true if <code>x</code> is not nil (Clojure semantics).<br />
             example = null,
             deprecation = DeprecationInfo(version = "Use phel\\string\\contains?"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L339",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L331",
                 docs = "",
             ),
         ),
@@ -517,7 +512,7 @@ With 1 arg, returns true if <code>x</code> is not nil (Clojure semantics).<br />
             summary = "Checks if value is exactly true (not just truthy).",
             example = "(true? 1) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L316",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L308",
                 docs = "",
             ),
         ),
@@ -536,7 +531,7 @@ Checks if <code>x</code> is truthy. Same as <code>x == true</code> in PHP.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/core/booleans.phel#L322",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/booleans.phel#L314",
                 docs = "",
             ),
         ),

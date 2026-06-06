@@ -21,7 +21,7 @@ internal fun registerTestFunctions(): List<PhelFunction> = listOf(
             summary = "Stack of testing context strings, most recent first.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L21",
                 docs = "",
             ),
         ),
@@ -36,12 +36,11 @@ internal fun registerTestFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Appends <code>reporter-fn</code> to the active reporter set. Returns the updated<br />
-  reporter list.
+Appends <code>reporter-fn</code> to the active reporter set. Returns the updated reporter list.
 """,
             example = "(add-reporter! tap-reporter)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L53",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L52",
                 docs = "",
             ),
         ),
@@ -65,7 +64,7 @@ Checks multiple assertions with a template expression.<br />
 """,
             example = "(are [x y] (= x y)\n  2 (+ 1 1)\n  4 (* 2 2))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L446",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L427",
                 docs = "",
             ),
         ),
@@ -73,7 +72,7 @@ Checks multiple assertions with a template expression.<br />
     PhelFunction(
         namespace = "test",
         name = "test/assert-expr",
-        signature = "(assert-expr & __phel_4361)",
+        signature = "(assert-expr & __phel_4387)",
         completion = CompletionInfo(
             tailText = "",
             priority = PhelCompletionPriority.TEST_FUNCTIONS,
@@ -82,7 +81,7 @@ Checks multiple assertions with a template expression.<br />
             summary = "",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L330",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L322",
                 docs = "",
             ),
         ),
@@ -99,7 +98,7 @@ Checks multiple assertions with a template expression.<br />
             summary = "Removes every registered reporter. Returns an empty vector.",
             example = "(clear-reporters!)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L61",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L59",
                 docs = "",
             ),
         ),
@@ -115,14 +114,11 @@ Checks multiple assertions with a template expression.<br />
         documentation = DocumentationInfo(
             summary = """
 Defines a test function.<br /><br />
-Metadata attached to <code>test-name</code> is forwarded to the defined function<br />
-  so selectors can inspect it at runtime. <code>^:integration</code> (shorthand<br />
-  for <code>{:integration true}</code>) and <code>^{:tags [:integration :slow]}</code><br />
-  multi-tag maps are both honoured.
+Metadata attached to <code>test-name</code> is forwarded to the defined function so selectors can inspect it at runtime. <code>^:integration</code> (shorthand for <code>{:integration true}</code>) and <code>^{:tags [:integration :slow]}</code> multi-tag maps are both honoured.
 """,
             example = "(deftest test-add)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L391",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L383",
                 docs = "",
             ),
         ),
@@ -137,13 +133,11 @@ Metadata attached to <code>test-name</code> is forwarded to the defined function
         ),
         documentation = DocumentationInfo(
             summary = """
-Add file and line information to a test result and call report.<br />
-  If you are writing a custom assert-expr method, call this function<br />
-  to pass test results to report.
+Add file and line information to a test result and call report. If you are writing a custom assert-expr method, call this function to pass test results to report.
 """,
             example = "(do-report {:state :pass :type :any :message \"ok\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L189",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L186",
                 docs = "",
             ),
         ),
@@ -158,13 +152,11 @@ Add file and line information to a test result and call report.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the names (<code>ns/test-name</code>) of tests that failed or errored<br />
-  in the last run. Used by <code>--parallel</code> orchestration to aggregate<br />
-  last-failed lists across worker processes.
+Returns the names (<code>ns/test-name</code>) of tests that failed or errored in the last run. Used by <code>--parallel</code> orchestration to aggregate last-failed lists across worker processes.
 """,
             example = "(get-failed-tests) ; =&gt; [\"my-app/foo-test\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1484",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1426",
                 docs = "",
             ),
         ),
@@ -181,7 +173,7 @@ Returns the names (<code>ns/test-name</code>) of tests that failed or errored<br
             summary = "Returns the currently registered reporter functions as a vector.",
             example = "(get-reporters)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L68",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L66",
                 docs = "",
             ),
         ),
@@ -200,7 +192,7 @@ Returns the current test statistics as a hash-map with :failed and :counts keys.
 """,
             example = "(get-stats) ; =&gt; {:failed [] :counts {:failed 0 :error 0 :pass 0 :total 0}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1472",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1414",
                 docs = "",
             ),
         ),
@@ -217,7 +209,7 @@ Returns the current test statistics as a hash-map with :failed and :counts keys.
             summary = "Asserts that an expression is true.",
             example = "(is (= 4 (+ 2 2)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L373",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L365",
                 docs = "",
             ),
         ),
@@ -232,13 +224,11 @@ Returns the current test statistics as a hash-map with :failed and :counts keys.
         ),
         documentation = DocumentationInfo(
             summary = """
-Emits the <code>:summary</code> event to the active reporter set.<br />
-  Kept for backwards compatibility; prefer letting <code>run-tests</code> emit the<br />
-  event at the end of the run.
+Emits the <code>:summary</code> event to the active reporter set. Kept for backwards compatibility; prefer letting <code>run-tests</code> emit the event at the end of the run.
 """,
             example = "(print-summary)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1095",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1056",
                 docs = "",
             ),
         ),
@@ -253,12 +243,11 @@ Emits the <code>:summary</code> event to the active reporter set.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Registers a custom reporter function under <code>name</code> (keyword or<br />
-  keyword-castable string). Returns <code>name</code>.
+Registers a custom reporter function under <code>name</code> (keyword or keyword-castable string). Returns <code>name</code>.
 """,
             example = "(register-reporter! :my-reporter (fn [event] ...))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1062",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1024",
                 docs = "",
             ),
         ),
@@ -266,7 +255,7 @@ Registers a custom reporter function under <code>name</code> (keyword or<br />
     PhelFunction(
         namespace = "test",
         name = "test/report",
-        signature = "(report & __phel_4303)",
+        signature = "(report & __phel_4330)",
         completion = CompletionInfo(
             tailText = "Records a test-framework event and dispatches it to the active reporters",
             priority = PhelCompletionPriority.TEST_FUNCTIONS,
@@ -284,7 +273,7 @@ Records a test-framework event and dispatches it to the active<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L128",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L125",
                 docs = "",
             ),
         ),
@@ -299,12 +288,11 @@ Records a test-framework event and dispatches it to the active<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Resets the test statistics to their initial state.<br />
-  Call this before running a new batch of tests to get fresh results.
+Resets the test statistics to their initial state. Call this before running a new batch of tests to get fresh results.
 """,
             example = "(reset-stats)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1458",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1401",
                 docs = "",
             ),
         ),
@@ -319,13 +307,11 @@ Resets the test statistics to their initial state.<br />
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns the reporter function registered for <code>name</code> (keyword or<br />
-  string). Checks user-registered reporters before the built-in set.<br />
-  Returns <code>nil</code> if the name is unknown.
+Returns the reporter function registered for <code>name</code> (keyword or string). Checks user-registered reporters before the built-in set. Returns <code>nil</code> if the name is unknown.
 """,
             example = "(resolve-reporter :junit-xml)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1051",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1015",
                 docs = "",
             ),
         ),
@@ -342,7 +328,7 @@ Returns the reporter function registered for <code>name</code> (keyword or<br />
             summary = "Restores test statistics from a previously saved state.",
             example = "(restore-stats saved)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1478",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1420",
                 docs = "",
             ),
         ),
@@ -368,7 +354,7 @@ Recognized option keys include <code>:filter</code>, <code>:filters</code>, <cod
 """,
             example = "(run-tests {} 'my-app\\test)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1439",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1382",
                 docs = "",
             ),
         ),
@@ -383,12 +369,11 @@ Recognized option keys include <code>:filter</code>, <code>:filters</code>, <cod
         ),
         documentation = DocumentationInfo(
             summary = """
-Configures the output path the JUnit reporter writes to. When <code>nil</code>,<br />
-  the XML is printed to stdout.
+Configures the output path the JUnit reporter writes to. When <code>nil</code>, the XML is printed to stdout.
 """,
             example = "(set-junit-output! \"build/junit.xml\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1025",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L990",
                 docs = "",
             ),
         ),
@@ -403,12 +388,11 @@ Configures the output path the JUnit reporter writes to. When <code>nil</code>,<
         ),
         documentation = DocumentationInfo(
             summary = """
-Replaces the active reporter set with <code>reporters</code> (a sequence of<br />
-  single-argument functions). Returns the new reporter list.
+Replaces the active reporter set with <code>reporters</code> (a sequence of single-argument functions). Returns the new reporter list.
 """,
             example = "(set-reporters! [my-reporter-fn])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L45",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L45",
                 docs = "",
             ),
         ),
@@ -425,7 +409,7 @@ Replaces the active reporter set with <code>reporters</code> (a sequence of<br /
             summary = "Checks if all tests passed.",
             example = "(successful?) # =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1465",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1407",
                 docs = "",
             ),
         ),
@@ -440,12 +424,11 @@ Replaces the active reporter set with <code>reporters</code> (a sequence of<br /
         ),
         documentation = DocumentationInfo(
             summary = """
-Adds a testing context string. Used inside deftest to describe a group of assertions.<br />
-  The context string is prepended to failure messages for better diagnostics.
+Adds a testing context string. Used inside deftest to describe a group of assertions. The context string is prepended to failure messages for better diagnostics.
 """,
             example = "(deftest test-math\n  (testing \"addition\"\n    (is (= 2 (+ 1 1)))))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L411",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L400",
                 docs = "",
             ),
         ),
@@ -470,7 +453,7 @@ Calling <code>use-fixtures</code> with no fixture functions removes all fixtures
 """,
             example = "(use-fixtures :once (fn [t] (setup) (t) (teardown)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/test.phel#L1124",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/test.phel#L1083",
                 docs = "",
             ),
         ),

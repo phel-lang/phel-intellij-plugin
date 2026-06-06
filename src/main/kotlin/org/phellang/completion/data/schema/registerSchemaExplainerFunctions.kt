@@ -19,12 +19,11 @@ internal fun registerSchemaExplainerFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns <code>nil</code> if <code>value</code> conforms to <code>schema</code>, otherwise a map<br />
-  describing the violations.
+Returns <code>nil</code> if <code>value</code> conforms to <code>schema</code>, otherwise a map describing the violations.
 """,
             example = "(explain :int :oops)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/explainer.phel#L216",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/explainer.phel#L234",
                 docs = "",
             ),
         ),
@@ -39,12 +38,11 @@ Returns <code>nil</code> if <code>value</code> conforms to <code>schema</code>, 
         ),
         documentation = DocumentationInfo(
             summary = """
-Renders an explain result as a multi-line human string suitable for<br />
-  REPL or CI output. Returns <code>nil</code> for a <code>nil</code> result.
+Renders an explain result as a multi-line human string suitable for REPL or CI output. Returns <code>nil</code> for a <code>nil</code> result.
 """,
             example = "(human-readable-explain (explain :int :oops))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.41.0/src/phel/schema/explainer.phel#L237",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/schema/explainer.phel#L254",
                 docs = "",
             ),
         ),
