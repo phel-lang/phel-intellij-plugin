@@ -1,0 +1,6 @@
+name: regenerate-grammar
+description: After editing a .flex or .bnf file, regenerate the lexer/parser so generated sources under src/main/gen stay in sync.
+event: PostToolUse
+matcher: Write|Edit
+target: claude
+command: FILE=$(jq -r '.tool_input.file_path // empty'); case "$FILE" in *.flex) cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" && echo 'JFlex source changed — regenerating lexer...' >&2 && ./gradlew generatePhelLexer --quiet 2>&1 | tail -3 >&2 ;; *.bnf) cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" && echo 'BNF grammar changed — regenerating parser...' >&2 && ./gradlew generatePhelParser --quiet 2>&1 | tail -3 >&2 ;; esac; exit 0
