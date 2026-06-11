@@ -47,3 +47,15 @@ bin/
 .DS_Store
 
 .intellijPlatform
+agnostic-ai.local.yaml
+.agnostic-ai/.sync-state
+.agnostic-ai/packs/
+
+# >>> agnostic-ai (managed) >>>
+# Generated paths. Edit specs, not this block. Run `agnostic-ai sync` to refresh.
+/.agnostic-ai/.sync-state
+/.claude/
+/.codex/
+/AGENTS.md
+/CLAUDE.md
+# <<< agnostic-ai (managed) <<<
