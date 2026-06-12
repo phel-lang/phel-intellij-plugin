@@ -15,6 +15,7 @@ import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelVisitor
 
 class PhelArityMismatchInspection : LocalInspectionTool() {
@@ -24,7 +25,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
             override fun visitList(o: PhelList) {
                 val forms = o.forms
                 if (forms.isEmpty()) return
-                val head = forms[0] as? PhelSymbol ?: return
+                val head = PhelPsiUtils.asSymbol(forms[0]) ?: return
                 val name = head.text ?: return
 
                 if (name in SKIP_HEADS) return
@@ -78,7 +79,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 }
             }
             if (current is PhelList && current !== list) {
-                val head = (current.forms.firstOrNull() as? PhelSymbol)?.text
+                val head = PhelPsiUtils.asSymbol(current.forms.firstOrNull())?.text
                 if (head == "quote" || head == "var") return true
             }
             current = current.parent
@@ -95,7 +96,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
     private fun isThreadedArgList(list: PhelList): Boolean {
         val parentList = findEnclosingList(list) ?: return false
         val parentForms = parentList.forms
-        val head = (parentForms.firstOrNull() as? PhelSymbol)?.text ?: return false
+        val head = PhelPsiUtils.asSymbol(parentForms.firstOrNull())?.text ?: return false
         if (head !in THREADING_HEADS) return false
         val firstFormRange = parentForms.firstOrNull()?.textRange ?: return false
         // True when [list] is an argument (i.e., not the head form) of the threading macro.
@@ -121,7 +122,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
         while (current != null) {
             if (current is PhelList) {
                 val parentForms = current.forms
-                val parentHead = (parentForms.firstOrNull() as? PhelSymbol)?.text
+                val parentHead = PhelPsiUtils.asSymbol(parentForms.firstOrNull())?.text
                 if (parentHead != null) {
                     if (parentHead in BINDING_INTRO_FORMS && bindingVecContains(parentForms, name)) return true
                     if (parentHead in FUNCTION_INTRO_FORMS && paramVecContains(parentForms, name)) return true
@@ -137,7 +138,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
         val bindings = vec.forms
         var i = 0
         while (i < bindings.size) {
-            if ((bindings[i] as? PhelSymbol)?.text == name) return true
+            if (PhelPsiUtils.asSymbol(bindings[i])?.text == name) return true
             i += 2
         }
         return false
@@ -147,7 +148,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
         for (form in forms.drop(1)) {
             if (form is org.phellang.language.psi.PhelVec) {
                 for (p in form.forms) {
-                    if ((p as? PhelSymbol)?.text == name) return true
+                    if (PhelPsiUtils.asSymbol(p)?.text == name) return true
                 }
                 return false
             }
