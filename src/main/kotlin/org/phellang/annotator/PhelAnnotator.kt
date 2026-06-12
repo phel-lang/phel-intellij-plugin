@@ -20,29 +20,28 @@ class PhelAnnotator : Annotator {
             return  // Don't apply other highlighting to commented-out forms
         }
 
-        // Skip highlighting if element is inside an anonymous function literal
-        if (PhelCommentAnalyzer.isInsideAnonFunction(element)) {
-            return
-        }
-
+        // The anonymous-function check (an ancestor walk) only matters for the element types
+        // handled below, so it runs inside the dispatch rather than for every PSI element
+        // (whitespace, punctuation, literals, lists, …), which are the majority.
         when (element) {
             is PhelKeyword -> {
+                if (PhelCommentAnalyzer.isInsideAnonFunction(element)) return
                 PhelElementHighlighter.annotateKeyword(element, holder)
             }
 
             is PhelSymbol -> {
-                val text = element.text
-                if (text != null) {
-                    // First check if this is a namespace in a (:require ...) form
-                    if (PhelRequireHighlighter.annotateRequireNamespace(element, holder)) {
-                        return  // Handled as require namespace
-                    }
-                    // Otherwise, apply regular symbol highlighting
-                    PhelSymbolHighlighter.annotateSymbol(element, text, holder)
+                if (PhelCommentAnalyzer.isInsideAnonFunction(element)) return
+                val text = element.text ?: return
+                // First check if this is a namespace in a (:require ...) form
+                if (PhelRequireHighlighter.annotateRequireNamespace(element, holder)) {
+                    return  // Handled as require namespace
                 }
+                // Otherwise, apply regular symbol highlighting
+                PhelSymbolHighlighter.annotateSymbol(element, text, holder)
             }
 
             is PhelHashFn -> {
+                if (PhelCommentAnalyzer.isInsideAnonFunction(element)) return
                 PhelElementHighlighter.annotateAnonymousFunction(element, holder)
             }
         }

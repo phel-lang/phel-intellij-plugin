@@ -4,7 +4,7 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.inspection.deprecated.PhelDeprecatedFunctionInspection
 import org.phellang.language.psi.files.PhelFile
 
@@ -13,7 +13,7 @@ import org.phellang.language.psi.files.PhelFile
  * symbols, so PhelAccess wrapping doesn't hide them) and skips local bindings that shadow a
  * deprecated core name.
  */
-class PhelDeprecatedFunctionInspectionFiringTest : BasePlatformTestCase() {
+class PhelDeprecatedFunctionInspectionFiringTest : PhelIntegrationTestCase() {
 
     fun testDeprecatedCallIsFlagged() {
         val warnings = inspect("(ns app\\m)\n(put {} :a 1)\n")

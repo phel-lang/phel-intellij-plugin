@@ -1,5 +1,10 @@
 package org.phellang.annotator.validators
 
+import com.intellij.openapi.util.Key
+import com.intellij.psi.util.CachedValue
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
@@ -19,6 +24,9 @@ data class ImportValidationResult(
  * Validates (:require ...) statements to ensure imported namespaces exist.
  */
 object PhelImportValidator {
+
+    private val USED_QUALIFIERS_KEY: Key<CachedValue<Set<String>>> =
+        Key.create("phel.usedNamespaceQualifiers")
 
     fun validateImport(namespaceSymbol: PhelSymbol): ImportValidationResult? {
         val fullNamespace = namespaceSymbol.text ?: return null
@@ -123,28 +131,38 @@ object PhelImportValidator {
         // The qualifier to look for is either the alias or the short namespace
         val qualifierToFind = alias ?: shortNamespace
 
-        // Scan all symbols in the file for usage
-        val allSymbols = PsiTreeUtil.findChildrenOfType(containingFile, PhelSymbol::class.java)
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(containingFile)
+        // Unused when no namespace-qualified symbol in the file body uses this qualifier.
+        return qualifierToFind !in usedNamespaceQualifiers(containingFile)
+    }
 
-        for (symbol in allSymbols) {
-            // Skip symbols inside the namespace declaration
+    /**
+     * Qualifiers (`str` in `str/join`) used by namespace-qualified symbols outside the
+     * `(ns ...)` declaration. Highlighting checks each import against this set, so the
+     * per-file scan is cached and shared across all imports rather than re-run per import.
+     */
+    private fun usedNamespaceQualifiers(file: PhelFile): Set<String> {
+        return CachedValuesManager.getCachedValue(file, USED_QUALIFIERS_KEY) {
+            CachedValueProvider.Result.create(
+                computeUsedNamespaceQualifiers(file),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
+    }
+
+    private fun computeUsedNamespaceQualifiers(file: PhelFile): Set<String> {
+        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file)
+        val qualifiers = HashSet<String>()
+        for (symbol in PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)) {
+            // Skip symbols inside the namespace declaration itself.
             if (nsDeclaration != null && PsiTreeUtil.isAncestor(nsDeclaration, symbol, false)) {
                 continue
             }
-
             val text = symbol.text ?: continue
-
-            // Check if this symbol uses the qualifier (e.g., "str/join" uses "str")
             if (text.contains("/")) {
-                val qualifier = text.substringBefore("/")
-                if (qualifier == qualifierToFind) {
-                    return false // Found a usage
-                }
+                qualifiers.add(text.substringBefore("/"))
             }
         }
-
-        return true // No usage found
+        return qualifiers
     }
 
     private fun hasReferClause(namespaceSymbol: PhelSymbol): Boolean {

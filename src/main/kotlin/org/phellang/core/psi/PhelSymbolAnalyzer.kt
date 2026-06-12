@@ -1,6 +1,11 @@
 package org.phellang.core.psi
 
+import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.CachedValue
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.completion.data.PhelFunctionRegistry
 import org.phellang.completion.infrastructure.PhelCompletionPriority
@@ -10,6 +15,11 @@ import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.SymbolCategory
 
 object PhelSymbolAnalyzer {
+
+    private val LOCAL_FUNCTION_NAMES_KEY: Key<CachedValue<Set<String>>> =
+        Key.create("phel.localFunctionNames")
+    private val FUNCTION_PARAMS_KEY: Key<CachedValue<Set<String>>> =
+        Key.create("phel.functionParameters")
 
     /** Forms that introduce a parameter vector — used by isFunctionParameter. */
     private val FUNCTION_DEFINING_FORMS = PhelSpecialForms.FUNCTION_DEFINING
@@ -141,36 +151,50 @@ object PhelSymbolAnalyzer {
         return PhelErrorHandler.safeOperation {
             val symbolText = symbol.text ?: return@safeOperation false
 
-            // Don't highlight if this is the parameter definition itself
-            val isParamDef = isFunctionParameter(symbol)
-            val isLetBindingDef = isLetBinding(symbol)
-
-            if (isParamDef || isLetBindingDef) {
+            // A binding/parameter *definition* is not a reference to one.
+            if (isFunctionParameter(symbol) || isLetBinding(symbol)) {
                 return@safeOperation false
             }
 
-            // Look for function parameters in the containing function
-            val containingFunction = findContainingFunction(symbol)
-            if (containingFunction != null) {
-                val parameters = extractFunctionParameters(containingFunction)
-                if (parameters.contains(symbolText)) {
-                    return@safeOperation true
-                }
-            }
-
-            // Look for let bindings in the containing scopes
-            if (isReferenceToLetBinding(symbol, symbolText)) {
-                return@safeOperation true
-            }
-
-            // Look for references to locally defined functions in the same file
-            val isLocalFuncRef = isReferenceToLocalFunction(symbol, symbolText)
-            if (isLocalFuncRef) {
-                return@safeOperation true
-            }
-
-            false
+            isLocalReferenceOnly(symbol, symbolText)
         } ?: false
+    }
+
+    /**
+     * True when [symbol] is a fn/let binding definition **or** a reference to one — i.e. any
+     * occurrence highlighting paints as a local symbol. Computes each underlying check once;
+     * prefer this over calling `isParameterReference`, `isFunctionParameter` and `isLetBinding`
+     * separately, which re-walks the PSI for the two definition checks.
+     */
+    @JvmStatic
+    fun isLocalBindingOrReference(symbol: PhelSymbol): Boolean {
+        return PhelErrorHandler.safeOperation {
+            val symbolText = symbol.text ?: return@safeOperation false
+            if (isFunctionParameter(symbol) || isLetBinding(symbol)) {
+                return@safeOperation true
+            }
+            isLocalReferenceOnly(symbol, symbolText)
+        } ?: false
+    }
+
+    /** Reference-only lookup: assumes the caller already ruled out a binding/param definition. */
+    private fun isLocalReferenceOnly(symbol: PhelSymbol, symbolText: String): Boolean {
+        // Look for function parameters in the containing function
+        val containingFunction = findContainingFunction(symbol)
+        if (containingFunction != null) {
+            val parameters = extractFunctionParameters(containingFunction)
+            if (parameters.contains(symbolText)) {
+                return true
+            }
+        }
+
+        // Look for let bindings in the containing scopes
+        if (isReferenceToLetBinding(symbol, symbolText)) {
+            return true
+        }
+
+        // Look for references to locally defined functions in the same file
+        return isReferenceToLocalFunction(symbol, symbolText)
     }
 
     private fun findContainingFunction(symbol: PhelSymbol): PhelList? {
@@ -205,6 +229,17 @@ object PhelSymbolAnalyzer {
     }
 
     private fun extractFunctionParameters(functionList: PhelList): Set<String> {
+        // Cached per function: isLocalReferenceOnly calls this for every regular symbol inside
+        // a function, and the parameter set is the same for all of them.
+        return CachedValuesManager.getCachedValue(functionList, FUNCTION_PARAMS_KEY) {
+            CachedValueProvider.Result.create(
+                computeFunctionParameters(functionList),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
+    }
+
+    private fun computeFunctionParameters(functionList: PhelList): Set<String> {
         val parameters = mutableSetOf<String>()
 
         // Single-arity: paramVec lives directly in the function list.
@@ -295,29 +330,41 @@ object PhelSymbolAnalyzer {
         }
 
         val file = symbol.containingFile as? PhelFile ?: return false
+        return symbolText in localFunctionNames(file)
+    }
 
-        // Search through all top-level forms in the file
+    /**
+     * Names of top-level `fn`/`defn`-family definitions in [file]. Highlighting probes this
+     * once per regular symbol, so the per-file scan is cached and invalidated by edits rather
+     * than re-walking every top-level form for every symbol.
+     */
+    private fun localFunctionNames(file: PhelFile): Set<String> {
+        return CachedValuesManager.getCachedValue(file, LOCAL_FUNCTION_NAMES_KEY) {
+            CachedValueProvider.Result.create(
+                computeLocalFunctionNames(file),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
+    }
+
+    private fun computeLocalFunctionNames(file: PhelFile): Set<String> {
+        val names = HashSet<String>()
         for (child in file.children) {
             if (child !is PhelList) continue
-            
+
             val children = child.children
             if (children.size < 2) continue
-            
+
             val firstChild = children[0]
-            val secondChild = children[1]
-
-            // Check if this is a function definition (defn, defn-, defmacro, etc.)
             if (firstChild !is PhelSymbol && firstChild !is PhelAccess) continue
-            
-            val functionType = firstChild.text
-            if (functionType !in FUNCTION_DEFINING_FORMS) continue
+            if (firstChild.text !in FUNCTION_DEFINING_FORMS) continue
 
-            // Check if the function name matches our symbol
-            if ((secondChild is PhelSymbol || secondChild is PhelAccess) && secondChild.text == symbolText) {
-                return true
+            val secondChild = children[1]
+            if (secondChild is PhelSymbol || secondChild is PhelAccess) {
+                secondChild.text?.let { names.add(it) }
             }
         }
-        return false
+        return names
     }
 
     private fun isLocalFunctionDefinition(symbol: PhelSymbol): Boolean {

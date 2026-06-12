@@ -1,7 +1,7 @@
 package org.phellang.integration.psi
 
 import com.intellij.psi.PsiManager
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.files.PhelFile
 
 /**
@@ -9,7 +9,7 @@ import org.phellang.language.psi.files.PhelFile
  * string arguments produce a file reference that resolves, mirroring the user's
  * `(load "main")` / `(load "core/meta")` scenarios.
  */
-class PhelLoadReferenceTest : BasePlatformTestCase() {
+class PhelLoadReferenceTest : PhelIntegrationTestCase() {
 
     fun testLoadResolvesCallerRelativeSiblingWithoutExtension() {
         myFixture.addFileToProject("src/main.phel", "(ns app\\main)\n")

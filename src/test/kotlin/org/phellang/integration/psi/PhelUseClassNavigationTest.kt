@@ -2,7 +2,7 @@ package org.phellang.integration.psi
 
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
@@ -17,7 +17,7 @@ import org.phellang.language.psi.files.PhelFile
  *     carrying the full class path as its text;
  *  2. [PhelNamespaceUtils.isUseClassSymbol] recognises those entries and nothing else.
  */
-class PhelUseClassNavigationTest : BasePlatformTestCase() {
+class PhelUseClassNavigationTest : PhelIntegrationTestCase() {
 
     fun testDotFormUseEntryIsSingleSymbol() {
         val symbol = symbolFor(
@@ -69,7 +69,7 @@ class PhelUseClassNavigationTest : BasePlatformTestCase() {
         // The reference must resolve only to a PHP class (absent here → no target), never
         // to the in-file usage symbol — otherwise Cmd+B would jump to the usage instead.
         val file = myFixture.addFileToProject(
-            "src/main.phel",
+            "src/useclass_main.phel",
             "(ns app\\main\n  (:use Foo))\n(defn bar [] (php/new Foo))\n"
         )
         val phelFile = PsiManager.getInstance(project).findFile(file.virtualFile) as PhelFile
@@ -81,7 +81,8 @@ class PhelUseClassNavigationTest : BasePlatformTestCase() {
     private fun symbolFor(source: String, entry: String): PhelSymbol = symbolIn(phelFileFor(source), entry)
 
     private fun phelFileFor(source: String): PhelFile {
-        val file = myFixture.addFileToProject("src/main.phel", source)
+        val file = myFixture.addFileToProject(
+            "src/useclass_main.phel", source)
         return PsiManager.getInstance(project).findFile(file.virtualFile) as PhelFile
     }
 

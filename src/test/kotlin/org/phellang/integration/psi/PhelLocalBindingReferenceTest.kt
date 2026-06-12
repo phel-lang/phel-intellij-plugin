@@ -1,7 +1,7 @@
 package org.phellang.integration.psi
 
 import com.intellij.psi.PsiManager
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
@@ -10,7 +10,7 @@ import org.phellang.language.psi.files.PhelFile
  * resolves to its binding. Covers `when-let`, whose bindings previously failed to
  * resolve because the resolver's binding-form list omitted it.
  */
-class PhelLocalBindingReferenceTest : BasePlatformTestCase() {
+class PhelLocalBindingReferenceTest : PhelIntegrationTestCase() {
 
     fun testWhenLetBindingResolves() {
         assertResolvesToBinding(
@@ -45,7 +45,9 @@ class PhelLocalBindingReferenceTest : BasePlatformTestCase() {
     }
 
     private fun assertResolvesToBinding(body: String, usageMarker: String, bindingMarker: String) {
-        val file = myFixture.addFileToProject("src/main.phel", "(ns app\\main)\n(defn f []\n  $body)\n")
+        // Unique path per class: the shared test project does not reliably clean files
+        // between classes, so a shared path (src/main.phel) lets stale content leak in.
+        val file = myFixture.addFileToProject("src/local_binding_test.phel", "(ns app\\main)\n(defn f []\n  $body)\n")
         val phelFile = PsiManager.getInstance(project).findFile(file.virtualFile) as PhelFile
         val text = phelFile.text
 

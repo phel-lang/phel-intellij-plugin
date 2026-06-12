@@ -1,6 +1,12 @@
 package org.phellang.annotator.analyzers
 
+import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.util.CachedValue
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiModificationTracker
 import org.phellang.language.psi.*
 import java.util.regex.Pattern.compile
 
@@ -10,10 +16,26 @@ object PhelCommentAnalyzer {
 
     private const val FORM_COMMENT_MARKER = "#_"
 
+    private val HAS_FORM_COMMENT_KEY: Key<CachedValue<Boolean>> = Key.create("phel.hasFormComment")
+
     fun isCommentedOutByFormComment(element: PsiElement): Boolean {
+        // Fast path: a file with no `#_` marker anywhere can't comment out any form, so skip
+        // the containing-form walk and text tokenization that otherwise run for every element.
+        val file = element.containingFile ?: return false
+        if (!fileHasFormComment(file)) return false
+
         val containingForm = findContainingForm(element) ?: return false
 
         return isInCommentedFormByText(containingForm)
+    }
+
+    private fun fileHasFormComment(file: PsiFile): Boolean {
+        return CachedValuesManager.getCachedValue(file, HAS_FORM_COMMENT_KEY) {
+            CachedValueProvider.Result.create(
+                file.text.contains(FORM_COMMENT_MARKER),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
     }
 
     fun isInsideAnonFunction(element: PsiElement): Boolean {

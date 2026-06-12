@@ -4,7 +4,7 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.inspection.PhelUnusedLetBindingInspection
 import org.phellang.language.psi.files.PhelFile
 
@@ -13,7 +13,7 @@ import org.phellang.language.psi.files.PhelFile
  * regression where a binding used only as a *bare symbol value* of a later binding —
  * `(let [x 1 y x] ...)` — was wrongly flagged as unused.
  */
-class PhelUnusedLetBindingInspectionIntegrationTest : BasePlatformTestCase() {
+class PhelUnusedLetBindingInspectionIntegrationTest : PhelIntegrationTestCase() {
 
     fun testBareSymbolValueCountsAsUsage() {
         val warnings = inspect("(ns app\\m)\n(defn f []\n  (let [x 1 y x]\n    (println y)))\n")

@@ -160,8 +160,12 @@ class PhelReference @JvmOverloads constructor(
         val phelFiles = FilenameIndex.getAllFilesByExt(
             project, "phel", GlobalSearchScope.projectScope(project)
         )
+        // A matching file's (ns …) form ends with this segment, so its text must contain it —
+        // skip the parse for files that can't be the target.
+        val targetShortName = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
         for (virtualFile in phelFiles) {
             val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
+            if (!psiFile.text.contains(targetShortName)) continue
             val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(psiFile) ?: continue
             val fileNamespace = PhelNamespaceUtils.extractNamespaceFromDeclaration(nsDeclaration) ?: continue
             if (PhelNamespaceUtils.normalizeNamespace(fileNamespace) == target) {
@@ -440,6 +444,8 @@ class PhelReference @JvmOverloads constructor(
 
                 val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
                 if (psiFile !is PhelFile) continue
+                // Fast reject: skip files whose text doesn't contain the name at all.
+                if (symbolName != null && !psiFile.text.contains(symbolName)) continue
 
                 val allSymbols = PsiTreeUtil.findChildrenOfType(psiFile, PhelSymbol::class.java)
 
@@ -640,14 +646,16 @@ class PhelReference @JvmOverloads constructor(
 
         for (file in phelFiles) {
             val psiFile = psiManager.findFile(file)
-            if (psiFile != null && psiFile != myElement!!.containingFile) {
-                // Skip current file (already handled above)
-                val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
-                for (list in lists) {
-                    val definition = findDefinitionInList(list)
-                    if (definition != null) {
-                        results.add(definition)
-                    }
+            if (psiFile == null || psiFile == myElement!!.containingFile) continue
+            // Fast reject: a file whose text doesn't mention the name can't define it, so
+            // skip the PSI walk for the many files that don't reference this symbol.
+            if (symbolName != null && !psiFile.text.contains(symbolName)) continue
+
+            val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
+            for (list in lists) {
+                val definition = findDefinitionInList(list)
+                if (definition != null) {
+                    results.add(definition)
                 }
             }
         }

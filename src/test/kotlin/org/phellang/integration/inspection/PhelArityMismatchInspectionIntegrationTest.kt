@@ -4,11 +4,11 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.inspection.PhelArityMismatchInspection
 import org.phellang.language.psi.files.PhelFile
 
-class PhelArityMismatchInspectionIntegrationTest : BasePlatformTestCase() {
+class PhelArityMismatchInspectionIntegrationTest : PhelIntegrationTestCase() {
 
     fun testWrongArityIsFlagged() {
         val warnings = inspect("(ns app\\m)\n(defn f [x] x)\n(f 1 2)\n")

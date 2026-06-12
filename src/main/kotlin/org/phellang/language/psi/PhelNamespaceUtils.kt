@@ -7,14 +7,29 @@ import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
+import java.util.Optional
 
 object PhelNamespaceUtils {
 
     private val USED_CLASSES_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.usedClasses")
     private val REFERRED_SYMBOLS_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.referredSymbols")
     private val ALIAS_MAP_KEY: Key<CachedValue<Map<String, String>>> = Key.create("phel.namespace.aliasMap")
+    private val NS_DECLARATION_KEY: Key<CachedValue<Optional<PhelList>>> = Key.create("phel.namespace.declaration")
+    private val REQUIRE_FORMS_KEY: Key<CachedValue<List<PhelList>>> = Key.create("phel.namespace.requireForms")
+    private val USE_FORMS_KEY: Key<CachedValue<List<PhelList>>> = Key.create("phel.namespace.useForms")
 
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
+        // Resolved once per file: highlighting and reference resolution look up the (ns …)
+        // form repeatedly (per qualified symbol), and each lookup otherwise scans the tree.
+        return CachedValuesManager.getCachedValue(file, NS_DECLARATION_KEY) {
+            CachedValueProvider.Result.create(
+                Optional.ofNullable(computeNamespaceDeclaration(file)),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }.orElse(null)
+    }
+
+    private fun computeNamespaceDeclaration(file: PhelFile): PhelList? {
         // (ns my-ns (:require ...) (:use ...))
         val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
         return lists.firstOrNull { list ->
@@ -39,7 +54,14 @@ object PhelNamespaceUtils {
     }
 
     fun findRequireForms(nsDeclaration: PhelList): List<PhelList> {
-        return findNsClauseForms(nsDeclaration, ":require")
+        // Cached on the (cached, per-file) ns element: the validators look these up once per
+        // qualified symbol, each otherwise re-walking the ns form's child lists.
+        return CachedValuesManager.getCachedValue(nsDeclaration, REQUIRE_FORMS_KEY) {
+            CachedValueProvider.Result.create(
+                findNsClauseForms(nsDeclaration, ":require"),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
     }
 
     /**
@@ -49,7 +71,12 @@ object PhelNamespaceUtils {
      * `DateTime/createFromFormat`, `(DateTime. ...)`, etc.
      */
     fun findUseForms(nsDeclaration: PhelList): List<PhelList> {
-        return findNsClauseForms(nsDeclaration, ":use")
+        return CachedValuesManager.getCachedValue(nsDeclaration, USE_FORMS_KEY) {
+            CachedValueProvider.Result.create(
+                findNsClauseForms(nsDeclaration, ":use"),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
     }
 
     private fun findNsClauseForms(nsDeclaration: PhelList, clauseKeyword: String): List<PhelList> {
