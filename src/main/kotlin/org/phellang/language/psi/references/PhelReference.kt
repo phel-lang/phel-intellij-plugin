@@ -659,10 +659,13 @@ class PhelReference @JvmOverloads constructor(
         val forms = letForm.forms
         if (forms.size < 2) return null
 
-        // Check if this is a binding form (let, for, binding, loop, foreach, dofor)
+        // Only binding forms whose second element is a `[name value ...]` vector are
+        // relevant here. `catch` was historically listed too, but its second element is
+        // the exception class (not a vector), so it never matched — and `when-let` was
+        // missing, so its bindings failed to resolve. The shared set fixes both.
         val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: return null
         val formType = firstSymbol.text
-        if (("let" != formType) && ("if-let" != formType) && ("for" != formType) && ("binding" != formType) && ("loop" != formType) && ("foreach" != formType) && ("dofor" != formType) && ("catch" != formType)) {
+        if (formType !in org.phellang.language.psi.PhelSpecialForms.LET_LIKE) {
             return null
         }
 
