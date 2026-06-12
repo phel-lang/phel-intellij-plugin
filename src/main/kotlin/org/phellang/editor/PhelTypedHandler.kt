@@ -17,7 +17,7 @@ class PhelTypedHandler : TypedHandlerDelegate() {
             return Result.CONTINUE
         }
 
-        if (c in setOf('(', '[', '{')) {
+        if (c == '(' || c == '[' || c == '{') {
             getInstance(project).scheduleAutoPopup(editor)
         }
 
