@@ -1,7 +1,7 @@
 package org.phellang.integration.inspection
 
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.annotator.validators.PhelImportValidator
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
@@ -12,7 +12,7 @@ import org.phellang.language.psi.files.PhelFile
  * used-qualifier scan: a required namespace is "unused" only when no `ns/...` call in the
  * file body references it.
  */
-class PhelUnusedImportTest : BasePlatformTestCase() {
+class PhelUnusedImportTest : PhelIntegrationTestCase() {
 
     fun testUsedImportIsNotUnused() {
         assertFalse(isUnused("(ns app\\m\n  (:require phel\\str))\n(str/join \", \" [1 2])\n", "phel\\str"))

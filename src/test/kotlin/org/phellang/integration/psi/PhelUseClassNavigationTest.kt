@@ -2,7 +2,7 @@ package org.phellang.integration.psi
 
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
@@ -17,7 +17,7 @@ import org.phellang.language.psi.files.PhelFile
  *     carrying the full class path as its text;
  *  2. [PhelNamespaceUtils.isUseClassSymbol] recognises those entries and nothing else.
  */
-class PhelUseClassNavigationTest : BasePlatformTestCase() {
+class PhelUseClassNavigationTest : PhelIntegrationTestCase() {
 
     fun testDotFormUseEntryIsSingleSymbol() {
         val symbol = symbolFor(

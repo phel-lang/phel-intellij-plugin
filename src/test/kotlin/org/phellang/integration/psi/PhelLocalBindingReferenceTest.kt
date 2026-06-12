@@ -1,7 +1,7 @@
 package org.phellang.integration.psi
 
 import com.intellij.psi.PsiManager
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
@@ -10,7 +10,7 @@ import org.phellang.language.psi.files.PhelFile
  * resolves to its binding. Covers `when-let`, whose bindings previously failed to
  * resolve because the resolver's binding-form list omitted it.
  */
-class PhelLocalBindingReferenceTest : BasePlatformTestCase() {
+class PhelLocalBindingReferenceTest : PhelIntegrationTestCase() {
 
     fun testWhenLetBindingResolves() {
         assertResolvesToBinding(

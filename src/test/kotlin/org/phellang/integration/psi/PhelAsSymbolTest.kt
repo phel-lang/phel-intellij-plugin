@@ -1,7 +1,7 @@
 package org.phellang.integration.psi
 
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.files.PhelFile
@@ -12,7 +12,7 @@ import org.phellang.language.psi.files.PhelFile
  * features (inspections, inlay hints) relied on a plain `as? PhelSymbol` cast and so
  * silently did nothing. asSymbol must unwrap those forms to their PhelSymbol.
  */
-class PhelAsSymbolTest : BasePlatformTestCase() {
+class PhelAsSymbolTest : PhelIntegrationTestCase() {
 
     fun testUnwrapsListHead() {
         val list = firstList("(ns app\\m)\n(let [x 1] x)\n", head = "let")

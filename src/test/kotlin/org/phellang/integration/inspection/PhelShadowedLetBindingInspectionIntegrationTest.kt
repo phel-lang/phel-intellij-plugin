@@ -4,7 +4,7 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.inspection.PhelShadowedLetBindingInspection
 import org.phellang.language.psi.files.PhelFile
 
@@ -13,7 +13,7 @@ import org.phellang.language.psi.files.PhelFile
  * inspection silently doing nothing — simple symbols parse as PhelAccess, so the head
  * and binding casts have to unwrap them for the inspection to fire at all.
  */
-class PhelShadowedLetBindingInspectionIntegrationTest : BasePlatformTestCase() {
+class PhelShadowedLetBindingInspectionIntegrationTest : PhelIntegrationTestCase() {
 
     fun testInnerLetShadowsOuterLet() {
         val warnings = inspect("(ns app\\m)\n(defn f []\n  (let [x 1]\n    (let [x 2]\n      x)))\n")

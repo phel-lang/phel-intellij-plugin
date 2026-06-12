@@ -1,7 +1,7 @@
 package org.phellang.integration.psi
 
 import com.intellij.psi.PsiManager
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
@@ -9,7 +9,7 @@ import org.phellang.language.psi.files.PhelFile
  * Ground-truth check that go-to-declaration on a namespace inside `(:require …)`
  * jumps to the required module's `(ns …)` declaration.
  */
-class PhelRequireNavigationTest : BasePlatformTestCase() {
+class PhelRequireNavigationTest : PhelIntegrationTestCase() {
 
     fun testRequireResolvesToTargetNamespaceDeclaration() {
         myFixture.addFileToProject("src/util.phel", "(ns app\\util)\n(defn helper [] 1)\n")
