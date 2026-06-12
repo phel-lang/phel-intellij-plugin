@@ -23,51 +23,54 @@ class PhelUnusedLetBindingInspection : LocalInspectionTool() {
                 val body = forms.drop(2)
                 if (body.isEmpty()) return
 
-                var i = 0
-                while (i < bindings.size) {
-                    val target = bindings[i]
-                    val name = (target as? PhelSymbol)?.text
-                    if (name != null && name != "_" && !name.startsWith("_") && !name.startsWith("&")) {
-                        if (!isUsedInBody(name, body) && !isUsedInLaterBindings(name, bindings, i)) {
-                            holder.registerProblem(
-                                target,
-                                "Binding '$name' is never used.",
-                                ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-                                PhelRemoveLetBindingQuickFix(),
-                            )
-                        }
+                // Names referenced anywhere in the body, collected in a single pass.
+                val bodySymbols = collectSymbolTexts(body)
+
+                // Walk bindings from the end so that, by the time we reach a binding name at
+                // an even index, `laterValueSymbols` already holds every symbol used in the
+                // value slots that follow it (Phel binds sequentially, so a value can only
+                // reference names introduced earlier).
+                val laterValueSymbols = HashSet<String>()
+                val unused = ArrayList<PhelSymbol>()
+                for (i in bindings.indices.reversed()) {
+                    if (i % 2 == 1) {
+                        collectSymbolTextsInto(bindings[i], laterValueSymbols)
+                        continue
                     }
-                    i += 2
+                    val target = bindings[i] as? PhelSymbol ?: continue
+                    val name = target.text
+                    if (name == "_" || name.startsWith("_") || name.startsWith("&")) continue
+                    if (name !in bodySymbols && name !in laterValueSymbols) {
+                        unused.add(target)
+                    }
+                }
+
+                // Report top-to-bottom for a natural reading order.
+                for (target in unused.asReversed()) {
+                    holder.registerProblem(
+                        target,
+                        "Binding '${target.text}' is never used.",
+                        ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+                        PhelRemoveLetBindingQuickFix(),
+                    )
                 }
             }
         }
     }
 
-    private fun isUsedInBody(name: String, body: List<PhelForm>): Boolean {
-        for (form in body) {
-            val symbols = PsiTreeUtil.findChildrenOfType(form, PhelSymbol::class.java)
-            for (s in symbols) {
-                if (s.text == name) return true
-            }
-            if ((form as? PhelSymbol)?.text == name) return true
-        }
-        return false
+    private fun collectSymbolTexts(forms: List<PhelForm>): Set<String> {
+        val result = HashSet<String>()
+        for (form in forms) collectSymbolTextsInto(form, result)
+        return result
     }
 
-    private fun isUsedInLaterBindings(name: String, bindings: List<PhelForm>, fromIndex: Int): Boolean {
-        // Values at odd indices can reference earlier names.
-        var i = fromIndex + 1
-        while (i < bindings.size) {
-            val value = bindings[i]
-            val symbols = PsiTreeUtil.findChildrenOfType(value, PhelSymbol::class.java)
-            for (s in symbols) {
-                if (s.text == name) return true
-            }
-            i += 2
+    /** Adds the text of [element] (when it is a symbol) plus every descendant symbol. */
+    private fun collectSymbolTextsInto(element: PhelForm, into: MutableSet<String>) {
+        if (element is PhelSymbol) into.add(element.text)
+        for (s in PsiTreeUtil.findChildrenOfType(element, PhelSymbol::class.java)) {
+            into.add(s.text)
         }
-        return false
     }
-
 }
 
 private val LET_LIKE_FORMS = setOf(
