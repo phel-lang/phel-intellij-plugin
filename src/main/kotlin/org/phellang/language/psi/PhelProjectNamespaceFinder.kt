@@ -1,12 +1,19 @@
 package org.phellang.language.psi
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.CachedValue
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiModificationTracker
 import org.phellang.language.psi.files.PhelFile
 
 object PhelProjectNamespaceFinder {
+
+    private val PROJECT_NAMESPACES_KEY: Key<CachedValue<List<String>>> = Key.create("phel.project.namespaces")
 
     // Canonical Phel 0.35+ form is dot-separated. The legacy backslash form is still
     // accepted on input via [normalize] but never emitted from this finder.
@@ -89,8 +96,24 @@ object PhelProjectNamespaceFinder {
     }
 
     fun findAllProjectNamespaces(project: Project): List<String> {
+        // Highlighting calls this (via namespaceExists / findByShortName) potentially once
+        // per namespace-qualified symbol; scanning every project file each time is O(files)
+        // per call. Cache the result per project and let any PSI edit invalidate it.
+        return CachedValuesManager.getManager(project).getCachedValue(
+            project, PROJECT_NAMESPACES_KEY,
+            {
+                CachedValueProvider.Result.create(
+                    computeAllProjectNamespaces(project),
+                    PsiModificationTracker.MODIFICATION_COUNT,
+                )
+            },
+            false,
+        )
+    }
+
+    private fun computeAllProjectNamespaces(project: Project): List<String> {
         val namespaces = mutableListOf<String>()
-        
+
         val phelFiles = FilenameIndex.getAllFilesByExt(
             project, "phel", GlobalSearchScope.projectScope(project)
         )
