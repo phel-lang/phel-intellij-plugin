@@ -12,6 +12,7 @@ object PhelNamespaceUtils {
 
     private val USED_CLASSES_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.usedClasses")
     private val REFERRED_SYMBOLS_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.referredSymbols")
+    private val ALIAS_MAP_KEY: Key<CachedValue<Map<String, String>>> = Key.create("phel.namespace.aliasMap")
 
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
         // (ns my-ns (:require ...) (:use ...))
@@ -131,6 +132,15 @@ object PhelNamespaceUtils {
     }
 
     fun extractAliasMap(file: PhelFile): Map<String, String> {
+        return CachedValuesManager.getCachedValue(file, ALIAS_MAP_KEY) {
+            CachedValueProvider.Result.create(
+                computeAliasMap(file),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
+    }
+
+    private fun computeAliasMap(file: PhelFile): Map<String, String> {
         val aliasMap = mutableMapOf<String, String>()
 
         val nsDeclaration = findNamespaceDeclaration(file) ?: return aliasMap
