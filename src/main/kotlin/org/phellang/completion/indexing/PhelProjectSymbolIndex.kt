@@ -103,9 +103,8 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         key: String,
         symbol: PhelProjectSymbol,
     ) {
-        val existing = map[key]?.toMutableList() ?: mutableListOf()
-        existing.add(symbol)
-        map[key] = existing
+        // Atomic read-modify-write so concurrent VFS/PSI listener updates can't lose entries.
+        map.compute(key) { _, existing -> (existing ?: emptyList()) + symbol }
     }
 
     private fun removeFromMap(
@@ -113,9 +112,10 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         key: String,
         filePath: String,
     ) {
-        val current = map[key]?.toMutableList() ?: return
-        current.removeIf { it.file.path == filePath }
-        if (current.isEmpty()) map.remove(key) else map[key] = current
+        // Returning null from computeIfPresent removes the key entirely.
+        map.computeIfPresent(key) { _, current ->
+            current.filterNot { it.file.path == filePath }.ifEmpty { null }
+        }
     }
 
     fun removeFile(file: VirtualFile) {
