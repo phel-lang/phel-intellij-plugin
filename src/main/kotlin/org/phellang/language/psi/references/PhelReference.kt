@@ -160,8 +160,12 @@ class PhelReference @JvmOverloads constructor(
         val phelFiles = FilenameIndex.getAllFilesByExt(
             project, "phel", GlobalSearchScope.projectScope(project)
         )
+        // A matching file's (ns …) form ends with this segment, so its text must contain it —
+        // skip the parse for files that can't be the target.
+        val targetShortName = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
         for (virtualFile in phelFiles) {
             val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
+            if (!psiFile.text.contains(targetShortName)) continue
             val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(psiFile) ?: continue
             val fileNamespace = PhelNamespaceUtils.extractNamespaceFromDeclaration(nsDeclaration) ?: continue
             if (PhelNamespaceUtils.normalizeNamespace(fileNamespace) == target) {
