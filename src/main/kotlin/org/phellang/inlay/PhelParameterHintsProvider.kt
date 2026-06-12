@@ -18,6 +18,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelParameterHintsProvider : InlayHintsProvider {
 
@@ -31,7 +32,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             val forms = element.forms
             if (forms.size < 2) return
 
-            val headSymbol = forms[0] as? PhelSymbol ?: return
+            val headSymbol = PhelPsiUtils.asSymbol(forms[0]) ?: return
             val headName = headSymbol.text ?: return
 
             if (headName in SKIP_HEADS) return
@@ -86,7 +87,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             while (current != null) {
                 if (current is PhelList) {
                     val forms = current.forms
-                    val parentHead = (forms.firstOrNull() as? PhelSymbol)?.text
+                    val parentHead = PhelPsiUtils.asSymbol(forms.firstOrNull())?.text
                     if (parentHead != null) {
                         if (parentHead in BINDING_INTRO_FORMS && bindingVecContains(forms, name)) return true
                         if (parentHead in FUNCTION_INTRO_FORMS && paramVecContains(forms, name)) return true
@@ -102,7 +103,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             val bindings = vec.forms
             var i = 0
             while (i < bindings.size) {
-                if ((bindings[i] as? PhelSymbol)?.text == name) return true
+                if (PhelPsiUtils.asSymbol(bindings[i])?.text == name) return true
                 i += 2
             }
             return false
@@ -112,7 +113,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             for (form in forms.drop(1)) {
                 if (form is PhelVec) {
                     for (p in form.forms) {
-                        if ((p as? PhelSymbol)?.text == name) return true
+                        if (PhelPsiUtils.asSymbol(p)?.text == name) return true
                     }
                     return false
                 }
