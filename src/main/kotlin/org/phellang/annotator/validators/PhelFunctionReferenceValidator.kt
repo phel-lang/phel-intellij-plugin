@@ -73,7 +73,7 @@ object PhelFunctionReferenceValidator {
     private fun existsInStandardLibrary(namespace: String, functionName: String): Boolean {
         // Try canonical name format: namespace/function
         val canonicalName = "$namespace/$functionName"
-        if (PhelApiDocumentation.functionDocs.containsKey(canonicalName)) {
+        if (PhelApiDocumentation.hasDocumentation(canonicalName)) {
             return true
         }
 
@@ -82,7 +82,7 @@ object PhelFunctionReferenceValidator {
         if (fullNamespace != null) {
             // Standard library namespace - check with full namespace too
             val fullName = "$fullNamespace/$functionName"
-            if (PhelApiDocumentation.functionDocs.containsKey(fullName)) {
+            if (PhelApiDocumentation.hasDocumentation(fullName)) {
                 return true
             }
         }

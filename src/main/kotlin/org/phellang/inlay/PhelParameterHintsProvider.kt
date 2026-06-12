@@ -10,13 +10,14 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import org.phellang.completion.data.PhelArity
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.completion.data.PhelArityResolver
 import org.phellang.completion.data.selectFor
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelParameterHintsProvider : InlayHintsProvider {
 
@@ -30,7 +31,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             val forms = element.forms
             if (forms.size < 2) return
 
-            val headSymbol = forms[0] as? PhelSymbol ?: return
+            val headSymbol = PhelPsiUtils.asSymbol(forms[0]) ?: return
             val headName = headSymbol.text ?: return
 
             if (headName in SKIP_HEADS) return
@@ -40,7 +41,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             if (resolvesToLocalBinding(headSymbol, headName)) return
 
             val args = forms.drop(1)
-            val arities = resolveArities(headSymbol, headName) ?: return
+            val arities = PhelArityResolver.resolve(headSymbol.project, headName) ?: return
             val arity = arities.selectFor(args.size) ?: return
 
             for ((i, arg) in args.withIndex()) {
@@ -67,25 +68,13 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             }
         }
 
-        private fun resolveArities(headSymbol: PhelSymbol, headName: String): List<PhelArity>? {
-            val shortName = headName.substringAfterLast('/')
-
-            PhelFunctionRegistry.getFunction(shortName)?.let { fn ->
-                val parsed = PhelArity.parseAll(fn.signature)
-                if (parsed.isNotEmpty()) return parsed
-            }
-
-            val index = PhelProjectSymbolIndex.getInstance(headSymbol.project)
-            return index.findByName(shortName).firstOrNull { it.arities.isNotEmpty() }?.arities
-        }
-
         /** True when [name] resolves to an enclosing let/loop binding or fn parameter. */
         private fun resolvesToLocalBinding(head: PhelSymbol, name: String): Boolean {
             var current: PsiElement? = head.parent
             while (current != null) {
                 if (current is PhelList) {
                     val forms = current.forms
-                    val parentHead = (forms.firstOrNull() as? PhelSymbol)?.text
+                    val parentHead = PhelPsiUtils.asSymbol(forms.firstOrNull())?.text
                     if (parentHead != null) {
                         if (parentHead in BINDING_INTRO_FORMS && bindingVecContains(forms, name)) return true
                         if (parentHead in FUNCTION_INTRO_FORMS && paramVecContains(forms, name)) return true
@@ -101,7 +90,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             val bindings = vec.forms
             var i = 0
             while (i < bindings.size) {
-                if ((bindings[i] as? PhelSymbol)?.text == name) return true
+                if (PhelPsiUtils.asSymbol(bindings[i])?.text == name) return true
                 i += 2
             }
             return false
@@ -111,7 +100,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             for (form in forms.drop(1)) {
                 if (form is PhelVec) {
                     for (p in form.forms) {
-                        if ((p as? PhelSymbol)?.text == name) return true
+                        if (PhelPsiUtils.asSymbol(p)?.text == name) return true
                     }
                     return false
                 }
@@ -121,11 +110,9 @@ class PhelParameterHintsProvider : InlayHintsProvider {
     }
 }
 
-private val BINDING_INTRO_FORMS = setOf(
-    "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor",
-)
+private val BINDING_INTRO_FORMS = PhelSpecialForms.LET_LIKE
 
-private val FUNCTION_INTRO_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
+private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
 // Special forms and macros where param-name hints would be noise.
 private val SKIP_HEADS = setOf(

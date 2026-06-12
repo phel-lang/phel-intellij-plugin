@@ -24,6 +24,21 @@ object PhelPsiUtils {
         return symbol
     }
 
+    /**
+     * Resolves a form to its [PhelSymbol]. Simple symbols frequently parse as a [PhelAccess]
+     * wrapper — e.g. the `let` head of a list or a `[name ...]` binding entry — so a plain
+     * `as? PhelSymbol` cast misses them. Unwrap via the access's symbol or the first child symbol.
+     */
+    @JvmStatic
+    fun asSymbol(form: PsiElement?): PhelSymbol? {
+        return when (form) {
+            null -> null
+            is PhelSymbol -> form
+            is PhelAccess -> form.symbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+            else -> PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+        }
+    }
+
     @JvmStatic
     fun getName(symbol: PhelSymbol): String? {
         return PhelErrorHandler.safeOperation {

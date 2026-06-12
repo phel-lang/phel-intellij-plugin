@@ -33,6 +33,11 @@ object PhelCommentAnalyzer {
         val containerText = parent.text
         if (containerText.isNullOrEmpty()) return false
 
+        // Fast path for the overwhelmingly common case: a container without any `#_`
+        // marker can't comment out anything, so skip the regex tokenization and offset
+        // math that runs otherwise for every annotated element.
+        if (!containerText.contains(FORM_COMMENT_MARKER)) return false
+
         return isFormCommentedInContainer(containerText, element, parent)
     }
 

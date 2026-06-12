@@ -8,9 +8,11 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.PhelVisitor
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelShadowedLetBindingInspection : LocalInspectionTool() {
 
@@ -19,7 +21,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
             override fun visitList(o: PhelList) {
                 val forms = o.forms
                 if (forms.size < 2) return
-                val head = forms[0] as? PhelSymbol ?: return
+                val head = PhelPsiUtils.asSymbol(forms[0]) ?: return
                 val headText = head.text ?: return
                 if (headText !in BINDING_INTRO_FORMS) return
 
@@ -28,7 +30,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
 
                 var i = 0
                 while (i < bindings.size) {
-                    val target = bindings[i] as? PhelSymbol
+                    val target = PhelPsiUtils.asSymbol(bindings[i])
                     if (target != null) {
                         val name = target.text
                         if (!name.isNullOrEmpty() && name != "_" && !name.startsWith("&")) {
@@ -53,7 +55,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
         while (current != null) {
             if (current is PhelList) {
                 val parentForms = current.forms
-                val head = parentForms.firstOrNull() as? PhelSymbol
+                val head = PhelPsiUtils.asSymbol(parentForms.firstOrNull())
                 val headText = head?.text
                 if (headText != null) {
                     val match = when {
@@ -74,7 +76,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
         val bindings = vec.forms
         var i = 0
         while (i < bindings.size) {
-            val s = bindings[i] as? PhelSymbol
+            val s = PhelPsiUtils.asSymbol(bindings[i])
             if (s?.text == name) return s
             i += 2
         }
@@ -98,9 +100,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
     }
 
     companion object {
-        private val BINDING_INTRO_FORMS = setOf(
-            "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor",
-        )
-        private val FUNCTION_INTRO_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
+        private val BINDING_INTRO_FORMS = PhelSpecialForms.LET_LIKE
+        private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
     }
 }

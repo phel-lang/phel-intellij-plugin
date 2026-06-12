@@ -6,6 +6,8 @@ import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.IncorrectOperationException
+import java.util.Collections
+import java.util.IdentityHashMap
 import org.phellang.language.psi.utils.SymbolCategory
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
@@ -85,64 +87,23 @@ class PhelReference @JvmOverloads constructor(
             return
         }
 
-        // Unqualified symbol - use original resolution logic
-
-        // 1. Check local scope first - but collect ALL definitions for polyvariant resolution
-        val localDefinition = resolveInLocalScope()
-        if (localDefinition != null) {
-            results.add(PsiElementResolveResult(localDefinition))
-            // Don't return immediately - collect ALL definitions for polyvariant resolution
+        // Unqualified symbol - use original resolution logic.
+        // Collect definitions from every scope, de-duplicating by PSI identity so the
+        // same element added by two scopes is only reported once (polyvariant resolve).
+        val seen = Collections.newSetFromMap(IdentityHashMap<PsiElement, Boolean>())
+        fun addUnique(element: PsiElement) {
+            if (seen.add(element)) results.add(PsiElementResolveResult(element))
         }
 
-        // 2. Current file definitions (def, defn, defmacro, etc.)
-        val fileDefinitions = resolveInCurrentFile()
-        for (def in fileDefinitions) {
-            // Avoid duplicates
-            var alreadyAdded = false
-            for (existing in results) {
-                if (existing.element === def) {
-                    alreadyAdded = true
-                    break
-                }
-            }
+        // 1. Local scope (let/loop/fn bindings visible at the reference).
+        resolveInLocalScope()?.let(::addUnique)
 
-            if (!alreadyAdded) {
-                results.add(PsiElementResolveResult(def))
-            }
-        }
+        // 2. Current file definitions (def, defn, defmacro, etc.) and function parameters.
+        resolveInCurrentFile().forEach(::addUnique)
+        findAllFunctionParameters().forEach(::addUnique)
 
-        val parameterDefinitions = findAllFunctionParameters()
-        for (param in parameterDefinitions) {
-            // Avoid duplicates - check if we already added this element
-            var alreadyAdded = false
-            for (existing in results) {
-                if (existing.element === param) {
-                    alreadyAdded = true
-                    break
-                }
-            }
-
-            if (!alreadyAdded) {
-                results.add(PsiElementResolveResult(param))
-            }
-        }
-
-        // 3. Project-wide definitions (other files)
-        val projectDefinitions = resolveInProject()
-        for (def in projectDefinitions) {
-            // Avoid duplicates
-            var alreadyAdded = false
-            for (existing in results) {
-                if (existing.element === def) {
-                    alreadyAdded = true
-                    break
-                }
-            }
-
-            if (!alreadyAdded) {
-                results.add(PsiElementResolveResult(def))
-            }
-        }
+        // 3. Project-wide definitions (other files).
+        resolveInProject().forEach(::addUnique)
 
         // 4. Phel standard library (vendor folder) - for core functions like map, filter, etc.
         if (results.isEmpty()) {
@@ -698,10 +659,13 @@ class PhelReference @JvmOverloads constructor(
         val forms = letForm.forms
         if (forms.size < 2) return null
 
-        // Check if this is a binding form (let, for, binding, loop, foreach, dofor)
+        // Only binding forms whose second element is a `[name value ...]` vector are
+        // relevant here. `catch` was historically listed too, but its second element is
+        // the exception class (not a vector), so it never matched — and `when-let` was
+        // missing, so its bindings failed to resolve. The shared set fixes both.
         val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: return null
         val formType = firstSymbol.text
-        if (("let" != formType) && ("if-let" != formType) && ("for" != formType) && ("binding" != formType) && ("loop" != formType) && ("foreach" != formType) && ("dofor" != formType) && ("catch" != formType)) {
+        if (formType !in org.phellang.language.psi.PhelSpecialForms.LET_LIKE) {
             return null
         }
 

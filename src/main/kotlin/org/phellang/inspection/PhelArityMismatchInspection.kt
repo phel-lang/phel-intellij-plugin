@@ -5,15 +5,15 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
-import org.phellang.completion.data.PhelArity
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.completion.data.PhelArityResolver
 import org.phellang.completion.data.accepts
 import org.phellang.completion.data.describe
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelVisitor
 
 class PhelArityMismatchInspection : LocalInspectionTool() {
@@ -23,7 +23,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
             override fun visitList(o: PhelList) {
                 val forms = o.forms
                 if (forms.isEmpty()) return
-                val head = forms[0] as? PhelSymbol ?: return
+                val head = PhelPsiUtils.asSymbol(forms[0]) ?: return
                 val name = head.text ?: return
 
                 if (name in SKIP_HEADS) return
@@ -34,7 +34,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 if (isThreadedArgList(o)) return
                 if (resolvesToLocalBinding(head, name)) return
 
-                val arities = resolveArities(head, name) ?: return
+                val arities = PhelArityResolver.resolve(head.project, name) ?: return
                 if (arities.isEmpty()) return
 
                 val argCount = forms.size - 1
@@ -47,20 +47,6 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 }
             }
         }
-    }
-
-    private fun resolveArities(head: PhelSymbol, name: String): List<PhelArity>? {
-        val shortName = name.substringAfterLast('/')
-
-        PhelFunctionRegistry.getFunction(shortName)?.let { fn ->
-            val parsed = PhelArity.parseAll(fn.signature)
-            if (parsed.isNotEmpty()) return parsed
-        }
-
-        val index = PhelProjectSymbolIndex.getInstance(head.project)
-        val candidates = index.findByName(shortName)
-        val withArities = candidates.firstOrNull { it.arities.isNotEmpty() }
-        return withArities?.arities
     }
 
     /**
@@ -77,7 +63,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 }
             }
             if (current is PhelList && current !== list) {
-                val head = (current.forms.firstOrNull() as? PhelSymbol)?.text
+                val head = PhelPsiUtils.asSymbol(current.forms.firstOrNull())?.text
                 if (head == "quote" || head == "var") return true
             }
             current = current.parent
@@ -94,7 +80,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
     private fun isThreadedArgList(list: PhelList): Boolean {
         val parentList = findEnclosingList(list) ?: return false
         val parentForms = parentList.forms
-        val head = (parentForms.firstOrNull() as? PhelSymbol)?.text ?: return false
+        val head = PhelPsiUtils.asSymbol(parentForms.firstOrNull())?.text ?: return false
         if (head !in THREADING_HEADS) return false
         val firstFormRange = parentForms.firstOrNull()?.textRange ?: return false
         // True when [list] is an argument (i.e., not the head form) of the threading macro.
@@ -120,7 +106,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
         while (current != null) {
             if (current is PhelList) {
                 val parentForms = current.forms
-                val parentHead = (parentForms.firstOrNull() as? PhelSymbol)?.text
+                val parentHead = PhelPsiUtils.asSymbol(parentForms.firstOrNull())?.text
                 if (parentHead != null) {
                     if (parentHead in BINDING_INTRO_FORMS && bindingVecContains(parentForms, name)) return true
                     if (parentHead in FUNCTION_INTRO_FORMS && paramVecContains(parentForms, name)) return true
@@ -136,7 +122,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
         val bindings = vec.forms
         var i = 0
         while (i < bindings.size) {
-            if ((bindings[i] as? PhelSymbol)?.text == name) return true
+            if (PhelPsiUtils.asSymbol(bindings[i])?.text == name) return true
             i += 2
         }
         return false
@@ -146,7 +132,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
         for (form in forms.drop(1)) {
             if (form is org.phellang.language.psi.PhelVec) {
                 for (p in form.forms) {
-                    if ((p as? PhelSymbol)?.text == name) return true
+                    if (PhelPsiUtils.asSymbol(p)?.text == name) return true
                 }
                 return false
             }
@@ -160,11 +146,9 @@ private val THREADING_HEADS = setOf(
     "->", "->>", "as->", "some->", "some->>", "cond->", "cond->>", "doto",
 )
 
-private val BINDING_INTRO_FORMS = setOf(
-    "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor",
-)
+private val BINDING_INTRO_FORMS = PhelSpecialForms.LET_LIKE
 
-private val FUNCTION_INTRO_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
+private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
 // Special forms / macros that legitimately accept variable arg shapes.
 // Skipping avoids false positives.

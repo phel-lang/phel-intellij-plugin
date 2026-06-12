@@ -16,12 +16,13 @@ import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.core.utils.PhelPerformanceUtils
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.impl.PhelAccessImpl
 import javax.swing.Icon
 
-private val FUNCTION_INTRO_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
+private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
 object PhelLocalSymbolCompletions {
     val PARAMETER_ICON = AllIcons.Nodes.Parameter
