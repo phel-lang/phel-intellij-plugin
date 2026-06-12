@@ -15,6 +15,7 @@ import org.phellang.completion.data.selectFor
 import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 
@@ -121,11 +122,9 @@ class PhelParameterHintsProvider : InlayHintsProvider {
     }
 }
 
-private val BINDING_INTRO_FORMS = setOf(
-    "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor",
-)
+private val BINDING_INTRO_FORMS = PhelSpecialForms.LET_LIKE
 
-private val FUNCTION_INTRO_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
+private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
 // Special forms and macros where param-name hints would be noise.
 private val SKIP_HEADS = setOf(

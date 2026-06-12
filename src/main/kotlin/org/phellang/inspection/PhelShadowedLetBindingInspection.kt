@@ -8,6 +8,7 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.PhelVisitor
@@ -98,9 +99,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
     }
 
     companion object {
-        private val BINDING_INTRO_FORMS = setOf(
-            "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor",
-        )
-        private val FUNCTION_INTRO_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
+        private val BINDING_INTRO_FORMS = PhelSpecialForms.LET_LIKE
+        private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
     }
 }

@@ -12,12 +12,10 @@ import org.phellang.language.psi.utils.SymbolCategory
 object PhelSymbolAnalyzer {
 
     /** Forms that introduce a parameter vector — used by isFunctionParameter. */
-    private val FUNCTION_DEFINING_FORMS = setOf("fn", "defn", "defn-", "defmacro", "defmacro-")
+    private val FUNCTION_DEFINING_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
     /** Forms that introduce a binding vector — used by isLetBinding. */
-    private val LET_LIKE_FORMS = setOf(
-        "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "with-output-buffer", "dofor"
-    )
+    private val LET_LIKE_FORMS = PhelSpecialForms.LET_LIKE
 
     /** Top-level forms that bind a name in their second position (the symbol being defined). */
     private val DEFINITION_FORMS = setOf(

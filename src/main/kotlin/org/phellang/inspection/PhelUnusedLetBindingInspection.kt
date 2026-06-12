@@ -73,6 +73,4 @@ class PhelUnusedLetBindingInspection : LocalInspectionTool() {
     }
 }
 
-private val LET_LIKE_FORMS = setOf(
-    "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor",
-)
+private val LET_LIKE_FORMS = PhelSpecialForms.LET_LIKE
