@@ -54,7 +54,7 @@ class PhelSymbolDocumentationResolver {
 
         // Try API documentation (standard library)
         val canonicalName = "$shortNamespace/$symbolName"
-        val apiDoc = PhelApiDocumentation.functionDocs[canonicalName]
+        val apiDoc = PhelApiDocumentation.getDocumentation(canonicalName)
         if (apiDoc != null) return apiDoc
 
         // Try project symbols
@@ -89,11 +89,11 @@ class PhelSymbolDocumentationResolver {
 
             // Try API documentation first (standard library)
             val canonicalName = "$resolvedNamespace/$functionName"
-            val apiDoc = PhelApiDocumentation.functionDocs[canonicalName]
+            val apiDoc = PhelApiDocumentation.getDocumentation(canonicalName)
             if (apiDoc != null) return apiDoc
 
             // Also try with original qualifier for direct lookups
-            val directDoc = PhelApiDocumentation.functionDocs[symbolName]
+            val directDoc = PhelApiDocumentation.getDocumentation(symbolName)
             if (directDoc != null) return directDoc
 
             // Try project symbols - use the resolved namespace (alias -> actual) or qualifier directly
@@ -101,7 +101,7 @@ class PhelSymbolDocumentationResolver {
             if (projectDoc != null) return projectDoc
         } else {
             // Unqualified symbol (e.g., "map") - direct API lookup first
-            val directDoc = PhelApiDocumentation.functionDocs[symbolName]
+            val directDoc = PhelApiDocumentation.getDocumentation(symbolName)
             if (directDoc != null) return directDoc
 
             // Then try resolving via a `:refer` clause: if the file imports this name
@@ -112,7 +112,7 @@ class PhelSymbolDocumentationResolver {
                 if (sourceNamespace != null) {
                     val shortNamespace = PhelReferUtils.extractShortNamespace(sourceNamespace)
                     val canonicalName = "$shortNamespace/$symbolName"
-                    PhelApiDocumentation.functionDocs[canonicalName]?.let { return it }
+                    PhelApiDocumentation.getDocumentation(canonicalName)?.let { return it }
                     val projectDoc = resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
                     if (projectDoc != null) return projectDoc
                 }
