@@ -440,6 +440,8 @@ class PhelReference @JvmOverloads constructor(
 
                 val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
                 if (psiFile !is PhelFile) continue
+                // Fast reject: skip files whose text doesn't contain the name at all.
+                if (symbolName != null && !psiFile.text.contains(symbolName)) continue
 
                 val allSymbols = PsiTreeUtil.findChildrenOfType(psiFile, PhelSymbol::class.java)
 
@@ -640,14 +642,16 @@ class PhelReference @JvmOverloads constructor(
 
         for (file in phelFiles) {
             val psiFile = psiManager.findFile(file)
-            if (psiFile != null && psiFile != myElement!!.containingFile) {
-                // Skip current file (already handled above)
-                val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
-                for (list in lists) {
-                    val definition = findDefinitionInList(list)
-                    if (definition != null) {
-                        results.add(definition)
-                    }
+            if (psiFile == null || psiFile == myElement!!.containingFile) continue
+            // Fast reject: a file whose text doesn't mention the name can't define it, so
+            // skip the PSI walk for the many files that don't reference this symbol.
+            if (symbolName != null && !psiFile.text.contains(symbolName)) continue
+
+            val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
+            for (list in lists) {
+                val definition = findDefinitionInList(list)
+                if (definition != null) {
+                    results.add(definition)
                 }
             }
         }
