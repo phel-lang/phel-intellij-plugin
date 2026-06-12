@@ -45,7 +45,9 @@ class PhelLocalBindingReferenceTest : BasePlatformTestCase() {
     }
 
     private fun assertResolvesToBinding(body: String, usageMarker: String, bindingMarker: String) {
-        val file = myFixture.addFileToProject("src/main.phel", "(ns app\\main)\n(defn f []\n  $body)\n")
+        // Unique path per class: the shared test project does not reliably clean files
+        // between classes, so a shared path (src/main.phel) lets stale content leak in.
+        val file = myFixture.addFileToProject("src/local_binding_test.phel", "(ns app\\main)\n(defn f []\n  $body)\n")
         val phelFile = PsiManager.getInstance(project).findFile(file.virtualFile) as PhelFile
         val text = phelFile.text
 

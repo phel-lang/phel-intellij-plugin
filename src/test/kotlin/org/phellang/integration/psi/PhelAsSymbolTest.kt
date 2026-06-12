@@ -35,7 +35,10 @@ class PhelAsSymbolTest : BasePlatformTestCase() {
     }
 
     private fun firstList(text: String, head: String): PhelList {
-        val vf = myFixture.addFileToProject("src/main.phel", text).virtualFile
+        // Unique path per class: the shared BasePlatformTestCase project does not reliably
+        // clean files between classes, so sharing a path (e.g. src/main.phel) lets stale
+        // content from another test leak in and resolve incorrectly.
+        val vf = myFixture.addFileToProject("src/as_symbol_test.phel", text).virtualFile
         val phelFile = com.intellij.psi.PsiManager.getInstance(project).findFile(vf) as PhelFile
         return PsiTreeUtil.findChildrenOfType(phelFile, PhelList::class.java)
             .first { PhelPsiUtils.asSymbol(it.forms.firstOrNull())?.text == head }
