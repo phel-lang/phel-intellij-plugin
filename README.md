@@ -23,28 +23,32 @@ Phel is a functional programming language that transpiles to PHP. It is a dialec
 ## Features
 
 - **Syntax Highlighting** - Full lexer-based syntax highlighting for Phel code
-- **Code Completion** - Intelligent completion for core functions, namespaces, and symbols
+- **Code Completion** - Intelligent completion for core functions, namespaces, and project symbols
 - **Documentation Popups** - Hover over functions to see detailed documentation with examples
+- **Code Inspections** - Deprecated-function, backslash-namespace, arity-mismatch, unused-let-binding, and shadowed-let-binding checks with quick-fixes
+- **Parameter Hints** - Inlay hints showing parameter names at call sites
+- **Structure View** - Outline of top-level definitions for quick navigation
+- **Rename Refactoring** - Safe rename for symbols across a file
 - **Bracket Matching** - Automatic matching and highlighting of parentheses, brackets, and braces
 - **Code Folding** - Collapse/expand code blocks for better navigation
-- **Smart Typing** - Auto-completion of brackets and quotes
+- **Smart Typing & Paredit** - Auto-completion of brackets/quotes and structural editing
+- **Code Formatting** - Format Phel sources via the external `phel` formatter
 - **Semantic Analysis** - Error detection and semantic highlighting
 - **File Templates** - Quick creation of new Phel files with proper structure
 
 ### Built-in Function Registry
 
-The plugin includes a comprehensive registry of **350+ Phel functions** across all core namespaces:
+The plugin ships a generated registry of **900+ Phel functions across 35 namespaces** (kept in
+sync with the official API via `./gradlew updatePhelRegistry`), including:
 
-- `phel\base64` - Base64 encoding/decoding utilities
-- `phel\core` - Core language functions (258+ functions)
-- `phel\debug` - Debugging and tracing tools
+- `phel\core` - Core language functions
+- `phel\string` - String manipulation functions
+- `phel\json`, `phel\edn`, `phel\base64`, `phel\transit` - Encoding/decoding utilities
+- `phel\http`, `phel\http-client`, `phel\router` - HTTP and routing helpers
 - `phel\html` - HTML generation helpers
-- `phel\http` - HTTP request/response handling
-- `phel\json` - JSON encoding/decoding
-- `phel\mock` - Testing and mocking utilities
-- `phel\repl` - REPL-specific functions
-- `phel\str` - String manipulation functions
-- `phel\test` - Testing framework functions
+- `phel\test`, `phel\test-gen`, `phel\mock` - Testing and property-based testing utilities
+- `phel\schema` (and validator/coercer/generator variants) - Data schema tooling
+- `phel\debug`, `phel\reflect`, `phel\repl` - Debugging, reflection, and REPL helpers
 
 ## Usage
 
@@ -108,7 +112,7 @@ src/
 #### Code Intelligence
 
 - **PhelCompletionContributor** - Intelligent code completion for functions and symbols
-- **PhelFunctionRegistry** - Central registry of 350+ Phel functions with full documentation
+- **PhelFunctionRegistry** - Central registry of 900+ Phel functions with full documentation
 - **PhelDocumentationProvider** - Hover documentation with examples and deprecation info
 - **PhelAnnotator** - Semantic highlighting and error detection
 
