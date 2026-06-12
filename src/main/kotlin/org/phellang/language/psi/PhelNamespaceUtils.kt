@@ -7,14 +7,27 @@ import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
+import java.util.Optional
 
 object PhelNamespaceUtils {
 
     private val USED_CLASSES_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.usedClasses")
     private val REFERRED_SYMBOLS_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.referredSymbols")
     private val ALIAS_MAP_KEY: Key<CachedValue<Map<String, String>>> = Key.create("phel.namespace.aliasMap")
+    private val NS_DECLARATION_KEY: Key<CachedValue<Optional<PhelList>>> = Key.create("phel.namespace.declaration")
 
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
+        // Resolved once per file: highlighting and reference resolution look up the (ns …)
+        // form repeatedly (per qualified symbol), and each lookup otherwise scans the tree.
+        return CachedValuesManager.getCachedValue(file, NS_DECLARATION_KEY) {
+            CachedValueProvider.Result.create(
+                Optional.ofNullable(computeNamespaceDeclaration(file)),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }.orElse(null)
+    }
+
+    private fun computeNamespaceDeclaration(file: PhelFile): PhelList? {
         // (ns my-ns (:require ...) (:use ...))
         val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
         return lists.firstOrNull { list ->
