@@ -100,8 +100,17 @@ object PhelFunctionRegistry {
         return functionNamesByPriority[priority]?.contains(name) == true
     }
 
+    // First-wins lookup by exact name, mirroring the previous `find { it.name == name }`.
+    private val functionsByName: Map<String, PhelFunction> by lazy {
+        val map = HashMap<String, PhelFunction>()
+        for (fn in functions.values.flatten()) {
+            map.putIfAbsent(fn.name, fn)
+        }
+        map
+    }
+
     fun getFunction(name: String): PhelFunction? {
-        return functions.values.flatten().find { it.name == name }
+        return functionsByName[name]
     }
 
     fun getAllFunctions(): List<PhelFunction> {
