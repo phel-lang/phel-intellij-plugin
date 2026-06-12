@@ -87,6 +87,19 @@ object PhelFunctionRegistry {
         return functions.values.flatten().filter { it.completion.priority == priority }
     }
 
+    // Cache of function names grouped by completion priority for fast membership checks.
+    // Used by syntax highlighting, which probes every symbol against several categories.
+    private val functionNamesByPriority: Map<PhelCompletionPriority, Set<String>> by lazy {
+        functions.values.flatten()
+            .groupBy { it.completion.priority }
+            .mapValues { (_, fns) -> fns.mapTo(HashSet()) { it.name } }
+    }
+
+    /** O(1) check for whether a function with [name] exists in the given [priority] category. */
+    fun hasFunctionWithName(priority: PhelCompletionPriority, name: String): Boolean {
+        return functionNamesByPriority[priority]?.contains(name) == true
+    }
+
     fun getFunction(name: String): PhelFunction? {
         return functions.values.flatten().find { it.name == name }
     }

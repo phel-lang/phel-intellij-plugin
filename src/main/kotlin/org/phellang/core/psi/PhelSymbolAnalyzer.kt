@@ -36,7 +36,7 @@ object PhelSymbolAnalyzer {
             SymbolCategory.CORE_FUNCTIONS -> PhelCompletionPriority.CORE_FUNCTIONS
             SymbolCategory.COLLECTION_FUNCTIONS -> PhelCompletionPriority.COLLECTION_FUNCTIONS
         }
-        return symbolText in PhelFunctionRegistry.getFunctions(priority).map { it.name }
+        return PhelFunctionRegistry.hasFunctionWithName(priority, symbolText)
     }
 
     @JvmStatic
