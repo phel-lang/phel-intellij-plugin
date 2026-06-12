@@ -149,36 +149,50 @@ object PhelSymbolAnalyzer {
         return PhelErrorHandler.safeOperation {
             val symbolText = symbol.text ?: return@safeOperation false
 
-            // Don't highlight if this is the parameter definition itself
-            val isParamDef = isFunctionParameter(symbol)
-            val isLetBindingDef = isLetBinding(symbol)
-
-            if (isParamDef || isLetBindingDef) {
+            // A binding/parameter *definition* is not a reference to one.
+            if (isFunctionParameter(symbol) || isLetBinding(symbol)) {
                 return@safeOperation false
             }
 
-            // Look for function parameters in the containing function
-            val containingFunction = findContainingFunction(symbol)
-            if (containingFunction != null) {
-                val parameters = extractFunctionParameters(containingFunction)
-                if (parameters.contains(symbolText)) {
-                    return@safeOperation true
-                }
-            }
-
-            // Look for let bindings in the containing scopes
-            if (isReferenceToLetBinding(symbol, symbolText)) {
-                return@safeOperation true
-            }
-
-            // Look for references to locally defined functions in the same file
-            val isLocalFuncRef = isReferenceToLocalFunction(symbol, symbolText)
-            if (isLocalFuncRef) {
-                return@safeOperation true
-            }
-
-            false
+            isLocalReferenceOnly(symbol, symbolText)
         } ?: false
+    }
+
+    /**
+     * True when [symbol] is a fn/let binding definition **or** a reference to one — i.e. any
+     * occurrence highlighting paints as a local symbol. Computes each underlying check once;
+     * prefer this over calling `isParameterReference`, `isFunctionParameter` and `isLetBinding`
+     * separately, which re-walks the PSI for the two definition checks.
+     */
+    @JvmStatic
+    fun isLocalBindingOrReference(symbol: PhelSymbol): Boolean {
+        return PhelErrorHandler.safeOperation {
+            val symbolText = symbol.text ?: return@safeOperation false
+            if (isFunctionParameter(symbol) || isLetBinding(symbol)) {
+                return@safeOperation true
+            }
+            isLocalReferenceOnly(symbol, symbolText)
+        } ?: false
+    }
+
+    /** Reference-only lookup: assumes the caller already ruled out a binding/param definition. */
+    private fun isLocalReferenceOnly(symbol: PhelSymbol, symbolText: String): Boolean {
+        // Look for function parameters in the containing function
+        val containingFunction = findContainingFunction(symbol)
+        if (containingFunction != null) {
+            val parameters = extractFunctionParameters(containingFunction)
+            if (parameters.contains(symbolText)) {
+                return true
+            }
+        }
+
+        // Look for let bindings in the containing scopes
+        if (isReferenceToLetBinding(symbol, symbolText)) {
+            return true
+        }
+
+        // Look for references to locally defined functions in the same file
+        return isReferenceToLocalFunction(symbol, symbolText)
     }
 
     private fun findContainingFunction(symbol: PhelSymbol): PhelList? {

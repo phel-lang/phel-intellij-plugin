@@ -38,10 +38,7 @@ object PhelSymbolHighlighter {
         // Function parameters and let bindings shadow same-named core fns. Classify
         // them first so the deprecated check below does not paint local bindings
         // with strikethrough.
-        if (PhelSymbolAnalyzer.isParameterReference(symbol)
-            || PhelSymbolAnalyzer.isFunctionParameter(symbol)
-            || PhelSymbolAnalyzer.isLetBinding(symbol)
-        ) {
+        if (PhelSymbolAnalyzer.isLocalBindingOrReference(symbol)) {
             PhelAnnotationUtils.createAnnotation(holder, symbol, FUNCTION_PARAMETER)
             return
         }

@@ -65,9 +65,7 @@ class PhelSymbolDocumentationResolver {
     }
 
     private fun isLocalSymbol(symbol: PhelSymbol): Boolean {
-        return PhelSymbolAnalyzer.isParameterReference(symbol)
-                || PhelSymbolAnalyzer.isFunctionParameter(symbol)
-                || PhelSymbolAnalyzer.isLetBinding(symbol)
+        return PhelSymbolAnalyzer.isLocalBindingOrReference(symbol)
     }
 
     private fun generateLocalSymbolDoc(symbol: PhelSymbol, symbolName: String): String {

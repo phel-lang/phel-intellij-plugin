@@ -21,9 +21,7 @@ class PhelDeprecatedFunctionInspection : LocalInspectionTool() {
                 // A name introduced by a fn/defn parameter vector or a let-like
                 // binding shadows any same-named core fn; usages of that local
                 // must not be flagged as a deprecated core-fn reference.
-                if (PhelSymbolAnalyzer.isParameterReference(symbol)) return
-                if (PhelSymbolAnalyzer.isFunctionParameter(symbol)) return
-                if (PhelSymbolAnalyzer.isLetBinding(symbol)) return
+                if (PhelSymbolAnalyzer.isLocalBindingOrReference(symbol)) return
                 if (PhelSymbolAnalyzer.isDefinition(symbol)) return
 
                 if (PhelFunctionRegistry.isDeprecated(text)) {
