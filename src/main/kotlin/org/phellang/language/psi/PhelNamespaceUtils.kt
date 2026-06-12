@@ -11,6 +11,7 @@ import org.phellang.language.psi.files.PhelFile
 object PhelNamespaceUtils {
 
     private val USED_CLASSES_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.usedClasses")
+    private val REFERRED_SYMBOLS_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.referredSymbols")
 
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
         // (ns my-ns (:require ...) (:use ...))
@@ -254,6 +255,15 @@ object PhelNamespaceUtils {
     }
 
     fun extractReferredSymbols(file: PhelFile): Set<String> {
+        return CachedValuesManager.getCachedValue(file, REFERRED_SYMBOLS_KEY) {
+            CachedValueProvider.Result.create(
+                computeReferredSymbols(file),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
+    }
+
+    private fun computeReferredSymbols(file: PhelFile): Set<String> {
         val referredSymbols = mutableSetOf<String>()
 
         val nsDeclaration = findNamespaceDeclaration(file) ?: return referredSymbols
