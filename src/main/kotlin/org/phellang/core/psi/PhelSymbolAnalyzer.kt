@@ -18,6 +18,8 @@ object PhelSymbolAnalyzer {
 
     private val LOCAL_FUNCTION_NAMES_KEY: Key<CachedValue<Set<String>>> =
         Key.create("phel.localFunctionNames")
+    private val FUNCTION_PARAMS_KEY: Key<CachedValue<Set<String>>> =
+        Key.create("phel.functionParameters")
 
     /** Forms that introduce a parameter vector — used by isFunctionParameter. */
     private val FUNCTION_DEFINING_FORMS = PhelSpecialForms.FUNCTION_DEFINING
@@ -227,6 +229,17 @@ object PhelSymbolAnalyzer {
     }
 
     private fun extractFunctionParameters(functionList: PhelList): Set<String> {
+        // Cached per function: isLocalReferenceOnly calls this for every regular symbol inside
+        // a function, and the parameter set is the same for all of them.
+        return CachedValuesManager.getCachedValue(functionList, FUNCTION_PARAMS_KEY) {
+            CachedValueProvider.Result.create(
+                computeFunctionParameters(functionList),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
+    }
+
+    private fun computeFunctionParameters(functionList: PhelList): Set<String> {
         val parameters = mutableSetOf<String>()
 
         // Single-arity: paramVec lives directly in the function list.
