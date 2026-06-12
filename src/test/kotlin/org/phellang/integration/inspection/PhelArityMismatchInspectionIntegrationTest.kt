@@ -32,6 +32,26 @@ class PhelArityMismatchInspectionIntegrationTest : BasePlatformTestCase() {
         assertTrue("threaded call should not be flagged: $warnings", warnings.isEmpty())
     }
 
+    fun testCommonStdlibCallsAreNotFlagged() {
+        // A realistic mix of correct-arity core calls must produce zero warnings,
+        // guarding the now-active inspection against false positives on the stdlib.
+        val warnings = inspect(
+            """
+            (ns app\m)
+            (defn run [xs m]
+              (map inc xs)
+              (filter even? xs)
+              (reduce + 0 xs)
+              (println "hi" xs)
+              (str "a" "b" "c")
+              (get m :k)
+              (assoc m :k 1)
+              (count xs))
+            """.trimIndent() + "\n"
+        )
+        assertTrue("common stdlib calls should not be flagged, got $warnings", warnings.isEmpty())
+    }
+
     fun testLocallyShadowedNameIsNotFlagged() {
         // `inc` is locally rebound, so the registry arity for core/inc must not apply.
         val warnings = inspect("(ns app\\m)\n(defn f []\n  (let [inc (fn [a b] a)]\n    (inc 1 2)))\n")
