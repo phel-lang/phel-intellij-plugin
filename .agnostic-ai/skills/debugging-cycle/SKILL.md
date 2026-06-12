@@ -1,0 +1,52 @@
+---
+name: debugging-cycle
+description: Diagnoses bugs, regressions, flaky behavior, and failures before fixes are proposed. Use when the user asks to debug, investigate, or find root cause.
+---
+
+Use this skill for requests like `debug flaky completion test`, `investigate parser crash on unterminated regex`, `diagnose lexer ordering regression`, or `find root cause of duplicate annotations`.
+
+Inputs: a bug/failure/flaky behavior/regression/diagnostic scope in `$ARGUMENTS`; relevant code, tests, generated sources, logs; optional severity/issue/package/path hints.
+
+## Artifact location (graceful degradation)
+
+- If `.specify/` exists, use `.specify/debug/<case-slug>/debug-report.md`.
+- Otherwise, use `docs/debug/<case-slug>/debug-report.md`.
+- `<case-slug>` uses `YYYY-MM-DD-short-kebab-summary`, preferring an issue-number prefix.
+
+Rules:
+- First deliverable is always the debug report, not an immediate fix.
+- The debug report is a pre-spec evidence artifact; it does not replace a canonical `spec.md`.
+- Do not propose or implement fixes until the report has concrete evidence, a best hypothesis, and a recommended follow-up path.
+- Ground every factual claim in repo/runtime evidence; label uncertain claims as hypothesis or unknown. Verify Phel/grammar facts against `api.json`, `.flex`/`.bnf`, and `src/main/gen/` — never memory.
+- If scope crosses 3+ files, 2+ packages, or needs end-to-end tracing, run `/workflow.team-run analysis <scope>` before finalizing.
+
+Workflow:
+1. Resolve the debug case:
+   - Reuse the current case directory when resuming the same active diagnosis.
+   - Otherwise create the case directory at the resolved artifact home.
+   - Load `debug-report-template.md` before writing or updating `debug-report.md`.
+2. Triage and scoping:
+   - Capture current symptom, impact, severity, suspected surface, and any safe containment step.
+   - Decide whether the case is likely `restore-fix`, `spec-required`, or `investigation-only`; this can stay provisional until more evidence exists.
+3. Investigation:
+   - Reproduce or explicitly document why reproduction is not yet possible. Prefer a focused test: `./gradlew test --tests "<FullyQualifiedTest>"`.
+   - Read errors fully, compare recent changes (`git log`/`git diff`), trace data flow, and gather evidence at component boundaries (lexer → parser → PSI → annotator/completion/inspection).
+   - For grammar issues, inspect the actual generated output in `src/main/gen/` and the rule ordering in `Phel.flex`/`Phel.bnf`.
+   - For IDE-runtime issues, check the sandbox log (`./gradlew runIde`) and watch for swallowed `ProcessCanceledException` or EDT violations.
+   - When the surface is broad, run `/workflow.team-run analysis <scope>` and merge that evidence into the report.
+4. Diagnosis synthesis:
+   - Update `debug-report.md` with evidence, current best root-cause hypothesis, known unknowns, and the smallest next validating step.
+   - Set `Resolution class` to one of:
+     - `restore-fix` — a narrow repair that restores already-intended behavior without changing product or interface intent
+     - `spec-required` — the permanent fix changes intended behavior, a token/PSI/grammar contract, or another spec-level decision
+     - `investigation-only` — more evidence is needed before either path is safe
+5. Review gate:
+   - Stop and summarize the diagnosis, evidence quality, and resolution class.
+   - End with: `Debug report ready. Reply with "approve debug report" to continue or tell me what to change.`
+6. Post-approval routing:
+   - `restore-fix` → continue as a narrow bugfix in the implementation workflow, keeping the debug report as the source of truth for scope and verification.
+   - `spec-required` → create or update a dedicated feature spec for the permanent change and continue through `spec → plan → tasks → implementation`.
+   - `investigation-only` → continue investigation rather than guessing.
+7. Completion:
+   - Leave the repo with an updated `debug-report.md`.
+   - Summarize the evidence used, the current diagnosis confidence, the chosen resolution class, and the exact next workflow step.

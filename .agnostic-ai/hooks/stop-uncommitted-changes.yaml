@@ -1,0 +1,13 @@
+name: stop-uncommitted-changes
+description: On stop, warn if there are uncommitted changes so work isn't lost before ending the session.
+event: Stop
+target: claude
+command: |
+  CHANGES=$(git status --porcelain 2>/dev/null)
+  if [ -n "$CHANGES" ]; then
+    COUNT=$(printf '%s\n' "$CHANGES" | wc -l | tr -d ' ')
+    echo "WARNING: $COUNT uncommitted file(s) detected — consider committing before stopping." >&2
+    printf '%s\n' "$CHANGES" | head -5 >&2
+    [ "$COUNT" -gt 5 ] && echo "  ... and $((COUNT - 5)) more" >&2
+  fi
+  exit 0
