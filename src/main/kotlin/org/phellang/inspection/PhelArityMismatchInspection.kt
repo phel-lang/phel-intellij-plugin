@@ -5,11 +5,9 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
-import org.phellang.completion.data.PhelArity
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.completion.data.PhelArityResolver
 import org.phellang.completion.data.accepts
 import org.phellang.completion.data.describe
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
@@ -36,7 +34,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 if (isThreadedArgList(o)) return
                 if (resolvesToLocalBinding(head, name)) return
 
-                val arities = resolveArities(head, name) ?: return
+                val arities = PhelArityResolver.resolve(head.project, name) ?: return
                 if (arities.isEmpty()) return
 
                 val argCount = forms.size - 1
@@ -49,20 +47,6 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 }
             }
         }
-    }
-
-    private fun resolveArities(head: PhelSymbol, name: String): List<PhelArity>? {
-        val shortName = name.substringAfterLast('/')
-
-        PhelFunctionRegistry.getFunction(shortName)?.let { fn ->
-            val parsed = PhelArity.parseAll(fn.signature)
-            if (parsed.isNotEmpty()) return parsed
-        }
-
-        val index = PhelProjectSymbolIndex.getInstance(head.project)
-        val candidates = index.findByName(shortName)
-        val withArities = candidates.firstOrNull { it.arities.isNotEmpty() }
-        return withArities?.arities
     }
 
     /**

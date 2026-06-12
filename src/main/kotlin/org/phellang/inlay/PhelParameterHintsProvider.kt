@@ -10,9 +10,8 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import org.phellang.completion.data.PhelArity
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.completion.data.PhelArityResolver
 import org.phellang.completion.data.selectFor
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
@@ -42,7 +41,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             if (resolvesToLocalBinding(headSymbol, headName)) return
 
             val args = forms.drop(1)
-            val arities = resolveArities(headSymbol, headName) ?: return
+            val arities = PhelArityResolver.resolve(headSymbol.project, headName) ?: return
             val arity = arities.selectFor(args.size) ?: return
 
             for ((i, arg) in args.withIndex()) {
@@ -67,18 +66,6 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             } else {
                 arity.params.getOrNull(argIndex)
             }
-        }
-
-        private fun resolveArities(headSymbol: PhelSymbol, headName: String): List<PhelArity>? {
-            val shortName = headName.substringAfterLast('/')
-
-            PhelFunctionRegistry.getFunction(shortName)?.let { fn ->
-                val parsed = PhelArity.parseAll(fn.signature)
-                if (parsed.isNotEmpty()) return parsed
-            }
-
-            val index = PhelProjectSymbolIndex.getInstance(headSymbol.project)
-            return index.findByName(shortName).firstOrNull { it.arities.isNotEmpty() }?.arities
         }
 
         /** True when [name] resolves to an enclosing let/loop binding or fn parameter. */
