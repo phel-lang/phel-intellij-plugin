@@ -23,9 +23,13 @@ object PhelFunctionRegistry {
 
     private val functions = mutableMapOf<Namespace, List<PhelFunction>>()
 
+    // `functions` is populated once in init and never mutated afterwards, so the flattened
+    // view can be computed a single time and reused by every read path.
+    private val flattenedFunctions: List<PhelFunction> by lazy { functions.values.flatten() }
+
     // Cache of deprecated function names for fast lookup
     private val deprecatedFunctionNames: Set<String> by lazy {
-        functions.values.flatten()
+        flattenedFunctions
             .filter { it.isDeprecated }
             .flatMap { func ->
                 // Store both full name and short name for flexible lookup
@@ -84,13 +88,13 @@ object PhelFunctionRegistry {
     }
 
     fun getFunctions(priority: PhelCompletionPriority): List<PhelFunction> {
-        return functions.values.flatten().filter { it.completion.priority == priority }
+        return flattenedFunctions.filter { it.completion.priority == priority }
     }
 
     // Cache of function names grouped by completion priority for fast membership checks.
     // Used by syntax highlighting, which probes every symbol against several categories.
     private val functionNamesByPriority: Map<PhelCompletionPriority, Set<String>> by lazy {
-        functions.values.flatten()
+        flattenedFunctions
             .groupBy { it.completion.priority }
             .mapValues { (_, fns) -> fns.mapTo(HashSet()) { it.name } }
     }
@@ -103,7 +107,7 @@ object PhelFunctionRegistry {
     // First-wins lookup by exact name, mirroring the previous `find { it.name == name }`.
     private val functionsByName: Map<String, PhelFunction> by lazy {
         val map = HashMap<String, PhelFunction>()
-        for (fn in functions.values.flatten()) {
+        for (fn in flattenedFunctions) {
             map.putIfAbsent(fn.name, fn)
         }
         map
@@ -114,7 +118,7 @@ object PhelFunctionRegistry {
     }
 
     fun getAllFunctions(): List<PhelFunction> {
-        return functions.values.flatten()
+        return flattenedFunctions
     }
 
     fun isDeprecated(functionName: String): Boolean {
