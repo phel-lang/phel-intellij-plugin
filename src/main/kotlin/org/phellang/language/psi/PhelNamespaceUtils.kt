@@ -1,9 +1,16 @@
 package org.phellang.language.psi
 
+import com.intellij.openapi.util.Key
+import com.intellij.psi.util.CachedValue
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
 
 object PhelNamespaceUtils {
+
+    private val USED_CLASSES_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.usedClasses")
 
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
         // (ns my-ns (:require ...) (:use ...))
@@ -63,6 +70,17 @@ object PhelNamespaceUtils {
      * `(.method bar)`, or `Bar/static-fn`.
      */
     fun extractUsedClasses(file: PhelFile): Set<String> {
+        // Highlighting probes this once per symbol; cache the per-file result and let
+        // the PSI modification tracker invalidate it whenever the file is edited.
+        return CachedValuesManager.getCachedValue(file, USED_CLASSES_KEY) {
+            CachedValueProvider.Result.create(
+                computeUsedClasses(file),
+                PsiModificationTracker.MODIFICATION_COUNT,
+            )
+        }
+    }
+
+    private fun computeUsedClasses(file: PhelFile): Set<String> {
         val nsDeclaration = findNamespaceDeclaration(file) ?: return emptySet()
         val useForms = findUseForms(nsDeclaration)
         if (useForms.isEmpty()) return emptySet()
