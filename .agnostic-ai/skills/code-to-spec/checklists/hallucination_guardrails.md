@@ -1,0 +1,31 @@
+# Hallucination Guardrails for Code to Spec
+
+## Grounding rules
+1) FACT rule:
+   - If a statement is asserted as fact, it must cite evidence (file path + symbol, config key, or test name).
+2) NO INVENTION:
+   - Never invent extension points, PSI types, tokens, grammar rules, action IDs, Phel functions, or behaviors.
+   - Verify Phel functions against `api.json` / `NamespaceConfig.kt`; verify grammar/PSI against `Phel.flex`, `Phel.bnf`, and `src/main/gen/`.
+3) UNKNOWN quarantine:
+   - If it cannot be proven from evidence, move it into `Unknowns & Questions` or label it as an explicit assumption.
+
+## Language rules
+- Avoid: `definitely`, `guarantees`, `always`, `never`
+- Prefer: `observed`, `implied by`, `appears to`, `likely (needs confirmation)`, `not observable in code`
+
+## Evidence formatting rules
+- Every major section should include at least one evidence reference.
+- Evidence references should look like:
+  - `src/main/kotlin/org/phellang/completion/Foo.kt: FooProvider`
+  - `src/main/resources/META-INF/plugin.xml: <completion.contributor>`
+  - `src/test/kotlin/.../FooTest.kt: testRanksExactMatchFirst`
+
+## Consistency rules
+- If two sources conflict, do not resolve the conflict by guessing.
+- Document the conflict, list both sources, and add a follow-up question.
+
+## Auto-fail red flags
+- Mentions a PSI type, token, or extension point not found in the evidence list
+- Adds an action/completion/inspection not grounded in `plugin.xml` or code
+- Claims a Phel function exists without an `api.json` / registry reference
+- Claims a lexer/parser behavior without citing the actual `.flex`/`.bnf` rule or generated output

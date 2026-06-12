@@ -1,3 +1,5 @@
 [
-  "PostToolUse"
+  "PreToolUse",
+  "PostToolUse",
+  "Stop"
 ]

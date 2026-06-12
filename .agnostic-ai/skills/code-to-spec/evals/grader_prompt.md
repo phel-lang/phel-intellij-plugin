@@ -1,0 +1,40 @@
+# Code to Spec Grader Prompt
+
+You are grading a reverse-spec output for correctness, grounding, and safety.
+
+Input:
+- The current `spec.md` draft
+- The evidence list and any cited file snippets
+
+Grade on:
+1. Structure completeness (required sections present, acceptance criteria present, unknowns present)
+2. Grounding (no invented PSI types/tokens/grammar rules/extension points/Phel functions; uncertain parts clearly labeled)
+3. Plugin behavior safety (lexer/parser ordering, malformed-input handling, PSI shape, threading/cancellation, version-compat — when relevant)
+4. Observability (logging and existing test coverage identified and grounded)
+
+Return JSON:
+
+```json
+{
+  "scores": {
+    "structure": 0.0,
+    "grounding": 0.0,
+    "behavior_safety": 0.0,
+    "observability": 0.0
+  },
+  "overall": 0.0,
+  "pass": false,
+  "issues": [
+    {
+      "severity": "high|med|low",
+      "note": "what is wrong",
+      "suggestion": "how to fix it without guessing"
+    }
+  ]
+}
+```
+
+Be strict about hallucinations:
+- If the spec asserts a PSI type, token, grammar rule, extension point, or Phel function not supported by evidence, deduct grounding heavily.
+- If lexer/parser behavior is described without citing the actual `.flex`/`.bnf` rule or generated output, deduct behavior-safety.
+- If the draft resolves evidence conflicts by guessing instead of documenting uncertainty, fail grounding.

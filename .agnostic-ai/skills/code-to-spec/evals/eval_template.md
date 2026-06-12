@@ -1,0 +1,25 @@
+# Code to Spec Self Evaluation
+
+After generating the reverse-spec draft, evaluate it against:
+
+## Structure
+- [ ] Evidence section present
+- [ ] Acceptance Criteria >= 3 (unless truly trivial)
+- [ ] Unknowns & Questions present
+
+## Grounding
+- [ ] All claims traceable to evidence (file:symbol, config key, or test)
+- [ ] No invented PSI types, tokens, grammar rules, extension points, or Phel functions
+- [ ] Uncertain areas labeled
+
+## Plugin behavior safety (if applicable)
+- [ ] Lexer/parser ordering and malformed-input handling described
+- [ ] PSI tree shape / key element types identified
+- [ ] Threading and cancellation behavior stated
+- [ ] Version-compat and generated-source/registry impact noted
+
+## Observability
+- [ ] Logging points defined where failures can occur
+- [ ] Existing test coverage identified
+
+If any item remains unchecked, revise the draft before declaring it complete.

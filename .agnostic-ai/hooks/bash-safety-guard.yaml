@@ -1,0 +1,16 @@
+name: bash-safety-guard
+description: Blocks destructive shell commands (rm -rf on absolute/relative roots, git push --no-verify) before they run.
+event: PreToolUse
+matcher: Bash
+target: claude
+command: |
+  CMD=$(jq -r '.tool_input.command // empty')
+  if printf '%s' "$CMD" | grep -qE 'rm[[:space:]]+(-[a-zA-Z]*[[:space:]]+)*-?[a-zA-Z]*f[a-zA-Z]*[[:space:]]+(/|\./|~|\$HOME)'; then
+    echo 'BLOCKED — destructive recursive/forced file deletion detected (rm -rf). Narrow the target or delete specific paths.' >&2
+    exit 2
+  fi
+  if printf '%s' "$CMD" | grep -qE 'git[[:space:]]+push.*--no-verify'; then
+    echo 'BLOCKED — --no-verify bypasses quality gates. Fix the underlying issue instead.' >&2
+    exit 2
+  fi
+  exit 0

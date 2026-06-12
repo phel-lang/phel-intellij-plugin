@@ -1,0 +1,94 @@
+---
+name: implementation-cycle
+description: Runs the repo's full implementation cycle with approval gates, analysis, delivery, and remediation. Use when the user wants to implement or change behavior in the plugin.
+---
+
+Use this skill for requests like `implement #42` or `implement hover docs for core macros`.
+
+Inputs: a GitHub issue number, issue URL, or freeform request in `$ARGUMENTS`; the repo's workflow commands; existing feature artifacts when resuming.
+
+## Artifact location (graceful degradation)
+
+This repo is not required to be Spec Kit-bootstrapped. Resolve the artifact home in this order:
+- If `.specify/` exists, use the repo's Spec Kit feature structure and templates.
+- Otherwise, write lightweight artifacts under `docs/specs/<feature-slug>/` (`spec.md`, `plan.md`, `tasks.md`), where `<feature-slug>` is `short-kebab-summary`, preferably prefixed with the issue number.
+
+Whichever home is chosen, those artifacts are the source of truth; never fork into ad hoc files outside it.
+
+Rules:
+- Resume from the current unfinished stage if a spec, plan, tasks, findings report, or delivery notes exist; don't restart unless the user asks for a reset.
+- Stop at each approval gate with the exact approval phrase below, unless the user requested an autonomous run.
+- Route to `/workflow.document-existing` if the request is documenting/reverse-specing existing behavior; to `/workflow.debug` if it's primarily diagnosing a bug/flaky test/regression/failure.
+- Verify Phel language facts against `api.json` and https://phel-lang.org/, and grammar/PSI facts against the actual `.flex`/`.bnf` sources and generated code in `src/main/gen/` — never from memory.
+
+Workflow:
+1. Validate environment:
+   - The repo root has `build.gradle.kts` and `gradlew`.
+   - `/workflow.brainstorm`, `/workflow.prepare-worktree`, `/workflow.team-run`, `/workflow.attack`, `/workflow.fix`, `/workflow.delivery`, and `/workflow.debug` exist in `.claude/commands`.
+2. Classify the request:
+   - Issue number/URL ⇒ ticket mode; otherwise ⇒ freeform mode.
+   - If nothing meaningful is present and there are no resumable artifacts, stop and explain what is missing.
+   - If `/workflow.classify` is available, run `/workflow.classify $ARGUMENTS` and follow its output:
+       - `direct` (TRIVIAL/SIMPLE): skip steps 3–11. State what will change in 1–2 sentences, make the edit, run `./gradlew test` (or `build`), summarize. Do not write spec/plan/tasks artifacts unless the user asks.
+       - `sdd` (MODERATE): continue with the full workflow from step 3 onward.
+       - `sdd+brainstorm` (COMPLEX): continue from step 3 but run `/workflow.brainstorm <scope>` before the spec phase.
+       - `clarify-first` (UNCLEAR): ask the one question returned by the classifier, wait for the answer, then re-run classification.
+   - If `/workflow.classify` is not available, continue the full cycle from step 3 (backward-compatible default).
+   - In autonomous mode, log the classification result and continue without stopping for `clarify-first`.
+3. Intake and analysis:
+   - In ticket mode, fetch the issue via `gh issue view <n>` when available.
+   - In freeform mode, restate the request as an implementation objective with explicit scope, likely constraints, and assumptions before writing artifacts.
+   - Discover the affected surface first: Grep/Read over `src/main/kotlin/org/phellang/` (`actions/`, `annotator/`, `completion/`, `language/` + `parser/`, `inspection/`, `syntax/`), `plugin.xml`, the grammar sources, and the registry.
+   - If the request is large, ambiguous, brownfield, high-risk, or has multiple plausible directions, run `/workflow.brainstorm <scope>`.
+   - If the request modifies an existing capability and there is no trustworthy current-state spec yet, run `/workflow.document-existing <scope>` first.
+   - If the impacted surface spans 3+ files, crosses 2+ packages, or clearly requires end-to-end tracing, run `/workflow.team-run analysis <scope>` before finalizing the spec.
+4. Spec phase:
+   - Create or update `spec.md` at the resolved artifact home.
+   - Capture scope, non-goals, dependencies, version-compat assumptions, open questions, and known risk areas (grammar ordering, PSI contracts, generated-source impact).
+   - If the spec already exists, update it in place rather than duplicating it.
+5. Spec approval gate:
+   - Summarize scope, major technical decisions, open questions or assumptions, and expected blast radius.
+   - End with: `Spec ready. Reply with "approve spec" to continue or tell me what to change.`
+   - Skip only when autonomous mode was explicitly requested.
+6. Plan phase:
+   - Create or update `plan.md`.
+   - Make verification (`./gradlew test`/`build`), rollback, registry-regeneration, generated-source, and version-compat expectations explicit where relevant.
+7. Plan approval gate:
+   - Summarize implementation order, verification strategy, and external dependencies.
+   - End with: `Plan ready. Reply with "approve plan" to continue or tell me what to change.`
+8. Tasks phase:
+   - Create or update `tasks.md`.
+   - Make task ordering, dependencies, validation steps, and any parallel-safe work explicit.
+9. Consistency analysis:
+   - Cross-check spec ⇄ plan ⇄ tasks for gaps or contradictions before implementation. Apply required updates before the final pre-implementation approval.
+10. Task approval gate:
+   - Summarize task order, parallelizable work, high-risk tasks, consistency findings, and required verification.
+   - End with: `Tasks ready. Reply with "approve tasks" to continue or tell me what to change.`
+11. Worktree preparation:
+   - Run `/workflow.prepare-worktree <scope>` for non-trivial work, especially broad, cross-package, brownfield, grammar/PSI, or risky changes.
+   - Preserve the current environment only when it is already an isolated workspace suitable for the task.
+12. Implementation:
+   - Implement directly, or run `/workflow.team-run implementation <scope>` for parallel-safe task sets.
+   - If grammar (`.flex`/`.bnf`) or the registry (`NamespaceConfig.kt`) changed, regenerate (`./gradlew generatePhelLexer generatePhelParser updatePhelRegistry`) and stage the generated output.
+   - Register every new feature in `plugin.xml`.
+   - If scope changes materially, update the affected artifact and re-open the relevant approval gate unless autonomous mode was requested.
+13. Review and remediation:
+   - Run `/workflow.attack`.
+   - Run `/workflow.fix` on the resulting findings report.
+14. Delivery:
+   - Run `/workflow.delivery`.
+15. Final status:
+   - Summarize what shipped, what was verified, what remains blocked, and the exact next action if the cycle did not finish.
+
+Resume behavior:
+- On `approve spec`/`approve plan`/`approve tasks`/`continue`/`resume`, inspect feature artifacts and continue from the next unfinished stage.
+- For review, remediation, tests, or commit/PR prep, prefer `/workflow.attack`, `/workflow.fix`, or `/workflow.delivery`.
+- If reframed as diagnosis/flaky behavior/root-cause, prefer `/workflow.debug`; if documenting/reverse-engineering, prefer `/workflow.document-existing`.
+- For freeform-started features, keep the spec and plan as the source of truth instead of re-parsing the original message.
+
+Exit criteria:
+- Spec, plan, and task artifacts in place/updated at the resolved artifact home.
+- Brainstorming, clarification, and analysis used when ambiguity or risk justified them.
+- Approval gates respected (or bypassed only on explicit autonomous request); implementation reflects approved scope.
+- Generated sources and `plugin.xml` are in sync; adversarial findings reviewed and remediated.
+- Test status, commit status, PR summary, and remaining risk are explicit.

@@ -1,0 +1,44 @@
+---
+name: code-to-spec
+description: Reverse-engineers existing behavior into a grounded spec.md. Use when the user wants to document current behavior instead of changing it.
+---
+
+Use this skill for requests like `document existing completion ranking`, `reverse spec the regex-literal lexer state`, or `document current behavior of brace matching`.
+
+Inputs: a brownfield capability description in `$ARGUMENTS`; existing code, tests, generated sources, configs, docs; optional path/symbol/package hints.
+
+## Artifact location (graceful degradation)
+
+- If `.specify/` exists, produce the canonical Spec Kit `spec.md` using `.specify/templates/spec-template.md`.
+- Otherwise, write `docs/specs/<feature-slug>/spec.md` using the structure in this skill.
+
+Rules:
+- Reverse-spec produces the canonical artifact, not a sidecar document track. Update an existing `spec.md` in place rather than duplicating it.
+- Never invent extension points, PSI types, tokens, actions, grammar rules, Phel functions, or behaviors. Verify Phel facts against `api.json` and https://phel-lang.org/; verify grammar/PSI facts against `Phel.flex`, `Phel.bnf`, and the generated code in `src/main/gen/`.
+- Ground every factual claim in repo evidence (path+symbol, config key, or test reference). Unprovable claims go to `Unknowns & Questions` or are labeled explicit assumptions.
+- Keep confidence language cautious: `observed`, `implied by`, `appears to`, `not observable in code`.
+- For broad scopes (3+ files, 2+ packages, end-to-end tracing), run `/workflow.team-run analysis <scope>` before synthesizing.
+
+Workflow:
+1. Resolve or create the active feature directory at the resolved artifact home.
+2. Scope discovery:
+   - Identify entrypoints (actions, completion contributors, annotators, inspections), PSI/grammar boundaries, and likely evidence sources. Map `plugin.xml` registrations for the surface.
+   - Build an evidence table before drafting conclusions.
+3. Parallel brownfield analysis gate:
+   - If the scope is broad, run `/workflow.team-run analysis <scope>` and use its evidence in addition to direct inspection.
+   - Capture impacted files, hidden dependencies (generated sources, registry), interface boundaries, and spec implications before synthesis.
+4. Current-behavior extraction:
+   - Describe current behavior strictly from code, tests, and docs.
+   - Extract implied invariants and state transitions when present (e.g. lexer states, PSI tree shape, completion ordering rules).
+   - For IDE-runtime concerns, describe threading/cancellation, performance, and version-compat behavior. If any of those are not observable in code, say so explicitly.
+5. Spec synthesis:
+   - Map the observed behavior into the spec sections: Summary, Evidence, Current Behavior, Invariants & Edge Cases, Constraints (version-compat / generated-source / registration), Acceptance Criteria, Unknowns & Questions.
+   - Keep everything grounded in evidence.
+6. Quality loop:
+   - Run the self-check in `evals/eval_template.md`.
+   - Grade the draft with `evals/grader_prompt.md`.
+   - Pass threshold: `structure >= 0.9`, `grounding >= 0.95`, `behavior_safety >= 0.9` when grammar/PSI/threading behavior is involved, `overall >= 0.9`, zero high-severity issues.
+   - If the draft fails, revise using only evidence-backed fixes, then re-grade. Maximum 3 iterations; if it still fails, keep the artifact grounded, document gaps in `Unknowns & Questions`, and report a safe fail rather than guessing.
+7. Completion:
+   - Leave the repo with an updated `spec.md`.
+   - Summarize the evidence sources, remaining unknowns, whether parallel analysis was used, and whether the quality loop passed cleanly or ended in safe-fail mode.
