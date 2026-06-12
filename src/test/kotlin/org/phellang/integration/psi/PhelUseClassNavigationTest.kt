@@ -69,7 +69,7 @@ class PhelUseClassNavigationTest : BasePlatformTestCase() {
         // The reference must resolve only to a PHP class (absent here → no target), never
         // to the in-file usage symbol — otherwise Cmd+B would jump to the usage instead.
         val file = myFixture.addFileToProject(
-            "src/main.phel",
+            "src/useclass_main.phel",
             "(ns app\\main\n  (:use Foo))\n(defn bar [] (php/new Foo))\n"
         )
         val phelFile = PsiManager.getInstance(project).findFile(file.virtualFile) as PhelFile
@@ -81,7 +81,8 @@ class PhelUseClassNavigationTest : BasePlatformTestCase() {
     private fun symbolFor(source: String, entry: String): PhelSymbol = symbolIn(phelFileFor(source), entry)
 
     private fun phelFileFor(source: String): PhelFile {
-        val file = myFixture.addFileToProject("src/main.phel", source)
+        val file = myFixture.addFileToProject(
+            "src/useclass_main.phel", source)
         return PsiManager.getInstance(project).findFile(file.virtualFile) as PhelFile
     }
 
