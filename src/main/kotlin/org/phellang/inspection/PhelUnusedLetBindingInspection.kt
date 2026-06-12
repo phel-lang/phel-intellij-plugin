@@ -6,6 +6,7 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelUnusedLetBindingInspection : LocalInspectionTool() {
 
@@ -14,7 +15,7 @@ class PhelUnusedLetBindingInspection : LocalInspectionTool() {
             override fun visitList(o: PhelList) {
                 val forms = o.forms
                 if (forms.size < 2) return
-                val head = forms[0] as? PhelSymbol ?: return
+                val head = PhelPsiUtils.asSymbol(forms[0]) ?: return
                 if (head.text !in LET_LIKE_FORMS) return
 
                 val bindingVec = forms[1] as? PhelVec ?: return
@@ -37,7 +38,7 @@ class PhelUnusedLetBindingInspection : LocalInspectionTool() {
                         collectSymbolTextsInto(bindings[i], laterValueSymbols)
                         continue
                     }
-                    val target = bindings[i] as? PhelSymbol ?: continue
+                    val target = PhelPsiUtils.asSymbol(bindings[i]) ?: continue
                     val name = target.text
                     if (name == "_" || name.startsWith("_") || name.startsWith("&")) continue
                     if (name !in bodySymbols && name !in laterValueSymbols) {
