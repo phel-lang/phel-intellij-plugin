@@ -12,7 +12,7 @@ internal fun registerSchemaGeneratorFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "schema.generator",
         name = "schema.generator/generate",
-        signature = "(generate schema)",
+        signature = "(generate schema)\n(generate schema opts)",
         completion = CompletionInfo(
             tailText = "Generates one random value conforming to schema",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

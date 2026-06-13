@@ -1151,7 +1151,7 @@ Returns the truncated integer quotient of <code>dividend</code> / <code>divisor<
     PhelFunction(
         namespace = "core",
         name = "rand",
-        signature = "(rand)",
+        signature = "(rand)\n(rand n)",
         completion = CompletionInfo(
             tailText = "Without arguments, returns a random number in [0, 1)",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

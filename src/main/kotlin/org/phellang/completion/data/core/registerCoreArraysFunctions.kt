@@ -95,7 +95,7 @@ Sets the value at <code>index</code> in a PHP array to <code>val</code>. Returns
     PhelFunction(
         namespace = "core",
         name = "double-array",
-        signature = "(double-array size-or-seq)",
+        signature = "(double-array size-or-seq)\n(double-array size init-val-or-seq)",
         completion = CompletionInfo(
             tailText = "Creates a PHP array of doubles (same as float-array in PHP)",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -114,7 +114,7 @@ Creates a PHP array of doubles (same as float-array in PHP). Accepts the same ar
     PhelFunction(
         namespace = "core",
         name = "float-array",
-        signature = "(float-array size-or-seq)",
+        signature = "(float-array size-or-seq)\n(float-array size init-val-or-seq)",
         completion = CompletionInfo(
             tailText = "Creates a PHP array of floats",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -133,7 +133,7 @@ Creates a PHP array of floats. Accepts the same arities as <code>int-array</code
     PhelFunction(
         namespace = "core",
         name = "int-array",
-        signature = "(int-array size-or-seq)",
+        signature = "(int-array size-or-seq)\n(int-array size init-val-or-seq)",
         completion = CompletionInfo(
             tailText = "Creates a PHP array of integers, matching Clojure's clojure",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -159,7 +159,7 @@ PHP has no typed arrays, so the result is a plain PHP array.
     PhelFunction(
         namespace = "core",
         name = "into-array",
-        signature = "(into-array aseq)",
+        signature = "(into-array aseq)\n(into-array _type aseq)",
         completion = CompletionInfo(
             tailText = "Returns a PHP array containing the elements of aseq",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -184,7 +184,7 @@ Returns a PHP array containing the elements of <code>aseq</code>. Accepts any<br
     PhelFunction(
         namespace = "core",
         name = "long-array",
-        signature = "(long-array size-or-seq)",
+        signature = "(long-array size-or-seq)\n(long-array size init-val-or-seq)",
         completion = CompletionInfo(
             tailText = "Creates a PHP array of longs (same as int-array in PHP)",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -264,7 +264,7 @@ Arguments:<br />
     PhelFunction(
         namespace = "core",
         name = "short-array",
-        signature = "(short-array size-or-seq)",
+        signature = "(short-array size-or-seq)\n(short-array size init-val-or-seq)",
         completion = CompletionInfo(
             tailText = "Creates a PHP array of shorts (16-bit integers)",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

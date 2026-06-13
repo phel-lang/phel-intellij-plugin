@@ -21,7 +21,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhelVisitor() {
             override fun visitList(o: PhelList) {
-                val forms = o.forms
+                val forms = PhelPsiUtils.activeForms(o)
                 if (forms.isEmpty()) return
                 val head = PhelPsiUtils.asSymbol(forms[0]) ?: return
                 val name = head.text ?: return
@@ -33,6 +33,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 if (isInQuoteContext(o)) return
                 if (isThreadedArgList(o)) return
                 if (resolvesToLocalBinding(head, name)) return
+                if (containsShortFnMarker(forms)) return
 
                 val arities = PhelArityResolver.resolve(head.project, name) ?: return
                 if (arities.isEmpty()) return
@@ -47,6 +48,20 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 }
             }
         }
+    }
+
+    /**
+     * True when any argument is a bare `|` symbol — the marker for Phel's deprecated
+     * `|(...)` short-fn syntax. The lexer treats `|` as a plain symbol (it does not
+     * recognize the removed short-fn opener), so `|(> $ 10)` parses as two forms — a `|`
+     * symbol and a list — inflating the textual argument count. We can't trust the count
+     * in that case, so skip the check rather than report a false positive.
+     */
+    private fun containsShortFnMarker(forms: List<PhelForm>): Boolean {
+        for (i in 1 until forms.size) {
+            if (PhelPsiUtils.asSymbol(forms[i])?.text == "|") return true
+        }
+        return false
     }
 
     /**

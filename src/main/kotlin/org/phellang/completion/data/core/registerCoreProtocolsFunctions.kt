@@ -12,7 +12,7 @@ internal fun registerCoreProtocolsFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
         name = "ancestors",
-        signature = "(ancestors tag)",
+        signature = "(ancestors tag)\n(ancestors h tag)",
         completion = CompletionInfo(
             tailText = "Returns the set of all transitive ancestors of tag, or nil",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -214,7 +214,7 @@ Deviation from Clojure: Phel's <code>deftype</code> shares the map-backed<br />
     PhelFunction(
         namespace = "core",
         name = "derive",
-        signature = "(derive child parent)",
+        signature = "(derive child parent)\n(derive h child parent)",
         completion = CompletionInfo(
             tailText = "Establishes a parent/child relationship between child and parent keywords",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -233,7 +233,7 @@ Establishes a parent/child relationship between child and parent keywords. With 
     PhelFunction(
         namespace = "core",
         name = "descendants",
-        signature = "(descendants tag)",
+        signature = "(descendants tag)\n(descendants h tag)",
         completion = CompletionInfo(
             tailText = "Returns the set of all descendants of tag, or nil",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -340,7 +340,7 @@ Returns true if the given type-key has implementations for all methods of the pr
     PhelFunction(
         namespace = "core",
         name = "find-hierarchy-method",
-        signature = "(find-hierarchy-method methods dispatch-val)",
+        signature = "(find-hierarchy-method methods dispatch-val)\n(find-hierarchy-method methods dispatch-val prefers-map)",
         completion = CompletionInfo(
             tailText = "Finds the best matching method for dispatch-val using the global hierarchy",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -417,7 +417,7 @@ Binds name to the value of test. If test is not nil, evaluates then with binding
     PhelFunction(
         namespace = "core",
         name = "isa?",
-        signature = "(isa? child parent)",
+        signature = "(isa? child parent)\n(isa? h child parent)",
         completion = CompletionInfo(
             tailText = "Returns true if child equals parent, or child is a descendant of parent",
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
@@ -510,7 +510,7 @@ Returns a map with <code>:parents</code>, <code>:descendants</code>, and <code>:
     PhelFunction(
         namespace = "core",
         name = "parents",
-        signature = "(parents tag)",
+        signature = "(parents tag)\n(parents h tag)",
         completion = CompletionInfo(
             tailText = "Returns the set of immediate parents of tag, or nil",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -730,7 +730,7 @@ Resolves the given symbol in the current environment and returns a resolved Symb
     PhelFunction(
         namespace = "core",
         name = "underive",
-        signature = "(underive child parent)",
+        signature = "(underive child parent)\n(underive h child parent)",
         completion = CompletionInfo(
             tailText = "Removes a parent/child relationship",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

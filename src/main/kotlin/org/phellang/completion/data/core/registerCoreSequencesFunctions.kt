@@ -67,7 +67,7 @@ Returns <code>ds</code> without the given keys. With no keys returns <code>ds</c
     PhelFunction(
         namespace = "core",
         name = "nth",
-        signature = "(nth coll index)",
+        signature = "(nth coll index)\n(nth coll index not-found)",
         completion = CompletionInfo(
             tailText = "Returns the value at index in coll",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

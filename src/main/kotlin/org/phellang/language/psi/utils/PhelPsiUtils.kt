@@ -39,6 +39,29 @@ object PhelPsiUtils {
         }
     }
 
+    /**
+     * The forms of [list] with `#_`-discarded forms removed. A `#_` (FORM_COMMENT) leaf
+     * discards the next form, and they stack (`#_#_` drops two), so callers that count
+     * call arguments must not treat a discarded form as a real argument. Without this,
+     * `(push #_skip coll x)` reads as three args instead of two.
+     */
+    @JvmStatic
+    fun activeForms(list: PhelList): List<PhelForm> {
+        val result = mutableListOf<PhelForm>()
+        var pendingDiscards = 0
+        var child = list.firstChild
+        while (child != null) {
+            when {
+                child.node?.elementType == PhelTypes.FORM_COMMENT -> pendingDiscards++
+                child is PhelForm -> {
+                    if (pendingDiscards > 0) pendingDiscards-- else result.add(child)
+                }
+            }
+            child = child.nextSibling
+        }
+        return result
+    }
+
     @JvmStatic
     fun getName(symbol: PhelSymbol): String? {
         return PhelErrorHandler.safeOperation {

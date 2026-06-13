@@ -314,7 +314,7 @@ Checks if all values are identical. Same as <code>a === b</code> in PHP.
     PhelFunction(
         namespace = "core",
         name = "keyword",
-        signature = "(keyword x)",
+        signature = "(keyword x)\n(keyword ns nm)",
         completion = CompletionInfo(
             tailText = "Creates a new Keyword",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -466,7 +466,7 @@ Returns the first truthy value of applying predicate to elements, or nil if none
     PhelFunction(
         namespace = "core",
         name = "some?",
-        signature = "(some? x)",
+        signature = "(some? x)\n(some? pred coll)",
         completion = CompletionInfo(
             tailText = "With 1 arg, returns true if x is not nil (Clojure semantics)",
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,

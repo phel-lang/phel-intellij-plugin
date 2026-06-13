@@ -175,7 +175,7 @@ Returns a memoized version of the function <code>f</code>. The memoized function
     PhelFunction(
         namespace = "core",
         name = "memoize-lru",
-        signature = "(memoize-lru f)",
+        signature = "(memoize-lru f)\n(memoize-lru f max-size)",
         completion = CompletionInfo(
             tailText = "Returns a memoized version of the function f with an LRU (Least Recently Used) cache limited to m...",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -233,7 +233,7 @@ Takes a function <code>f</code> and fewer than the normal number of arguments to
     PhelFunction(
         namespace = "core",
         name = "some-fn",
-        signature = "(some-fn)",
+        signature = "(some-fn)\n(some-fn p & ps)",
         completion = CompletionInfo(
             tailText = "Takes a variadic set of predicates and returns a function f that, when called with any number of ...",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

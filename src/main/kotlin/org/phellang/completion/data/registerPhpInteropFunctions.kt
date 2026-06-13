@@ -6,7 +6,7 @@ internal fun registerPhpInteropFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "php",
         name = "php/->",
-        signature = "(php/-> object call*)",
+        signature = "(php/-> object call*)\n(php/:: class call*)",
         completion = CompletionInfo(
             tailText = "Access to an object property or result of chained calls",
             priority = PhelCompletionPriority.SPECIAL_FORMS,
@@ -23,7 +23,7 @@ internal fun registerPhpInteropFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "php",
         name = "php/::",
-        signature = "(php/:: class (method-name expr*))",
+        signature = "(php/:: class (method-name expr*))\n(php/:: class call*)",
         completion = CompletionInfo(
             tailText = "Calls a static method or property from a PHP class",
             priority = PhelCompletionPriority.SPECIAL_FORMS,
@@ -211,7 +211,7 @@ Evaluates expr and creates a new PHP class using the arguments. The instance of 
     PhelFunction(
         namespace = "php",
         name = "php/oset",
-        signature = "(php/oset (php/-> object property) value)",
+        signature = "(php/oset (php/-> object property) value)\n(php/oset (php/:: class property) value)",
         completion = CompletionInfo(
             tailText = "Use php/oset to set a value to a class/object property",
             priority = PhelCompletionPriority.SPECIAL_FORMS,

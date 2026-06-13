@@ -6,7 +6,7 @@ internal fun registerTransitFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "transit",
         name = "transit/read-string",
-        signature = "(read-string s)",
+        signature = "(read-string s)\n(read-string s opts)",
         completion = CompletionInfo(
             tailText = "Reads one Transit+JSON-Verbose value from string s",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

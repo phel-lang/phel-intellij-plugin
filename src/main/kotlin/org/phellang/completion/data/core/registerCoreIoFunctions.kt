@@ -133,7 +133,7 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
     PhelFunction(
         namespace = "core",
         name = "csv-seq",
-        signature = "(csv-seq filename)",
+        signature = "(csv-seq filename)\n(csv-seq filename options)",
         completion = CompletionInfo(
             tailText = "Returns a lazy sequence of rows from a CSV file",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -368,7 +368,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
     PhelFunction(
         namespace = "core",
         name = "read-file-lazy",
-        signature = "(read-file-lazy filename)",
+        signature = "(read-file-lazy filename)\n(read-file-lazy filename chunk-size)",
         completion = CompletionInfo(
             tailText = "Returns a lazy sequence of byte chunks from a file",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,

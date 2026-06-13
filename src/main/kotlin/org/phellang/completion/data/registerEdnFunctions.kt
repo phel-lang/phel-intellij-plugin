@@ -6,7 +6,7 @@ internal fun registerEdnFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "edn",
         name = "edn/read-string",
-        signature = "(read-string s)",
+        signature = "(read-string s)\n(read-string s opts)",
         completion = CompletionInfo(
             tailText = "Reads one EDN value from string s",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -30,7 +30,7 @@ Options:<br />
     PhelFunction(
         namespace = "edn",
         name = "edn/read-string-all",
-        signature = "(read-string-all s)",
+        signature = "(read-string-all s)\n(read-string-all s opts)",
         completion = CompletionInfo(
             tailText = "Reads every EDN value from string s and returns them as a vector",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
