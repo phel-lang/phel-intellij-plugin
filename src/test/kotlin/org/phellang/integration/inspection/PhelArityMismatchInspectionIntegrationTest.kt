@@ -160,6 +160,20 @@ class PhelArityMismatchInspectionIntegrationTest : PhelIntegrationTestCase() {
         assertTrue("genuine 3-arg call to 2-arg fn should be flagged: $warnings", warnings.any { it.contains("'some'") })
     }
 
+    fun testUserlandFnWithVectorHeadedBodyKeepsItsArity() {
+        // `([10 20 30] i)` is a vector used as a function in the body of a 1-arg fn.
+        // The scanner must not mistake that body list for a multi-arity clause, which
+        // would make `idx` look like a 3-arg fn and flag the correct 1-arg call.
+        val warnings = inspect("(ns app\\m)\n(defn idx [i] ([10 20 30] i))\n(idx 1)\n")
+        assertTrue("single-arity fn with vector-headed body should not be flagged: $warnings", warnings.isEmpty())
+    }
+
+    fun testUserlandMultiArityFnAcceptsAllArities() {
+        // Genuine multi-arity userland fn: both 1-arg and 2-arg calls are valid.
+        val warnings = inspect("(ns app\\m)\n(defn f ([x] x) ([x y] y))\n(f 1)\n(f 1 2)\n")
+        assertTrue("both arities of a multi-arity userland fn should be accepted: $warnings", warnings.isEmpty())
+    }
+
     private fun inspect(text: String): List<String> {
         val file = myFixture.configureByText("a.phel", text) as PhelFile
         // Populate the project symbol index directly from this file's PSI. The lazy

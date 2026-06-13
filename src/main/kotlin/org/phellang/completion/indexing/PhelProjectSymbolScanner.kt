@@ -90,17 +90,19 @@ object PhelProjectSymbolScanner {
     private fun extractSignature(keyword: String, name: String, forms: List<PhelForm>): String {
         return when (keyword) {
             "defn", "defmacro" -> {
-                val aritySignatures = extractMultiAritySignatures(name, forms)
-                if (aritySignatures.isNotEmpty()) {
-                    aritySignatures.joinToString("\n")
+                // A defn is single-arity when it has a direct parameter vector
+                // (`(defn f [x] body)`) and multi-arity only when the body is made of
+                // `([params] body)` clauses with no top-level vector. Check the direct
+                // vector first: otherwise a single-arity body whose first form is a
+                // vector-headed list — e.g. `(defn idx [i] ([10 20 30] i))`, a vector
+                // used as a function — is misread as a 3-arity clause.
+                val paramVec = findDirectParameterVector(forms)
+                if (paramVec != null) {
+                    val params = extractParameterNames(paramVec)
+                    if (params.isEmpty()) "($name)" else "($name ${params.joinToString(" ")})"
                 } else {
-                    val paramVec = findDirectParameterVector(forms)
-                    if (paramVec != null) {
-                        val params = extractParameterNames(paramVec)
-                        if (params.isEmpty()) "($name)" else "($name ${params.joinToString(" ")})"
-                    } else {
-                        "($name)"
-                    }
+                    val aritySignatures = extractMultiAritySignatures(name, forms)
+                    if (aritySignatures.isNotEmpty()) aritySignatures.joinToString("\n") else "($name)"
                 }
             }
 
