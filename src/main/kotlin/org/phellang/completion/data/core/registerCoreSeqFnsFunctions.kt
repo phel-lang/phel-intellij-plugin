@@ -200,7 +200,7 @@ Returns a lazy sequence with consecutive duplicate values removed in <code>coll<
     PhelFunction(
         namespace = "core",
         name = "disj",
-        signature = "(disj set)",
+        signature = "(disj set)\n(disj set k)\n(disj set k & ks)",
         completion = CompletionInfo(
             tailText = "Returns a new set that does not contain the given key(s)",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -308,7 +308,7 @@ Drops the first <code>n</code> elements of <code>coll</code>. Returns a lazy seq
     PhelFunction(
         namespace = "core",
         name = "drop-last",
-        signature = "(drop-last coll)",
+        signature = "(drop-last coll)\n(drop-last n coll)",
         completion = CompletionInfo(
             tailText = "Drops the last n elements of coll",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -855,7 +855,7 @@ With a single collection behaves like <code>(apply concat (map f coll))</code>. 
     PhelFunction(
         namespace = "core",
         name = "merge",
-        signature = "(merge)",
+        signature = "(merge)\n(merge map)\n(merge map & more)",
         completion = CompletionInfo(
             tailText = "Merges multiple maps into one new map",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -1266,7 +1266,7 @@ Extracts a slice of <code>coll</code> starting at <code>offset</code> with optio
     PhelFunction(
         namespace = "core",
         name = "sort",
-        signature = "(sort coll)",
+        signature = "(sort coll)\n(sort a b)",
         completion = CompletionInfo(
             tailText = "Returns a sorted vector",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -1283,7 +1283,7 @@ Extracts a slice of <code>coll</code> starting at <code>offset</code> with optio
     PhelFunction(
         namespace = "core",
         name = "sort-by",
-        signature = "(sort-by keyfn coll)",
+        signature = "(sort-by keyfn coll)\n(sort-by keyfn comp-or-coll coll-or-comp)",
         completion = CompletionInfo(
             tailText = "Returns a sorted vector where the sort order is determined by comparing (keyfn item)",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,

@@ -158,7 +158,7 @@ Handle exceptions thrown in a <code>try</code> block by matching on the provided
     PhelFunction(
         namespace = "core",
         name = "conj",
-        signature = "(conj)",
+        signature = "(conj)\n(conj coll)\n(conj coll value)\n(conj coll value & more)",
         completion = CompletionInfo(
             tailText = "Returns a new collection with values added",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -211,7 +211,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
     PhelFunction(
         namespace = "core",
         name = "defexception*",
-        signature = "(defexception name)",
+        signature = "(defexception name)\n(defexception name parent)",
         completion = CompletionInfo(
             tailText = "Defines a new exception, optionally extending a custom parent class",
             priority = PhelCompletionPriority.SPECIAL_FORMS,
@@ -362,7 +362,7 @@ Defines a function. A function consists of a list of parameters and a list of ex
     PhelFunction(
         namespace = "core",
         name = "foreach",
-        signature = "(foreach [value valueExpr] expr*)",
+        signature = "(foreach [value valueExpr] expr*)\n(foreach [key value valueExpr] expr*)",
         completion = CompletionInfo(
             tailText = "The foreach special form can be used to iterate over all kind of PHP datastructures",
             priority = PhelCompletionPriority.CONTROL_FLOW,

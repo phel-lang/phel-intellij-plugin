@@ -244,7 +244,7 @@ Generator that picks one of the <code>[weight gen]</code> pairs with probability
     PhelFunction(
         namespace = "test.gen",
         name = "test.gen/generate",
-        signature = "(generate g)",
+        signature = "(generate g)\n(generate g {:size size, :seed seed})",
         completion = CompletionInfo(
             tailText = "Runs g once and returns a single value",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -394,7 +394,7 @@ Generator that selects uniformly from <code>gens</code> and runs the chosen one.
     PhelFunction(
         namespace = "test.gen",
         name = "test.gen/quick-check",
-        signature = "(quick-check num-tests args-gen property)",
+        signature = "(quick-check num-tests args-gen property)\n(quick-check num-tests args-gen property {:size size, :seed seed, :shrink? shrink?})",
         completion = CompletionInfo(
             tailText = "Runs property for num-tests trials, drawing each trial's arguments from args-gen (a generator ret...",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -461,7 +461,7 @@ Generator that always yields <code>x</code>.
     PhelFunction(
         namespace = "test.gen",
         name = "test.gen/sample",
-        signature = "(sample g)",
+        signature = "(sample g)\n(sample g num-samples)\n(sample g num-samples {:size size, :seed seed})",
         completion = CompletionInfo(
             tailText = "Runs g num-samples times (default 10) and returns a vector of values",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -594,7 +594,7 @@ Generator of ASCII alphanumeric strings, length in <code>[0, size]</code>.
     PhelFunction(
         namespace = "test.gen",
         name = "test.gen/such-that",
-        signature = "(such-that pred g)",
+        signature = "(such-that pred g)\n(such-that pred g max-tries)",
         completion = CompletionInfo(
             tailText = "Generator yielding only values from g that satisfy pred",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -652,7 +652,7 @@ Generator of a fixed-length vector produced by running each of the given generat
     PhelFunction(
         namespace = "test.gen",
         name = "test.gen/vector-of",
-        signature = "(vector-of g)",
+        signature = "(vector-of g)\n(vector-of g n)\n(vector-of g lo hi)",
         completion = CompletionInfo(
             tailText = "Generator of vectors",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

@@ -25,13 +25,26 @@ data class PhelArity(
             val paramTokens = tokens.drop(1) // first token is the function name
 
             val ampIndex = paramTokens.indexOf("&")
-            return if (ampIndex >= 0) {
-                val before = paramTokens.subList(0, ampIndex)
-                val rest = paramTokens.subList(ampIndex + 1, paramTokens.size)
-                val restName = rest.firstOrNull() ?: "rest"
-                PhelArity(params = before + restName, variadic = true)
-            } else {
-                PhelArity(params = paramTokens, variadic = false)
+            val lastToken = paramTokens.lastOrNull()
+            return when {
+                ampIndex >= 0 -> {
+                    val before = paramTokens.subList(0, ampIndex)
+                    val rest = paramTokens.subList(ampIndex + 1, paramTokens.size)
+                    val restName = rest.firstOrNull() ?: "rest"
+                    PhelArity(params = before + restName, variadic = true)
+                }
+
+                // Star-suffix convention (e.g. "(apply f expr*)") -- the registry's other
+                // way of spelling "zero or more trailing args" alongside `& rest`. Without
+                // this, variadic stdlib fns like `apply` parse as fixed-arity and a call
+                // with extra args is wrongly flagged.
+                lastToken != null && lastToken.length > 1 && lastToken.endsWith("*") -> {
+                    val before = paramTokens.dropLast(1)
+                    val restName = lastToken.dropLast(1)
+                    PhelArity(params = before + restName, variadic = true)
+                }
+
+                else -> PhelArity(params = paramTokens, variadic = false)
             }
         }
 

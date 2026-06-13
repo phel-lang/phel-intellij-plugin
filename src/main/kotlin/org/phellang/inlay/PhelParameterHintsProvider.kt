@@ -28,7 +28,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
         override fun collectFromElement(element: PsiElement, sink: InlayTreeSink) {
             if (element !is PhelList) return
 
-            val forms = element.forms
+            val forms = PhelPsiUtils.activeForms(element)
             if (forms.size < 2) return
 
             val headSymbol = PhelPsiUtils.asSymbol(forms[0]) ?: return

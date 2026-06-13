@@ -37,6 +37,34 @@ class PhelArityTest {
     }
 
     @Test
+    fun `parses star-suffix variadic signature`() {
+        // The registry spells some variadic fns with a trailing `*` (e.g. apply).
+        val arity = PhelArity.parseSignature("(apply f expr*)")
+        assertNotNull(arity)
+        assertTrue(arity!!.variadic)
+        assertEquals(listOf("f", "expr"), arity.params)
+        assertEquals(1, arity.fixedCount)
+    }
+
+    @Test
+    fun `star-suffix variadic accepts extra args`() {
+        val arities = PhelArity.parseAll("(apply f expr*)")
+        assertTrue(arities.accepts(2)) // (apply + [1 2 3])
+        assertTrue(arities.accepts(4)) // (apply + 1 2 [3])
+        assertFalse(arities.accepts(0))
+    }
+
+    @Test
+    fun `lone star is treated as a fixed param name`() {
+        // `*` is a real fn name; "(* & xs)" must not be mistaken for star-suffix variadic.
+        val arity = PhelArity.parseSignature("(* & xs)")
+        assertNotNull(arity)
+        assertTrue(arity!!.variadic)
+        assertEquals(listOf("xs"), arity.params)
+        assertEquals(0, arity.fixedCount)
+    }
+
+    @Test
     fun `parses multi-arity newline-separated`() {
         val arities = PhelArity.parseAll("(foo a)\n(foo a b)\n(foo a b & xs)")
         assertEquals(3, arities.size)

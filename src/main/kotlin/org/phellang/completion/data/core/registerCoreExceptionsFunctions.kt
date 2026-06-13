@@ -46,7 +46,7 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
         name = "ex-info",
-        signature = "(ex-info msg data)",
+        signature = "(ex-info msg data)\n(ex-info msg data cause)",
         completion = CompletionInfo(
             tailText = "Creates an exception with a message and a data map",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

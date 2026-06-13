@@ -36,7 +36,7 @@ Associates one or more key-value pairs with a transient collection,<br />
     PhelFunction(
         namespace = "core",
         name = "conj!",
-        signature = "(conj!)",
+        signature = "(conj!)\n(conj! tcoll)\n(conj! tcoll value)\n(conj! tcoll value & more)",
         completion = CompletionInfo(
             tailText = "Adds value to the transient collection tcoll, mutating it in place, and returns tcoll",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -55,7 +55,7 @@ Adds <code>value</code> to the transient collection <code>tcoll</code>, mutating
     PhelFunction(
         namespace = "core",
         name = "disj!",
-        signature = "(disj! tcoll)",
+        signature = "(disj! tcoll)\n(disj! tcoll value)\n(disj! tcoll value & more)",
         completion = CompletionInfo(
             tailText = "Removes one or more elements from a transient set, mutating it in place",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -74,7 +74,7 @@ Removes one or more elements from a transient set, mutating it in place. Raises 
     PhelFunction(
         namespace = "core",
         name = "dissoc!",
-        signature = "(dissoc! tcoll)",
+        signature = "(dissoc! tcoll)\n(dissoc! tcoll key)\n(dissoc! tcoll key & ks)",
         completion = CompletionInfo(
             tailText = "Dissociates one or more keys from a transient map, mutating it in place",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

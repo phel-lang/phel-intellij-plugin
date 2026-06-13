@@ -140,7 +140,10 @@ internal object PhelFunctionRenderer {
 
     fun render(apiFunction: ApiFunction): String {
         val priority = PriorityRules.determinePriority(apiFunction)
-        val signature = apiFunction.signatures.firstOrNull() ?: ""
+        // Join every arity (newline-separated) so multi-arity fns like `conj` keep all
+        // their shapes: the arity-mismatch inspection parses these via PhelArity.parseAll,
+        // and the documentation provider renders the newlines as <br />.
+        val signature = apiFunction.signatures.joinToString("\n")
         val tailText = TailTextGenerator.generate(apiFunction.description)
         val summary = MarkdownToHtmlTransformer.transform(apiFunction.description)
         val example = apiFunction.meta?.example?.let { StringEscaper.escapeHtml(it) }

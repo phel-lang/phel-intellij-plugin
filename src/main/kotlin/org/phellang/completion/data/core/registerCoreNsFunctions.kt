@@ -262,7 +262,7 @@ Removes the namespace and all of its definitions from the registry. Use with cau
     PhelFunction(
         namespace = "core",
         name = "var-get",
-        signature = "(var-get x)",
+        signature = "(var-get x)\n(var-get x not-found)",
         completion = CompletionInfo(
             tailText = "Resolves the value bound to a Var or to a fully-qualified symbol",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,

@@ -90,7 +90,7 @@ Returns <code>nil</code> when <code>value</code> conforms to <code>schema</code>
     PhelFunction(
         namespace = "schema",
         name = "schema/generate",
-        signature = "(generate schema)",
+        signature = "(generate schema)\n(generate schema opts)",
         completion = CompletionInfo(
             tailText = "Generates a single value conforming to schema",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
