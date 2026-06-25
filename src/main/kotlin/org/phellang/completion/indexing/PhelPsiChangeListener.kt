@@ -2,7 +2,6 @@ package org.phellang.completion.indexing
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
@@ -52,10 +51,10 @@ class PhelPsiChangeListener(private val project: Project) : PsiTreeChangeAdapter
 
                 if (project.isDisposed || !fileToRefresh.isValid) return@invokeLater
 
-                ReadAction.run<RuntimeException> {
-                    if (project.isDisposed) return@run
+                ApplicationManager.getApplication().runReadAction {
+                    if (project.isDisposed) return@runReadAction
                     val freshPsi = PsiManager.getInstance(project).findFile(fileToRefresh) as? PhelFile
-                        ?: return@run
+                        ?: return@runReadAction
                     PhelProjectSymbolIndex.getInstance(project).refreshFileFromPsi(freshPsi)
                     DaemonCodeAnalyzer.getInstance(project).restart(freshPsi)
                 }

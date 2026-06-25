@@ -2,7 +2,6 @@ package org.phellang.completion.indexing
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -68,8 +67,8 @@ class PhelFileChangeListener(private val project: Project) : BulkFileListener {
         ApplicationManager.getApplication().invokeLater {
             if (project.isDisposed) return@invokeLater
 
-            ReadAction.run<RuntimeException> {
-                if (project.isDisposed) return@run
+            ApplicationManager.getApplication().runReadAction {
+                if (project.isDisposed) return@runReadAction
                 val fileEditorManager = FileEditorManager.getInstance(project)
                 val psiManager = PsiManager.getInstance(project)
                 val daemon = DaemonCodeAnalyzer.getInstance(project)

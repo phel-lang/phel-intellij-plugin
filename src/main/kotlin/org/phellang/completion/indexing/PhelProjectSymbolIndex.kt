@@ -1,7 +1,7 @@
 package org.phellang.completion.indexing
 
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -65,9 +65,9 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     }
 
     fun refreshFile(file: VirtualFile) {
-        ReadAction.run<RuntimeException> {
-            if (project.isDisposed || !file.isValid) return@run
-            val psiFile = PsiManager.getInstance(project).findFile(file) as? PhelFile ?: return@run
+        ApplicationManager.getApplication().runReadAction {
+            if (project.isDisposed || !file.isValid) return@runReadAction
+            val psiFile = PsiManager.getInstance(project).findFile(file) as? PhelFile ?: return@runReadAction
             refreshFileFromPsi(psiFile)
         }
     }
@@ -138,8 +138,8 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     }
 
     private fun buildIndex() {
-        ReadAction.run<RuntimeException> {
-            if (project.isDisposed) return@run
+        ApplicationManager.getApplication().runReadAction {
+            if (project.isDisposed) return@runReadAction
             val phelFiles = FilenameIndex.getAllFilesByExt(
                 project, "phel", GlobalSearchScope.projectScope(project)
             )
