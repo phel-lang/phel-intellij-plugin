@@ -122,16 +122,16 @@ public class PhelLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\2\3\2\4\1\5\1\6\1\7"+
-    "\1\2\1\10\2\11\1\12\1\13\1\14\1\2\1\15"+
-    "\1\2\1\16\1\17\1\20\4\2\1\21\1\22\1\23"+
-    "\1\1\1\4\1\24\2\4\1\25\1\2\1\26\1\4"+
-    "\1\27\1\30\1\0\1\31\1\32\1\33\2\11\1\34"+
-    "\1\11\1\2\1\11\1\2\1\11\4\2\1\35\1\36"+
-    "\1\2\12\37\4\2\1\40\1\0\1\25\1\0\4\4"+
-    "\1\41\3\0\1\42\1\2\1\11\1\43\1\44\1\45"+
-    "\1\46\1\47\11\2\1\50\2\2\2\4\1\51\1\31"+
-    "\1\43\1\44\1\46\10\2\1\52\1\53\1\0\15\2";
+    "\2\0\1\1\2\2\2\3\1\4\1\5\1\6\1\1"+
+    "\1\7\2\10\1\11\1\12\1\13\1\1\1\14\1\1"+
+    "\1\15\1\16\1\17\4\1\1\20\1\21\1\22\2\23"+
+    "\1\24\1\23\1\3\1\25\1\1\1\26\1\3\1\27"+
+    "\1\30\1\0\1\31\1\32\1\33\2\10\1\34\1\10"+
+    "\1\1\1\10\1\1\1\10\4\1\1\35\1\36\1\1"+
+    "\12\37\4\1\1\40\1\0\1\25\1\0\4\3\1\41"+
+    "\3\0\1\42\1\1\1\10\1\43\1\44\1\45\1\46"+
+    "\1\47\11\1\1\50\2\1\2\3\1\51\1\31\1\43"+
+    "\1\44\1\46\10\1\1\52\1\53\1\0\15\1";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[137];
@@ -446,7 +446,7 @@ public class PhelLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\6\1\3\11\6\1\1\11\1\1\1\11\1\1"+
+    "\2\0\5\1\3\11\6\1\1\11\1\1\1\11\1\1"+
     "\3\11\4\1\2\11\2\1\2\11\4\1\1\11\1\1"+
     "\2\11\1\0\1\1\2\11\20\1\1\11\14\1\1\11"+
     "\1\0\1\11\1\0\4\1\1\11\3\0\26\1\1\11"+
@@ -763,97 +763,97 @@ public class PhelLexer implements FlexLexer {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { yybegin(YYINITIAL); return BAD_CHARACTER;
+            { return PhelTypes.SYM;
             }
           // fall through
           case 44: break;
           case 2:
-            { return PhelTypes.SYM;
+            { return WHITE_SPACE;
             }
           // fall through
           case 45: break;
           case 3:
-            { return WHITE_SPACE;
+            { return BAD_CHARACTER;
             }
           // fall through
           case 46: break;
           case 4:
-            { return BAD_CHARACTER;
+            { return PhelTypes.QUOTE;
             }
           // fall through
           case 47: break;
           case 5:
-            { return PhelTypes.QUOTE;
+            { return PhelTypes.PAREN1;
             }
           // fall through
           case 48: break;
           case 6:
-            { return PhelTypes.PAREN1;
+            { return PhelTypes.PAREN2;
             }
           // fall through
           case 49: break;
           case 7:
-            { return PhelTypes.PAREN2;
+            { return PhelTypes.DOT;
             }
           // fall through
           case 50: break;
           case 8:
-            { return PhelTypes.DOT;
+            { return PhelTypes.NUMBER;
             }
           // fall through
           case 51: break;
           case 9:
-            { return PhelTypes.NUMBER;
+            { return PhelTypes.COLON;
             }
           // fall through
           case 52: break;
           case 10:
-            { return PhelTypes.COLON;
+            { return PhelTypes.LINE_COMMENT;
             }
           // fall through
           case 53: break;
           case 11:
-            { return PhelTypes.LINE_COMMENT;
+            { return PhelTypes.DEREF;
             }
           // fall through
           case 54: break;
           case 12:
-            { return PhelTypes.DEREF;
+            { return PhelTypes.BRACKET1;
             }
           // fall through
           case 55: break;
           case 13:
-            { return PhelTypes.BRACKET1;
+            { return PhelTypes.BRACKET2;
             }
           // fall through
           case 56: break;
           case 14:
-            { return PhelTypes.BRACKET2;
+            { return PhelTypes.HAT;
             }
           // fall through
           case 57: break;
           case 15:
-            { return PhelTypes.HAT;
+            { return PhelTypes.SYNTAX_QUOTE;
             }
           // fall through
           case 58: break;
           case 16:
-            { return PhelTypes.SYNTAX_QUOTE;
+            { return PhelTypes.BRACE1;
             }
           // fall through
           case 59: break;
           case 17:
-            { return PhelTypes.BRACE1;
+            { return PhelTypes.BRACE2;
             }
           // fall through
           case 60: break;
           case 18:
-            { return PhelTypes.BRACE2;
+            { return PhelTypes.TILDE;
             }
           // fall through
           case 61: break;
           case 19:
-            { return PhelTypes.TILDE;
+            { yybegin(YYINITIAL); return BAD_CHARACTER;
             }
           // fall through
           case 62: break;

@@ -121,7 +121,8 @@ TAG="#" {TAG_NAME}
 
 <REGEX_LITERAL> {
   ([^\\\"\r\n]|\\.)*\"   { yybegin(YYINITIAL); return PhelTypes.REGEX_BODY; }
-  ([^\\\"\r\n]|\\.)*     { yybegin(YYINITIAL); return BAD_CHARACTER; } // Unterminated regex on this line
+  ([^\\\"\r\n]|\\.)+     { yybegin(YYINITIAL); return BAD_CHARACTER; } // Unterminated regex with a body on this line
+  [^]                    { yybegin(YYINITIAL); return BAD_CHARACTER; } // Empty/EOL after #" — consume one char so the lexer always advances
 }
 
 [^] { return BAD_CHARACTER; }
