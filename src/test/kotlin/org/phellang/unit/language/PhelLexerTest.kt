@@ -343,6 +343,27 @@ class PhelLexerTest {
         assertEquals("#php", tokens[0].second)
     }
 
+    @Test
+    fun `namespaced tagged literal tokenizes as single TAG`() {
+        val tokens = tokenize("#my.app/Person {:name \"a\"}")
+        assertEquals(PhelTypes.TAG, tokens[0].first)
+        assertEquals("#my.app/Person", tokens[0].second)
+    }
+
+    @Test
+    fun `dotted tag name tokenizes as single TAG`() {
+        val tokens = tokenize("#my.app.sub/Thing []")
+        assertEquals(PhelTypes.TAG, tokens[0].first)
+        assertEquals("#my.app.sub/Thing", tokens[0].second)
+    }
+
+    @Test
+    fun `dotted tag without namespace tokenizes as single TAG`() {
+        val tokens = tokenize("#my.app []")
+        assertEquals(PhelTypes.TAG, tokens[0].first)
+        assertEquals("#my.app", tokens[0].second)
+    }
+
     // --- Existing syntax preserved ---
 
     @Test

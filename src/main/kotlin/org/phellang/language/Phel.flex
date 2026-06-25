@@ -44,8 +44,10 @@ KEYWORD_TAIL={ATOM} ("/" {ATOM})? (":" {ATOM}+)?
 PHP_INTEROP_OP="php/" [+\-*/%&|!=<>\^~@.]+
 
 // Tagged literal dispatch: #inst, #uuid, #regex, #php, #cpp, etc.
+// EDN-style namespaced tags carry dotted segments and an optional `/name` part:
+//   #my.app/Person, #my.app.sub/Thing
 // Must start with a letter so #_ still matches the form-comment rule via first-match-wins.
-TAG_NAME=[a-zA-Z] [a-zA-Z0-9_\-]*
+TAG_NAME=[a-zA-Z] [a-zA-Z0-9_\-]* ("." [a-zA-Z0-9_\-]+)* ("/" [a-zA-Z] [a-zA-Z0-9_\-]* ("." [a-zA-Z0-9_\-]+)*)?
 TAG="#" {TAG_NAME}
 
 %%
