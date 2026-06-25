@@ -25,7 +25,7 @@ Must be called from inside a fiber context (e.g. the AMPHP event loop or an encl
 """,
             example = "(let [f (future (expensive-computation))] @f)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/futures.phel#L9",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/futures.phel#L9",
                 docs = "",
             ),
         ),

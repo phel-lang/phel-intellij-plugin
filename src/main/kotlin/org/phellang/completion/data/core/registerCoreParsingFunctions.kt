@@ -26,7 +26,7 @@ Parses a string as a boolean. Returns <code>true</code> for the exact string<br 
 """,
             example = "(parse-boolean \"true\") ; =&gt; true\n(parse-boolean \"True\") ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/parsing.phel#L34",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/parsing.phel#L34",
                 docs = "",
             ),
         ),
@@ -45,7 +45,7 @@ Parses a string as a float. Returns <code>nil</code> for non-numeric input or fo
 """,
             example = "(parse-double \"3.14\") ; =&gt; 3.14\n(parse-double \"Infinity\") ; =&gt; INF",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/parsing.phel#L20",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/parsing.phel#L20",
                 docs = "",
             ),
         ),
@@ -62,7 +62,7 @@ Parses a string as a float. Returns <code>nil</code> for non-numeric input or fo
             summary = "Parses a string as an integer. Returns nil if parsing fails.",
             example = "(parse-long \"123\") ; =&gt; 123",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/parsing.phel#L10",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/parsing.phel#L10",
                 docs = "",
             ),
         ),

@@ -23,7 +23,7 @@ Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L73",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L73",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Reduces collection to a single value by repeatedly applying function to accumula
 """,
             example = "(reduce + [1 2 3 4]) ; =&gt; 10",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L50",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L50",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Wraps <code>x</code> in a Reduced, signaling early termination from reduce/trans
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L18",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L18",
                 docs = "",
             ),
         ),
@@ -80,7 +80,7 @@ Returns true if <code>x</code> is a Reduced value.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L24",
                 docs = "",
             ),
         ),
@@ -101,7 +101,7 @@ Reduce with a transformation of <code>f</code> (xf). If init is not supplied,<br
 """,
             example = "(transduce (map inc) + [1 2 3]) ; =&gt; 9",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L84",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L84",
                 docs = "",
             ),
         ),
@@ -120,7 +120,7 @@ If <code>x</code> is Reduced, returns the unwrapped value; otherwise returns <co
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L30",
                 docs = "",
             ),
         ),
@@ -139,7 +139,7 @@ Creates a volatile mutable reference with initial value <code>val</code>. Use fo
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L101",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L101",
                 docs = "",
             ),
         ),
@@ -158,7 +158,7 @@ Returns true if <code>x</code> is a Volatile.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L119",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L119",
                 docs = "",
             ),
         ),
@@ -177,7 +177,7 @@ Sets the value of volatile <code>vol</code> to <code>val</code>. Returns <code>v
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L107",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L107",
                 docs = "",
             ),
         ),
@@ -196,7 +196,7 @@ Applies <code>f</code> to the current value of volatile <code>vol</code> plus <c
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core/transducers.phel#L113",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core/transducers.phel#L113",
                 docs = "",
             ),
         ),

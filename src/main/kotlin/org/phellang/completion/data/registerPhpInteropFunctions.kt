@@ -191,6 +191,25 @@ Equivalent to PHP's <code>unset(arr[k1][k2][k...])</code>.
     ),
     PhelFunction(
         namespace = "php",
+        name = "php/callable",
+        signature = "(php/callable \\function)\n(php/callable Class method)\n(php/callable object method)",
+        completion = CompletionInfo(
+            tailText = "Builds a native PHP first-class callable from a function or method, without an fn wrapper",
+            priority = PhelCompletionPriority.PHP_INTEROP,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Builds a native PHP first-class callable from a function or method, without an fn wrapper.
+""",
+            example = "(map (php/callable \\strtoupper) [\"a\" \"b\"])",
+            links = DocumentationLinks(
+                github = "",
+                docs = "/documentation/php-interop/#php-first-class-callable",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "php",
         name = "php/new",
         signature = "(php/new expr args*)",
         completion = CompletionInfo(

@@ -18,7 +18,7 @@ Returns an HTML doctype declaration for the given type. Supports <code>:html4</c
 """,
             example = "(doctype :html5) ; =&gt; \"&lt;!DOCTYPE html&gt;\\n\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L172",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/html.phel#L175",
                 docs = "",
             ),
         ),
@@ -35,7 +35,7 @@ Returns an HTML doctype declaration for the given type. Supports <code>:html4</c
             summary = "Escapes HTML special characters to prevent XSS.",
             example = "(escape-html \"&lt;div&gt;\") ; =&gt; \"&amp;lt;div&amp;gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L6",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/html.phel#L6",
                 docs = "",
             ),
         ),
@@ -58,7 +58,7 @@ Compiles nested Phel vectors to HTML strings at compile-time. A vector<br />
 """,
             example = "(html [:div \"Hello\"]) ; =&gt; \"&lt;div&gt;Hello&lt;/div&gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L152",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/html.phel#L155",
                 docs = "",
             ),
         ),
@@ -75,7 +75,7 @@ Compiles nested Phel vectors to HTML strings at compile-time. A vector<br />
             summary = "Creates a new raw-string struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/html.phel#L4",
                 docs = "",
             ),
         ),
@@ -94,7 +94,7 @@ Checks if <code>x</code> is an instance of the raw-string struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/html.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/html.phel#L4",
                 docs = "",
             ),
         ),

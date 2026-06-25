@@ -22,7 +22,7 @@ Options:<br />
 """,
             example = "(read-string \"{:a 1 :b 2}\") ; =&gt; {:a 1, :b 2}\n(read-string \"\" {:eof :default}) ; =&gt; :default",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/edn.phel#L105",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/edn.phel#L105",
                 docs = "",
             ),
         ),
@@ -43,7 +43,7 @@ Options:<br />
 """,
             example = "(read-string-all \"1 2 3\") ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/edn.phel#L123",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/edn.phel#L123",
                 docs = "",
             ),
         ),
@@ -62,7 +62,7 @@ Serialises <code>value</code> to its EDN string representation. Uses Phel's read
 """,
             example = "(write-string {:a 1}) ; =&gt; \"{:a 1}\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/edn.phel#L137",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/edn.phel#L137",
                 docs = "",
             ),
         ),
@@ -81,7 +81,7 @@ Serialises a sequence of values to EDN, separating top-level forms with a single
 """,
             example = "(write-string-all [1 2 3]) ; =&gt; \"1 2 3\"\n(write-string-all [1 \"hi\" :kw]) ; =&gt; \"1 \\\"hi\\\" :kw\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/edn.phel#L144",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/edn.phel#L144",
                 docs = "",
             ),
         ),

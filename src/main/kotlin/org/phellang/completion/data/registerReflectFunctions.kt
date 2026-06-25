@@ -17,7 +17,7 @@ Returns the class-level attribute maps for <code>obj-or-class</code>; an instanc
 """,
             example = "(attributes my-controller)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L117",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L117",
                 docs = "",
             ),
         ),
@@ -36,7 +36,7 @@ Returns a vector of attribute maps for the class <code>class-or-name</code> (str
 """,
             example = "(class-attributes \\App\\Controller\\ProductController)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L96",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L96",
                 docs = "",
             ),
         ),
@@ -56,7 +56,7 @@ Returns a map describing <code>class-or-name</code> with <code>:name</code>, <co
 """,
             example = "(class-info \\DateTime)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L124",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L124",
                 docs = "",
             ),
         ),
@@ -76,7 +76,7 @@ Returns the keyword for a native PHP enum <code>enum-case</code>, using the case
 """,
             example = "(enum-&gt;keyword Status/Active)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L147",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L147",
                 docs = "",
             ),
         ),
@@ -96,7 +96,7 @@ Returns a vector of keywords, one per case of the native PHP enum<br />
 """,
             example = "(enum-values \\App\\Status)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L164",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L164",
                 docs = "",
             ),
         ),
@@ -115,7 +115,7 @@ Returns the case of the native PHP enum <code>enum-class</code> (string FQN) who
 """,
             example = "(keyword-&gt;enum \\App\\Status :Active)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L155",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L155",
                 docs = "",
             ),
         ),
@@ -134,7 +134,7 @@ Returns a vector of attribute maps for method <code>method-name</code> on <code>
 """,
             example = "(method-attributes \\App\\Foo \"handle\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L103",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L103",
                 docs = "",
             ),
         ),
@@ -154,7 +154,7 @@ Returns a vector of method maps for <code>class-or-name</code>. Each map contain
 """,
             example = "(methods DateTime)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L46",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L46",
                 docs = "",
             ),
         ),
@@ -174,7 +174,7 @@ Returns a vector of property maps for <code>class-or-name</code>. Each map conta
 """,
             example = "(properties \\DateInterval)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L55",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L55",
                 docs = "",
             ),
         ),
@@ -193,7 +193,7 @@ Returns a vector of attribute maps for property <code>property-name</code> on <c
 """,
             example = "(property-attributes \\App\\Foo \"id\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L110",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L110",
                 docs = "",
             ),
         ),
@@ -212,7 +212,7 @@ Returns a set of fully qualified parent classes and implemented interfaces for <
 """,
             example = "(supers \\RuntimeException)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/reflect.phel#L64",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/reflect.phel#L64",
                 docs = "",
             ),
         ),

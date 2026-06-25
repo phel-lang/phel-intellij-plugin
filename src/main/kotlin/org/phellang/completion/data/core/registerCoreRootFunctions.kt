@@ -11,6 +11,25 @@ import org.phellang.completion.infrastructure.PhelCompletionPriority
 internal fun registerCoreRootFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
+        name = "*argv*",
+        signature = "",
+        completion = CompletionInfo(
+            tailText = "Vector of user arguments passed to the script (excludes program name)",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Vector of user arguments passed to the script (excludes program name). Use <em>program</em> to get the script path or namespace.
+""",
+            example = null,
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core.phel#L192",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
         name = "*assert*",
         signature = "",
         completion = CompletionInfo(
@@ -23,7 +42,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical fa
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core.phel#L21",
                 docs = "",
             ),
         ),
@@ -74,7 +93,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical fa
             summary = "The script path or namespace being executed.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L187",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core.phel#L187",
                 docs = "",
             ),
         ),
@@ -100,25 +119,6 @@ Calls the function with the given arguments. The last argument must be a list of
     ),
     PhelFunction(
         namespace = "core",
-        name = "argv",
-        signature = "",
-        completion = CompletionInfo(
-            tailText = "Vector of user arguments passed to the script (excludes program name)",
-            priority = PhelCompletionPriority.CORE_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = """
-Vector of user arguments passed to the script (excludes program name). Use <em>program</em> to get the script path or namespace.
-""",
-            example = null,
-            links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L192",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "core",
         name = "array-map",
         signature = "",
         completion = CompletionInfo(
@@ -131,7 +131,7 @@ Constructs a map from the given key/value pairs. If any keys are equal, later va
 """,
             example = "(array-map :a 1 :b 2) ; =&gt; {:a 1 :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L53",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core.phel#L53",
                 docs = "",
             ),
         ),
@@ -186,7 +186,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             summary = "Declare a global symbol before it is defined.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L175",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core.phel#L175",
                 docs = "",
             ),
         ),
@@ -335,7 +335,7 @@ Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns a
 """,
             example = "(first [1 2 3]) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L136",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core.phel#L136",
                 docs = "",
             ),
         ),
@@ -519,7 +519,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = "Returns the sequence after the first element, or nil if empty.",
             example = "(next [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L84",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core.phel#L84",
                 docs = "",
             ),
         ),
@@ -557,7 +557,7 @@ Creates a persistent FIFO queue. With no arguments returns an empty queue; with 
 """,
             example = "(queue 1 2 3) ; =&gt; first 1, then 2, then 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/core.phel#L41",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/core.phel#L41",
                 docs = "",
             ),
         ),

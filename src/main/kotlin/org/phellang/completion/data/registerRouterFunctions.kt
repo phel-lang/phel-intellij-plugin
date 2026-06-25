@@ -15,7 +15,7 @@ internal fun registerRouterFunctions(): List<PhelFunction> = listOf(
             summary = "Creates a new CompiledSymfonyRouter struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L219",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L231",
                 docs = "",
             ),
         ),
@@ -34,7 +34,7 @@ Checks if <code>x</code> is an instance of the CompiledSymfonyRouter struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L219",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L231",
                 docs = "",
             ),
         ),
@@ -51,7 +51,7 @@ Checks if <code>x</code> is an instance of the CompiledSymfonyRouter struct.
             summary = "Creates a new SymfonyRouter struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L177",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L189",
                 docs = "",
             ),
         ),
@@ -70,7 +70,7 @@ Checks if <code>x</code> is an instance of the SymfonyRouter struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L177",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L189",
                 docs = "",
             ),
         ),
@@ -90,7 +90,7 @@ Because compilation runs during macro expansion, <code>raw-routes</code> must be
 """,
             example = "(compiled-router [[\"/ping\" {:get {:handler pong}}]])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L229",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L241",
                 docs = "",
             ),
         ),
@@ -113,7 +113,7 @@ Parent paths are concatenated with their children's paths and parent data<br />
 """,
             example = "(flatten-routes [\"/api\" {:middleware [:auth]}\n                 [\"/ping\" {:handler :ping}]] \"\" {})\n; =&gt; [[\"/api/ping\" {:middleware [:auth] :handler :ping}]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L39",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L51",
                 docs = "",
             ),
         ),
@@ -130,7 +130,7 @@ Parent paths are concatenated with their children's paths and parent data<br />
             summary = "Generate a url for a route",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L117",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L129",
                 docs = "",
             ),
         ),
@@ -166,7 +166,7 @@ Dispatch is precompiled at handler construction time, so per-request work<br />
 """,
             example = "(handler (router [[\"/ping\" {:get {:handler pong}}]])\n         {:middleware [logging-mw]\n          :not-found  (fn [_] {:status 404 :body \"nope\"})})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L253",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L265",
                 docs = "",
             ),
         ),
@@ -183,7 +183,7 @@ Dispatch is precompiled at handler construction time, so per-request work<br />
             summary = "Matches a route given a route name. Returns nil if route can't be found.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L117",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L129",
                 docs = "",
             ),
         ),
@@ -200,7 +200,7 @@ Dispatch is precompiled at handler construction time, so per-request work<br />
             summary = "Matches a route given a path. Returns nil if path doesn't match.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L117",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L129",
                 docs = "",
             ),
         ),
@@ -229,7 +229,7 @@ Routes are described as <code>[path data children*]</code> where <code>data</cod
 """,
             example = "(router [[\"/ping\" {:get {:handler pong}}]])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L193",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L205",
                 docs = "",
             ),
         ),
@@ -246,7 +246,7 @@ Routes are described as <code>[path data children*]</code> where <code>data</cod
             summary = "Returns all registered routes as a vector of [path data] tuples.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.42.0/src/phel/router.phel#L117",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.46.0/src/phel/router.phel#L129",
                 docs = "",
             ),
         ),
