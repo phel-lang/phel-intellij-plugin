@@ -61,8 +61,8 @@ object PhelInteropShorthands {
         if (text.contains("/") && !text.startsWith("/") && !text.endsWith("/")) {
             val qualifier = text.substringBeforeLast('/')
             if (isInteropClassName(qualifier)) return true
-            val shortQualifier = qualifier.trimStart('\\').substringAfterLast('\\')
-            if (shortQualifier in usedClasses) return true
+            val shortQualifier = PhelNamespaceUtils.extractShortClassName(qualifier)
+            if (shortQualifier != null && shortQualifier in usedClasses) return true
         }
 
         // \Foo or \Foo\Bar with no `/` — bare PHP class reference (e.g., catch target)

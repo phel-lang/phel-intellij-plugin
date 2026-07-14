@@ -1,6 +1,6 @@
 package org.phellang.completion.documentation
 
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.registry.PhelFunctionRegistry
 import java.util.concurrent.ConcurrentHashMap
 
 object PhelApiDocumentation {

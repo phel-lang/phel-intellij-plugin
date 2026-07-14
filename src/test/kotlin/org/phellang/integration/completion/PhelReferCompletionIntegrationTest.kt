@@ -3,8 +3,8 @@ package org.phellang.integration.completion
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.completion.data.Namespace
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.registry.Namespace
+import org.phellang.registry.PhelFunctionRegistry
 
 class PhelReferCompletionIntegrationTest {
 

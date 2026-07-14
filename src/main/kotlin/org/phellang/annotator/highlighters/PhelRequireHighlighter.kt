@@ -28,36 +28,9 @@ object PhelRequireHighlighter {
             return false
         }
 
-        // Validate the import
-        val validationResult = PhelImportValidator.validateImport(symbol)
-
-        if (validationResult != null) {
-            when {
-                // Duplicate import - offer to remove it (skip unused check)
-                validationResult.isDuplicate -> {
-                    val quickFix = PhelRemoveImportQuickFix(symbol, "Remove duplicate import")
-                    PhelAnnotationUtils.createWarningAnnotationWithFix(
-                        holder, symbol, validationResult.message, quickFix
-                    )
-                    return true
-                }
-                // Namespace doesn't exist but we have a suggestion
-                validationResult.suggestedNamespace != null -> {
-                    val quickFix = PhelFixImportQuickFix(symbol, validationResult.suggestedNamespace)
-                    PhelAnnotationUtils.createWarningAnnotationWithFix(
-                        holder, symbol, validationResult.message, quickFix
-                    )
-                }
-                // Namespace doesn't exist, no suggestion
-                else -> {
-                    PhelAnnotationUtils.createWarningAnnotation(holder, symbol, validationResult.message)
-                }
-            }
-        }
-
-        if (PhelImportValidator.isUnusedImport(symbol)) {
-            val quickFix = PhelRemoveImportQuickFix(symbol, "Remove unused import")
-            PhelAnnotationUtils.createWeakWarningAnnotationWithFix(holder, symbol, "Unused import", quickFix)
+        // Duplicate-vs-unused precedence is the validator's call, not ours; we just render.
+        PhelImportValidator.validateImport(symbol).forEach { problem ->
+            PhelAnnotationUtils.report(holder, symbol, problem)
         }
 
         // Return true to indicate we handled this symbol (whether valid or invalid)
@@ -69,11 +42,8 @@ object PhelRequireHighlighter {
             return false
         }
 
-        // Validate the symbol
-        val validationResult = PhelReferSymbolValidator.validateReferSymbol(symbol)
-
-        if (validationResult != null) {
-            PhelAnnotationUtils.createWarningAnnotation(holder, symbol, validationResult.message)
+        PhelReferSymbolValidator.validateReferSymbol(symbol).forEach { problem ->
+            PhelAnnotationUtils.report(holder, symbol, problem)
         }
 
         return true

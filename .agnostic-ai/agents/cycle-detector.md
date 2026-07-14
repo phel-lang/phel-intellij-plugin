@@ -21,10 +21,28 @@ tools/            (build-time: registry generator, model)
 
 # Known baseline (do not re-flag unless worsened)
 
-Documented in `.omc/research/ai-slop/04-cycles.md` if present. The salient remaining cycles after the recent refactor:
+The shared function model was moved out of `completion/` into its own top-level package
+`org.phellang.registry` (`PhelFunctionRegistry`, `PhelFunction`, `Namespace`, `PhelArity*`,
+`PhelProjectSymbol`, `PhelCompletionPriority`, the generated `register*Functions.kt`, and
+`registry/indexing`). It was never a completion concern — annotator, inspection, documentation,
+inlay and core all consume it — and being under `completion/` is what forced the old
+`core ↔ completion` and `completion.data ↔ completion.infrastructure` cycles.
 
-1. **`core ↔ completion`** via `core/psi/PhelSymbolAnalyzer.kt` importing `completion.data.PhelFunctionRegistry` + `completion.infrastructure.PhelCompletionPriority`. The classification data lives in the registry; properly fixing requires extracting a `SymbolClassifier` interface or relocating the registry. Flag only if the import surface grows.
-2. **`language → completion`** via `language/psi/references/PhelReference.kt`. Reduced after the SymbolCategory extraction; should be limited to `PhelCompletionPriority` for non-classification uses (e.g. ranking). Flag any new edges.
+**`registry` must stay a leaf**: it may import `language/psi` and the platform, nothing else.
+An import of `completion/`, `annotator/`, `editor/` or `inspection/` from `registry/` re-creates
+the cycle that move removed — flag it.
+
+Remaining known cycles (do not re-flag unless worsened):
+
+1. **`core.psi ↔ language.psi`** — `core/psi/PhelSymbolAnalyzer.kt` imports the PSI types, and
+   `language/psi/{references,navigation,impl}` import the analyzer back. Note the obvious fix
+   (moving the analyzer into `language/psi/`) does NOT work: the analyzer needs the registry, and
+   `registry/indexing` already imports `language.psi`, so that trade swaps this cycle for a
+   `language.psi ↔ registry` one. A real fix means lifting `language/psi/references` +
+   `navigation` (feature code) out of the PSI package.
+2. **`completion.infrastructure ↔ completion.handlers`** — `PhelCompletionUtils` ↔
+   `NamespacedInsertHandler`. Intra-feature and benign: the handler is only constructed inside a
+   function body, so there is no class-initialization hazard.
 
 # Methodology
 

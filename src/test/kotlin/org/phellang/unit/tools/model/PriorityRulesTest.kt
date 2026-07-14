@@ -3,7 +3,7 @@ package org.phellang.unit.tools.model
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.completion.infrastructure.PhelCompletionPriority
+import org.phellang.registry.PhelCompletionPriority
 import org.phellang.tools.model.ApiFunction
 import org.phellang.tools.model.ApiFunctionMeta
 import org.phellang.tools.model.PriorityRules

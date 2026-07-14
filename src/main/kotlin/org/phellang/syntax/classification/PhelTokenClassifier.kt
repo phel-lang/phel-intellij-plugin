@@ -72,9 +72,6 @@ object PhelTokenClassifier {
         return tokenType == PhelTypes.STRING
     }
 
-    fun isRegex(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.REGEX_START || tokenType == PhelTypes.REGEX_BODY
-    }
 
     fun isNumber(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.NUMBER || tokenType == PhelTypes.BINNUM
@@ -124,9 +121,6 @@ object PhelTokenClassifier {
         return tokenType == PhelTypes.SYNTAX_QUOTE
     }
 
-    fun isDeref(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.DEREF
-    }
 
     fun isUnquote(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.TILDE
@@ -136,9 +130,6 @@ object PhelTokenClassifier {
         return tokenType == PhelTypes.TILDE_AT
     }
 
-    fun isTag(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.TAG
-    }
 
     fun isKeyword(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.KEYWORD || tokenType == PhelTypes.KEYWORD_TOKEN

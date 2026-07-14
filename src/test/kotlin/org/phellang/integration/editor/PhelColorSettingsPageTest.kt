@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.syntax.PhelSyntaxHighlighter
-import org.phellang.editor.PhelColorSettingsPage
+import org.phellang.editor.colorsettings.PhelColorSettingsPage
 
 class PhelColorSettingsPageTest {
 

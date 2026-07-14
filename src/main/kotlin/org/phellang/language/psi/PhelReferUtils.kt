@@ -2,6 +2,7 @@ package org.phellang.language.psi
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelReferUtils {
 
@@ -60,8 +61,7 @@ object PhelReferUtils {
 
             // If not a keyword, might be the namespace
             if (keyword == null) {
-                val namespaceSymbol = form as? PhelSymbol
-                    ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+                val namespaceSymbol = PhelPsiUtils.asSymbol(form)
                 if (namespaceSymbol != null && namespace == null) {
                     namespace = namespaceSymbol.text
                 }

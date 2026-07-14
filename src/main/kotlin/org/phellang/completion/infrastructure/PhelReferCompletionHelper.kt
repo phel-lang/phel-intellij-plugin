@@ -3,12 +3,13 @@ package org.phellang.completion.infrastructure
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import org.phellang.completion.data.Namespace
-import org.phellang.completion.data.PhelFunctionRegistry
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.Namespace
+import org.phellang.registry.PhelFunctionRegistry
+import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.registry.PhelCompletionPriority
 
 object PhelReferCompletionHelper {
 

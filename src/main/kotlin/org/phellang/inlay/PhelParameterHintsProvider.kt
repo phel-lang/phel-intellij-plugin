@@ -9,9 +9,9 @@ import com.intellij.codeInsight.hints.declarative.SharedBypassCollector
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import org.phellang.completion.data.PhelArity
-import org.phellang.completion.data.PhelArityResolver
-import org.phellang.completion.data.selectFor
+import org.phellang.registry.PhelArity
+import org.phellang.registry.PhelArityResolver
+import org.phellang.registry.selectFor
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms

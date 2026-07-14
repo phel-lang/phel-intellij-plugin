@@ -3,42 +3,9 @@ package org.phellang.unit.annotator.validators
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.annotator.validators.FunctionReferenceValidationResult
 
 class PhelFunctionReferenceValidatorTest {
 
-    @Nested
-    inner class ValidationResultDataClass {
-
-        @Test
-        fun `validation result contains message namespace and function name`() {
-            val result = FunctionReferenceValidationResult(
-                message = "Cannot resolve function 'foo' in namespace 'bar'",
-                namespace = "bar",
-                functionName = "foo"
-            )
-
-            assertEquals("Cannot resolve function 'foo' in namespace 'bar'", result.message)
-            assertEquals("bar", result.namespace)
-            assertEquals("foo", result.functionName)
-        }
-
-        @Test
-        fun `validation result supports equality`() {
-            val result1 = FunctionReferenceValidationResult(
-                message = "Error",
-                namespace = "ns",
-                functionName = "fn"
-            )
-            val result2 = FunctionReferenceValidationResult(
-                message = "Error",
-                namespace = "ns",
-                functionName = "fn"
-            )
-
-            assertEquals(result1, result2)
-        }
-    }
 
     @Nested
     inner class QualifiedSymbolParsing {

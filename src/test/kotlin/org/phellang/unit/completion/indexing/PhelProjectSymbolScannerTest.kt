@@ -3,8 +3,8 @@ package org.phellang.unit.completion.indexing
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.completion.data.SymbolType
-import org.phellang.completion.indexing.PhelProjectSymbolScanner
+import org.phellang.registry.SymbolType
+import org.phellang.registry.indexing.PhelProjectSymbolScanner
 
 class PhelProjectSymbolScannerTest {
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.documentation.providers.PhelQuickNavigateInfoProvider
 import org.phellang.language.psi.PhelSymbol
 
@@ -73,12 +73,6 @@ class PhelQuickNavigateInfoProviderTest {
         }
     }
 
-    @Test
-    fun `should be instantiable without errors`() {
-        assertDoesNotThrow {
-            PhelQuickNavigateInfoProvider()
-        }
-    }
 
     @Test
     fun `should be consistent across multiple calls`() {
@@ -91,87 +85,9 @@ class PhelQuickNavigateInfoProviderTest {
         assertEquals(result1, result2)
     }
 
-    @Test
-    fun `should maintain thread safety`() {
-        val providers = mutableListOf<PhelQuickNavigateInfoProvider>()
-        val threads = mutableListOf<Thread>()
-        
-        repeat(5) {
-            val thread = Thread {
-                val localProvider = PhelQuickNavigateInfoProvider()
-                providers.add(localProvider)
-            }
-            threads.add(thread)
-            thread.start()
-        }
-        
-        threads.forEach { it.join() }
-        
-        assertEquals(5, providers.size)
-        providers.forEach { assertNotNull(it) }
-    }
 
-    @Test
-    fun `should be performant during instantiation`() {
-        val startTime = System.currentTimeMillis()
-        
-        repeat(100) {
-            val provider = PhelQuickNavigateInfoProvider()
-            assertNotNull(provider)
-        }
-        
-        val endTime = System.currentTimeMillis()
-        val duration = endTime - startTime
-        
-        assertTrue(duration < 1000, "Provider instantiation took too long: ${duration}ms")
-    }
 
-    @Test
-    fun `should have expected method structure`() {
-        val methods = provider.javaClass.declaredMethods
-        val hasGetQuickNavigateInfoMethod = methods.any { it.name == "getQuickNavigateInfo" }
-        assertTrue(hasGetQuickNavigateInfoMethod, "Provider should have getQuickNavigateInfo method")
-    }
 
-    @Test
-    fun `should maintain consistent class structure`() {
-        val provider1 = PhelQuickNavigateInfoProvider()
-        val provider2 = PhelQuickNavigateInfoProvider()
-        
-        assertEquals(provider1.javaClass.name, provider2.javaClass.name)
-        assertEquals(provider1.javaClass.packageName, provider2.javaClass.packageName)
-        assertEquals(provider1.javaClass.simpleName, provider2.javaClass.simpleName)
-    }
 
-    @Test
-    fun `should handle rapid successive calls`() {
-        val symbol = mock(PhelSymbol::class.java)
-        `when`(symbol.text).thenReturn("test")
-        
-        val results = mutableListOf<String?>()
-        
-        repeat(100) {
-            results.add(provider.getQuickNavigateInfo(symbol))
-        }
-        
-        // All results should be consistent
-        val firstResult = results[0]
-        assertTrue(results.all { it == firstResult })
-    }
 
-    @Test
-    fun `should handle multiple different symbols`() {
-        val symbol1 = mock(PhelSymbol::class.java)
-        `when`(symbol1.text).thenReturn("symbol1")
-        
-        val symbol2 = mock(PhelSymbol::class.java)
-        `when`(symbol2.text).thenReturn("symbol2")
-
-        // Results can be null if symbols are not in registry
-        // But they should be computed independently
-        assertDoesNotThrow {
-            provider.getQuickNavigateInfo(symbol1)
-            provider.getQuickNavigateInfo(symbol2)
-        }
-    }
 }

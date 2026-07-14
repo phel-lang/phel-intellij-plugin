@@ -2,10 +2,10 @@ package org.phellang.documentation.resolvers
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.completion.data.PhelProjectSymbol
+import org.phellang.registry.PhelProjectSymbol
 import org.phellang.completion.documentation.PhelApiDocumentation
 import org.phellang.completion.documentation.PhelBasicDocumentation
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
@@ -172,8 +172,7 @@ class PhelSymbolDocumentationResolver {
         if (forms.size < 3) return null
 
         // Only treat the symbol as a definition site when it sits at the name position.
-        val nameSymbol = (forms[1] as? PhelSymbol)
-            ?: PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
+        val nameSymbol = PhelPsiUtils.asSymbol(forms[1])
         if (nameSymbol !== symbol) return null
 
         for (i in 2 until forms.size) {
