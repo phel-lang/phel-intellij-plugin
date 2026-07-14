@@ -91,26 +91,16 @@ object PhelSymbolHighlighter {
         // Namespace-qualified function calls - use "/" as separator
         if (text.contains("/") && !text.startsWith("/") && !text.endsWith("/")) {
             // First, validate the namespace itself
-            val namespaceValidation = PhelNamespaceValidator.validateNamespace(symbol)
-            if (namespaceValidation != null) {
-                // Namespace issue - report it with optional quick fix
-                if (namespaceValidation.fullNamespace != null) {
-                    val quickFix = PhelImportNamespaceQuickFix(
-                        namespaceValidation.fullNamespace
-                    )
-                    PhelAnnotationUtils.createWarningAnnotationWithFix(
-                        holder, symbol, namespaceValidation.message, quickFix
-                    )
-                } else {
-                    PhelAnnotationUtils.createWarningAnnotation(holder, symbol, namespaceValidation.message)
-                }
+            val namespaceProblems = PhelNamespaceValidator.validateNamespace(symbol)
+            if (namespaceProblems.isNotEmpty()) {
+                namespaceProblems.forEach { PhelAnnotationUtils.report(holder, symbol, it) }
                 return
             }
 
             // Namespace is valid - now check if the function exists in that namespace
-            val functionValidation = PhelFunctionReferenceValidator.validateFunctionReference(symbol)
-            if (functionValidation != null) {
-                PhelAnnotationUtils.createWarningAnnotation(holder, symbol, functionValidation.message)
+            val functionProblems = PhelFunctionReferenceValidator.validateFunctionReference(symbol)
+            if (functionProblems.isNotEmpty()) {
+                functionProblems.forEach { PhelAnnotationUtils.report(holder, symbol, it) }
                 return
             }
 

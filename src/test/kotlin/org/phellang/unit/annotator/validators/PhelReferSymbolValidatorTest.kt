@@ -3,58 +3,11 @@ package org.phellang.unit.annotator.validators
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.annotator.validators.ReferSymbolValidationResult
 import org.phellang.registry.Namespace
 import org.phellang.registry.PhelFunctionRegistry
 
 class PhelReferSymbolValidatorTest {
 
-    @Nested
-    inner class ValidationResultDataClass {
-
-        @Test
-        fun `validation result contains message, symbol name and namespace`() {
-            val result = ReferSymbolValidationResult(
-                message = "Cannot resolve 'foo' in namespace 'phel\\test'",
-                symbolName = "foo",
-                namespace = "phel\\test"
-            )
-
-            assertEquals("Cannot resolve 'foo' in namespace 'phel\\test'", result.message)
-            assertEquals("foo", result.symbolName)
-            assertEquals("phel\\test", result.namespace)
-            assertFalse(result.isDuplicate)
-        }
-
-        @Test
-        fun `validation result supports duplicate flag`() {
-            val result = ReferSymbolValidationResult(
-                message = "'is' is already referred",
-                symbolName = "is",
-                namespace = "phel\\test",
-                isDuplicate = true
-            )
-
-            assertTrue(result.isDuplicate)
-            assertEquals("'is' is already referred", result.message)
-        }
-
-        @Test
-        fun `validation result supports equality`() {
-            val result1 = ReferSymbolValidationResult(
-                message = "Error",
-                symbolName = "fn",
-                namespace = "ns"
-            )
-            val result2 = ReferSymbolValidationResult(
-                message = "Error",
-                symbolName = "fn",
-                namespace = "ns"
-            )
-
-            assertEquals(result1, result2)
-        }
-    }
 
     @Nested
     inner class StandardLibrarySymbolExistence {
