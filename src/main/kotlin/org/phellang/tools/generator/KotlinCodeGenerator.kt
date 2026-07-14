@@ -24,7 +24,7 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
                 val targetDir = config.subfolder?.let { File(outputDirectory, it).apply { mkdirs() } }
                     ?: outputDirectory
                 val packageName = config.subfolder?.let { "$ROOT_PACKAGE.$it" } ?: ROOT_PACKAGE
-                val extraImports = if (config.subfolder != null) SHARED_DATA_IMPORTS else emptyList()
+                val extraImports = SHARED_DATA_IMPORTS
                 writeFunctionsFile(
                     file = File(targetDir, config.fileName),
                     packageName = packageName,
@@ -70,6 +70,7 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
         val content = buildString {
             appendLine("package $ROOT_PACKAGE")
             appendLine()
+            appendLine("import org.phellang.registry.PhelFunction")
             subFunctionNames.forEach { appendLine("import $CORE_PACKAGE.$it") }
             appendLine()
             appendLine("internal fun registerCoreFunctions(): List<PhelFunction> =")
@@ -124,8 +125,8 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
             .joinToString("") { it.replaceFirstChar(Char::uppercase) }
 
     companion object {
-        private const val ROOT_PACKAGE = "org.phellang.registry"
-        private const val CORE_PACKAGE = "org.phellang.registry.core"
+        private const val ROOT_PACKAGE = "org.phellang.registry.data"
+        private const val CORE_PACKAGE = "org.phellang.registry.data.core"
         private val SHARED_DATA_IMPORTS = listOf(
             "org.phellang.registry.CompletionInfo",
             "org.phellang.registry.DocumentationInfo",

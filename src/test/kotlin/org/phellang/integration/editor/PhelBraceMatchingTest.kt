@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.phellang.editor.PhelBraceMatcher
+import org.phellang.editor.matching.PhelBraceMatcher
 import org.phellang.editor.matching.PhelBraceContextAnalyzer
 import org.phellang.editor.matching.PhelBracePairProvider
 import org.phellang.language.psi.PhelTypes
