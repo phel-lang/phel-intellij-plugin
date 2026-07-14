@@ -5,7 +5,6 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
 import org.phellang.completion.handlers.*
-import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
 import org.phellang.completion.infrastructure.PhelProjectCompletionHelper
 import org.phellang.completion.infrastructure.PhelReferCompletionHelper
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
@@ -22,12 +21,8 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
-        PhelErrorHandler.safeOperation {
+        PhelErrorHandler.safeOperation("completion") {
             val element = parameters.position
-
-            check(PhelCompletionErrorHandler.isCompletionContextValid(element)) {
-                "Invalid completion context"
-            }
 
             val completionContext = PhelCompletionContext(parameters)
 
@@ -109,34 +104,19 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
     }
 
     private fun addGeneralCompletions(element: PsiElement, result: CompletionResultSet) {
-        PhelErrorHandler.safeOperation {
-            // Extract alias map once for efficient lookup during completion
-            val psiFile = element.containingFile as? PhelFile
-            val aliasMap = psiFile?.let { PhelNamespaceUtils.extractAliasMap(it) } ?: emptyMap()
+        // Extract alias map once for efficient lookup during completion
+        val psiFile = element.containingFile as? PhelFile
+        val aliasMap = psiFile?.let { PhelNamespaceUtils.extractAliasMap(it) } ?: emptyMap()
 
-            // Local symbols (parameters, let bindings, etc.)
-            PhelLocalSymbolCompletions.addLocalSymbols(result, element)
+        // Local symbols (parameters, let bindings, etc.)
+        PhelLocalSymbolCompletions.addLocalSymbols(result, element)
 
-            // Standard library functions
-            PhelRegistryCompletionHelper.addCoreFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addStringFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addJsonFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addAiFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addHtmlFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addHttpFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addHttpClientFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addDebugFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addBase64Functions(result, aliasMap)
-            PhelRegistryCompletionHelper.addTestFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addPhpInteropFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addReplFunctions(result, aliasMap)
-            PhelRegistryCompletionHelper.addMockFunctions(result, aliasMap)
+        PhelRegistryCompletionHelper.addStandardLibraryFunctions(result, aliasMap)
 
-            // Project symbols (functions from other project files)
-            if (psiFile != null) {
-                PhelProjectCompletionHelper.addProjectCompletions(result, psiFile, aliasMap)
-                PhelUsedClassCompletionHelper.addUsedClassCompletions(result, psiFile)
-            }
+        // Project symbols (functions from other project files)
+        if (psiFile != null) {
+            PhelProjectCompletionHelper.addProjectCompletions(result, psiFile, aliasMap)
+            PhelUsedClassCompletionHelper.addUsedClassCompletions(result, psiFile)
         }
     }
 }

@@ -3,7 +3,7 @@ package org.phellang.unit.inspection.deprecated
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.completion.data.DeprecationInfo
+import org.phellang.registry.DeprecationInfo
 import org.phellang.inspection.deprecated.DeprecationMessageBuilder
 
 class DeprecationMessageBuilderTest {

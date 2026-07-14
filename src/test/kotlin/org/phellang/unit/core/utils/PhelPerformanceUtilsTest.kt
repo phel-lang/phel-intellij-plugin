@@ -191,13 +191,15 @@ class PhelPerformanceUtilsTest {
     }
 
     @Test
-    fun `shouldSkipExpensiveOperations should handle exception in operation`() {
+    fun `shouldSkipExpensiveOperations propagates a PSI failure instead of silently skipping`() {
         val element = mock(PsiElement::class.java)
         `when`(element.containingFile).thenThrow(RuntimeException("Test error"))
 
-        val result = PhelPerformanceUtils.shouldSkipExpensiveOperations(element)
-
-        assertTrue(result, "Should skip on error to be safe")
+        // Previously this was swallowed and reported as "skip", which silently disabled local
+        // and project completion with no diagnostic. A broken PSI is a bug and must surface.
+        assertThrows(RuntimeException::class.java) {
+            PhelPerformanceUtils.shouldSkipExpensiveOperations(element)
+        }
     }
 
     @Test

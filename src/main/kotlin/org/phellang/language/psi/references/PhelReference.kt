@@ -29,9 +29,10 @@ import org.phellang.language.psi.PhelVendorUtils
  * - Redefinitions
  */
 class PhelReference @JvmOverloads constructor(
-    element: PhelSymbol, // If true, find usages; if false, find definitions
+    element: PhelSymbol,
+    /** True: find usages of this definition. False: resolve this usage to its definitions. */
     private val findUsages: Boolean = PhelSymbolAnalyzer.isDefinition(element)
-) : PsiReferenceBase<PhelSymbol?>(element, calculateRangeInElement(element)), PsiPolyVariantReference {
+) : PsiReferenceBase<PhelSymbol>(element, calculateRangeInElement(element)), PsiPolyVariantReference {
     private val symbolName: String? = PhelPsiUtils.getName(element)
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
@@ -70,13 +71,13 @@ class PhelReference @JvmOverloads constructor(
         // A PHP class entry inside `(:use ...)` resolves only to its PHP declaration.
         // Short-circuit here so Phel-side lookups can't false-match a bare class name
         // (e.g. `InvalidArgumentException`) against its own in-file usages.
-        if (PhelNamespaceUtils.isUseClassSymbol(myElement!!)) {
+        if (PhelNamespaceUtils.isUseClassSymbol(myElement)) {
             addPhpClassResults(results)
             return
         }
 
         // Check if this is a namespace-qualified symbol (e.g., utils/greet, m/square)
-        val qualifier = PhelPsiUtils.getQualifier(myElement!!)
+        val qualifier = PhelPsiUtils.getQualifier(myElement)
         if (qualifier != null) {
             // This is a qualified symbol - resolve by namespace
             val namespacedDefinitions = resolveQualifiedSymbol(qualifier)
@@ -107,7 +108,7 @@ class PhelReference @JvmOverloads constructor(
 
         // 4. Phel standard library (vendor folder) - for core functions like map, filter, etc.
         if (results.isEmpty()) {
-            val vendorDefinitions = resolveInVendor(myElement!!.project, "core")
+            val vendorDefinitions = resolveInVendor(myElement.project, "core")
             for (def in vendorDefinitions) {
                 results.add(PsiElementResolveResult(def))
             }
@@ -122,7 +123,7 @@ class PhelReference @JvmOverloads constructor(
     }
 
     private fun addPhpClassResults(results: MutableList<ResolveResult>) {
-        val element = myElement ?: return
+        val element = myElement
         // Prefer specific members (e.g. `Class.` -> __construct method) so go-to-def
         // lands on the precise PHP node; fall back to the class otherwise.
         val memberTargets = PhpClassResolver.resolveAsPhpMember(element)
@@ -145,7 +146,7 @@ class PhelReference @JvmOverloads constructor(
      * * `(:require [foo\bar :as fb :refer […]])` — namespace as the head of a vector spec
      */
     private fun resolveRequireNamespace(): List<PsiElement> {
-        val symbol = myElement ?: return emptyList()
+        val symbol = myElement
         if (!isRequireNamespaceHead(symbol)) return emptyList()
 
         val namespaceText = symbol.text ?: return emptyList()
@@ -246,19 +247,19 @@ class PhelReference @JvmOverloads constructor(
      */
     private fun resolveQualifiedSymbol(qualifier: String): MutableCollection<PsiElement> {
         val results: MutableList<PsiElement> = ArrayList()
-        val containingFile = myElement!!.containingFile as? PhelFile ?: return results
-        val project = myElement!!.project
+        val containingFile = myElement.containingFile as? PhelFile ?: return results
+        val project = myElement.project
 
         // PHP interop static call (`ClassName/method`, `\Foo\Bar/CONST`, …).
         // Try the specific member (method/constant) first so go-to-def lands on
         // the precise PHP node; fall back to the class if the member lookup
         // misses (or when the PHP plugin isn't available).
-        val memberTargets = PhpClassResolver.resolveAsPhpMember(myElement!!)
+        val memberTargets = PhpClassResolver.resolveAsPhpMember(myElement)
         if (memberTargets.isNotEmpty()) {
             results.addAll(memberTargets)
             return results
         }
-        val phpTargets = PhpClassResolver.resolveAsPhpClass(myElement!!)
+        val phpTargets = PhpClassResolver.resolveAsPhpClass(myElement)
         if (phpTargets.isNotEmpty()) {
             results.addAll(phpTargets)
             return results
@@ -405,7 +406,7 @@ class PhelReference @JvmOverloads constructor(
         val usages: MutableList<PsiElement> = ArrayList()
 
         // For function parameters, let bindings, etc., only search within the local scope
-        if (PhelSymbolAnalyzer.isDefinition(myElement!!) && this.isLocalBinding) {
+        if (PhelSymbolAnalyzer.isDefinition(myElement) && this.isLocalBinding) {
             // For local bindings, search only within the containing form (function/let block)
             val localUsages = findUsagesInLocalScope()
             if (!localUsages.isEmpty()) {
@@ -415,7 +416,7 @@ class PhelReference @JvmOverloads constructor(
         }
 
         // Search current file for usages and other definitions
-        val containingFile = myElement!!.containingFile
+        val containingFile = myElement.containingFile
         if (containingFile is PhelFile) {
             val allSymbols = PsiTreeUtil.findChildrenOfType(containingFile, PhelSymbol::class.java)
 
@@ -433,7 +434,7 @@ class PhelReference @JvmOverloads constructor(
         // Search project-wide ONLY for top-level definitions (def, defn, etc.)
         // Skip expensive project-wide search for local bindings
         if (!this.isLocalBinding) {
-            val project = myElement!!.project
+            val project = myElement.project
             val projectScope = GlobalSearchScope.projectScope(project)
 
             val phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", projectScope)
@@ -468,7 +469,7 @@ class PhelReference @JvmOverloads constructor(
          * This checks if it's NOT a top-level definition (def, defn, etc.)
          */
         get() {
-            if (!PhelSymbolAnalyzer.isDefinition(myElement!!)) {
+            if (!PhelSymbolAnalyzer.isDefinition(myElement)) {
                 return false // Not a definition at all
             }
 
@@ -501,7 +502,7 @@ class PhelReference @JvmOverloads constructor(
     }
 
     private fun findContainingForm(): PhelList? {
-        var current = myElement!!.parent
+        var current = myElement.parent
 
         while (current != null) {
             if (current is PhelList) {
@@ -618,7 +619,7 @@ class PhelReference @JvmOverloads constructor(
 
     private fun resolveInCurrentFile(): MutableCollection<PsiElement> {
         val results: MutableList<PsiElement> = ArrayList()
-        val file = myElement!!.containingFile
+        val file = myElement.containingFile
 
         if (file != null) {
             val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
@@ -635,7 +636,7 @@ class PhelReference @JvmOverloads constructor(
 
     private fun resolveInProject(): MutableCollection<PsiElement> {
         val results: MutableList<PsiElement> = ArrayList()
-        val project = myElement!!.project
+        val project = myElement.project
 
         // Find all .phel files in the project
         val phelFiles = FilenameIndex.getAllFilesByExt(
@@ -646,7 +647,7 @@ class PhelReference @JvmOverloads constructor(
 
         for (file in phelFiles) {
             val psiFile = psiManager.findFile(file)
-            if (psiFile == null || psiFile == myElement!!.containingFile) continue
+            if (psiFile == null || psiFile == myElement.containingFile) continue
             // Fast reject: a file whose text doesn't mention the name can't define it, so
             // skip the PSI walk for the many files that don't reference this symbol.
             if (symbolName != null && !psiFile.text.contains(symbolName)) continue
@@ -749,7 +750,7 @@ class PhelReference @JvmOverloads constructor(
      */
     private fun findAllFunctionParameters(): MutableCollection<PsiElement> {
         val results: MutableList<PsiElement> = ArrayList()
-        val file = myElement!!.containingFile
+        val file = myElement.containingFile
 
         if (file != null) {
             val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)

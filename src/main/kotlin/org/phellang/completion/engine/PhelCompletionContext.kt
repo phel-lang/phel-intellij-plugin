@@ -4,7 +4,6 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.core.psi.PhelSymbolAnalyzer
-import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.SymbolCategory
@@ -12,43 +11,23 @@ import org.phellang.language.psi.utils.SymbolCategory
 class PhelCompletionContext(parameters: CompletionParameters) {
     val element: PsiElement = parameters.position
 
-    fun shouldSuggestNewForm(): Boolean {
-        return PhelErrorHandler.safeOperation {
-            isAtFileLevel()
-        } ?: false
-    }
+    fun shouldSuggestNewForm(): Boolean = isAtFileLevel()
 
     fun isInsideParentheses(): Boolean {
-        return PhelErrorHandler.safeOperation {
-            val parent = element.parent
+        val parent = element.parent
 
-            isAfterOpeningParen() || (parent is PhelList && parent.parent !is PhelFile)
-        } ?: false
+        return isAfterOpeningParen() || (parent is PhelList && parent.parent !is PhelFile)
     }
 
     fun shouldSuppressCompletions(): Boolean {
-        return PhelErrorHandler.safeOperation {
-            isInFunctionNamePosition() || isInParameterDefinitionPosition() || isInBindingDefinitionPosition() || isInDefinitionNamePosition()
-        } ?: false
+        return isInFunctionNamePosition() || isInParameterDefinitionPosition() || isInBindingDefinitionPosition() || isInDefinitionNamePosition()
     }
 
-    fun isInsideReferVector(): Boolean {
-        return PhelErrorHandler.safeOperation {
-            PhelReferUtils.isInsideReferVector(element)
-        } ?: false
-    }
+    fun isInsideReferVector(): Boolean = PhelReferUtils.isInsideReferVector(element)
 
-    fun getReferNamespace(): String? {
-        return PhelErrorHandler.safeOperation {
-            PhelReferUtils.getReferNamespace(element)
-        }
-    }
+    fun getReferNamespace(): String? = PhelReferUtils.getReferNamespace(element)
 
-    fun getAlreadyReferredSymbols(): Set<String> {
-        return PhelErrorHandler.safeOperation {
-            PhelReferUtils.getAlreadyReferredSymbols(element)
-        } ?: emptySet()
-    }
+    fun getAlreadyReferredSymbols(): Set<String> = PhelReferUtils.getAlreadyReferredSymbols(element)
 
     private fun isAtFileLevel(): Boolean {
         var current = element
@@ -71,17 +50,13 @@ class PhelCompletionContext(parameters: CompletionParameters) {
     }
 
     private fun isAfterOpeningParen(): Boolean {
-        return PhelErrorHandler.safeOperation {
-            val text = element.containingFile.text
-            val offset = element.textOffset
+        val text = element.containingFile.text
+        val offset = element.textOffset
 
-            if (offset > 0) {
-                val charBefore = text[offset - 1]
-                charBefore == '(' || charBefore == '[' || charBefore == '{'
-            } else {
-                false
-            }
-        } ?: false
+        if (offset <= 0) return false
+
+        val charBefore = text[offset - 1]
+        return charBefore == '(' || charBefore == '[' || charBefore == '{'
     }
 
     private fun isInFunctionNamePosition(): Boolean {

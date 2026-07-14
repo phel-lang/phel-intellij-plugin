@@ -10,7 +10,7 @@ import kotlin.system.exitProcess
  * Main entry point for the Phel Function Registry generator.
  *
  * This tool fetches the official Phel API JSON from https://phel-lang.org/api.json and regenerates
- * all register*Functions.kt files in the completion/data directory.
+ * all register*Functions.kt files in the registry directory.
  *
  * Usage:
  *   ./gradlew updatePhelRegistry
@@ -65,11 +65,11 @@ fun main() {
 private fun determineOutputDirectory(): File {
     val possiblePaths = listOf(
         // When run from project root
-        "src/main/kotlin/org/phellang/completion/data",
+        "src/main/kotlin/org/phellang/registry",
         // When run from Gradle with project dir
-        System.getProperty("user.dir")?.let { "$it/src/main/kotlin/org/phellang/completion/data" },
+        System.getProperty("user.dir")?.let { "$it/src/main/kotlin/org/phellang/registry" },
         // Absolute path fallback
-        System.getenv("PROJECT_DIR")?.let { "$it/src/main/kotlin/org/phellang/completion/data" })
+        System.getenv("PROJECT_DIR")?.let { "$it/src/main/kotlin/org/phellang/registry" })
 
     for (path in possiblePaths.filterNotNull()) {
         val dir = File(path)
@@ -79,7 +79,7 @@ private fun determineOutputDirectory(): File {
     }
 
     // If not found, try to create it relative to current directory
-    val defaultDir = File("src/main/kotlin/org/phellang/completion/data")
+    val defaultDir = File("src/main/kotlin/org/phellang/registry")
     if (!defaultDir.exists()) {
         throw IllegalStateException(
             "Could not find output directory. " + "Please run this tool from the project root directory."

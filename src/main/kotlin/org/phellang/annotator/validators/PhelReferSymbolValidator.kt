@@ -1,8 +1,8 @@
 package org.phellang.annotator.validators
 
-import org.phellang.completion.data.Namespace
-import org.phellang.completion.data.PhelFunctionRegistry
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.Namespace
+import org.phellang.registry.PhelFunctionRegistry
+import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelReferUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile

@@ -77,7 +77,10 @@ class PhelAnnotatorPerformanceTest {
             val durationMs = (endTime - startTime) / 1_000_000.0
 
             assertTrue(result, "Element with valid range should be annotatable")
-            assertTrue(durationMs < 0.1, "shouldAnnotate should be very fast: ${durationMs}ms")
+            // Budget sits well above JIT/GC noise on purpose: shouldAnnotate is a constant-time
+            // range check, so this guards against it accidentally growing a tree walk, not against
+            // microsecond jitter. A tighter bound only ever fails randomly.
+            assertTrue(durationMs < 5.0, "shouldAnnotate should be fast: ${durationMs}ms")
         }
     }
 

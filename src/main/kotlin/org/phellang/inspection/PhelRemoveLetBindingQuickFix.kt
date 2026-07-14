@@ -2,8 +2,6 @@ package org.phellang.inspection
 
 import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemDescriptor
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
@@ -15,25 +13,22 @@ class PhelRemoveLetBindingQuickFix : LocalQuickFix {
 
     override fun getFamilyName(): String = "Remove unused let binding"
 
+    // The platform runs applyFix inside a write action and a command: if the PSI edit below
+    // fails it rolls the command back and reports it. Catching here instead left the user
+    // clicking the fix, seeing nothing happen, and getting an empty entry on the undo stack.
     override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
         val element = descriptor.psiElement
-        try {
-            val targetForm = findBindingForm(element) ?: return
-            val vec = targetForm.parent as? PhelVec ?: return
+        val targetForm = findBindingForm(element) ?: return
+        val vec = targetForm.parent as? PhelVec ?: return
 
-            val forms = vec.forms
-            val idx = forms.indexOf(targetForm)
-            if (idx < 0) return
-            val valueForm = forms.getOrNull(idx + 1) ?: return
+        val forms = vec.forms
+        val idx = forms.indexOf(targetForm)
+        if (idx < 0) return
+        val valueForm = forms.getOrNull(idx + 1) ?: return
 
-            val deleteFrom: PsiElement = leadingWhitespaceOrSelf(targetForm)
-            val deleteTo: PsiElement = trailingWhitespaceOrSelf(valueForm)
-            vec.node.removeRange(deleteFrom.node, deleteTo.node.treeNext)
-        } catch (e: ProcessCanceledException) {
-            throw e
-        } catch (e: Exception) {
-            LOG.warn("Failed to remove let binding", e)
-        }
+        val deleteFrom: PsiElement = leadingWhitespaceOrSelf(targetForm)
+        val deleteTo: PsiElement = trailingWhitespaceOrSelf(valueForm)
+        vec.node.removeRange(deleteFrom.node, deleteTo.node.treeNext)
     }
 
     private fun findBindingForm(element: PsiElement): PhelForm? {
@@ -49,6 +44,8 @@ class PhelRemoveLetBindingQuickFix : LocalQuickFix {
         val form = PsiTreeUtil.getParentOfType(element, PhelForm::class.java) ?: return null
         return if (form.parent is PhelVec) form else null
     }
+
+
 
     private fun leadingWhitespaceOrSelf(form: PhelForm): PsiElement {
         var node = form.prevSibling
@@ -68,9 +65,5 @@ class PhelRemoveLetBindingQuickFix : LocalQuickFix {
             node = node.nextSibling
         }
         return anchor
-    }
-
-    companion object {
-        private val LOG = Logger.getInstance(PhelRemoveLetBindingQuickFix::class.java)
     }
 }

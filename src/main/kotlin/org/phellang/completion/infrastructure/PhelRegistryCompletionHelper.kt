@@ -1,75 +1,23 @@
 package org.phellang.completion.infrastructure
 
 import com.intellij.codeInsight.completion.CompletionResultSet
-import org.phellang.completion.data.Namespace
-import org.phellang.completion.data.PhelFunction
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.registry.Namespace
+import org.phellang.registry.PhelFunction
+import org.phellang.registry.PhelFunctionRegistry
 
 object PhelRegistryCompletionHelper {
 
+    /**
+     * Offers every namespace the registry knows. The registry is generated from `api.json`, so a
+     * namespace added to `NamespaceConfig` is surfaced here automatically — previously this was a
+     * hand-maintained list of 13 that had drifted, leaving `edn`, `walk`, `transit`, the schema
+     * namespaces and others loaded but never suggested.
+     */
     @JvmStatic
-    fun addCoreFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.CORE, aliasMap)
-    }
-
-    @JvmStatic
-    fun addStringFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.STRING, aliasMap)
-    }
-
-    @JvmStatic
-    fun addJsonFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.JSON, aliasMap)
-    }
-
-    @JvmStatic
-    fun addHttpFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.HTTP, aliasMap)
-    }
-
-    @JvmStatic
-    fun addHttpClientFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.HTTP_CLIENT, aliasMap)
-    }
-
-    @JvmStatic
-    fun addHtmlFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.HTML, aliasMap)
-    }
-
-    @JvmStatic
-    fun addDebugFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.DEBUG, aliasMap)
-    }
-
-    @JvmStatic
-    fun addTestFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.TEST, aliasMap)
-    }
-
-    @JvmStatic
-    fun addReplFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.REPL, aliasMap)
-    }
-
-    @JvmStatic
-    fun addAiFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.AI, aliasMap)
-    }
-
-    @JvmStatic
-    fun addBase64Functions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.BASE64, aliasMap)
-    }
-
-    @JvmStatic
-    fun addPhpInteropFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.PHP_INTEROP, aliasMap)
-    }
-
-    @JvmStatic
-    fun addMockFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
-        addNamespaceFunctions(result, Namespace.MOCK, aliasMap)
+    fun addStandardLibraryFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {
+        Namespace.entries.forEach { namespace ->
+            addNamespaceFunctions(result, namespace, aliasMap)
+        }
     }
 
     private fun addNamespaceFunctions(
@@ -84,7 +32,8 @@ object PhelRegistryCompletionHelper {
         }
     }
 
-    private fun transformNameWithAlias(function: PhelFunction, aliasMap: Map<String, String>): String {
+    /** Renders `str/join` as `s/join` when the file aliased `str` to `s` via `(:require ... :as s)`. */
+    internal fun transformNameWithAlias(function: PhelFunction, aliasMap: Map<String, String>): String {
         // aliasMap is: alias -> namespace (e.g., "s" -> "str")
         // We need reverse lookup: namespace -> alias
         val alias = aliasMap.entries.find { it.value == function.namespace }?.key

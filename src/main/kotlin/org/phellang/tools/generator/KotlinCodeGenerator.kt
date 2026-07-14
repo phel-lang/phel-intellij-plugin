@@ -94,7 +94,7 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
             appendLine()
             extraImports.forEach { appendLine("import $it") }
             if (extraImports.isNotEmpty()) appendLine()
-            appendLine("import org.phellang.completion.infrastructure.PhelCompletionPriority")
+            appendLine("import org.phellang.registry.PhelCompletionPriority")
             appendLine()
             appendLine("internal fun $functionName(): List<PhelFunction> = listOf(")
             functions.forEachIndexed { index, function ->
@@ -124,14 +124,14 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
             .joinToString("") { it.replaceFirstChar(Char::uppercase) }
 
     companion object {
-        private const val ROOT_PACKAGE = "org.phellang.completion.data"
-        private const val CORE_PACKAGE = "org.phellang.completion.data.core"
+        private const val ROOT_PACKAGE = "org.phellang.registry"
+        private const val CORE_PACKAGE = "org.phellang.registry.core"
         private val SHARED_DATA_IMPORTS = listOf(
-            "org.phellang.completion.data.CompletionInfo",
-            "org.phellang.completion.data.DocumentationInfo",
-            "org.phellang.completion.data.DocumentationLinks",
-            "org.phellang.completion.data.DeprecationInfo",
-            "org.phellang.completion.data.PhelFunction"
+            "org.phellang.registry.CompletionInfo",
+            "org.phellang.registry.DocumentationInfo",
+            "org.phellang.registry.DocumentationLinks",
+            "org.phellang.registry.DeprecationInfo",
+            "org.phellang.registry.PhelFunction"
         )
     }
 }

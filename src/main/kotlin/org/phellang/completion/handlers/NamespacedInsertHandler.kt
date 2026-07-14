@@ -5,41 +5,38 @@ import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.command.WriteCommandAction
 import org.phellang.completion.infrastructure.PhelCompletionUtils
-import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.PhelNamespaceImporter
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.files.PhelFile
 
 class NamespacedInsertHandler : InsertHandler<LookupElement?> {
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
-        PhelErrorHandler.safeOperation {
-            val editor = context.editor
-            val document = editor.document
-            val caretOffset = context.startOffset
+        val editor = context.editor
+        val document = editor.document
+        val caretOffset = context.startOffset
 
-            var symbolStart = caretOffset
-            val text = document.charsSequence
+        var symbolStart = caretOffset
+        val text = document.charsSequence
 
-            // Move back to find the beginning of the symbol
-            while (symbolStart > 0) {
-                val c = text[symbolStart - 1]
-                // Stop at whitespace, opening parenthesis, or other delimiters
-                if (Character.isWhitespace(c) || c == '(' || c == '[' || c == '{') {
-                    break
-                }
-                symbolStart--
+        // Move back to find the beginning of the symbol
+        while (symbolStart > 0) {
+            val c = text[symbolStart - 1]
+            // Stop at whitespace, opening parenthesis, or other delimiters
+            if (Character.isWhitespace(c) || c == '(' || c == '[' || c == '{') {
+                break
             }
-
-            val symbolEnd = context.tailOffset
-
-            // Already aliased at suggestion time if applicable.
-            document.replaceString(symbolStart, symbolEnd, item.lookupString)
-            editor.caretModel.moveToOffset(symbolStart + item.lookupString.length)
-
-            // Auto-import namespace if needed
-            val psiFile = context.file as? PhelFile
-            autoImportNamespaceIfNeeded(context, psiFile, item)
+            symbolStart--
         }
+
+        val symbolEnd = context.tailOffset
+
+        // Already aliased at suggestion time if applicable.
+        document.replaceString(symbolStart, symbolEnd, item.lookupString)
+        editor.caretModel.moveToOffset(symbolStart + item.lookupString.length)
+
+        // Auto-import namespace if needed
+        val psiFile = context.file as? PhelFile
+        autoImportNamespaceIfNeeded(context, psiFile, item)
     }
 
     private fun autoImportNamespaceIfNeeded(context: InsertionContext, psiFile: PhelFile?, item: LookupElement) {
