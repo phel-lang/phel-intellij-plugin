@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
-import org.phellang.language.psi.references.PhpClassResolver
+import org.phellang.language.psi.references.PhpIndexBridge
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 
@@ -28,7 +28,7 @@ class PhpClassResolverControlFlowTest {
         val pce = ProcessCanceledException()
 
         val thrown = assertThrows(ProcessCanceledException::class.java) {
-            PhpClassResolver.rethrowIfPlatformControlFlow(InvocationTargetException(pce))
+            PhpIndexBridge.rethrowIfPlatformControlFlow(InvocationTargetException(pce))
         }
 
         // The original PCE must escape, not a wrapper: the platform matches on identity/type.
@@ -46,14 +46,14 @@ class PhpClassResolverControlFlowTest {
         val indexNotReady = mock(IndexNotReadyException::class.java)
 
         assertThrows(IndexNotReadyException::class.java) {
-            PhpClassResolver.rethrowIfPlatformControlFlow(InvocationTargetException(indexNotReady))
+            PhpIndexBridge.rethrowIfPlatformControlFlow(InvocationTargetException(indexNotReady))
         }
     }
 
     @Test
     fun `rethrows a bare ProcessCanceledException that was not wrapped`() {
         assertThrows(ProcessCanceledException::class.java) {
-            PhpClassResolver.rethrowIfPlatformControlFlow(ProcessCanceledException())
+            PhpIndexBridge.rethrowIfPlatformControlFlow(ProcessCanceledException())
         }
     }
 
@@ -61,7 +61,7 @@ class PhpClassResolverControlFlowTest {
     fun `rethrows an Error rather than absorbing it`() {
         // catch (Throwable) previously swallowed StackOverflowError / OutOfMemoryError too.
         assertThrows(StackOverflowError::class.java) {
-            PhpClassResolver.rethrowIfPlatformControlFlow(InvocationTargetException(StackOverflowError()))
+            PhpIndexBridge.rethrowIfPlatformControlFlow(InvocationTargetException(StackOverflowError()))
         }
     }
 
@@ -70,10 +70,10 @@ class PhpClassResolverControlFlowTest {
         // "The PHP plugin's API is not the shape we expect" is the case the broad catch exists for:
         // it must NOT be rethrown, so the resolver can degrade to "no PHP target found".
         assertDoesNotThrow {
-            PhpClassResolver.rethrowIfPlatformControlFlow(NoSuchMethodException("getAnyByFQN"))
+            PhpIndexBridge.rethrowIfPlatformControlFlow(NoSuchMethodException("getAnyByFQN"))
         }
         assertDoesNotThrow {
-            PhpClassResolver.rethrowIfPlatformControlFlow(InvocationTargetException(IOException("boom")))
+            PhpIndexBridge.rethrowIfPlatformControlFlow(InvocationTargetException(IOException("boom")))
         }
     }
 }
