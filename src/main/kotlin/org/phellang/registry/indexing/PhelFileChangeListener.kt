@@ -1,0 +1,83 @@
+package org.phellang.registry.indexing
+
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.newvfs.BulkFileListener
+import com.intellij.openapi.vfs.newvfs.events.*
+import com.intellij.psi.PsiManager
+
+class PhelFileChangeListener(private val project: Project) : BulkFileListener {
+
+    override fun after(events: List<VFileEvent>) {
+        if (project.isDisposed) return
+
+        val index = PhelProjectSymbolIndex.getInstance(project)
+        var needsReparse = false
+
+        for (event in events) {
+            val file = event.file ?: continue
+
+            if (!isPhelFile(file)) continue
+
+            when (event) {
+                is VFileContentChangeEvent -> {
+                    index.refreshFile(file)
+                    needsReparse = true
+                }
+
+                is VFileCreateEvent -> {
+                    index.refreshFile(file)
+                    needsReparse = true
+                }
+
+                is VFileDeleteEvent -> {
+                    index.removeFile(file)
+                    needsReparse = true
+                }
+
+                is VFileMoveEvent -> {
+                    index.refreshFile(file)
+                    needsReparse = true
+                }
+
+                is VFilePropertyChangeEvent -> {
+                    if (event.propertyName == VirtualFile.PROP_NAME) {
+                        index.refreshFile(file)
+                        needsReparse = true
+                    }
+                }
+            }
+        }
+
+        if (needsReparse) {
+            triggerRehighlight()
+        }
+    }
+
+    private fun isPhelFile(file: VirtualFile): Boolean {
+        return file.extension == "phel"
+    }
+
+    private fun triggerRehighlight() {
+        if (project.isDisposed) return
+
+        ApplicationManager.getApplication().invokeLater {
+            if (project.isDisposed) return@invokeLater
+
+            ApplicationManager.getApplication().runReadAction {
+                if (project.isDisposed) return@runReadAction
+                val fileEditorManager = FileEditorManager.getInstance(project)
+                val psiManager = PsiManager.getInstance(project)
+                val daemon = DaemonCodeAnalyzer.getInstance(project)
+
+                fileEditorManager.openFiles
+                    .filter { it.extension == "phel" }
+                    .mapNotNull { psiManager.findFile(it) }
+                    .forEach { daemon.restart(it) }
+            }
+        }
+    }
+}

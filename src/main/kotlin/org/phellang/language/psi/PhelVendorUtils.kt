@@ -63,8 +63,4 @@ object PhelVendorUtils {
 
         return results
     }
-
-    /** Legacy single-file lookup. Prefer [findStandardLibraryFiles]. */
-    fun findStandardLibraryFile(project: Project, namespace: String): VirtualFile? =
-        findStandardLibraryFiles(project, namespace).firstOrNull()
 }

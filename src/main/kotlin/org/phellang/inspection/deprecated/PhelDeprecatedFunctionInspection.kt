@@ -4,8 +4,8 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
-import org.phellang.completion.data.DeprecationInfo
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.registry.DeprecationInfo
+import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVisitor

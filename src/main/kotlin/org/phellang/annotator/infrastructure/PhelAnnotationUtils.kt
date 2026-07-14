@@ -6,6 +6,7 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
+import org.phellang.annotator.validators.PhelValidationProblem
 
 object PhelAnnotationUtils {
 
@@ -19,6 +20,18 @@ object PhelAnnotationUtils {
 
     fun createWarningAnnotation(holder: AnnotationHolder, element: PsiElement, message: String) {
         holder.newAnnotation(HighlightSeverity.WARNING, message).range(element.textRange).create()
+    }
+
+    /** Renders whatever a validator reported: severity, message, and a fix when one applies. */
+    fun report(holder: AnnotationHolder, element: PsiElement, problem: PhelValidationProblem) {
+        val severity = when (problem.severity) {
+            PhelValidationProblem.Severity.WARNING -> HighlightSeverity.WARNING
+            PhelValidationProblem.Severity.WEAK_WARNING -> HighlightSeverity.WEAK_WARNING
+        }
+
+        val annotation = holder.newAnnotation(severity, problem.message).range(element.textRange)
+        problem.quickFix?.let { annotation.withFix(it) }
+        annotation.create()
     }
 
     fun createWarningAnnotationWithFix(holder: AnnotationHolder, element: PsiElement, message: String, quickFix: IntentionAction) {

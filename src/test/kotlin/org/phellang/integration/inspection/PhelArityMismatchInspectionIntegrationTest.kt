@@ -5,7 +5,7 @@ import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
 import org.phellang.integration.PhelIntegrationTestCase
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.inspection.PhelArityMismatchInspection
 import org.phellang.language.psi.files.PhelFile
 

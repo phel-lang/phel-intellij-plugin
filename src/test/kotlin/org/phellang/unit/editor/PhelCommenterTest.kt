@@ -3,7 +3,7 @@ package org.phellang.unit.editor
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.phellang.editor.PhelCommenter
+import org.phellang.editor.commenting.PhelCommenter
 
 class PhelCommenterTest {
 
