@@ -14,7 +14,9 @@ import javax.swing.Icon
 class PhelStructureViewElement(private val element: NavigatablePsiElement) :
     StructureViewTreeElement, SortableTreeElement {
 
-    override fun getValue(): Any = element
+    // StructureViewTreeElement declares Object; narrowed here because the value is always the
+    // PSI element this node was built from.
+    override fun getValue(): NavigatablePsiElement = element
 
     override fun navigate(requestFocus: Boolean) = element.navigate(requestFocus)
 
@@ -36,6 +38,10 @@ class PhelStructureViewElement(private val element: NavigatablePsiElement) :
         return topLevelForms
             .mapNotNull { PsiTreeUtil.findChildOfType(it, PhelList::class.java) }
             .filter { PhelStructuralFormRecognizer.classify(it) != null }
+            // The generated PhelList interface only declares PsiElement, but every implementation
+            // descends from ASTWrapperPsiElement (PhelListImpl -> PhelListMixin -> ... ->
+            // PhelFormMixin), which is navigable. An unchecked cast rather than `as?`: if that ever
+            // stops holding we want it to fail loudly, not to quietly drop nodes from the tree.
             .map { PhelStructureViewElement(it as NavigatablePsiElement) }
             .toTypedArray()
     }
