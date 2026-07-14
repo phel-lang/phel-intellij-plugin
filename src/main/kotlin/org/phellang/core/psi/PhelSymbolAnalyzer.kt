@@ -1,31 +1,26 @@
 package org.phellang.core.psi
 
-import com.intellij.openapi.util.Key
-import com.intellij.psi.PsiElement
-import com.intellij.psi.util.CachedValue
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.registry.PhelCompletionPriority
-import org.phellang.language.psi.*
-import org.phellang.language.psi.files.PhelFile
+import org.phellang.registry.PhelFunctionRegistry
+import org.phellang.language.psi.PhelForm
+import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.utils.SymbolCategory
-import org.phellang.language.psi.utils.PhelPsiUtils
 
+/**
+ * What a Phel symbol *is* — a special form, a definition, a parameter, a binding, or a reference to
+ * one. The questions highlighting, completion and resolution all ask.
+ *
+ * The analysis itself lives in focused collaborators; this is the API they are reached through:
+ *
+ * * [PhelParameterAnalyzer]   — parameter vectors and the names they bind
+ * * [PhelLetBindingAnalyzer]  — `let`-like binding vectors
+ * * [PhelLocalFunctionIndex]  — functions defined in the current file
+ * * [PhelFormWalker]          — walking enclosing forms and reading their heads
+ */
 object PhelSymbolAnalyzer {
-
-    private val LOCAL_FUNCTION_NAMES_KEY: Key<CachedValue<Set<String>>> =
-        Key.create("phel.localFunctionNames")
-    private val FUNCTION_PARAMS_KEY: Key<CachedValue<Set<String>>> =
-        Key.create("phel.functionParameters")
-
-    /** Forms that introduce a parameter vector — used by isFunctionParameter. */
-    private val FUNCTION_DEFINING_FORMS = PhelSpecialForms.FUNCTION_DEFINING
-
-    /** Forms that introduce a binding vector — used by isLetBinding. */
-    private val LET_LIKE_FORMS = PhelSpecialForms.LET_LIKE
 
     /** Top-level forms that bind a name in their second position (the symbol being defined). */
     private val DEFINITION_FORMS = setOf(
@@ -33,6 +28,7 @@ object PhelSymbolAnalyzer {
         "defstruct", "definterface", "defexception", "declare", "deftest",
     )
 
+    /** True when [symbolText] belongs to [category] according to the generated function registry. */
     @JvmStatic
     fun isSymbolType(symbolText: String?, category: SymbolCategory): Boolean {
         if (symbolText == null) return false
@@ -47,458 +43,74 @@ object PhelSymbolAnalyzer {
         return PhelFunctionRegistry.hasFunctionWithName(priority, symbolText)
     }
 
+    /** True when [symbol] declares a name: a parameter, a `let` binding, or a top-level definition. */
     @JvmStatic
     fun isDefinition(symbol: PhelSymbol): Boolean {
-        // Check if this symbol is a function parameter
-        if (isFunctionParameter(symbol)) {
-            return true
-        }
+        if (isFunctionParameter(symbol) || isLetBinding(symbol)) return true
 
-        // Check if this symbol is a let binding
-        if (isLetBinding(symbol)) {
-            return true
-        }
+        return isDefinedName(symbol)
+    }
 
-        // Check if this symbol is the name being defined in a special form
+    /** True when [symbol] is the name in `(def <symbol> …)` / `(defn <symbol> …)`. */
+    private fun isDefinedName(symbol: PhelSymbol): Boolean {
         val containingList = PsiTreeUtil.getParentOfType(symbol, PhelList::class.java) ?: return false
 
         val firstForm = PsiTreeUtil.findChildOfType(containingList, PhelForm::class.java) ?: return false
+        val head = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java) ?: return false
+        if (head.text !in DEFINITION_FORMS) return false
 
-        val firstSymbol = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java) ?: return false
-
-        if (firstSymbol.text !in DEFINITION_FORMS) {
-            return false
-        }
-
-        // Check if this symbol is the second element (the name being defined)
         val forms = PsiTreeUtil.getChildrenOfType(containingList, PhelForm::class.java) ?: return false
         if (forms.size <= 1) return false
 
         val definedName = PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java) ?: return false
-
         return symbol === definedName
     }
 
     @JvmStatic
-    fun isInParameterVector(symbol: PhelSymbol): Boolean {
-        return isFunctionParameter(symbol, excludeSymbols = emptySet())
-    }
+    fun isInParameterVector(symbol: PhelSymbol): Boolean =
+        PhelParameterAnalyzer.isFunctionParameter(symbol, excludeSymbols = emptySet())
+
+    /** `&` introduces a rest parameter rather than naming one, so it is excluded by default. */
+    @JvmStatic
+    fun isFunctionParameter(symbol: PhelSymbol, excludeSymbols: Set<String> = setOf("&")): Boolean =
+        PhelParameterAnalyzer.isFunctionParameter(symbol, excludeSymbols)
 
     @JvmStatic
-    fun isFunctionParameter(symbol: PhelSymbol, excludeSymbols: Set<String> = setOf("&")): Boolean {
-        val paramVec = findContainingParameterVector(symbol) ?: return false
-
-        // Check if this vector is a parameter vector in a function definition
-        if (!isParameterVectorInFunctionDefinition(paramVec)) {
-            return false
-        }
-
-        // Additional check: exclude specified symbols
-        return symbol.text !in excludeSymbols
-    }
+    fun isLetBinding(symbol: PhelSymbol): Boolean = PhelLetBindingAnalyzer.isLetBinding(symbol)
 
     @JvmStatic
-    fun isLetBinding(symbol: PhelSymbol): Boolean {
-        // Check if symbol is inside a binding vector
-        val bindingVec = PsiTreeUtil.getParentOfType(symbol, PhelVec::class.java) ?: return false
+    fun findParameterVector(functionList: PhelList): PhelVec? =
+        PhelParameterAnalyzer.findParameterVector(functionList)
 
-        // Check if the binding vector is part of a let form
-        val containingList = PsiTreeUtil.getParentOfType(bindingVec, PhelList::class.java) ?: return false
-
-        val forms = PsiTreeUtil.getChildrenOfType(containingList, PhelForm::class.java)
-        if (forms == null || forms.size < 2) return false
-
-        // Check if first symbol is a binding form
-        val firstSymbol = PhelPsiUtils.asSymbol(forms[0])
-            ?: return false
-        if (firstSymbol.text !in LET_LIKE_FORMS) return false
-
-        // Check if binding vector is at forms[1] — either directly or via a PhelForm wrapper.
-        if (forms[1] !== bindingVec && forms[1] !== bindingVec.parent) return false
-
-        // Binding symbols sit at even indices: [name value name value ...]
-        val bindings = PsiTreeUtil.getChildrenOfType(bindingVec, PhelForm::class.java) ?: return false
-
-        var i = 0
-        while (i < bindings.size) {
-            val bindingSymbol = PhelPsiUtils.asSymbol(bindings[i])
-            if (bindingSymbol === symbol) {
-                return true
-            }
-            i += 2
-        }
-
-        return false
-    }
-
+    /** True when [symbol] *uses* a local binding — a binding's own declaration is not a reference. */
     @JvmStatic
     fun isParameterReference(symbol: PhelSymbol): Boolean {
         val symbolText = symbol.text ?: return false
+        if (isFunctionParameter(symbol) || isLetBinding(symbol)) return false
 
-        // A binding/parameter *definition* is not a reference to one.
-        if (isFunctionParameter(symbol) || isLetBinding(symbol)) {
-            return false
-        }
-
-        return isLocalReferenceOnly(symbol, symbolText)
+        return isLocalReference(symbol, symbolText)
     }
 
     /**
-     * True when [symbol] is a fn/let binding definition **or** a reference to one — i.e. any
-     * occurrence highlighting paints as a local symbol. Computes each underlying check once;
-     * prefer this over calling `isParameterReference`, `isFunctionParameter` and `isLetBinding`
-     * separately, which re-walks the PSI for the two definition checks.
+     * True when [symbol] is a local binding *or* a reference to one — i.e. anything occurrence
+     * highlighting paints as local.
+     *
+     * Prefer this over calling [isParameterReference], [isFunctionParameter] and [isLetBinding]
+     * separately: it computes each underlying check once instead of re-walking the PSI for them.
      */
     @JvmStatic
     fun isLocalBindingOrReference(symbol: PhelSymbol): Boolean {
         val symbolText = symbol.text ?: return false
-        if (isFunctionParameter(symbol) || isLetBinding(symbol)) {
-            return true
-        }
-        return isLocalReferenceOnly(symbol, symbolText)
+        if (isFunctionParameter(symbol) || isLetBinding(symbol)) return true
+
+        return isLocalReference(symbol, symbolText)
     }
 
-    /** Reference-only lookup: assumes the caller already ruled out a binding/param definition. */
-    private fun isLocalReferenceOnly(symbol: PhelSymbol, symbolText: String): Boolean {
-        // Look for function parameters in the containing function
-        val containingFunction = findContainingFunction(symbol)
-        if (containingFunction != null) {
-            val parameters = extractFunctionParameters(containingFunction)
-            if (parameters.contains(symbolText)) {
-                return true
-            }
-        }
+    /** Assumes the caller has already ruled out [symbol] being a binding's own declaration. */
+    private fun isLocalReference(symbol: PhelSymbol, symbolText: String): Boolean {
+        if (symbolText in PhelParameterAnalyzer.parametersInScopeOf(symbol)) return true
+        if (PhelLetBindingAnalyzer.isReferenceToLetBinding(symbol, symbolText)) return true
 
-        // Look for let bindings in the containing scopes
-        if (isReferenceToLetBinding(symbol, symbolText)) {
-            return true
-        }
-
-        // Look for references to locally defined functions in the same file
-        return isReferenceToLocalFunction(symbol, symbolText)
+        return PhelLocalFunctionIndex.isReferenceToLocalFunction(symbol, symbolText, DEFINITION_FORMS)
     }
-
-    private fun findContainingFunction(symbol: PhelSymbol): PhelList? {
-        var current = symbol.parent
-        while (current != null) {
-            // Skip non-list elements
-            if (current !is PhelList) {
-                current = current.parent
-                continue
-            }
-
-            val children = current.children
-            if (children.isEmpty()) {
-                current = current.parent
-                continue
-            }
-
-            val firstChild = children[0]
-            if (firstChild !is PhelSymbol && firstChild !is PhelAccess) {
-                current = current.parent
-                continue
-            }
-
-            val functionType = firstChild.text
-            if (functionType in FUNCTION_DEFINING_FORMS) {
-                return current
-            }
-
-            current = current.parent
-        }
-        return null
-    }
-
-    private fun extractFunctionParameters(functionList: PhelList): Set<String> {
-        // Cached per function: isLocalReferenceOnly calls this for every regular symbol inside
-        // a function, and the parameter set is the same for all of them.
-        return CachedValuesManager.getCachedValue(functionList, FUNCTION_PARAMS_KEY) {
-            CachedValueProvider.Result.create(
-                computeFunctionParameters(functionList),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
-    }
-
-    private fun computeFunctionParameters(functionList: PhelList): Set<String> {
-        val parameters = mutableSetOf<String>()
-
-        // Single-arity: paramVec lives directly in the function list.
-        findParameterVector(functionList)?.let { collectParameterNames(it, parameters) }
-
-        // Multi-arity: every child arity is a list `([params] body)` whose head is the param vec.
-        for (child in functionList.children) {
-            val arityList = (child as? PhelList)
-                ?: PsiTreeUtil.findChildOfType(child, PhelList::class.java)
-                ?: continue
-            val arityChildren = arityList.children
-            if (arityChildren.isEmpty()) continue
-            val arityHeadVec = (arityChildren[0] as? PhelVec)
-                ?: PsiTreeUtil.findChildOfType(arityChildren[0], PhelVec::class.java)
-                ?: continue
-            collectParameterNames(arityHeadVec, parameters)
-        }
-
-        return parameters
-    }
-
-    private fun collectParameterNames(paramVec: PhelVec, into: MutableSet<String>) {
-        for (paramChild in paramVec.children) {
-            if (paramChild !is PhelSymbol && paramChild !is PhelAccess) continue
-            val paramName = paramChild.text
-            if (paramName.isNullOrEmpty() || paramName == "&") continue
-            into.add(paramName)
-        }
-    }
-
-    private fun isReferenceToLetBinding(symbol: PhelSymbol, symbolText: String): Boolean {
-        var current = symbol.parent
-        while (current != null) {
-            // Skip non-list elements
-            if (current !is PhelList) {
-                current = current.parent
-                continue
-            }
-
-            val children = current.children
-            if (children.isEmpty()) {
-                current = current.parent
-                continue
-            }
-
-            val firstChild = children[0]
-            if (firstChild !is PhelSymbol && firstChild !is PhelAccess) {
-                current = current.parent
-                continue
-            }
-
-            val bindingType = firstChild.text
-            if (bindingType !in LET_LIKE_FORMS) {
-                current = current.parent
-                continue
-            }
-
-            // Check if symbolText is in the binding vector
-            if (children.size <= 1) {
-                current = current.parent
-                continue
-            }
-
-            val bindingElement = children[1]
-            if (bindingElement !is PhelVec) {
-                current = current.parent
-                continue
-            }
-
-            // Search for the symbol in binding positions (even indices)
-            val bindingChildren = bindingElement.children
-            for (i in bindingChildren.indices step 2) {
-                val bindingChild = bindingChildren[i]
-                if ((bindingChild is PhelSymbol || bindingChild is PhelAccess) && bindingChild.text == symbolText) {
-                    return true
-                }
-            }
-
-            current = current.parent
-        }
-        return false
-    }
-
-    private fun isReferenceToLocalFunction(symbol: PhelSymbol, symbolText: String): Boolean {
-        // Don't highlight if this is the function definition itself
-        if (isLocalFunctionDefinition(symbol)) {
-            return false
-        }
-
-        val file = symbol.containingFile as? PhelFile ?: return false
-        return symbolText in localFunctionNames(file)
-    }
-
-    /**
-     * Names of top-level `fn`/`defn`-family definitions in [file]. Highlighting probes this
-     * once per regular symbol, so the per-file scan is cached and invalidated by edits rather
-     * than re-walking every top-level form for every symbol.
-     */
-    private fun localFunctionNames(file: PhelFile): Set<String> {
-        return CachedValuesManager.getCachedValue(file, LOCAL_FUNCTION_NAMES_KEY) {
-            CachedValueProvider.Result.create(
-                computeLocalFunctionNames(file),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
-    }
-
-    private fun computeLocalFunctionNames(file: PhelFile): Set<String> {
-        val names = HashSet<String>()
-        for (child in file.children) {
-            if (child !is PhelList) continue
-
-            val children = child.children
-            if (children.size < 2) continue
-
-            val firstChild = children[0]
-            if (firstChild !is PhelSymbol && firstChild !is PhelAccess) continue
-            if (firstChild.text !in FUNCTION_DEFINING_FORMS) continue
-
-            val secondChild = children[1]
-            if (secondChild is PhelSymbol || secondChild is PhelAccess) {
-                secondChild.text?.let { names.add(it) }
-            }
-        }
-        return names
-    }
-
-    private fun isLocalFunctionDefinition(symbol: PhelSymbol): Boolean {
-        val parent = symbol.parent
-
-        // Handle case where symbol is wrapped in PhelAccessImpl
-        val listParent = if (parent is PhelAccess) {
-            parent.parent as? PhelList
-        } else {
-            parent as? PhelList
-        }
-
-        listParent ?: return false
-        
-        val children = listParent.children
-        if (children.size < 2) return false
-        
-        val firstChild = children[0]
-        val secondChild = children[1]
-
-        // Check if this is a function definition form
-        if (firstChild !is PhelSymbol && firstChild !is PhelAccess) return false
-        
-        val functionType = firstChild.text
-        if (functionType !in DEFINITION_FORMS) return false
-
-        // Check if the symbol is the function name (second child)
-        // The symbol might be wrapped in PhelAccess, so check both direct and wrapped cases
-        val isSecondChild = secondChild == symbol || (secondChild is PhelAccess && secondChild == parent)
-        
-        return isSecondChild
-    }
-
-    @JvmStatic
-    fun findParameterVector(functionList: PhelList): PhelVec? {
-        val children = functionList.children
-        if (children.isEmpty()) return null
-
-        val functionType = symbolTextOf(children[0]) ?: return null
-
-        return when (functionType) {
-            "fn" -> {
-                // For (fn [params] ...), parameter vector is at index 1
-                if (children.size >= 2) vecOf(children[1]) else null
-            }
-
-            "defn", "defn-", "defmacro", "defmacro-" -> {
-                // For defn forms, find the first vector after the function name
-                // Skip docstring and metadata: (defn name "doc" {:meta} [params] ...)
-                for (i in 2 until children.size) {
-                    val vec = vecOf(children[i])
-                    if (vec != null) return vec
-                }
-                null
-            }
-
-            else -> null
-        }
-    }
-
-    /** Returns the symbol text of [child], whether [child] is a PhelSymbol/PhelAccess directly
-     *  or a PhelForm wrapping one. */
-    private fun symbolTextOf(child: PsiElement): String? = when (child) {
-        is PhelSymbol -> child.text
-        is PhelAccess -> child.text
-        else -> PsiTreeUtil.findChildOfType(child, PhelSymbol::class.java)?.text
-    }
-
-    /** Returns the PhelVec at [child], whether [child] IS a PhelVec or wraps one in a PhelForm. */
-    private fun vecOf(child: PsiElement): PhelVec? = when (child) {
-        is PhelVec -> child
-        else -> PsiTreeUtil.findChildOfType(child, PhelVec::class.java)
-    }
-
-    /**
-     * Find the parameter vector in a defn/defn-/defmacro form.
-     * The parameter vector is the first PhelVec after the function name,
-     * skipping any docstring or metadata map.
-     */
-    private fun findParameterVectorInDefn(forms: Array<PhelForm>, targetVec: PhelVec): Boolean {
-        // Start from index 2 (after defn and function name)
-        for (i in 2 until forms.size) {
-            val form = forms[i]
-
-            // Check if this form IS our target vector
-            if (form === targetVec) {
-                return true
-            }
-
-            // Check if this form contains our target vector
-            if (form === targetVec.parent) {
-                return true
-            }
-
-            // If we encounter a vector that's not our target, it means our target
-            // is not the parameter vector (it might be inside the function body)
-            val foundVec = PsiTreeUtil.findChildOfType(form, PhelVec::class.java)
-            if (foundVec != null && foundVec !== targetVec) {
-                return false
-            }
-        }
-        return false
-    }
-
-    private fun findContainingParameterVector(symbol: PhelSymbol): PhelVec? {
-        var current = symbol.parent
-        while (current != null) {
-            if (current is PhelVec) {
-                return current
-            }
-            current = current.parent
-        }
-        return null
-    }
-
-    private fun isParameterVectorInFunctionDefinition(paramVec: PhelVec): Boolean {
-        val immediate = PsiTreeUtil.getParentOfType(paramVec, PhelList::class.java) ?: return false
-        val immediateForms = PsiTreeUtil.getChildrenOfType(immediate, PhelForm::class.java) ?: return false
-        val immediateHead = headSymbolText(immediateForms)
-
-        // Direct case: paramVec lives in the function-defining list itself.
-        //   (fn [params] body)            → paramVec at forms[1]
-        //   (defn name [params] body)     → first vec after the name (skip doc/meta)
-        //   (defmacro name [params] body) → ditto
-        if (immediateHead in FUNCTION_DEFINING_FORMS) {
-            return when (immediateHead) {
-                "fn" -> immediateForms.size >= 2 && isSameOrWrapperOf(immediateForms[1], paramVec)
-                else -> findParameterVectorInDefn(immediateForms, paramVec)
-            }
-        }
-
-        // Multi-arity case: paramVec is the head of an arity list, and the arity list's
-        // parent is a function-defining form.
-        //   (defn name ([] body) ([x] body))
-        //   (fn   ([] body) ([x] body))
-        if (immediateForms.isNotEmpty() && isSameOrWrapperOf(immediateForms[0], paramVec)) {
-            val outer = PsiTreeUtil.getParentOfType(immediate, PhelList::class.java) ?: return false
-            val outerForms = PsiTreeUtil.getChildrenOfType(outer, PhelForm::class.java) ?: return false
-            return headSymbolText(outerForms) in FUNCTION_DEFINING_FORMS
-        }
-
-        return false
-    }
-
-    /** First-position symbol text for a list's child forms, tolerant of flat/wrapped layouts. */
-    private fun headSymbolText(forms: Array<PhelForm>): String? {
-        if (forms.isEmpty()) return null
-        return (forms[0] as? PhelSymbol)?.text
-            ?: (forms[0] as? PhelAccess)?.text
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)?.text
-    }
-
-    /** True when [candidate] either IS [target] or is the PhelForm wrapper around it. */
-    private fun isSameOrWrapperOf(candidate: PsiElement?, target: PhelVec): Boolean =
-        candidate === target || candidate === target.parent
 }
