@@ -1,6 +1,7 @@
 package org.phellang.completion.engine
 
 import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
@@ -19,10 +20,11 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        result: CompletionResultSet
+        rawResult: CompletionResultSet
     ) {
         PhelErrorHandler.safeOperation("completion") {
             val element = parameters.position
+            val result = rawResult.withPhelPrefix(parameters)
 
             val completionContext = PhelCompletionContext(parameters)
 
@@ -69,6 +71,30 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
                 }
             }
         }
+    }
+
+    /**
+     * Re-derives the completion prefix using Phel's identifier alphabet.
+     *
+     * The platform computes the initial prefix with Java's rules, so it stops at the first character
+     * that is not a Java identifier part. In Phel that severs a symbol at `/`, `-`, `?`, `!` and the
+     * rest of [PhelCompletionCharFilter]'s alphabet: invoking completion at `(s/|)` yields an *empty*
+     * prefix, so nothing filters on `s/` and the whole registry is offered. Typing the same text
+     * works only because the char filter widens the prefix while a lookup is already open — which is
+     * why this is invisible until you ask for completion at an existing symbol.
+     *
+     * [PlainPrefixMatcher] rather than the default: `s/upper-case` must match the literal prefix
+     * `s/`, and camel-hump matching has nothing to offer kebab-case Phel names anyway.
+     */
+    private fun CompletionResultSet.withPhelPrefix(parameters: CompletionParameters): CompletionResultSet {
+        val position = parameters.position
+        val caretInElement = parameters.offset - position.textRange.startOffset
+        if (caretInElement <= 0 || caretInElement > position.text.length) return this
+
+        val prefix = position.text.take(caretInElement)
+        if (prefix == prefixMatcher.prefix) return this
+
+        return withPrefixMatcher(PlainPrefixMatcher(prefix))
     }
 
     private fun addTemplateCompletions(result: CompletionResultSet) {
