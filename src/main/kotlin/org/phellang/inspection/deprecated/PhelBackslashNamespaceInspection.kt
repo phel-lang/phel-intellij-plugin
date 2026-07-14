@@ -13,6 +13,7 @@ import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVisitor
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Flags backslash-separated namespaces inside `(ns ...)` and `:require` clauses.
@@ -58,8 +59,7 @@ class PhelBackslashNamespaceInspection : LocalInspectionTool() {
         }
 
         // (ns my.ns ...) — top-level ns form.
-        val firstSymbol = forms[0] as? PhelSymbol
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
+        val firstSymbol = PhelPsiUtils.asSymbol(forms[0])
         return firstSymbol?.text == "ns" && forms.size >= 2 && PsiTreeUtil.isAncestor(forms[1], symbol, false)
     }
 

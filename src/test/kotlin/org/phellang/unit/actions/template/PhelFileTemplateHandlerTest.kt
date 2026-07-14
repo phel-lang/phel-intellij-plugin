@@ -84,7 +84,7 @@ class PhelFileTemplateHandlerTest {
     }
 
     @Test
-    fun `createFileFromTemplate should return null on exception`() {
+    fun `createFileFromTemplate propagates a template failure instead of silently doing nothing`() {
         val name = "TestFile"
         val namespace = "tests\\namespace"
 
@@ -98,9 +98,10 @@ class PhelFileTemplateHandlerTest {
                 )
             }.thenThrow(RuntimeException("Template creation failed"))
 
-            val result = handler.createFileFromTemplate(name, mockFileTemplate, mockPsiDirectory, namespace)
-
-            assertNull(result)
+            // Returning null here made "New > Phel File" a silent no-op: no file, no error.
+            assertThrows(RuntimeException::class.java) {
+                handler.createFileFromTemplate(name, mockFileTemplate, mockPsiDirectory, namespace)
+            }
         }
     }
 

@@ -9,6 +9,7 @@ import com.intellij.util.ProcessingContext
 import org.phellang.registry.PhelCompletionPriority
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?>() {
 
@@ -168,8 +169,7 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
                 return null
             }
 
-            val symbol = firstForm as? PhelSymbol
-                ?: PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
+            val symbol = PhelPsiUtils.asSymbol(firstForm)
             if (symbol != null) return symbol.text
 
             val keyword = firstForm as? PhelKeyword

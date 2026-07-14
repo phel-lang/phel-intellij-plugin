@@ -13,6 +13,7 @@ import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelProjectSymbolScanner {
 
@@ -46,8 +47,7 @@ object PhelProjectSymbolScanner {
         val forms = list.forms
         if (forms.size < 2) return null
 
-        val keywordSymbol = forms[0] as? PhelSymbol
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
+        val keywordSymbol = PhelPsiUtils.asSymbol(forms[0])
             ?: return null
 
         val keyword = keywordSymbol.text
@@ -56,8 +56,7 @@ object PhelProjectSymbolScanner {
 
         val symbolType = SymbolType.fromKeyword(keyword) ?: return null
 
-        val nameSymbol = forms[1] as? PhelSymbol
-            ?: PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
+        val nameSymbol = PhelPsiUtils.asSymbol(forms[1])
             ?: return null
 
         val name = nameSymbol.text
