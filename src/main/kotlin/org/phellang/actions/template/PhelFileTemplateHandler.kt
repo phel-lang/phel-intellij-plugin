@@ -2,8 +2,6 @@ package org.phellang.actions.template
 
 import com.intellij.ide.fileTemplates.FileTemplate
 import com.intellij.ide.fileTemplates.FileTemplateUtil
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFile
 import java.util.*
@@ -14,17 +12,15 @@ class PhelFileTemplateHandler {
         return "Create Phel File $fileName"
     }
 
+    /**
+     * Not guarded: swallowing a template failure and returning null made "New > Phel File" do
+     * nothing at all — no file, no error, no hint as to why. Letting it out means the platform
+     * reports the failure, which is the only way the user finds out.
+     */
     fun createFileFromTemplate(name: String, template: FileTemplate, dir: PsiDirectory, namespace: String): PsiFile? {
         val properties = buildTemplateProperties(name, namespace)
 
-        return try {
-            FileTemplateUtil.createFromTemplate(template, name, properties, dir) as? PsiFile
-        } catch (e: ProcessCanceledException) {
-            throw e
-        } catch (e: Exception) {
-            LOG.warn("Failed to create file from template '$name'", e)
-            null
-        }
+        return FileTemplateUtil.createFromTemplate(template, name, properties, dir) as? PsiFile
     }
 
     private fun buildTemplateProperties(name: String, namespace: String): Properties {
@@ -34,7 +30,4 @@ class PhelFileTemplateHandler {
         return properties
     }
 
-    companion object {
-        private val LOG = Logger.getInstance(PhelFileTemplateHandler::class.java)
-    }
 }

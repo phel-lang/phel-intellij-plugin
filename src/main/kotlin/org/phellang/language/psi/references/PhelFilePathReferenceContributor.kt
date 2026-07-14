@@ -18,6 +18,7 @@ import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelLiteral
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Turns the string path argument of file-loading forms into a real file reference so
@@ -88,7 +89,7 @@ private class PhelFilePathReferenceProvider : PsiReferenceProvider() {
 
         val head = forms[0]
 
-        val headSymbol = head as? PhelSymbol ?: PsiTreeUtil.findChildOfType(head, PhelSymbol::class.java)
+        val headSymbol = PhelPsiUtils.asSymbol(head)
         when (headSymbol?.text) {
             // (load "core/meta") — path is the first (and only) argument.
             "load" -> if (forms[1] === literal) return LoadFormKind.LOAD

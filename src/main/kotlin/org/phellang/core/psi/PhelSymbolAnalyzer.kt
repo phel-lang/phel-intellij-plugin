@@ -12,6 +12,7 @@ import org.phellang.registry.PhelCompletionPriority
 import org.phellang.language.psi.*
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.SymbolCategory
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelSymbolAnalyzer {
 
@@ -108,8 +109,7 @@ object PhelSymbolAnalyzer {
         if (forms == null || forms.size < 2) return false
 
         // Check if first symbol is a binding form
-        val firstSymbol = (forms[0] as? PhelSymbol)
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
+        val firstSymbol = PhelPsiUtils.asSymbol(forms[0])
             ?: return false
         if (firstSymbol.text !in LET_LIKE_FORMS) return false
 
@@ -121,8 +121,7 @@ object PhelSymbolAnalyzer {
 
         var i = 0
         while (i < bindings.size) {
-            val bindingSymbol = (bindings[i] as? PhelSymbol)
-                ?: PsiTreeUtil.findChildOfType(bindings[i], PhelSymbol::class.java)
+            val bindingSymbol = PhelPsiUtils.asSymbol(bindings[i])
             if (bindingSymbol === symbol) {
                 return true
             }

@@ -8,6 +8,7 @@ import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
 import java.util.Optional
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelNamespaceUtils {
 
@@ -119,7 +120,7 @@ object PhelNamespaceUtils {
             val forms = useForm.forms
             for (i in 1 until forms.size) {
                 val form = forms[i]
-                val symbol = form as? PhelSymbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+                val symbol = PhelPsiUtils.asSymbol(form)
                 val text = symbol?.text ?: continue
                 val shortName = extractShortClassName(text) ?: continue
                 classes.add(shortName)
@@ -177,7 +178,7 @@ object PhelNamespaceUtils {
             val forms = useForm.forms
             for (i in 1 until forms.size) {
                 val form = forms[i]
-                val sym = form as? PhelSymbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+                val sym = PhelPsiUtils.asSymbol(form)
                 val raw = sym?.text ?: continue
                 val shortName = extractShortClassName(raw) ?: continue
                 val fqn = if (raw.startsWith("\\")) raw else "\\$raw"
@@ -274,8 +275,7 @@ object PhelNamespaceUtils {
         val forms = nsDeclaration.forms
         if (forms.size < 2) return null
 
-        val namespaceSymbol = forms[1] as? PhelSymbol
-            ?: PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
+        val namespaceSymbol = PhelPsiUtils.asSymbol(forms[1])
         return namespaceSymbol?.text
     }
 
