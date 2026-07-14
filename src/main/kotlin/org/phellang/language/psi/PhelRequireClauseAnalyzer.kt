@@ -13,22 +13,28 @@ import org.phellang.language.psi.utils.PhelPsiUtils
  */
 internal object PhelRequireClauseAnalyzer {
 
-    /** alias -> short namespace, e.g. `s -> string` for `(:require phel\string :as s)`. */
-    fun computeAliasMap(file: PhelFile): Map<String, String> {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return emptyMap()
+    /** One `(:require ...)` entry: the namespace as written, its short form, and its `:as` alias. */
+    data class RequireImport(val fullNamespace: String, val shortNamespace: String, val alias: String?)
 
-        val aliasMap = mutableMapOf<String, String>()
+    /** Every namespace imported by [file]'s `(:require ...)` clauses. */
+    fun imports(file: PhelFile): List<RequireImport> {
+        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return emptyList()
+
+        val imports = mutableListOf<RequireImport>()
         for (requireForm in PhelNamespaceUtils.findRequireForms(nsDeclaration)) {
-            val forms = requireForm.forms
-            forEachSpec(forms) { namespaceText, aliasAt ->
-                if (aliasAt != null) {
-                    val short = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
-                    aliasMap[aliasAt] = short
-                }
+            forEachSpec(requireForm.forms) { namespaceText, aliasAt ->
+                val short = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
+                imports += RequireImport(namespaceText, short, aliasAt)
             }
         }
-        return aliasMap
+        return imports
     }
+
+    /** alias -> short namespace, e.g. `s -> string` for `(:require phel\string :as s)`. */
+    fun computeAliasMap(file: PhelFile): Map<String, String> =
+        imports(file)
+            .filter { it.alias != null }
+            .associate { it.alias!! to it.shortNamespace }
 
     /** Symbols brought in unqualified via `(:require [ns :refer [a b c]])`. */
     fun computeReferredSymbols(file: PhelFile): Set<String> {
