@@ -2,7 +2,6 @@ package org.phellang.documentation.resolvers
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.registry.PhelProjectSymbol
 import org.phellang.completion.documentation.PhelApiDocumentation
 import org.phellang.completion.documentation.PhelBasicDocumentation
 import org.phellang.registry.indexing.PhelProjectSymbolIndex
@@ -34,7 +33,7 @@ class PhelSymbolDocumentationResolver {
             else -> resolveApiDocumentation(symbol, symbolName)
         }
 
-        return formatAsHtml(content)
+        return PhelDocHtml.page(content)
     }
 
     private fun isInsideReferVector(symbol: PhelSymbol): Boolean {
@@ -68,10 +67,8 @@ class PhelSymbolDocumentationResolver {
         return PhelSymbolAnalyzer.isLocalBindingOrReference(symbol)
     }
 
-    private fun generateLocalSymbolDoc(symbol: PhelSymbol, symbolName: String): String {
-        val category = PhelBasicDocumentation.generateBasicDocForElement(symbol)
-        return "<h3>$symbolName</h3><br />$category<br /><br />"
-    }
+    private fun generateLocalSymbolDoc(symbol: PhelSymbol, symbolName: String): String =
+        PhelDocHtml.localSymbol(symbolName, PhelBasicDocumentation.generateBasicDocForElement(symbol))
 
     private fun resolveApiDocumentation(symbol: PhelSymbol, symbolName: String): String {
         val qualifier = PhelPsiUtils.getQualifier(symbol)
@@ -127,37 +124,13 @@ class PhelSymbolDocumentationResolver {
         val index = PhelProjectSymbolIndex.getInstance(project)
         val projectSymbol = index.findSymbol(shortNamespace, functionName) ?: return null
 
-        return generateProjectSymbolDocumentation(projectSymbol)
-    }
-
-    private fun generateProjectSymbolDocumentation(symbol: PhelProjectSymbol): String {
-        return buildString {
-            // Title (qualified name)
-            append("<h3>${symbol.qualifiedName}</h3>")
-            append("<br />")
-
-            // Signature (convert newlines to <br> for multi-arity functions)
-            val signatureHtml = symbol.signature.replace("\n", "<br />")
-            append("<code>$signatureHtml</code><br /><br />")
-
-            // Description (docstring) if available
-            if (!symbol.docstring.isNullOrBlank()) {
-                append(symbol.docstring)
-                append("<br />")
-            }
-
-            // File location as subtle info
-            append("<br />")
-            append("<i>${symbol.type.keyword} in ${symbol.namespace}</i>")
-            append("<br /><br />")
-        }
+        return PhelDocHtml.projectSymbol(projectSymbol)
     }
 
     private fun generateBasicDocumentation(symbol: PhelSymbol, symbolName: String): String {
-        val docstring = extractDefinitionDocstring(symbol)
-        val category = PhelBasicDocumentation.generateBasicDocForElement(symbol)
-        val description = docstring?.takeIf { it.isNotBlank() } ?: category
-        return "<h3>$symbolName</h3><br />$description<br /><br />"
+        val docstring = extractDefinitionDocstring(symbol)?.takeIf { it.isNotBlank() }
+        val description = docstring ?: PhelBasicDocumentation.generateBasicDocForElement(symbol)
+        return PhelDocHtml.basic(symbolName, description)
     }
 
     /**
@@ -190,7 +163,4 @@ class PhelSymbolDocumentationResolver {
         return raw.substring(1, raw.length - 1)
     }
 
-    private fun formatAsHtml(content: String): String {
-        return "<html><body>$content</body></html>"
-    }
 }
