@@ -4,6 +4,7 @@ import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.IndexNotReadyException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
 import org.phellang.core.utils.PhelErrorHandler
 
 class PhelErrorHandlerTest {
@@ -37,9 +38,14 @@ class PhelErrorHandlerTest {
     fun `rethrows IndexNotReadyException instead of degrading to an empty result`() {
         // IndexNotReadyException must reach the platform, which reruns us once indexing finishes.
         // Swallowing it would silently return "nothing found" during dumb mode.
+        //
+        // Mocked rather than built via IndexNotReadyException.create(), which needs an initialised
+        // Application and so only succeeds when an earlier test happened to boot the platform.
+        val indexNotReady = mock(IndexNotReadyException::class.java)
+
         assertThrows(IndexNotReadyException::class.java) {
             PhelErrorHandler.safeOperation("test") {
-                throw IndexNotReadyException.create()
+                throw indexNotReady
             }
         }
     }

@@ -191,7 +191,7 @@ object PhpClassResolver {
      * rethrow anything the platform owns; everything else is a genuine "the PHP plugin's API
      * is not the shape we expect" and is handled by the caller.
      */
-    private fun rethrowIfPlatformControlFlow(t: Throwable) {
+    internal fun rethrowIfPlatformControlFlow(t: Throwable) {
         val cause = (t as? InvocationTargetException)?.targetException ?: t
         if (cause is ProcessCanceledException || cause is IndexNotReadyException || cause is Error) {
             throw cause
