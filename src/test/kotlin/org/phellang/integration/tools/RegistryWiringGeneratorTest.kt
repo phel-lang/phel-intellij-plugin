@@ -27,7 +27,7 @@ class RegistryWiringGeneratorTest {
     private fun writeNamespaceStub() {
         File(tempDir, "Namespace.kt").writeText(
             """
-            package org.phellang.completion.data
+            package org.phellang.registry
 
             enum class Namespace {
                 // region GENERATED — updatePhelRegistry; do not edit by hand
@@ -46,11 +46,11 @@ class RegistryWiringGeneratorTest {
     private fun writeRegistryStub() {
         File(tempDir, "PhelFunctionRegistry.kt").writeText(
             """
-            package org.phellang.completion.data
+            package org.phellang.registry
 
             // region GENERATED IMPORTS — updatePhelRegistry; do not edit by hand
             // endregion GENERATED IMPORTS — updatePhelRegistry
-            import org.phellang.completion.infrastructure.PhelCompletionPriority
+            import org.phellang.registry.PhelCompletionPriority
 
             object PhelFunctionRegistry {
                 init {
@@ -77,7 +77,7 @@ class RegistryWiringGeneratorTest {
     }
 
     @Test
-    fun `wires registry init and subfolder imports`() {
+    fun `wires registry init and imports every generated namespace`() {
         writeNamespaceStub()
         writeRegistryStub()
 
@@ -85,12 +85,19 @@ class RegistryWiringGeneratorTest {
 
         val registryText = File(tempDir, "PhelFunctionRegistry.kt").readText()
         assertTrue(registryText.contains("functions[Namespace.CORE] = registerCoreFunctions()"))
+
+        // The generated payload lives in `registry/data`, below the model package, so the registry
+        // needs an import for *every* namespace — not just the ones in a subfolder as before.
         assertTrue(
-            registryText.contains("import org.phellang.completion.data.schema.registerSchemaFunctions"),
-            "subfolder namespaces need an import"
+            registryText.contains("import org.phellang.registry.data.registerCoreFunctions"),
+            "a flat namespace needs an import from the data package"
         )
         assertTrue(
-            registryText.contains("import org.phellang.completion.infrastructure.PhelCompletionPriority"),
+            registryText.contains("import org.phellang.registry.data.schema.registerSchemaFunctions"),
+            "a subfolder namespace needs an import nested under the data package"
+        )
+        assertTrue(
+            registryText.contains("import org.phellang.registry.PhelCompletionPriority"),
             "non-generated imports must be preserved"
         )
     }

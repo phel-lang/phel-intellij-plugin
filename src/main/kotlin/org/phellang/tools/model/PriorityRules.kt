@@ -1,6 +1,6 @@
 package org.phellang.tools.model
 
-import org.phellang.completion.infrastructure.PhelCompletionPriority
+import org.phellang.registry.PhelCompletionPriority
 
 object PriorityRules {
 

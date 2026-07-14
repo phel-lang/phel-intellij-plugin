@@ -1,62 +1,46 @@
 package org.phellang.annotator.validators
 
-import org.phellang.completion.data.Namespace
-import org.phellang.completion.data.PhelFunctionRegistry
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.Namespace
+import org.phellang.registry.PhelFunctionRegistry
+import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelReferUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
-data class ReferSymbolValidationResult(
-    val message: String,
-    val symbolName: String,
-    val namespace: String,
-    val isDuplicate: Boolean = false
-)
-
 object PhelReferSymbolValidator {
 
-    fun validateReferSymbol(symbol: PhelSymbol): ReferSymbolValidationResult? {
-        val symbolName = symbol.text ?: return null
+    fun validateReferSymbol(symbol: PhelSymbol): List<PhelValidationProblem> {
+        val symbolName = symbol.text ?: return emptyList()
 
         // Skip symbols that look like namespaces (contain backslash)
         if (symbolName.contains("\\")) {
-            return null
+            return emptyList()
         }
 
         // Check if this symbol is inside a :refer vector
-        val referContext = PhelReferUtils.getReferContext(symbol) ?: return null
+        val referContext = PhelReferUtils.getReferContext(symbol) ?: return emptyList()
 
         val namespace = referContext.namespace
         val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
 
         // Check for duplicate first
         if (PhelReferUtils.isDuplicateInReferVector(symbol)) {
-            return ReferSymbolValidationResult(
-                message = "'$symbolName' is already referred",
-                symbolName = symbolName,
-                namespace = namespace,
-                isDuplicate = true
-            )
+            return listOf(PhelValidationProblem("'$symbolName' is already referred"))
         }
 
         // Check if symbol exists in standard library
         if (existsInStandardLibrary(shortNamespace, symbolName)) {
-            return null // Valid
+            return emptyList() // Valid
         }
 
         // Check if symbol exists in project
         val containingFile = symbol.containingFile as? PhelFile
         if (containingFile != null && existsInProject(containingFile, shortNamespace, symbolName)) {
-            return null // Valid
+            return emptyList() // Valid
         }
 
         // Symbol doesn't exist
-        return ReferSymbolValidationResult(
-            message = "Cannot resolve '$symbolName' in namespace '$namespace'",
-            symbolName = symbolName,
-            namespace = namespace
-        )
+        return listOf(PhelValidationProblem("Cannot resolve '$symbolName' in namespace '$namespace'"))
     }
 
     fun isInsideReferVector(symbol: PhelSymbol): Boolean {

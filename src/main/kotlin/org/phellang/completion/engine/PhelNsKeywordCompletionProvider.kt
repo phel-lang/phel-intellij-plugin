@@ -6,16 +6,17 @@ import com.intellij.icons.AllIcons
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import org.phellang.completion.infrastructure.PhelCompletionPriority
+import org.phellang.registry.PhelCompletionPriority
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?>() {
 
     override fun addCompletions(
         parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
     ) {
-        PhelErrorHandler.safeOperation {
+        PhelErrorHandler.safeOperation("ns keyword completion") {
             addNsKeywordCompletions(parameters.position, result)
         }
     }
@@ -168,8 +169,7 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
                 return null
             }
 
-            val symbol = firstForm as? PhelSymbol
-                ?: PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
+            val symbol = PhelPsiUtils.asSymbol(firstForm)
             if (symbol != null) return symbol.text
 
             val keyword = firstForm as? PhelKeyword

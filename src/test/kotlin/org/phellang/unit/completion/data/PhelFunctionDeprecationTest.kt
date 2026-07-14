@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.registry.PhelFunctionRegistry
 
 class PhelFunctionDeprecationTest {
 

@@ -1,13 +1,16 @@
 ---
-globs: [ "src/main/kotlin/org/phellang/completion/**", "src/main/kotlin/org/phellang/tools/**" ]
+globs: [ "src/main/kotlin/org/phellang/completion/**", "src/main/kotlin/org/phellang/registry/**", "src/main/kotlin/org/phellang/tools/**" ]
 description: Function registry and completion
 ---
 
 # Registry & Completion
 
-Registry of 350+ functions in `completion/data/`:
-- `PhelFunctionRegistry.kt` (loader) · `PhelFunction.kt` (model) · `Namespace.kt` (enum) · `PhelProjectSymbol.kt` · `register*Functions.kt` (generated).
-- Covered ns: `phel\core str json html http test base64 debug mock repl`.
+Registry of 350+ functions in `registry/` (`org.phellang.registry`) — a **leaf** package: it may
+import `language/psi` and the platform, never a feature package. It is not a completion concern
+(annotator, inspection, documentation, inlay and core all consume it), which is why it does not
+live under `completion/`.
+- `PhelFunctionRegistry.kt` (loader) · `PhelFunction.kt` (model) · `Namespace.kt` (enum) · `PhelProjectSymbol.kt` · `PhelCompletionPriority.kt` · `register*Functions.kt` (generated) · `indexing/` (project symbol index).
+- Every `Namespace` the registry knows is offered in completion (`PhelRegistryCompletionHelper.addStandardLibraryFunctions` iterates `Namespace.entries`), so a namespace added to `NamespaceConfig` is surfaced automatically.
 
 ## Updating
 

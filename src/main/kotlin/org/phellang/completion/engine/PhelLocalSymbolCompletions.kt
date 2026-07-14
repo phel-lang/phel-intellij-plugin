@@ -1,19 +1,11 @@
 package org.phellang.completion.engine
 
 import com.intellij.codeInsight.completion.CompletionResultSet
-import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.roots.ProjectRootManager
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import org.phellang.language.infrastructure.PhelFileType
-import org.phellang.completion.infrastructure.PhelCompletionErrorHandler
-import org.phellang.completion.infrastructure.PhelCompletionPriority
+import org.phellang.registry.PhelCompletionPriority
 import org.phellang.completion.infrastructure.PhelCompletionUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
-import org.phellang.core.utils.PhelErrorHandler
-import org.phellang.core.utils.PhelPerformanceUtils
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
@@ -29,24 +21,17 @@ object PhelLocalSymbolCompletions {
     val METHOD_ICON = AllIcons.Nodes.Method
     val VARIABLE_ICON = AllIcons.Nodes.Variable
 
+    /**
+     * Symbols bound in the file being edited: parameters, let/loop bindings, and its own
+     * top-level definitions. All of these are legal to type unqualified, and all are found by
+     * walking PSI the user already has parsed.
+     *
+     * Symbols from *other* files are deliberately not handled here — [PhelProjectCompletionHelper]
+     * serves those from the symbol index, namespace-qualified and with auto-import, which is the
+     * only spelling that actually compiles.
+     */
     @JvmStatic
     fun addLocalSymbols(result: CompletionResultSet, position: PsiElement) {
-        PhelCompletionErrorHandler.withErrorHandling(PhelCompletionErrorHandler.withResultSet {
-            addLocalSymbolsWithValidation(result, position)
-        }, "local symbol completion") {
-            // Fallback: add basic local symbols if detailed analysis fails
-            addBasicLocalFallback(result, position)
-        }
-    }
-
-    @Throws(Exception::class)
-    private fun addLocalSymbolsWithValidation(result: CompletionResultSet, position: PsiElement) {
-        if (PhelPerformanceUtils.shouldSkipExpensiveOperations(position)) {
-            return
-        }
-
-        check(PhelCompletionErrorHandler.isCompletionContextValid(position)) { "Invalid PSI element context for local symbol completion" }
-
         val addedSymbols: MutableSet<String> = HashSet()
 
         // First priority: Add function parameters from current scope
@@ -55,11 +40,8 @@ object PhelLocalSymbolCompletions {
         // Second priority: Add let bindings from current scope
         addCurrentLetBindings(result, position, addedSymbols)
 
-        // Third priority: Add local definitions
+        // Third priority: Add this file's own top-level definitions
         addLocalDefinitionSymbolsSimple(result, position, addedSymbols)
-
-        // Lower priority: Add global definitions from other files
-        addProjectGlobalDefinitions(result, position, addedSymbols)
     }
 
     private fun addSymbolCompletion(
@@ -168,118 +150,6 @@ object PhelLocalSymbolCompletions {
         }
     }
 
-    private fun addBasicLocalFallback(result: CompletionResultSet, position: PsiElement) {
-        PhelErrorHandler.safeOperation {
-            // Try to add at least some basic local symbols using simple PSI traversal
-            val currentFunctionName = getCurrentFunctionName(position)
-            if (currentFunctionName != null && !currentFunctionName.isEmpty()) {
-                result.addElement(
-                    LookupElementBuilder.create(currentFunctionName).withIcon(METHOD_ICON)
-                        .withTailText(" (current function)", true)
-                )
-            }
-        }
-    }
-
-    private fun addProjectGlobalDefinitions(
-        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
-    ) {
-        val project = position.project
-
-        // Skip in large projects for performance
-        if (PhelPerformanceUtils.shouldSkipExpensiveOperations(position)) {
-            return
-        }
-
-        PhelErrorHandler.safeOperation {
-            // Iterate through all project files and filter by type
-            val phelFiles: MutableCollection<VirtualFile> = ArrayList()
-            ProjectRootManager.getInstance(project).fileIndex.iterateContent { virtualFile: VirtualFile? ->
-                if (phelFiles.size < 20 &&  // Limit for performance
-                    virtualFile!!.fileType == PhelFileType.INSTANCE
-                ) {
-                    phelFiles.add(virtualFile)
-                }
-                true
-            }
-
-            val psiManager = PsiManager.getInstance(project)
-            val currentFile = position.containingFile
-
-            var fileCount = 0
-            val maxFilesToScan = 20 // Performance limit
-
-            for (virtualFile in phelFiles) {
-                if (fileCount >= maxFilesToScan) break
-
-                // Skip current file - already processed
-                if (virtualFile == currentFile.virtualFile) continue
-
-                val psiFile = psiManager.findFile(virtualFile)
-                if (psiFile is PhelFile) {
-                    extractGlobalDefinitionsFromFile(psiFile, result, addedSymbols)
-                    fileCount++
-                }
-            }
-        }
-    }
-
-    private fun extractGlobalDefinitionsFromFile(
-        file: PhelFile, result: CompletionResultSet, addedSymbols: MutableSet<String>
-    ) {
-        var definitionCount = 0
-        val maxDefinitionsPerFile = 10
-
-        for (child in file.children) {
-            if (definitionCount >= maxDefinitionsPerFile) break
-
-            if (child !is PhelList) continue
-            val children: Array<PsiElement> = child.children
-            if (children.size < 2) continue
-            val firstElement = children[0]
-
-            if (firstElement !is PhelSymbol) continue
-
-            val publicAccessibleDefinitions = arrayOf(
-                "def",
-                "defn",
-                "defmacro",
-                "defexception",
-                "defexception*",
-                "definterface",
-                "definterface*",
-                "defstruct",
-                "defstruct*",
-                "macroexpand",
-                "macroexpand-1"
-            )
-            val defType = firstElement.text
-            if (!publicAccessibleDefinitions.contains(defType)) continue
-
-            val nameElement = children[1]
-            if (nameElement !is PhelSymbol) continue
-
-            val symbolName = nameElement.text
-            val displayType = when (defType) {
-                "def" -> "Global Variable"
-                "defn" -> "Public Function"
-                "defmacro" -> "Public Macro"
-                "defexception", "defexception*" -> "Public Exception"
-                "definterface", "definterface*" -> "Public Interface"
-                "defstruct", "defstruct*" -> "Public Struct"
-                "macroexpand", "macroexpand-1" -> "Public Macro"
-                else -> "Public Definition"
-            }
-
-            // Add file context
-            val fileName = file.name.replace(".phel", "")
-            val typeWithContext = "$displayType ($fileName)"
-
-            addSymbolCompletion(result, symbolName, typeWithContext, METHOD_ICON, addedSymbols)
-            definitionCount++
-        }
-    }
-
     private fun addLocalDefinitionSymbolsSimple(
         result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
     ) {
@@ -341,36 +211,6 @@ object PhelLocalSymbolCompletions {
                 result, symbolName, "", displayType, priority
             )
         }
-    }
-
-    private fun getCurrentFunctionName(position: PsiElement): String? {
-        var current: PsiElement? = position
-
-        while (current != null) {
-            if (current is PhelList) {
-                val list = current
-                val children: Array<PsiElement> = list.children
-
-                if (children.size >= 2) {
-                    val firstElement = children[0]
-
-                    // Check if this is a function definition
-                    if (firstElement is PhelSymbol || firstElement is PhelAccessImpl) {
-                        val defType = firstElement.text
-                        if (defType == "defn" || defType == "defn-" || defType == "defmacro" || defType == "defmacro-") {
-                            // Get the function name (second element)
-                            val nameElement = children[1]
-                            if (nameElement is PhelSymbol || nameElement is PhelAccessImpl) {
-                                return nameElement.text
-                            }
-                        }
-                    }
-                }
-            }
-            current = current.parent
-        }
-
-        return null // Not inside a function definition
     }
 
 }

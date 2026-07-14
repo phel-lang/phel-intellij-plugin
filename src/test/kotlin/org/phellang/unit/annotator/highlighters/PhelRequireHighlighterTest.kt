@@ -75,34 +75,4 @@ class PhelRequireHighlighterTest {
         }
     }
 
-    @Nested
-    inner class ValidationResultHandling {
-
-        @Test
-        fun `duplicate result triggers remove quick fix`() {
-            data class MockResult(val isDuplicate: Boolean, val suggestedNamespace: String?)
-
-            val duplicateResult = MockResult(isDuplicate = true, suggestedNamespace = null)
-            assertTrue(duplicateResult.isDuplicate)
-            assertNull(duplicateResult.suggestedNamespace)
-        }
-
-        @Test
-        fun `suggestion result triggers fix quick fix`() {
-            data class MockResult(val isDuplicate: Boolean, val suggestedNamespace: String?)
-
-            val suggestionResult = MockResult(isDuplicate = false, suggestedNamespace = "my-project\\utils")
-            assertFalse(suggestionResult.isDuplicate)
-            assertNotNull(suggestionResult.suggestedNamespace)
-        }
-
-        @Test
-        fun `no suggestion result shows warning only`() {
-            data class MockResult(val isDuplicate: Boolean, val suggestedNamespace: String?)
-
-            val noSuggestionResult = MockResult(isDuplicate = false, suggestedNamespace = null)
-            assertFalse(noSuggestionResult.isDuplicate)
-            assertNull(noSuggestionResult.suggestedNamespace)
-        }
-    }
 }

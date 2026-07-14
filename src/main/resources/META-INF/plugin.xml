@@ -57,7 +57,7 @@
                 language="Phel"
                 implementationClass="org.phellang.syntax.PhelSyntaxHighlighter"/>
         <colorSettingsPage
-                implementation="org.phellang.editor.PhelColorSettingsPage"/>
+                implementation="org.phellang.editor.colorsettings.PhelColorSettingsPage"/>
         <annotator
                 language="Phel"
                 implementationClass="org.phellang.annotator.PhelAnnotator"/>
@@ -71,15 +71,15 @@
                 implementationClass="org.phellang.documentation.PhelDocumentationProvider"/>
         <lang.commenter
                 language="Phel"
-                implementationClass="org.phellang.editor.PhelCommenter"/>
+                implementationClass="org.phellang.editor.commenting.PhelCommenter"/>
         <lang.braceMatcher
                 language="Phel"
-                implementationClass="org.phellang.editor.PhelBraceMatcher"/>
+                implementationClass="org.phellang.editor.matching.PhelBraceMatcher"/>
         <lang.quoteHandler
                 language="Phel"
-                implementationClass="org.phellang.editor.PhelQuoteHandler"/>
+                implementationClass="org.phellang.editor.quote.PhelQuoteHandler"/>
         <typedHandler
-                implementation="org.phellang.editor.PhelTypedHandler"/>
+                implementation="org.phellang.editor.typing.PhelTypedHandler"/>
         <lang.findUsagesProvider
                 language="Phel"
                 implementationClass="org.phellang.language.psi.navigation.PhelFindUsagesProvider"/>
@@ -88,12 +88,12 @@
                 implementation="org.phellang.language.psi.references.PhelFilePathReferenceContributor"/>
         <lang.foldingBuilder
                 language="Phel"
-                implementationClass="org.phellang.editor.PhelFoldingBuilder"/>
+                implementationClass="org.phellang.editor.folding.PhelFoldingBuilder"/>
         <lang.psiStructureViewFactory
                 language="Phel"
                 implementationClass="org.phellang.editor.structure.PhelStructureViewFactory"/>
         <enterHandlerDelegate
-                implementation="org.phellang.editor.PhelEnterHandlerDelegate"/>
+                implementation="org.phellang.editor.enter.PhelEnterHandlerDelegate"/>
         <internalFileTemplate name="Phel File.phel"/>
         <localInspection
                 language="Phel"

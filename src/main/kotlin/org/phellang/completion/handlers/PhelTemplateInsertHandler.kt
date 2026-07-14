@@ -3,7 +3,6 @@ package org.phellang.completion.handlers
 import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElement
-import org.phellang.core.utils.PhelErrorHandler
 
 class PhelTemplateInsertHandler(
     private val template: String,
@@ -11,15 +10,13 @@ class PhelTemplateInsertHandler(
     private val selectionLength: Int = 0,
 ) : InsertHandler<LookupElement?> {
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
-        PhelErrorHandler.safeOperation {
-            val editor = context.editor
-            editor.document.replaceString(context.startOffset, context.tailOffset, template)
+        val editor = context.editor
+        editor.document.replaceString(context.startOffset, context.tailOffset, template)
 
-            val caretAt = context.startOffset + caretOffset
-            editor.caretModel.moveToOffset(caretAt)
-            if (selectionLength > 0) {
-                editor.selectionModel.setSelection(caretAt, caretAt + selectionLength)
-            }
+        val caretAt = context.startOffset + caretOffset
+        editor.caretModel.moveToOffset(caretAt)
+        if (selectionLength > 0) {
+            editor.selectionModel.setSelection(caretAt, caretAt + selectionLength)
         }
     }
 

@@ -1,7 +1,7 @@
 package org.phellang.annotator.validators
 
 import org.phellang.completion.documentation.PhelApiDocumentation
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
@@ -9,38 +9,32 @@ import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
-data class FunctionReferenceValidationResult(
-    val message: String,
-    val namespace: String,
-    val functionName: String
-)
-
 object PhelFunctionReferenceValidator {
 
-    fun validateFunctionReference(symbol: PhelSymbol): FunctionReferenceValidationResult? {
-        val text = symbol.text ?: return null
+    fun validateFunctionReference(symbol: PhelSymbol): List<PhelValidationProblem> {
+        val text = symbol.text ?: return emptyList()
 
         // Only validate namespace-qualified symbols
         if (!text.contains("/")) {
-            return null
+            return emptyList()
         }
 
-        val qualifier = PhelPsiUtils.getQualifier(symbol) ?: return null
-        val functionName = PhelPsiUtils.getName(symbol) ?: return null
+        val qualifier = PhelPsiUtils.getQualifier(symbol) ?: return emptyList()
+        val functionName = PhelPsiUtils.getName(symbol) ?: return emptyList()
 
         // Skip php/ interop - can't validate PHP functions
         if (qualifier == "php") {
-            return null
+            return emptyList()
         }
 
-        val containingFile = symbol.containingFile as? PhelFile ?: return null
+        val containingFile = symbol.containingFile as? PhelFile ?: return emptyList()
 
         // Skip PHP-class interop shorthands (e.g. `DateTime/createFromFormat`,
         // `\Foo\Bar/CONST`). The qualifier is a PHP class, not a Phel namespace,
         // so the regular function lookup can't validate it.
         val usedClasses = PhelNamespaceUtils.extractUsedClasses(containingFile)
         if (PhelInteropShorthands.isInteropShorthand(text, usedClasses)) {
-            return null
+            return emptyList()
         }
 
         // Get alias map to resolve the actual namespace
@@ -49,25 +43,22 @@ object PhelFunctionReferenceValidator {
 
         // Check if function exists in standard library
         if (existsInStandardLibrary(resolvedNamespace, functionName)) {
-            return null // Valid - exists in API
+            return emptyList() // Valid - exists in API
         }
 
         // Check if function exists in project symbols
         if (existsInProjectSymbols(symbol, resolvedNamespace, functionName)) {
-            return null // Valid - exists in project
+            return emptyList() // Valid - exists in project
         }
 
         // Check if the namespace even exists before reporting function not found
         if (!isNamespaceKnown(symbol, qualifier, resolvedNamespace)) {
-            return null // Namespace itself is unknown - let namespace validator handle it
+            return emptyList() // Namespace itself is unknown - let namespace validator handle it
         }
 
-        // Function doesn't exist in a known namespace
-        return FunctionReferenceValidationResult(
-            message = "Cannot resolve function '$functionName' in namespace '$qualifier'",
-            namespace = qualifier,
-            functionName = functionName
-        )
+        // Function doesn't exist in a known namespace. No fix to offer: we know the namespace is
+        // real, so the function name itself is wrong and only the user can say what they meant.
+        return listOf(PhelValidationProblem("Cannot resolve function '$functionName' in namespace '$qualifier'"))
     }
 
     private fun existsInStandardLibrary(namespace: String, functionName: String): Boolean {
