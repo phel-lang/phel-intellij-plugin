@@ -2,7 +2,7 @@ package org.phellang.integration
 
 import com.intellij.openapi.util.Disposer
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.indexing.PhelProjectSymbolIndex
 
 /**
  * Base class for integration tests that exercise PSI/reference/inspection features.

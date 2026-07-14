@@ -25,7 +25,7 @@ IntelliJ IDEA plugin for the [Phel programming language](https://phel-lang.org/)
 
 Plugin sources live under `src/main/kotlin/org/phellang/`:
 
-- `actions/` contextual menu actions · `annotator/` semantic highlighting & form-comment detection · `completion/` completion + docs (`data/` holds the auto-generated `register*Functions.kt` registry) · `core/` utilities · `debug/` · `documentation/` hover popups · `editor/` smart typing, brace matching, folding · `inspection/` code inspections · `language/` file type, icons, lexer (`.flex`) and `parser/` grammar (`.bnf`) · `syntax/` highlighter & colors · `tools/` `ApiGenerator` for `updatePhelRegistry`.
+- `actions/` contextual menu actions · `annotator/` semantic highlighting & form-comment detection · `completion/` completion + docs · `core/` utilities · `registry/` the shared Phel function/symbol model (API at the root, generated `register*Functions.kt` under `data/`, symbol index under `indexing/`) — a leaf package consumed by completion, annotator, inspection, documentation and inlay alike · `debug/` · `documentation/` hover popups · `editor/` smart typing, brace matching, folding · `inspection/` code inspections · `language/` file type, icons, lexer (`.flex`) and `parser/` grammar (`.bnf`) · `syntax/` highlighter & colors · `tools/` `ApiGenerator` for `updatePhelRegistry`.
 - `src/main/gen/` — **generated** lexer/parser. Never edit by hand; committed to the repo.
 - `src/test/kotlin/org/phellang/` — `unit/` (JUnit 5 + Mockito) and `integration/` (IntelliJ `BasePlatformTestCase` / light fixtures).
 

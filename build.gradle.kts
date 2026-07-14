@@ -7,7 +7,7 @@ version = "0.5.1"
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.4.0"
-    id("org.jetbrains.intellij.platform") version "2.16.0"
+    id("org.jetbrains.intellij.platform") version "2.17.0"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
 }
 
@@ -57,10 +57,10 @@ dependencies {
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
     }
 
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.1.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.1.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:6.1.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:6.1.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.1.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.23.0")

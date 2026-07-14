@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import org.phellang.editor.PhelFoldingBuilder
+import org.phellang.editor.folding.PhelFoldingBuilder
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelFormCommentMacro
 import org.phellang.language.psi.PhelList

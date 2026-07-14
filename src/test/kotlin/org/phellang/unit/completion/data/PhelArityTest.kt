@@ -2,10 +2,10 @@ package org.phellang.unit.completion.data
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.phellang.completion.data.PhelArity
-import org.phellang.completion.data.accepts
-import org.phellang.completion.data.describe
-import org.phellang.completion.data.selectFor
+import org.phellang.registry.PhelArity
+import org.phellang.registry.accepts
+import org.phellang.registry.describe
+import org.phellang.registry.selectFor
 
 class PhelArityTest {
 

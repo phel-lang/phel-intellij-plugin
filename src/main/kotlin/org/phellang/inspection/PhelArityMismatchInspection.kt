@@ -5,9 +5,9 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
-import org.phellang.completion.data.PhelArityResolver
-import org.phellang.completion.data.accepts
-import org.phellang.completion.data.describe
+import org.phellang.registry.PhelArityResolver
+import org.phellang.registry.accepts
+import org.phellang.registry.describe
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList

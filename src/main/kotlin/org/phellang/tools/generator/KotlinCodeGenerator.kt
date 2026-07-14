@@ -24,7 +24,7 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
                 val targetDir = config.subfolder?.let { File(outputDirectory, it).apply { mkdirs() } }
                     ?: outputDirectory
                 val packageName = config.subfolder?.let { "$ROOT_PACKAGE.$it" } ?: ROOT_PACKAGE
-                val extraImports = if (config.subfolder != null) SHARED_DATA_IMPORTS else emptyList()
+                val extraImports = SHARED_DATA_IMPORTS
                 writeFunctionsFile(
                     file = File(targetDir, config.fileName),
                     packageName = packageName,
@@ -70,6 +70,7 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
         val content = buildString {
             appendLine("package $ROOT_PACKAGE")
             appendLine()
+            appendLine("import org.phellang.registry.PhelFunction")
             subFunctionNames.forEach { appendLine("import $CORE_PACKAGE.$it") }
             appendLine()
             appendLine("internal fun registerCoreFunctions(): List<PhelFunction> =")
@@ -94,7 +95,7 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
             appendLine()
             extraImports.forEach { appendLine("import $it") }
             if (extraImports.isNotEmpty()) appendLine()
-            appendLine("import org.phellang.completion.infrastructure.PhelCompletionPriority")
+            appendLine("import org.phellang.registry.PhelCompletionPriority")
             appendLine()
             appendLine("internal fun $functionName(): List<PhelFunction> = listOf(")
             functions.forEachIndexed { index, function ->
@@ -124,14 +125,14 @@ class KotlinCodeGenerator(private val outputDirectory: File) {
             .joinToString("") { it.replaceFirstChar(Char::uppercase) }
 
     companion object {
-        private const val ROOT_PACKAGE = "org.phellang.completion.data"
-        private const val CORE_PACKAGE = "org.phellang.completion.data.core"
+        private const val ROOT_PACKAGE = "org.phellang.registry.data"
+        private const val CORE_PACKAGE = "org.phellang.registry.data.core"
         private val SHARED_DATA_IMPORTS = listOf(
-            "org.phellang.completion.data.CompletionInfo",
-            "org.phellang.completion.data.DocumentationInfo",
-            "org.phellang.completion.data.DocumentationLinks",
-            "org.phellang.completion.data.DeprecationInfo",
-            "org.phellang.completion.data.PhelFunction"
+            "org.phellang.registry.CompletionInfo",
+            "org.phellang.registry.DocumentationInfo",
+            "org.phellang.registry.DocumentationLinks",
+            "org.phellang.registry.DeprecationInfo",
+            "org.phellang.registry.PhelFunction"
         )
     }
 }

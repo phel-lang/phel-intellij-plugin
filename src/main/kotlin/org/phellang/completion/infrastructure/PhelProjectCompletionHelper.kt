@@ -2,9 +2,9 @@ package org.phellang.completion.infrastructure
 
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.completion.data.PhelProjectSymbol
-import org.phellang.completion.data.SymbolType
-import org.phellang.completion.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.PhelProjectSymbol
+import org.phellang.registry.SymbolType
+import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
@@ -12,6 +12,7 @@ import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.registry.PhelCompletionPriority
 
 object PhelProjectCompletionHelper {
 

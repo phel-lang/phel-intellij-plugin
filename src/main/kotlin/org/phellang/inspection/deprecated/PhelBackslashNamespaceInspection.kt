@@ -5,8 +5,6 @@ import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElementVisitor
@@ -15,6 +13,7 @@ import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVisitor
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Flags backslash-separated namespaces inside `(ns ...)` and `:require` clauses.
@@ -60,14 +59,15 @@ class PhelBackslashNamespaceInspection : LocalInspectionTool() {
         }
 
         // (ns my.ns ...) — top-level ns form.
-        val firstSymbol = forms[0] as? PhelSymbol
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
+        val firstSymbol = PhelPsiUtils.asSymbol(forms[0])
         return firstSymbol?.text == "ns" && forms.size >= 2 && PsiTreeUtil.isAncestor(forms[1], symbol, false)
     }
 
     private class ConvertToDotSeparatorQuickFix : LocalQuickFix {
         override fun getFamilyName(): String = "Convert to dot-separated namespace"
 
+        // Runs in the platform's write action: a failed document edit rolls back and is
+        // reported. Catching it here made the quick fix a silent no-op.
         override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
             val symbol = descriptor.psiElement as? PhelSymbol ?: return
             if (!symbol.isValid) return
@@ -75,22 +75,12 @@ class PhelBackslashNamespaceInspection : LocalInspectionTool() {
             if (!text.contains('\\')) return
             val replacement = text.replace('\\', '.')
 
-            try {
-                val file = symbol.containingFile ?: return
-                val docManager = PsiDocumentManager.getInstance(project)
-                val document = docManager.getDocument(file) ?: return
-                val range = symbol.textRange ?: return
-                document.replaceString(range.startOffset, range.endOffset, replacement)
-                docManager.commitDocument(document)
-            } catch (e: ProcessCanceledException) {
-                throw e
-            } catch (e: Exception) {
-                LOG.warn("Failed to convert backslash namespace '$text' to dot form", e)
-            }
+            val file = symbol.containingFile ?: return
+            val docManager = PsiDocumentManager.getInstance(project)
+            val document = docManager.getDocument(file) ?: return
+            val range = symbol.textRange ?: return
+            document.replaceString(range.startOffset, range.endOffset, replacement)
+            docManager.commitDocument(document)
         }
-    }
-
-    companion object {
-        private val LOG = Logger.getInstance(PhelBackslashNamespaceInspection::class.java)
     }
 }
