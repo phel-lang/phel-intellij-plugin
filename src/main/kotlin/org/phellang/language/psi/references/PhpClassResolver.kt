@@ -1,6 +1,8 @@
 package org.phellang.language.psi.references
 
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.openapi.project.IndexNotReadyException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
@@ -8,6 +10,7 @@ import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
+import java.lang.reflect.InvocationTargetException
 
 /**
  * Reflection-based bridge to the JetBrains PHP plugin (PhpStorm / Ultimate with
@@ -173,27 +176,27 @@ object PhpClassResolver {
         return tail.ifEmpty { null }
     }
 
-    private fun findUseFqn(file: PhelFile, shortName: String): String? {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return null
-        val useForms = PhelNamespaceUtils.findUseForms(nsDeclaration)
-        for (useForm in useForms) {
-            val forms = useForm.forms
-            for (i in 1 until forms.size) {
-                val form = forms[i]
-                val sym = form as? PhelSymbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-                val raw = sym?.text ?: continue
-                val candidateShort = raw.trimStart('\\').substringAfterLast('\\')
-                if (candidateShort == shortName) {
-                    return if (raw.startsWith("\\")) raw else "\\$raw"
-                }
-            }
-        }
-        return null
-    }
+    private fun findUseFqn(file: PhelFile, shortName: String): String? =
+        PhelNamespaceUtils.buildUseFqnIndex(file)[shortName]
 
     // ──────────────────────────────────────────────────────────────────────────
     // PhpIndex reflection
     // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Reflection wraps whatever the callee threw in an [InvocationTargetException], so a
+     * [ProcessCanceledException] coming out of a PHP stub-index query does *not* arrive here
+     * as a PCE and is invisible to every PCE-aware catch upstream. Swallowing it would break
+     * read-action cancellation (this runs under `PhelReference.multiResolve`). Unwrap and
+     * rethrow anything the platform owns; everything else is a genuine "the PHP plugin's API
+     * is not the shape we expect" and is handled by the caller.
+     */
+    private fun rethrowIfPlatformControlFlow(t: Throwable) {
+        val cause = (t as? InvocationTargetException)?.targetException ?: t
+        if (cause is ProcessCanceledException || cause is IndexNotReadyException || cause is Error) {
+            throw cause
+        }
+    }
 
     private fun findClassesByFqn(project: Project, fqn: String): List<Any> {
         val phpIndex = phpIndexClass ?: return emptyList()
@@ -206,7 +209,8 @@ object PhpClassResolver {
             val phpTypes = getByFqn.invoke(instance, fqn) as? Collection<Any> ?: return emptyList()
             phpTypes.toList()
         } catch (t: Throwable) {
-            LOG.debug("PHP type lookup failed for '$fqn'", t)
+            rethrowIfPlatformControlFlow(t)
+            LOG.warn("PHP type lookup failed for '$fqn'", t)
             emptyList()
         }
     }
@@ -272,7 +276,9 @@ object PhpClassResolver {
                 readStringProperty(p, "getName")?.let { "$$it" } ?: "?"
             }
             "$name($rendered)"
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            rethrowIfPlatformControlFlow(t)
+            LOG.warn("Could not read parameters of PHP method '$name'", t)
             "$name(...)"
         }
     }
@@ -289,7 +295,11 @@ object PhpClassResolver {
             val access = getAccess.invoke(modifier) ?: return true
             val name = (access.javaClass.getMethod("name").invoke(access) as? String)?.uppercase()
             name == null || name == "PUBLIC"
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            rethrowIfPlatformControlFlow(t)
+            // Fail open: if the PHP plugin's modifier API ever changes shape, offering a
+            // member we can't classify beats hiding every member of the class.
+            LOG.warn("Could not read PHP member accessibility; treating it as public", t)
             true
         }
     }
@@ -298,7 +308,9 @@ object PhpClassResolver {
         return try {
             val m = cls.methods.firstOrNull { it.name == name && it.parameterCount == 0 } ?: return null
             m.invoke(target) as? Collection<*>
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            rethrowIfPlatformControlFlow(t)
+            LOG.warn("Reflective call to PHP '$name()' failed", t)
             null
         }
     }
@@ -307,7 +319,9 @@ object PhpClassResolver {
         if (target == null) return null
         return try {
             target.javaClass.getMethod(methodName).invoke(target) as? String
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            rethrowIfPlatformControlFlow(t)
+            LOG.warn("Reflective read of PHP '$methodName()' failed", t)
             null
         }
     }
@@ -316,7 +330,9 @@ object PhpClassResolver {
         if (target == null) return null
         return try {
             target.javaClass.getMethod(methodName).invoke(target) as? Boolean
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            rethrowIfPlatformControlFlow(t)
+            LOG.warn("Reflective read of PHP '$methodName()' failed", t)
             null
         }
     }

@@ -109,8 +109,8 @@ class ApiGeneratorIntegrationTest {
             generator.generate(functions)
 
             val content = File(tempDir, "registerJsonFunctions.kt").readText()
-            assertTrue(content.contains("package org.phellang.completion.data"))
-            assertTrue(content.contains("import org.phellang.completion.infrastructure.PhelCompletionPriority"))
+            assertTrue(content.contains("package org.phellang.registry"))
+            assertTrue(content.contains("import org.phellang.registry.PhelCompletionPriority"))
             assertTrue(content.contains("internal fun registerJsonFunctions(): List<PhelFunction>"))
         }
 

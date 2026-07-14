@@ -12,7 +12,7 @@ import org.phellang.annotator.infrastructure.PhelAnnotationConstants.VARIADIC_PA
 import org.phellang.annotator.quickfixes.PhelImportNamespaceQuickFix
 import org.phellang.annotator.validators.PhelFunctionReferenceValidator
 import org.phellang.annotator.validators.PhelNamespaceValidator
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer

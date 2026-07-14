@@ -4,8 +4,8 @@ Usage: `/bump-phel-version <new-version>` (e.g. `/bump-phel-version 0.3.7`)
 
 Steps:
 1. Confirm the requested version is newer than the current version in `build.gradle.kts` (the `version` property near the top).
-2. Run `./gradlew updatePhelRegistry` to fetch the latest `https://phel-lang.org/api.json` and regenerate `src/main/kotlin/org/phellang/completion/data/register*Functions.kt` (and subfolder files). Report any `Unknown namespace` warnings — those signal new upstream namespaces that need to be added to `NamespaceConfig`, `Namespace` enum, `PhelProjectNamespaceFinder.STANDARD_LIBRARY_SHORT_TO_FULL`, and `PhelVendorUtils.NAMESPACE_TO_FILE`.
-3. Review the `git status` on `src/main/kotlin/org/phellang/completion/data/` — diff should only touch generated files.
+2. Run `./gradlew updatePhelRegistry` to fetch the latest `https://phel-lang.org/api.json` and regenerate `src/main/kotlin/org/phellang/registry/register*Functions.kt` (and subfolder files). Report any `Unknown namespace` warnings — those signal new upstream namespaces that need to be added to `NamespaceConfig`, `Namespace` enum, `PhelProjectNamespaceFinder.STANDARD_LIBRARY_SHORT_TO_FULL`, and `PhelVendorUtils.NAMESPACE_TO_FILE`.
+3. Review the `git status` on `src/main/kotlin/org/phellang/registry/` — diff should only touch generated files.
 4. Update the plugin version in `build.gradle.kts` to the requested value.
 5. If the `CHANGELOG.md` file exists, add a new entry under `## Unreleased` or a new section for this version.
 6. Run `./gradlew compileKotlin test` as a verification gate.

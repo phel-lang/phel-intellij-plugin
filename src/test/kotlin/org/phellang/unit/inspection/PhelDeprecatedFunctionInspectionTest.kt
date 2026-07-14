@@ -3,8 +3,8 @@ package org.phellang.unit.inspection
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.completion.data.DeprecationInfo
-import org.phellang.completion.data.PhelFunctionRegistry
+import org.phellang.registry.DeprecationInfo
+import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.inspection.deprecated.DeprecationMessageBuilder
 import org.phellang.inspection.deprecated.ReplacementParser
 

@@ -1,6 +1,6 @@
 package org.phellang.inspection.deprecated
 
-import org.phellang.completion.data.DeprecationInfo
+import org.phellang.registry.DeprecationInfo
 
 object DeprecationMessageBuilder {
 

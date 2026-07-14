@@ -71,7 +71,7 @@ class RegistryWiringGenerator(private val dataDirectory: File) {
             .uppercase()
 
     companion object {
-        private const val ROOT_PACKAGE = "org.phellang.completion.data"
+        private const val ROOT_PACKAGE = "org.phellang.registry"
         private const val ENUM_MARKER = "GENERATED — updatePhelRegistry"
         private const val IMPORTS_MARKER = "GENERATED IMPORTS — updatePhelRegistry"
         private const val INIT_MARKER = "GENERATED INIT — updatePhelRegistry"

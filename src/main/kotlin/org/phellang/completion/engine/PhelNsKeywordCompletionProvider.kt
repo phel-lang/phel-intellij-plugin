@@ -6,7 +6,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import org.phellang.completion.infrastructure.PhelCompletionPriority
+import org.phellang.registry.PhelCompletionPriority
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.*
 
@@ -15,7 +15,7 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
     override fun addCompletions(
         parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
     ) {
-        PhelErrorHandler.safeOperation {
+        PhelErrorHandler.safeOperation("ns keyword completion") {
             addNsKeywordCompletions(parameters.position, result)
         }
     }

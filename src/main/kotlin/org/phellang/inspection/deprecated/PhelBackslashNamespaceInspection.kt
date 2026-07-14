@@ -5,8 +5,6 @@ import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElementVisitor
@@ -68,6 +66,8 @@ class PhelBackslashNamespaceInspection : LocalInspectionTool() {
     private class ConvertToDotSeparatorQuickFix : LocalQuickFix {
         override fun getFamilyName(): String = "Convert to dot-separated namespace"
 
+        // Runs in the platform's write action: a failed document edit rolls back and is
+        // reported. Catching it here made the quick fix a silent no-op.
         override fun applyFix(project: Project, descriptor: ProblemDescriptor) {
             val symbol = descriptor.psiElement as? PhelSymbol ?: return
             if (!symbol.isValid) return
@@ -75,22 +75,12 @@ class PhelBackslashNamespaceInspection : LocalInspectionTool() {
             if (!text.contains('\\')) return
             val replacement = text.replace('\\', '.')
 
-            try {
-                val file = symbol.containingFile ?: return
-                val docManager = PsiDocumentManager.getInstance(project)
-                val document = docManager.getDocument(file) ?: return
-                val range = symbol.textRange ?: return
-                document.replaceString(range.startOffset, range.endOffset, replacement)
-                docManager.commitDocument(document)
-            } catch (e: ProcessCanceledException) {
-                throw e
-            } catch (e: Exception) {
-                LOG.warn("Failed to convert backslash namespace '$text' to dot form", e)
-            }
+            val file = symbol.containingFile ?: return
+            val docManager = PsiDocumentManager.getInstance(project)
+            val document = docManager.getDocument(file) ?: return
+            val range = symbol.textRange ?: return
+            document.replaceString(range.startOffset, range.endOffset, replacement)
+            docManager.commitDocument(document)
         }
-    }
-
-    companion object {
-        private val LOG = Logger.getInstance(PhelBackslashNamespaceInspection::class.java)
     }
 }

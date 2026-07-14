@@ -3,7 +3,7 @@ package org.phellang.unit.completion.data
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.completion.data.SymbolType
+import org.phellang.registry.SymbolType
 
 class PhelProjectSymbolTest {
 

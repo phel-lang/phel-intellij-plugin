@@ -151,11 +151,40 @@ object PhelNamespaceUtils {
         return forms.drop(1).any { it === symbol || PsiTreeUtil.isAncestor(it, symbol, false) }
     }
 
-    private fun extractShortClassName(text: String): String? {
+    /**
+     * `\Phel\Compiler\CompilerFacade` -> `CompilerFacade`. Null when [text] has no class name
+     * (empty, or nothing but separators). Backslashes are PHP's FQCN separator, so they are
+     * expected here — this is not legacy Phel-namespace handling.
+     */
+    fun extractShortClassName(text: String): String? {
         val trimmed = text.trimStart('\\')
         if (trimmed.isEmpty()) return null
         val short = trimmed.substringAfterLast('\\')
         return short.ifEmpty { null }
+    }
+
+    /**
+     * Indexes a file's `(:use ...)` clause as short class name -> fully-qualified name, with the
+     * FQN normalized to a leading `\` (`Foo\Bar` -> `\Foo\Bar`).
+     *
+     * The first entry wins if a file imports two classes with the same short name — that case is
+     * already broken PHP, and first-wins keeps this agreeing with go-to-definition.
+     */
+    fun buildUseFqnIndex(file: PhelFile): Map<String, String> {
+        val nsDeclaration = findNamespaceDeclaration(file) ?: return emptyMap()
+        val index = mutableMapOf<String, String>()
+        for (useForm in findUseForms(nsDeclaration)) {
+            val forms = useForm.forms
+            for (i in 1 until forms.size) {
+                val form = forms[i]
+                val sym = form as? PhelSymbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+                val raw = sym?.text ?: continue
+                val shortName = extractShortClassName(raw) ?: continue
+                val fqn = if (raw.startsWith("\\")) raw else "\\$raw"
+                index.putIfAbsent(shortName, fqn)
+            }
+        }
+        return index
     }
 
     fun extractAliasMap(file: PhelFile): Map<String, String> {

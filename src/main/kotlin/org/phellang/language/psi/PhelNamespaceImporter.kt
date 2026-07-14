@@ -1,7 +1,6 @@
 package org.phellang.language.psi
 
 import com.intellij.openapi.project.Project
-import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.psi.files.PhelFile
 
 object PhelNamespaceImporter {
@@ -32,10 +31,11 @@ object PhelNamespaceImporter {
     }
 
     private fun addRequireToNamespace(project: Project, nsDeclaration: PhelList, namespace: String): Boolean {
-        return PhelErrorHandler.safeOperation {
-            addNewRequireForm(project, nsDeclaration, namespace)
-            true
-        } ?: false
+        // Runs inside the insert handler's write action. If PSI manipulation fails, let it out:
+        // the platform rolls the write action back and reports it. Swallowing it here left the
+        // user with the symbol inserted and no `(:require ...)`, with nothing to indicate why.
+        addNewRequireForm(project, nsDeclaration, namespace)
+        return true
     }
 
     private fun addNewRequireForm(project: Project, nsDeclaration: PhelList, namespace: String) {

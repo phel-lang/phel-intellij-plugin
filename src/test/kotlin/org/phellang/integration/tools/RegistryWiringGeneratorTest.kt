@@ -27,7 +27,7 @@ class RegistryWiringGeneratorTest {
     private fun writeNamespaceStub() {
         File(tempDir, "Namespace.kt").writeText(
             """
-            package org.phellang.completion.data
+            package org.phellang.registry
 
             enum class Namespace {
                 // region GENERATED — updatePhelRegistry; do not edit by hand
@@ -46,11 +46,11 @@ class RegistryWiringGeneratorTest {
     private fun writeRegistryStub() {
         File(tempDir, "PhelFunctionRegistry.kt").writeText(
             """
-            package org.phellang.completion.data
+            package org.phellang.registry
 
             // region GENERATED IMPORTS — updatePhelRegistry; do not edit by hand
             // endregion GENERATED IMPORTS — updatePhelRegistry
-            import org.phellang.completion.infrastructure.PhelCompletionPriority
+            import org.phellang.registry.PhelCompletionPriority
 
             object PhelFunctionRegistry {
                 init {
@@ -86,11 +86,11 @@ class RegistryWiringGeneratorTest {
         val registryText = File(tempDir, "PhelFunctionRegistry.kt").readText()
         assertTrue(registryText.contains("functions[Namespace.CORE] = registerCoreFunctions()"))
         assertTrue(
-            registryText.contains("import org.phellang.completion.data.schema.registerSchemaFunctions"),
+            registryText.contains("import org.phellang.registry.schema.registerSchemaFunctions"),
             "subfolder namespaces need an import"
         )
         assertTrue(
-            registryText.contains("import org.phellang.completion.infrastructure.PhelCompletionPriority"),
+            registryText.contains("import org.phellang.registry.PhelCompletionPriority"),
             "non-generated imports must be preserved"
         )
     }

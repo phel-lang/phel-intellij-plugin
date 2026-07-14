@@ -9,6 +9,7 @@ import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.references.PhpClassResolver
+import org.phellang.registry.PhelCompletionPriority
 
 /**
  * Completion for PHP classes brought into scope via `(:use ...)` in the file's
@@ -27,7 +28,7 @@ object PhelUsedClassCompletionHelper {
         val classes = PhelNamespaceUtils.extractUsedClasses(file)
         if (classes.isEmpty()) return
 
-        val fqnByShort = buildFqnIndex(file)
+        val fqnByShort = PhelNamespaceUtils.buildUseFqnIndex(file)
 
         for (className in classes) {
             result.addElement(usedClassLookup(className))
@@ -41,22 +42,6 @@ object PhelUsedClassCompletionHelper {
         }
     }
 
-    private fun buildFqnIndex(file: PhelFile): Map<String, String> {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return emptyMap()
-        val index = mutableMapOf<String, String>()
-        for (useForm in PhelNamespaceUtils.findUseForms(nsDeclaration)) {
-            val forms = useForm.forms
-            for (i in 1 until forms.size) {
-                val form = forms[i]
-                val sym = form as? PhelSymbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-                val raw = sym?.text ?: continue
-                val shortName = raw.trimStart('\\').substringAfterLast('\\')
-                val fqn = if (raw.startsWith("\\")) raw else "\\$raw"
-                index[shortName] = fqn
-            }
-        }
-        return index
-    }
 
     private fun memberLookup(
         className: String,

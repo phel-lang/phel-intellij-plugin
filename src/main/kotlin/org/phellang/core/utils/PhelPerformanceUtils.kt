@@ -9,20 +9,7 @@ object PhelPerformanceUtils {
     const val MAX_FILE_SIZE_KB = 100
 
     fun shouldSkipExpensiveOperations(element: PsiElement): Boolean {
-        return PhelErrorHandler.safeOperation({
-            // Skip if file is too large
-            val file = element.containingFile
-            if (isFileTooLarge(file)) {
-                return@safeOperation true
-            }
-
-            // Skip if PSI tree is too deep (malformed code)
-            if (isPsiTreeTooDeep(element)) {
-                return@safeOperation true
-            }
-
-            false
-        }) ?: true // Skip on error to be safe
+        return isFileTooLarge(element.containingFile) || isPsiTreeTooDeep(element)
     }
 
     private fun isFileTooLarge(file: PsiFile?): Boolean {
