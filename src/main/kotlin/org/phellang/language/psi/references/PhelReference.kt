@@ -1,871 +1,172 @@
 package org.phellang.language.psi.references
 
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.*
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElementResolveResult
+import com.intellij.psi.PsiPolyVariantReference
+import com.intellij.psi.PsiReferenceBase
+import com.intellij.psi.ResolveResult
 import com.intellij.util.IncorrectOperationException
+import org.phellang.core.psi.PhelSymbolAnalyzer
+import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.utils.PhelPsiUtils
 import java.util.Collections
 import java.util.IdentityHashMap
-import org.phellang.language.psi.utils.SymbolCategory
-import org.phellang.language.psi.utils.PhelPsiUtils
-import org.phellang.core.psi.PhelSymbolAnalyzer
-import org.phellang.language.psi.files.PhelFile
-import org.phellang.language.psi.PhelForm
-import org.phellang.language.psi.PhelList
-import org.phellang.language.psi.PhelNamespaceUtils
-import org.phellang.language.psi.PhelProjectNamespaceFinder
-import org.phellang.language.psi.PhelSymbol
-import org.phellang.language.psi.PhelVec
-import org.phellang.language.psi.PhelVendorUtils
 
 /**
- * Reference implementation for Phel symbols that supports resolving to multiple targets.
- * This handles cases where a symbol might refer to multiple definitions, such as:
- * - Function overloads
- * - Macro vs function with same name
- * - Forward declarations + definitions
- * - Redefinitions
+ * Reference for a Phel symbol, resolving to *every* matching target rather than just one — a name
+ * can be a function and a macro, a forward declaration and its definition, or simply redefined.
+ *
+ * This class owns only the [PsiReferenceBase] contract and the order in which the resolvers are
+ * consulted; each way of finding a target lives in its own resolver:
+ *
+ * * [PhelRequireNamespaceResolver] — the namespace head of a `(:require ...)` spec
+ * * [PhpClassResolver]             — PHP interop (`(:use ...)` entries, `Class/method`)
+ * * [PhelQualifiedSymbolResolver]  — `ns/name`, including `:as` aliases
+ * * [PhelLocalScopeResolver]       — `let` bindings and function parameters
+ * * [PhelDefinitionSearcher]       — top-level definitions in this file, then the project
+ * * [PhelUsageFinder]              — the reverse direction, when the symbol *is* the definition
  */
 class PhelReference @JvmOverloads constructor(
     element: PhelSymbol,
     /** True: find usages of this definition. False: resolve this usage to its definitions. */
     private val findUsages: Boolean = PhelSymbolAnalyzer.isDefinition(element)
 ) : PsiReferenceBase<PhelSymbol>(element, calculateRangeInElement(element)), PsiPolyVariantReference {
+
     private val symbolName: String? = PhelPsiUtils.getName(element)
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        if (symbolName == null || symbolName.isEmpty()) {
-            return ResolveResult.EMPTY_ARRAY
-        }
+        val name = symbolName?.takeIf { it.isNotEmpty() } ?: return ResolveResult.EMPTY_ARRAY
 
-        val results: MutableList<ResolveResult> = ArrayList()
-
-        if (findUsages) {
-            // Find all usages of this symbol (for definitions)
-            val usages = findAllUsages()
-            for (usage in usages) {
-                results.add(PsiElementResolveResult(usage))
-            }
+        val targets = if (findUsages) {
+            PhelUsageFinder.findUsages(myElement, name)
         } else {
-            // Find definitions (original behavior)
-            findDefinitions(results)
+            findDefinitions(name)
         }
 
-        return results.toTypedArray<ResolveResult>()
+        return targets.map(::PsiElementResolveResult).toTypedArray()
     }
 
-    private fun findDefinitions(results: MutableList<ResolveResult>) {
-        // Namespace reference inside an `(ns ... (:require foo\bar))` clause.
-        // Go-to-definition should jump to the required module's `(ns ...)` form,
-        // mirroring how IntelliJ resolves imports in other languages.
-        val namespaceTargets = resolveRequireNamespace()
-        if (namespaceTargets.isNotEmpty()) {
-            for (target in namespaceTargets) {
-                results.add(PsiElementResolveResult(target))
-            }
-            return
-        }
+    /**
+     * The first resolver to produce a target wins, so the order encodes precedence: a require head
+     * and a `(:use ...)` class must never fall through to Phel-side name matching, and a qualified
+     * symbol must not be matched against local scope.
+     */
+    private fun findDefinitions(name: String): List<PsiElement> {
+        PhelRequireNamespaceResolver.resolve(myElement)
+            .takeIf { it.isNotEmpty() }
+            ?.let { return it }
 
-        // A PHP class entry inside `(:use ...)` resolves only to its PHP declaration.
-        // Short-circuit here so Phel-side lookups can't false-match a bare class name
-        // (e.g. `InvalidArgumentException`) against its own in-file usages.
+        // A PHP class in `(:use ...)` resolves only to its PHP declaration — otherwise a bare class
+        // name such as `InvalidArgumentException` false-matches its own usages in this file.
         if (PhelNamespaceUtils.isUseClassSymbol(myElement)) {
-            addPhpClassResults(results)
-            return
+            return resolvePhpTargets()
         }
 
-        // Check if this is a namespace-qualified symbol (e.g., utils/greet, m/square)
-        val qualifier = PhelPsiUtils.getQualifier(myElement)
-        if (qualifier != null) {
-            // This is a qualified symbol - resolve by namespace
-            val namespacedDefinitions = resolveQualifiedSymbol(qualifier)
-            for (def in namespacedDefinitions) {
-                results.add(PsiElementResolveResult(def))
-            }
-            // For qualified symbols, don't search local scope or other files
-            return
+        PhelPsiUtils.getQualifier(myElement)?.let { qualifier ->
+            // PHP interop first: a PHP class qualifier must never be matched against a Phel namespace.
+            resolvePhpTargets().takeIf { it.isNotEmpty() }?.let { return it }
+            return PhelQualifiedSymbolResolver.resolve(myElement, qualifier, name)
         }
 
-        // Unqualified symbol - use original resolution logic.
-        // Collect definitions from every scope, de-duplicating by PSI identity so the
-        // same element added by two scopes is only reported once (polyvariant resolve).
+        return findUnqualifiedDefinitions(name)
+    }
+
+    /** Every scope an unqualified name can be declared in, de-duplicated by PSI identity. */
+    private fun findUnqualifiedDefinitions(name: String): List<PsiElement> {
         val seen = Collections.newSetFromMap(IdentityHashMap<PsiElement, Boolean>())
-        fun addUnique(element: PsiElement) {
-            if (seen.add(element)) results.add(PsiElementResolveResult(element))
-        }
+        val results = mutableListOf<PsiElement>()
 
-        // 1. Local scope (let/loop/fn bindings visible at the reference).
-        resolveInLocalScope()?.let(::addUnique)
+        fun addAll(elements: List<PsiElement>) = elements.forEach { if (seen.add(it)) results.add(it) }
 
-        // 2. Current file definitions (def, defn, defmacro, etc.) and function parameters.
-        resolveInCurrentFile().forEach(::addUnique)
-        findAllFunctionParameters().forEach(::addUnique)
+        addAll(listOfNotNull(PhelLocalScopeResolver.resolve(myElement, name)))
+        addAll(PhelDefinitionSearcher.findInCurrentFile(myElement, name))
+        myElement.containingFile?.let { addAll(PhelLocalScopeResolver.findAllParametersIn(it, name)) }
+        addAll(PhelDefinitionSearcher.findInProject(myElement, name))
 
-        // 3. Project-wide definitions (other files).
-        resolveInProject().forEach(::addUnique)
-
-        // 4. Phel standard library (vendor folder) - for core functions like map, filter, etc.
+        // The standard library is only consulted when nothing else matched — `map`, `filter` and the
+        // rest of phel\core would otherwise shadow a project's own definitions.
         if (results.isEmpty()) {
-            val vendorDefinitions = resolveInVendor(myElement.project, "core")
-            for (def in vendorDefinitions) {
-                results.add(PsiElementResolveResult(def))
-            }
+            addAll(PhelDefinitionFinder.collectVendorDefinitions(myElement.project, "core", name))
         }
 
-        // 5. PHP interop fall-through. Only runs when nothing Phel-side resolved AND the
-        //    text looks like an interop shorthand — keeps the cost off the hot path for
-        //    ordinary Phel symbols and is a no-op when the PHP plugin isn't installed.
+        // PHP interop is the last fall-through: a no-op when the PHP plugin isn't installed, and kept
+        // off the hot path for ordinary Phel symbols.
         if (results.isEmpty()) {
-            addPhpClassResults(results)
-        }
-    }
-
-    private fun addPhpClassResults(results: MutableList<ResolveResult>) {
-        val element = myElement
-        // Prefer specific members (e.g. `Class.` -> __construct method) so go-to-def
-        // lands on the precise PHP node; fall back to the class otherwise.
-        val memberTargets = PhpClassResolver.resolveAsPhpMember(element)
-        if (memberTargets.isNotEmpty()) {
-            for (target in memberTargets) results.add(PsiElementResolveResult(target))
-            return
-        }
-        val phpTargets = PhpClassResolver.resolveAsPhpClass(element)
-        for (target in phpTargets) results.add(PsiElementResolveResult(target))
-    }
-
-    /**
-     * Resolves a namespace symbol that appears as the head of a `(:require ...)` spec
-     * to the `(ns ...)` declaration of the module it imports. Returns an empty list when
-     * the symbol isn't a require namespace head, so the caller falls through to ordinary
-     * symbol resolution.
-     *
-     * Handles both layouts Phel allows:
-     * * `(:require foo\bar baz\qux)`            — namespace directly under the clause
-     * * `(:require [foo\bar :as fb :refer […]])` — namespace as the head of a vector spec
-     */
-    private fun resolveRequireNamespace(): List<PsiElement> {
-        val symbol = myElement
-        if (!isRequireNamespaceHead(symbol)) return emptyList()
-
-        val namespaceText = symbol.text ?: return emptyList()
-        if (namespaceText.isEmpty()) return emptyList()
-
-        val project = symbol.project
-        val target = PhelNamespaceUtils.normalizeNamespace(namespaceText)
-        val psiManager = PsiManager.getInstance(project)
-        val results: MutableList<PsiElement> = ArrayList()
-
-        // 1. Project files
-        val phelFiles = FilenameIndex.getAllFilesByExt(
-            project, "phel", GlobalSearchScope.projectScope(project)
-        )
-        // A matching file's (ns …) form ends with this segment, so its text must contain it —
-        // skip the parse for files that can't be the target.
-        val targetShortName = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
-        for (virtualFile in phelFiles) {
-            val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
-            if (!psiFile.text.contains(targetShortName)) continue
-            val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(psiFile) ?: continue
-            val fileNamespace = PhelNamespaceUtils.extractNamespaceFromDeclaration(nsDeclaration) ?: continue
-            if (PhelNamespaceUtils.normalizeNamespace(fileNamespace) == target) {
-                results.add(namespaceNavigationTarget(nsDeclaration))
-            }
-        }
-        if (results.isNotEmpty()) return results
-
-        // 2. Phel standard library (vendor folder), e.g. (:require phel\str)
-        val vendorFiles = PhelVendorUtils.findStandardLibraryFiles(project, namespaceText)
-        for (vendorFile in vendorFiles) {
-            val psiFile = psiManager.findFile(vendorFile) as? PhelFile ?: continue
-            val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(psiFile)
-            if (nsDeclaration != null &&
-                PhelNamespaceUtils.extractNamespaceFromDeclaration(nsDeclaration)
-                    ?.let(PhelNamespaceUtils::normalizeNamespace) == target
-            ) {
-                results.add(namespaceNavigationTarget(nsDeclaration))
-            }
-        }
-        // Fall back to the first vendor file's ns form when none matched exactly
-        // (e.g. phel\core is split across many bucket files).
-        if (results.isEmpty()) {
-            for (vendorFile in vendorFiles) {
-                val psiFile = psiManager.findFile(vendorFile) as? PhelFile ?: continue
-                val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(psiFile) ?: continue
-                results.add(namespaceNavigationTarget(nsDeclaration))
-                break
-            }
+            addAll(resolvePhpTargets())
         }
 
         return results
     }
 
-    /** True when [symbol] is the namespace head of a `(:require ...)` spec. */
-    private fun isRequireNamespaceHead(symbol: PhelSymbol): Boolean {
-        // A dot-separated namespace like `phel.string` parses as a PhelAccess form
-        // (the `.` is interop-access syntax), so the form node under the clause may be
-        // that wrapper rather than the symbol itself.
-        val node: PsiElement = if (symbol.parent is org.phellang.language.psi.PhelAccess) symbol.parent else symbol
-        val parent = node.parent
-        // (:require foo\bar) / (:require phel.string) — namespace directly under the clause
-        if (parent is PhelList && isRequireClause(parent)) {
-            return true
-        }
-        // (:require [foo\bar :as fb]) — namespace is the vector spec's head
-        if (parent is PhelVec) {
-            val grandParent = parent.parent
-            if (grandParent is PhelList && isRequireClause(grandParent) && parent.forms.firstOrNull() === node) {
-                return true
-            }
-        }
-        return false
-    }
+    /** Prefer the specific member (`Class.` -> `__construct`) so go-to-def lands on the precise node. */
+    private fun resolvePhpTargets(): List<PsiElement> {
+        val members = PhpClassResolver.resolveAsPhpMember(myElement)
+        if (members.isNotEmpty()) return members
 
-    private fun isRequireClause(list: PhelList): Boolean {
-        val head = list.forms.firstOrNull() ?: return false
-        val keyword = head as? org.phellang.language.psi.PhelKeyword
-            ?: PsiTreeUtil.findChildOfType(head, org.phellang.language.psi.PhelKeyword::class.java)
-        return keyword?.text == ":require"
-    }
-
-    /** The `(ns <name> ...)` name symbol to navigate to, falling back to the whole form. */
-    private fun namespaceNavigationTarget(nsDeclaration: PhelList): PsiElement {
-        val nameForm = nsDeclaration.forms.getOrNull(1)
-        val nameSymbol = nameForm as? PhelSymbol
-            ?: nameForm?.let { PsiTreeUtil.findChildOfType(it, PhelSymbol::class.java) }
-        return nameSymbol ?: nsDeclaration
-    }
-
-    /**
-     * Resolves a qualified symbol (e.g., utils/greet, m/square, str/join) to its definition.
-     * This handles:
-     * - Direct namespace imports: utils/greet -> phel-project\utils/greet
-     * - Aliased imports: m/square -> phel-project\math/square (when m is alias for math)
-     * - Unimported namespaces: searches project files by short namespace name
-     * - Standard library functions: searches vendor/phel-lang/phel/src/phel/
-     */
-    private fun resolveQualifiedSymbol(qualifier: String): MutableCollection<PsiElement> {
-        val results: MutableList<PsiElement> = ArrayList()
-        val containingFile = myElement.containingFile as? PhelFile ?: return results
-        val project = myElement.project
-
-        // PHP interop static call (`ClassName/method`, `\Foo\Bar/CONST`, …).
-        // Try the specific member (method/constant) first so go-to-def lands on
-        // the precise PHP node; fall back to the class if the member lookup
-        // misses (or when the PHP plugin isn't available).
-        val memberTargets = PhpClassResolver.resolveAsPhpMember(myElement)
-        if (memberTargets.isNotEmpty()) {
-            results.addAll(memberTargets)
-            return results
-        }
-        val phpTargets = PhpClassResolver.resolveAsPhpClass(myElement)
-        if (phpTargets.isNotEmpty()) {
-            results.addAll(phpTargets)
-            return results
-        }
-
-        // First, try to resolve the qualifier via imports (handles aliases)
-        val targetNamespace = resolveQualifierToNamespace(containingFile, qualifier)
-
-        // Determine the actual namespace to search for
-        val resolvedQualifier = if (targetNamespace != null) {
-            PhelProjectNamespaceFinder.extractShortNamespace(targetNamespace)
-        } else {
-            qualifier
-        }
-
-        // Check if this is a standard library namespace - search vendor folder
-        val vendorResults = resolveInVendor(project, resolvedQualifier)
-        results.addAll(vendorResults)
-
-        // Also search project files
-        val phelFiles = FilenameIndex.getAllFilesByExt(
-            project, "phel", GlobalSearchScope.projectScope(project)
-        )
-        val psiManager = PsiManager.getInstance(project)
-
-        for (virtualFile in phelFiles) {
-            val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
-
-            val fileNamespace = PhelNamespaceUtils.extractNamespaceFromFile(psiFile) ?: continue
-            val fileShortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fileNamespace)
-
-            // Match by full namespace (if resolved from imports) OR by short namespace name
-            val matches = if (targetNamespace != null) {
-                fileNamespace == targetNamespace
-            } else {
-                // No import found - match by short namespace name
-                fileShortNamespace == qualifier
-            }
-
-            if (matches) {
-                // Found the file! Search for the definition in this file
-                val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
-                for (list in lists) {
-                    val definition = findDefinitionInList(list)
-                    if (definition != null) {
-                        results.add(definition)
-                    }
-                }
-            }
-        }
-
-        return results
-    }
-
-    /**
-     * Searches for the symbol definition in the Phel standard library (vendor folder).
-     */
-    private fun resolveInVendor(project: com.intellij.openapi.project.Project, namespace: String): List<PsiElement> {
-        val results: MutableList<PsiElement> = ArrayList()
-
-        // Phel 0.35+: a namespace may be backed by multiple vendor files
-        // (e.g. phel.core spans core.phel + core/*.phel)
-        val vendorFiles = PhelVendorUtils.findStandardLibraryFiles(project, namespace)
-        if (vendorFiles.isEmpty()) return results
-
-        val psiManager = PsiManager.getInstance(project)
-        for (vendorFile in vendorFiles) {
-            val psiFile = psiManager.findFile(vendorFile) as? PhelFile ?: continue
-            val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
-            for (list in lists) {
-                val definition = findDefinitionInList(list)
-                if (definition != null) {
-                    results.add(definition)
-                }
-            }
-        }
-
-        return results
-    }
-
-    /**
-     * Resolves a qualifier to a full namespace name using the file's imports.
-     * Handles both direct imports and aliases.
-     *
-     * @param file The file containing the symbol
-     * @param qualifier The qualifier (e.g., "utils", "m", "str")
-     * @return The full namespace (e.g., "phel-project\\utils", "phel-project\\math", "phel\\str"),
-     *         or null if the qualifier is not found in imports
-     */
-    private fun resolveQualifierToNamespace(file: PhelFile, qualifier: String): String? {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return null
-        val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
-        
-        if (requireForms.isEmpty()) {
-            return null // No imports, will fall back to short namespace matching
-        }
-
-        for (requireForm in requireForms) {
-            val forms = requireForm.forms
-
-            var i = 1
-            while (i < forms.size) {
-                val form = forms[i]
-                val namespaceSymbol = if (form is PhelSymbol) form
-                else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-
-                if (namespaceSymbol != null) {
-                    val fullNamespace = namespaceSymbol.text
-                    val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
-
-                    // Check for :as alias pattern
-                    if (i + 2 < forms.size) {
-                        val nextForm = forms[i + 1]
-                        val asKeyword = nextForm as? org.phellang.language.psi.PhelKeyword
-                            ?: PsiTreeUtil.findChildOfType(nextForm, org.phellang.language.psi.PhelKeyword::class.java)
-
-                        if (asKeyword?.text == ":as") {
-                            val aliasForm = forms[i + 2]
-                            val aliasSymbol = if (aliasForm is PhelSymbol) aliasForm
-                            else PsiTreeUtil.findChildOfType(aliasForm, PhelSymbol::class.java)
-
-                            if (aliasSymbol != null && aliasSymbol.text == qualifier) {
-                                // Qualifier matches an alias
-                                return fullNamespace
-                            }
-                            i += 3
-                            continue
-                        }
-                    }
-
-                    // Check if qualifier matches short namespace (direct import)
-                    if (shortNamespace == qualifier) {
-                        return fullNamespace
-                    }
-                }
-                i++
-            }
-        }
-
-        return null
-    }
-
-    private fun findAllUsages(): MutableCollection<PsiElement> {
-        val usages: MutableList<PsiElement> = ArrayList()
-
-        // For function parameters, let bindings, etc., only search within the local scope
-        if (PhelSymbolAnalyzer.isDefinition(myElement) && this.isLocalBinding) {
-            // For local bindings, search only within the containing form (function/let block)
-            val localUsages = findUsagesInLocalScope()
-            if (!localUsages.isEmpty()) {
-                usages.addAll(localUsages)
-                return usages // Local bindings skip project-wide search.
-            }
-        }
-
-        // Search current file for usages and other definitions
-        val containingFile = myElement.containingFile
-        if (containingFile is PhelFile) {
-            val allSymbols = PsiTreeUtil.findChildrenOfType(containingFile, PhelSymbol::class.java)
-
-            for (symbol in allSymbols) {
-                if (symbol !== null) {
-                    val name = PhelPsiUtils.getName(symbol)
-                    if (symbolName == name && symbol !== myElement) {
-                        // Include both usages AND other definitions (but not the element we clicked on)
-                        usages.add(symbol)
-                    }
-                }
-            }
-        }
-
-        // Search project-wide ONLY for top-level definitions (def, defn, etc.)
-        // Skip expensive project-wide search for local bindings
-        if (!this.isLocalBinding) {
-            val project = myElement.project
-            val projectScope = GlobalSearchScope.projectScope(project)
-
-            val phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", projectScope)
-            for (virtualFile in phelFiles) {
-                if (virtualFile == containingFile.virtualFile) {
-                    continue  // Skip current file (already searched above)
-                }
-
-                val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
-                if (psiFile !is PhelFile) continue
-                // Fast reject: skip files whose text doesn't contain the name at all.
-                if (symbolName != null && !psiFile.text.contains(symbolName)) continue
-
-                val allSymbols = PsiTreeUtil.findChildrenOfType(psiFile, PhelSymbol::class.java)
-
-                for (symbol in allSymbols) {
-                    val name = PhelPsiUtils.getName(symbol)
-                    if (symbolName == name) {
-                        // Include both usages AND definitions from other files
-                        usages.add(symbol)
-                    }
-                }
-            }
-        }
-
-        return usages
-    }
-
-    private val isLocalBinding: Boolean
-        /**
-         * Check if this symbol is a local binding (parameter, let binding, etc.)
-         * This checks if it's NOT a top-level definition (def, defn, etc.)
-         */
-        get() {
-            if (!PhelSymbolAnalyzer.isDefinition(myElement)) {
-                return false // Not a definition at all
-            }
-
-            // Check if it's inside a parameter vector or binding vector
-            PsiTreeUtil.getParentOfType(myElement, PhelVec::class.java)
-                ?: return false // Not in a vector, so likely a top-level definition
-
-            // If it's in a vector, it's likely a parameter or binding (local binding)
-            return true
-        }
-
-    private fun findUsagesInLocalScope(): MutableCollection<PsiElement> {
-        val usages: MutableList<PsiElement> = ArrayList()
-
-        // Find the containing function or let form
-        val containingForm = findContainingForm() ?: return usages
-
-        // Search only within this form
-        val localSymbols = PsiTreeUtil.findChildrenOfType(containingForm, PhelSymbol::class.java)
-
-        for (symbol in localSymbols) {
-            val name = PhelPsiUtils.getName(symbol)
-            if (symbolName == name && symbol !== myElement && !PhelSymbolAnalyzer.isDefinition(symbol)) {
-                // Include only usages (not other definitions) within local scope
-                usages.add(symbol)
-            }
-        }
-
-        return usages
-    }
-
-    private fun findContainingForm(): PhelList? {
-        var current = myElement.parent
-
-        while (current != null) {
-            if (current is PhelList) {
-                val list = current
-
-                // Check if this is a defining form
-                val firstForm = PsiTreeUtil.findChildOfType(list, PhelForm::class.java)
-                if (firstForm != null) {
-                    val firstSymbol = PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
-                    if (firstSymbol != null) {
-                        val keyword = firstSymbol.text
-                        if (PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.SPECIAL_FORMS) ||
-                            PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.CONTROL_FLOW)) {
-                            return list
-                        }
-                    }
-                }
-            }
-            current = current.parent
-        }
-
-        return null
+        return PhpClassResolver.resolveAsPhpClass(myElement)
     }
 
     override fun resolve(): PsiElement? {
         val results = multiResolve(false)
 
-        // For definitions finding usages, return null if multiple usages exist
-        // This forces IntelliJ to show the polyvariant selection modal
-        if (findUsages && results.size > 1) {
-            return null // Force modal for multiple usages
-        }
+        // Several usages of one definition: returning null makes the platform show its own chooser
+        // rather than silently jumping to the first.
+        if (findUsages && results.size > 1) return null
 
-        // For single targets or usage-to-definition, return the first result
-        return if (results.isNotEmpty()) results[0].element else null
+        return results.firstOrNull()?.element
     }
 
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        val results = multiResolve(false)
-        for (result in results) {
-            if (element == result.element) {
-                return true
-            }
-        }
-        return false
-    }
+    override fun isReferenceTo(element: PsiElement): Boolean =
+        multiResolve(false).any { element == it.element }
 
     override fun getVariants(): Array<Any?> {
+        val name = symbolName ?: return emptyArray()
+
         val variants = mutableListOf<PsiElement>()
+        variants += listOfNotNull(PhelLocalScopeResolver.resolve(myElement, name))
+        variants += PhelDefinitionSearcher.findInCurrentFile(myElement, name)
 
-        val localDef = resolveInLocalScope()
-        if (localDef != null) variants.add(localDef)
-
-        variants.addAll(resolveInCurrentFile())
-
-        if (variants.size < 20) {
-            variants.addAll(resolveInProject())
+        if (variants.size < MAX_PROJECT_VARIANTS) {
+            variants += PhelDefinitionSearcher.findInProject(myElement, name)
         }
 
         return variants.toTypedArray()
     }
 
     @Throws(IncorrectOperationException::class)
-    override fun handleElementRename(newElementName: String): PsiElement? {
-        if (myElement is PhelSymbol) {
-            val symbol = myElement as PhelSymbol
+    override fun handleElementRename(newElementName: String): PsiElement {
+        val currentText = myElement.text ?: return myElement
 
-            // For qualified symbols like "ns/symbol", only rename the symbol part
-            val currentText = symbol.text
-            if (currentText != null && currentText.contains("/")) {
-                val slashIndex = currentText.lastIndexOf('/')
-                val qualifier = currentText.take(slashIndex + 1)
-                val newText = qualifier + newElementName
-                return symbol.setName(newText)
-            } else {
-                // For unqualified symbols, replace entire text
-                return symbol.setName(newElementName)
-            }
+        // A qualified symbol renames only its name part: `str/join` -> `str/<new>`.
+        val slashIndex = currentText.lastIndexOf('/')
+        val newText = if (slashIndex >= 0) {
+            currentText.take(slashIndex + 1) + newElementName
+        } else {
+            newElementName
         }
-        return null
+
+        return myElement.setName(newText)
     }
 
     @Throws(IncorrectOperationException::class)
-    override fun bindToElement(element: PsiElement): PsiElement? {
-        return myElement
-    }
-
-    // === Resolution Methods ===
-    private fun resolveInLocalScope(): PsiElement? {
-        var current: PsiElement? = myElement
-
-        // Walk up the PSI tree looking for binding contexts
-        while (current != null) {
-            // Check for let bindings
-            val letForm = PsiTreeUtil.getParentOfType(current, PhelList::class.java)
-            if (letForm != null) {
-                val binding = findInLetBindings(letForm)
-                if (binding != null) {
-                    return binding
-                }
-            }
-
-            // Check for function parameters
-            val fnParam = findInFunctionParameters(current)
-            if (fnParam != null) {
-                return fnParam
-            }
-
-            current = current.parent
-        }
-
-        return null
-    }
-
-    private fun resolveInCurrentFile(): MutableCollection<PsiElement> {
-        val results: MutableList<PsiElement> = ArrayList()
-        val file = myElement.containingFile
-
-        if (file != null) {
-            val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
-            for (list in lists) {
-                val definition = findDefinitionInList(list)
-                if (definition != null) {
-                    results.add(definition)
-                }
-            }
-        }
-
-        return results
-    }
-
-    private fun resolveInProject(): MutableCollection<PsiElement> {
-        val results: MutableList<PsiElement> = ArrayList()
-        val project = myElement.project
-
-        // Find all .phel files in the project
-        val phelFiles = FilenameIndex.getAllFilesByExt(
-            project, "phel", GlobalSearchScope.projectScope(project)
-        )
-
-        val psiManager = PsiManager.getInstance(project)
-
-        for (file in phelFiles) {
-            val psiFile = psiManager.findFile(file)
-            if (psiFile == null || psiFile == myElement.containingFile) continue
-            // Fast reject: a file whose text doesn't mention the name can't define it, so
-            // skip the PSI walk for the many files that don't reference this symbol.
-            if (symbolName != null && !psiFile.text.contains(symbolName)) continue
-
-            val lists = PsiTreeUtil.findChildrenOfType(psiFile, PhelList::class.java)
-            for (list in lists) {
-                val definition = findDefinitionInList(list)
-                if (definition != null) {
-                    results.add(definition)
-                }
-            }
-        }
-
-        return results
-    }
-
-    private fun findInLetBindings(letForm: PhelList): PsiElement? {
-        val forms = letForm.forms
-        if (forms.size < 2) return null
-
-        // Only binding forms whose second element is a `[name value ...]` vector are
-        // relevant here. `catch` was historically listed too, but its second element is
-        // the exception class (not a vector), so it never matched — and `when-let` was
-        // missing, so its bindings failed to resolve. The shared set fixes both.
-        val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: return null
-        val formType = firstSymbol.text
-        if (formType !in org.phellang.language.psi.PhelSpecialForms.LET_LIKE) {
-            return null
-        }
-
-        // Look at binding vector - forms[1] should BE the vector directly
-        val bindingsVec = if (forms[1] is PhelVec) {
-            forms[1] as PhelVec
-        } else {
-            // Fallback: look inside forms[1] for a vector
-            PsiTreeUtil.findChildOfType(forms[1], PhelVec::class.java)
-        }
-
-        if (bindingsVec == null) {
-            return null
-        }
-
-        val bindings = bindingsVec.forms
-
-        // Bindings are pairs: [symbol1 value1 symbol2 value2 ...]
-        var i = 0
-        while (i < bindings.size) {
-            val bindingSymbol = PsiTreeUtil.findChildOfType(bindings[i], PhelSymbol::class.java)
-            if (bindingSymbol != null && symbolName == bindingSymbol.text) {
-                return bindingSymbol
-            }
-            i += 2
-        }
-
-        return null
-    }
-
-    /**
-     * Find symbol in function parameters: (defn func-name [param1 param2] ...)
-     * This searches for ALL function parameters with matching names, not just in the current function.
-     */
-    private fun findInFunctionParameters(context: PsiElement): PsiElement? {
-        // Walk up the PSI tree to find ALL parent PhelList elements
-        // We need to check each one to see if it's a function definition
-        var current: PsiElement? = context
-
-        while (current != null) {
-            // Find the next parent PhelList
-            val fnForm = PsiTreeUtil.getParentOfType(current, PhelList::class.java) ?: break
-
-            val forms = fnForm.forms
-            if (forms.size >= 2) {
-                val fnKeyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
-
-                if (fnKeyword != null) {
-                    val keyword = fnKeyword.text
-                    val paramVec = findParameterVectorInForms(forms, keyword)
-
-                    if (paramVec != null) {
-                        for (param in paramVec.forms) {
-                            val paramSymbol = PsiTreeUtil.findChildOfType(param, PhelSymbol::class.java)
-                            if (paramSymbol != null && symbolName == paramSymbol.text) {
-                                return paramSymbol
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Continue searching up the tree
-            current = fnForm.parent
-        }
-
-        return null
-    }
-
-    /**
-     * Find ALL function parameters with matching names in the current file.
-     * This is for polyvariant resolution - show all parameter definitions.
-     */
-    private fun findAllFunctionParameters(): MutableCollection<PsiElement> {
-        val results: MutableList<PsiElement> = ArrayList()
-        val file = myElement.containingFile
-
-        if (file != null) {
-            val lists = PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
-            for (list in lists) {
-                val forms = list.forms
-                if (forms.size < 2) continue
-
-                val fnKeyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: continue
-                val keyword = fnKeyword.text
-                val paramVec = findParameterVectorInForms(forms, keyword) ?: continue
-
-                for (param in paramVec.forms) {
-                    val paramSymbol = PsiTreeUtil.findChildOfType(param, PhelSymbol::class.java)
-                    if (paramSymbol != null && symbolName == paramSymbol.text) {
-                        results.add(paramSymbol)
-                    }
-                }
-            }
-        }
-
-        return results
-    }
-
-    /**
-     * Find definition in a list form: (def name value), (defn name [...] ...), etc.
-     */
-    private fun findDefinitionInList(list: PhelList): PsiElement? {
-        val forms = list.forms
-        if (forms.size < 2) return null
-
-        // Check if this is a defining form
-        val defKeyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
-        val keywordText = defKeyword?.text
-
-        if (defKeyword == null || !isDefiningKeyword(keywordText)) {
-            return null
-        }
-
-        // Get the defined name (second element)
-        val definedName = PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java)
-
-        if (definedName != null && symbolName == definedName.text) {
-            return definedName
-        }
-
-        return null
-    }
-
-    /**
-     * Checks if the keyword is a defining form (defn, def, defmacro, etc.).
-     */
-    private fun isDefiningKeyword(keyword: String?): Boolean {
-        if (keyword == null) return false
-
-        // Direct check for common defining keywords
-        return keyword in DEFINING_KEYWORDS ||
-            PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.SPECIAL_FORMS)
-             || PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.MACROS)
-    }
+    override fun bindToElement(element: PsiElement): PsiElement = myElement
 
     companion object {
-        /**
-         * Keywords that define new symbols.
-         */
-        private val DEFINING_KEYWORDS = setOf(
-            "def", "defn", "defn-", "defmacro", "defmacro-",
-            "defstruct", "definterface", "def-"
-        )
+        /** Project-wide variants are only collected while the list is still short enough to be useful. */
+        private const val MAX_PROJECT_VARIANTS = 20
 
-        /**
-         * Calculate the text range within the symbol that represents the reference.
-         * For qualified symbols like "ns/symbol", we only reference the symbol part.
-         */
+        /** A qualified symbol references only the part after the `/`; an unqualified one, all of it. */
         private fun calculateRangeInElement(element: PhelSymbol): TextRange {
             val text = element.text ?: return TextRange.EMPTY_RANGE
 
-            // For qualified symbols, reference only the name part after '/'
             val slashIndex = text.lastIndexOf('/')
             if (slashIndex >= 0 && slashIndex < text.length - 1) {
                 return TextRange.from(slashIndex + 1, text.length - slashIndex - 1)
             }
 
-            // For unqualified symbols, reference the entire text
             return TextRange.from(0, text.length)
-        }
-    }
-
-    private fun findParameterVectorInForms(forms: List<PhelForm>, keyword: String): PhelVec? {
-        return when (keyword) {
-            "fn" -> {
-                // For (fn [params] ...), parameter vector is at index 1
-                if (forms.size >= 2) {
-                    if (forms[1] is PhelVec) {
-                        forms[1] as PhelVec
-                    } else {
-                        PsiTreeUtil.findChildOfType(forms[1], PhelVec::class.java)
-                    }
-                } else null
-            }
-            "defn", "defn-", "defmacro", "defmacro-" -> {
-                // For defn forms, find the first vector after the function name
-                // Skip docstring and metadata: (defn name "doc" {:meta} [params] ...)
-                for (i in 2 until forms.size) {
-                    if (forms[i] is PhelVec) {
-                        return forms[i] as PhelVec
-                    }
-                    // Also check if the form contains a vector (for nested structures)
-                    val nestedVec = PsiTreeUtil.findChildOfType(forms[i], PhelVec::class.java)
-                    if (nestedVec != null) {
-                        return nestedVec
-                    }
-                }
-                null
-            }
-            else -> null
         }
     }
 }
