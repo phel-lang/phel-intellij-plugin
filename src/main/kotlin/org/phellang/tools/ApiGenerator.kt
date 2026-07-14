@@ -43,7 +43,7 @@ fun main() {
 
         // Generate Kotlin files
         println("Generating Kotlin files...")
-        val generator = KotlinCodeGenerator(outputDir)
+        val generator = KotlinCodeGenerator(File(outputDir, "data"))
         generator.generate(apiFunctions)
 
         // Sync the hand-wired enum + registry to NamespaceConfig (kills the bootstrap deadlock).

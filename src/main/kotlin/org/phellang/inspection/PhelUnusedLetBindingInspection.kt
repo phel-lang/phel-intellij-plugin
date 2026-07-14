@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
 import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.inspection.quickfixes.PhelRemoveLetBindingQuickFix
 
 class PhelUnusedLetBindingInspection : LocalInspectionTool() {
 

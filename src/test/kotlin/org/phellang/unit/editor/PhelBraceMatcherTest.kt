@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.phellang.editor.PhelBraceMatcher
+import org.phellang.editor.matching.PhelBraceMatcher
 import org.phellang.language.psi.PhelTypes
 
 @ExtendWith(MockitoExtension::class)

@@ -1,18 +1,41 @@
 package org.phellang.registry
 
 // region GENERATED IMPORTS — updatePhelRegistry; do not edit by hand
-import org.phellang.registry.schema.registerSchemaCoercerFunctions
-import org.phellang.registry.schema.registerSchemaExplainerFunctions
-import org.phellang.registry.schema.registerSchemaFunctions
-import org.phellang.registry.schema.registerSchemaGeneratorFunctions
-import org.phellang.registry.schema.registerSchemaInstrumentFunctions
-import org.phellang.registry.schema.registerSchemaRegistryFunctions
-import org.phellang.registry.schema.registerSchemaValidatorFunctions
-import org.phellang.registry.test.registerTestFunctions
-import org.phellang.registry.test.registerTestGenFunctions
-import org.phellang.registry.test.registerTestRoseFunctions
-import org.phellang.registry.test.registerTestSelectorFunctions
-import org.phellang.registry.test.registerTestShrinkFunctions
+import org.phellang.registry.data.registerAiFunctions
+import org.phellang.registry.data.registerAsyncFunctions
+import org.phellang.registry.data.registerBase64Functions
+import org.phellang.registry.data.registerCliFunctions
+import org.phellang.registry.data.registerCoreFunctions
+import org.phellang.registry.data.registerDebugFunctions
+import org.phellang.registry.data.registerEdnFunctions
+import org.phellang.registry.data.registerHtmlFunctions
+import org.phellang.registry.data.registerHttpClientFunctions
+import org.phellang.registry.data.registerHttpFunctions
+import org.phellang.registry.data.registerJsonFunctions
+import org.phellang.registry.data.registerMatchFunctions
+import org.phellang.registry.data.registerMockFunctions
+import org.phellang.registry.data.registerPhpInteropFunctions
+import org.phellang.registry.data.registerPprintFunctions
+import org.phellang.registry.data.registerReaderFunctions
+import org.phellang.registry.data.registerReflectFunctions
+import org.phellang.registry.data.registerReplFunctions
+import org.phellang.registry.data.registerRouterFunctions
+import org.phellang.registry.data.registerStringFunctions
+import org.phellang.registry.data.registerTransitFunctions
+import org.phellang.registry.data.registerWalkFunctions
+import org.phellang.registry.data.registerWatchFunctions
+import org.phellang.registry.data.schema.registerSchemaCoercerFunctions
+import org.phellang.registry.data.schema.registerSchemaExplainerFunctions
+import org.phellang.registry.data.schema.registerSchemaFunctions
+import org.phellang.registry.data.schema.registerSchemaGeneratorFunctions
+import org.phellang.registry.data.schema.registerSchemaInstrumentFunctions
+import org.phellang.registry.data.schema.registerSchemaRegistryFunctions
+import org.phellang.registry.data.schema.registerSchemaValidatorFunctions
+import org.phellang.registry.data.test.registerTestFunctions
+import org.phellang.registry.data.test.registerTestGenFunctions
+import org.phellang.registry.data.test.registerTestRoseFunctions
+import org.phellang.registry.data.test.registerTestSelectorFunctions
+import org.phellang.registry.data.test.registerTestShrinkFunctions
 // endregion GENERATED IMPORTS — updatePhelRegistry
 import org.phellang.registry.PhelCompletionPriority
 

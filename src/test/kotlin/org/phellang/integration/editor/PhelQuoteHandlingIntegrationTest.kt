@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import org.phellang.editor.PhelQuoteHandler
+import org.phellang.editor.quote.PhelQuoteHandler
 import org.phellang.editor.quote.analysis.PhelQuotePositionAnalyzer
 import org.phellang.editor.quote.integration.PhelTypingQuoteHandler
 import org.phellang.language.psi.PhelTypes

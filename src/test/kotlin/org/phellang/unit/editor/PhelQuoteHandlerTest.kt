@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import org.phellang.editor.PhelQuoteHandler
+import org.phellang.editor.quote.PhelQuoteHandler
 import org.phellang.language.psi.PhelTypes
 
 class PhelQuoteHandlerTest {

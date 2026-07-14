@@ -23,7 +23,8 @@ class RegistryWiringGenerator(private val dataDirectory: File) {
                 Wiring(
                     enumName = enumName(info.functionName),
                     functionName = info.functionName,
-                    import = info.subfolder?.let { "$ROOT_PACKAGE.$it.${info.functionName}" },
+                    import = info.subfolder?.let { "$DATA_PACKAGE.$it.${info.functionName}" }
+                        ?: "$DATA_PACKAGE.${info.functionName}",
                 )
             }
             .sortedBy { it.enumName }
@@ -71,7 +72,7 @@ class RegistryWiringGenerator(private val dataDirectory: File) {
             .uppercase()
 
     companion object {
-        private const val ROOT_PACKAGE = "org.phellang.registry"
+        private const val DATA_PACKAGE = "org.phellang.registry.data"
         private const val ENUM_MARKER = "GENERATED — updatePhelRegistry"
         private const val IMPORTS_MARKER = "GENERATED IMPORTS — updatePhelRegistry"
         private const val INIT_MARKER = "GENERATED INIT — updatePhelRegistry"

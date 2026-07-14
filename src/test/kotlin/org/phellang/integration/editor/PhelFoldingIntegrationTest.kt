@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import org.phellang.editor.PhelFoldingBuilder
+import org.phellang.editor.folding.PhelFoldingBuilder
 import org.phellang.editor.folding.collectors.PhelFoldingCollector
 import org.phellang.editor.folding.placeholders.PhelPlaceholderGenerator
 import org.phellang.editor.folding.resolvers.PhelFoldingConflictResolver

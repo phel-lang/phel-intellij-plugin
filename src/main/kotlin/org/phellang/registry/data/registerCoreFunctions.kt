@@ -1,0 +1,63 @@
+package org.phellang.registry.data
+
+import org.phellang.registry.PhelFunction
+import org.phellang.registry.data.core.registerCoreArraysFunctions
+import org.phellang.registry.data.core.registerCoreAsyncFunctions
+import org.phellang.registry.data.core.registerCoreAtomsFunctions
+import org.phellang.registry.data.core.registerCoreBooleansFunctions
+import org.phellang.registry.data.core.registerCoreCollectionsFunctions
+import org.phellang.registry.data.core.registerCoreControlFunctions
+import org.phellang.registry.data.core.registerCoreDefsFunctions
+import org.phellang.registry.data.core.registerCoreExceptionsFunctions
+import org.phellang.registry.data.core.registerCoreFnsSetsFunctions
+import org.phellang.registry.data.core.registerCoreFuturesFunctions
+import org.phellang.registry.data.core.registerCoreIoFunctions
+import org.phellang.registry.data.core.registerCoreLazyFunctions
+import org.phellang.registry.data.core.registerCoreLoopsFunctions
+import org.phellang.registry.data.core.registerCoreMacroexpandFunctions
+import org.phellang.registry.data.core.registerCoreMathFunctions
+import org.phellang.registry.data.core.registerCoreMetaFunctions
+import org.phellang.registry.data.core.registerCoreNsFunctions
+import org.phellang.registry.data.core.registerCoreParsingFunctions
+import org.phellang.registry.data.core.registerCorePredicatesFunctions
+import org.phellang.registry.data.core.registerCoreProtocolsFunctions
+import org.phellang.registry.data.core.registerCoreRootFunctions
+import org.phellang.registry.data.core.registerCoreSeqBasicsFunctions
+import org.phellang.registry.data.core.registerCoreSeqFnsFunctions
+import org.phellang.registry.data.core.registerCoreSequencesFunctions
+import org.phellang.registry.data.core.registerCoreStringsFunctions
+import org.phellang.registry.data.core.registerCoreTapFunctions
+import org.phellang.registry.data.core.registerCoreTransducersFunctions
+import org.phellang.registry.data.core.registerCoreTransientsFunctions
+import org.phellang.registry.data.core.registerCoreUuidFunctions
+
+internal fun registerCoreFunctions(): List<PhelFunction> =
+    registerCoreArraysFunctions() +
+        registerCoreAsyncFunctions() +
+        registerCoreAtomsFunctions() +
+        registerCoreBooleansFunctions() +
+        registerCoreCollectionsFunctions() +
+        registerCoreControlFunctions() +
+        registerCoreDefsFunctions() +
+        registerCoreExceptionsFunctions() +
+        registerCoreFnsSetsFunctions() +
+        registerCoreFuturesFunctions() +
+        registerCoreIoFunctions() +
+        registerCoreLazyFunctions() +
+        registerCoreLoopsFunctions() +
+        registerCoreMacroexpandFunctions() +
+        registerCoreMathFunctions() +
+        registerCoreMetaFunctions() +
+        registerCoreNsFunctions() +
+        registerCoreParsingFunctions() +
+        registerCorePredicatesFunctions() +
+        registerCoreProtocolsFunctions() +
+        registerCoreRootFunctions() +
+        registerCoreSeqBasicsFunctions() +
+        registerCoreSeqFnsFunctions() +
+        registerCoreSequencesFunctions() +
+        registerCoreStringsFunctions() +
+        registerCoreTapFunctions() +
+        registerCoreTransducersFunctions() +
+        registerCoreTransientsFunctions() +
+        registerCoreUuidFunctions()
