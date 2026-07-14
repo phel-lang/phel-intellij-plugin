@@ -1,16 +1,12 @@
 package org.phellang.completion.infrastructure
 
 import com.intellij.codeInsight.completion.CompletionResultSet
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.registry.PhelProjectSymbol
 import org.phellang.registry.SymbolType
 import org.phellang.registry.indexing.PhelProjectSymbolIndex
-import org.phellang.language.psi.PhelForm
-import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelNamespaceUtils
-import org.phellang.language.psi.PhelProjectNamespaceFinder
-import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelRequireClauseAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.registry.PhelCompletionPriority
 
@@ -21,7 +17,7 @@ object PhelProjectCompletionHelper {
         result: CompletionResultSet, file: PhelFile, aliasMap: Map<String, String>
     ) {
         val index = PhelProjectSymbolIndex.getInstance(file.project)
-        val importedNamespaces = extractImportedNamespaces(file)
+        val importedNamespaces = PhelRequireClauseAnalyzer.imports(file)
         val currentFileNamespace = PhelNamespaceUtils.findNamespaceDeclaration(file)?.let {
             extractNamespaceFromDeclaration(it)
         }
@@ -70,64 +66,12 @@ object PhelProjectCompletionHelper {
         }
     }
 
-    private fun extractImportedNamespaces(file: PhelFile): List<ImportInfo> {
-        val imports = mutableListOf<ImportInfo>()
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return imports
-        val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
-
-        for (requireForm in requireForms) {
-            val forms = requireForm.forms
-
-            // Skip the :require keyword (first form)
-            var i = 1
-            while (i < forms.size) {
-                val form = forms[i]
-
-                // Get the namespace symbol
-                val namespaceSymbol = if (form is PhelSymbol) form
-                else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-
-                if (namespaceSymbol != null) {
-                    val fullNamespace = namespaceSymbol.text
-                    val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
-                    var alias: String?
-
-                    // Check if next form is :as keyword
-                    if (i + 1 < forms.size) {
-                        val nextForm = forms[i + 1]
-                        val asKeyword =
-                            nextForm as? PhelKeyword ?: PsiTreeUtil.findChildOfType(nextForm, PhelKeyword::class.java)
-
-                        if (asKeyword?.text == ":as" && i + 2 < forms.size) {
-                            // Get the alias symbol
-                            val aliasForm = forms[i + 2]
-                            val aliasSymbol = if (aliasForm is PhelSymbol) aliasForm
-                            else PsiTreeUtil.findChildOfType(aliasForm, PhelSymbol::class.java)
-
-                            if (aliasSymbol != null) {
-                                alias = aliasSymbol.text
-                                i += 3  // Skip namespace, :as, and alias
-                                imports.add(ImportInfo(fullNamespace, shortNamespace, alias))
-                                continue
-                            }
-                        }
-                    }
-
-                    imports.add(ImportInfo(fullNamespace, shortNamespace, null))
-                }
-                i++
-            }
-        }
-
-        return imports
-    }
-
     private fun extractNamespaceFromDeclaration(nsDeclaration: PhelList): String? {
         return PhelNamespaceUtils.extractShortNamespaceFromDeclaration(nsDeclaration)
     }
 
     private fun transformWithAlias(
-        symbol: PhelProjectSymbol, importInfo: ImportInfo, aliasMap: Map<String, String>
+        symbol: PhelProjectSymbol, importInfo: PhelRequireClauseAnalyzer.RequireImport, aliasMap: Map<String, String>
     ): String {
         // If the import has an alias, use it
         if (importInfo.alias != null) {
@@ -146,15 +90,6 @@ object PhelProjectCompletionHelper {
     private fun addProjectSymbolCompletion(
         result: CompletionResultSet, symbol: PhelProjectSymbol, displayName: String
     ) {
-        val priority = when (symbol.type) {
-            SymbolType.FUNCTION -> PhelCompletionPriority.PROJECT_SYMBOLS
-            SymbolType.MACRO -> PhelCompletionPriority.PROJECT_SYMBOLS
-            SymbolType.VALUE -> PhelCompletionPriority.PROJECT_SYMBOLS
-            SymbolType.STRUCT -> PhelCompletionPriority.PROJECT_SYMBOLS
-            SymbolType.INTERFACE -> PhelCompletionPriority.PROJECT_SYMBOLS
-            SymbolType.EXCEPTION -> PhelCompletionPriority.PROJECT_SYMBOLS
-        }
-
         val description = when (symbol.type) {
             SymbolType.FUNCTION -> "function"
             SymbolType.MACRO -> "macro"
@@ -165,11 +100,8 @@ object PhelProjectCompletionHelper {
         }
 
         PhelCompletionUtils.addRankedCompletionWithNamespace(
-            result, displayName, symbol.signature, description, priority, symbol.namespace
+            result, displayName, symbol.signature, description, PhelCompletionPriority.PROJECT_SYMBOLS, symbol.namespace
         )
     }
 
-    private data class ImportInfo(
-        val fullNamespace: String, val shortNamespace: String, val alias: String?
-    )
 }

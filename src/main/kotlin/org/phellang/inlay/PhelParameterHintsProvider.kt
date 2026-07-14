@@ -9,14 +9,11 @@ import com.intellij.codeInsight.hints.declarative.SharedBypassCollector
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import org.phellang.core.psi.PhelLocalBindingScope
 import org.phellang.registry.PhelArity
 import org.phellang.registry.PhelArityResolver
 import org.phellang.registry.selectFor
-import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
-import org.phellang.language.psi.PhelSpecialForms
-import org.phellang.language.psi.PhelSymbol
-import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelParameterHintsProvider : InlayHintsProvider {
@@ -38,7 +35,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             if (headName.startsWith("php/") || headName.startsWith(".") || headName.startsWith("php-")) {
                 return
             }
-            if (resolvesToLocalBinding(headSymbol, headName)) return
+            if (PhelLocalBindingScope.resolvesToLocalBinding(headSymbol, headName)) return
 
             val args = forms.drop(1)
             val arities = PhelArityResolver.resolve(headSymbol.project, headName) ?: return
@@ -68,51 +65,8 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             }
         }
 
-        /** True when [name] resolves to an enclosing let/loop binding or fn parameter. */
-        private fun resolvesToLocalBinding(head: PhelSymbol, name: String): Boolean {
-            var current: PsiElement? = head.parent
-            while (current != null) {
-                if (current is PhelList) {
-                    val forms = current.forms
-                    val parentHead = PhelPsiUtils.asSymbol(forms.firstOrNull())?.text
-                    if (parentHead != null) {
-                        if (parentHead in BINDING_INTRO_FORMS && bindingVecContains(forms, name)) return true
-                        if (parentHead in FUNCTION_INTRO_FORMS && paramVecContains(forms, name)) return true
-                    }
-                }
-                current = current.parent
-            }
-            return false
-        }
-
-        private fun bindingVecContains(forms: List<PhelForm>, name: String): Boolean {
-            val vec = forms.getOrNull(1) as? PhelVec ?: return false
-            val bindings = vec.forms
-            var i = 0
-            while (i < bindings.size) {
-                if (PhelPsiUtils.asSymbol(bindings[i])?.text == name) return true
-                i += 2
-            }
-            return false
-        }
-
-        private fun paramVecContains(forms: List<PhelForm>, name: String): Boolean {
-            for (form in forms.drop(1)) {
-                if (form is PhelVec) {
-                    for (p in form.forms) {
-                        if (PhelPsiUtils.asSymbol(p)?.text == name) return true
-                    }
-                    return false
-                }
-            }
-            return false
-        }
     }
 }
-
-private val BINDING_INTRO_FORMS = PhelSpecialForms.LET_LIKE
-
-private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
 // Special forms and macros where param-name hints would be noise.
 private val SKIP_HEADS = setOf(

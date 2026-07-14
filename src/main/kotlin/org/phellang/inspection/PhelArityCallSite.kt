@@ -1,6 +1,7 @@
 package org.phellang.inspection
 
 import com.intellij.psi.PsiElement
+import org.phellang.core.psi.PhelLocalBindingScope
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
@@ -27,7 +28,7 @@ internal object PhelArityCallSite {
 
         if (isInQuoteContext(list)) return true
         if (isThreadedArgList(list)) return true
-        if (resolvesToLocalBinding(head, name)) return true
+        if (PhelLocalBindingScope.resolvesToLocalBinding(head, name)) return true
         if (containsShortFnMarker(forms)) return true
 
         return false
@@ -75,45 +76,13 @@ internal object PhelArityCallSite {
         return !headRange.contains(list.textRange.startOffset)
     }
 
-    /**
-     * True when [name] resolves to a local binding — a `let`/`loop`/`for`/`binding` name or a
-     * function parameter — visible at [head]. Such a name shadows any same-named core function, so
-     * the registry's arity must not be applied.
-     */
-    private fun resolvesToLocalBinding(head: PhelSymbol, name: String): Boolean {
-        var current: PsiElement? = head.parent
-        while (current != null) {
-            if (current is PhelList) {
-                val forms = current.forms
-                val parentHead = PhelPsiUtils.asSymbol(forms.firstOrNull())?.text
-                if (parentHead in BINDING_INTRO_FORMS && bindingVecContains(forms, name)) return true
-                if (parentHead in FUNCTION_INTRO_FORMS && paramVecContains(forms, name)) return true
-            }
-            current = current.parent
-        }
-        return false
-    }
 
     private fun enclosingList(list: PhelList): PhelList? =
         generateSequence(list.parent) { it.parent }.filterIsInstance<PhelList>().firstOrNull()
 
-    /** Names sit at the even positions of a `[name value …]` binding vector. */
-    private fun bindingVecContains(forms: List<PhelForm>, name: String): Boolean {
-        val bindings = (forms.getOrNull(1) as? PhelVec)?.forms ?: return false
-        return (bindings.indices step 2).any { PhelPsiUtils.asSymbol(bindings[it])?.text == name }
-    }
-
-    private fun paramVecContains(forms: List<PhelForm>, name: String): Boolean {
-        val paramVec = forms.drop(1).firstNotNullOfOrNull { it as? PhelVec } ?: return false
-        return paramVec.forms.any { PhelPsiUtils.asSymbol(it)?.text == name }
-    }
-
     private val THREADING_HEADS = setOf(
         "->", "->>", "as->", "some->", "some->>", "cond->", "cond->>", "doto",
     )
-
-    private val BINDING_INTRO_FORMS = PhelSpecialForms.LET_LIKE
-    private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
     /** Special forms and macros that legitimately accept variable arg shapes. */
     private val SKIP_HEADS = setOf(
