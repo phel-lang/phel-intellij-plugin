@@ -110,140 +110,21 @@ object PhelNamespaceUtils {
         }
     }
 
-    private fun computeUsedClasses(file: PhelFile): Set<String> {
-        val nsDeclaration = findNamespaceDeclaration(file) ?: return emptySet()
-        val useForms = findUseForms(nsDeclaration)
-        if (useForms.isEmpty()) return emptySet()
+    private fun computeUsedClasses(file: PhelFile): Set<String> = PhelUseClauseAnalyzer.computeUsedClasses(file)
 
-        val classes = mutableSetOf<String>()
-        for (useForm in useForms) {
-            val forms = useForm.forms
-            for (i in 1 until forms.size) {
-                val form = forms[i]
-                val symbol = PhelPsiUtils.asSymbol(form)
-                val text = symbol?.text ?: continue
-                val shortName = extractShortClassName(text) ?: continue
-                classes.add(shortName)
-            }
-        }
-        return classes
-    }
+    fun isUseClassSymbol(symbol: PhelSymbol): Boolean = PhelUseClauseAnalyzer.isUseClassSymbol(symbol)
 
-    /**
-     * True when [symbol] is one of the PHP class entries inside a `(:use ...)` clause
-     * (i.e. not the `:use` keyword itself). Used to wire go-to-definition from the
-     * imported class name straight to its PHP class declaration.
-     *
-     * Handles every spelling Phel accepts for the entry — bare (`Countable`),
-     * dot-separated (`Phel.Compiler.CompilerFacade`, the modern form) and the legacy
-     * backslash form (`Phel\Compiler\CompilerFacade`) — since each lexes as a single
-     * symbol.
-     */
-    fun isUseClassSymbol(symbol: PhelSymbol): Boolean {
-        val clause = PsiTreeUtil.getParentOfType(symbol, PhelList::class.java) ?: return false
-        val forms = clause.forms
-        if (forms.isEmpty()) return false
+    fun extractShortClassName(text: String): String? = PhelUseClauseAnalyzer.extractShortClassName(text)
 
-        val firstKeyword = forms[0] as? PhelKeyword
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelKeyword::class.java)
-        if (firstKeyword?.text != ":use") return false
-
-        // Reject the keyword form itself; accept any class-entry form (forms[1..n]).
-        return forms.drop(1).any { it === symbol || PsiTreeUtil.isAncestor(it, symbol, false) }
-    }
-
-    /**
-     * `\Phel\Compiler\CompilerFacade` -> `CompilerFacade`. Null when [text] has no class name
-     * (empty, or nothing but separators). Backslashes are PHP's FQCN separator, so they are
-     * expected here — this is not legacy Phel-namespace handling.
-     */
-    fun extractShortClassName(text: String): String? {
-        val trimmed = text.trimStart('\\')
-        if (trimmed.isEmpty()) return null
-        val short = trimmed.substringAfterLast('\\')
-        return short.ifEmpty { null }
-    }
-
-    /**
-     * Indexes a file's `(:use ...)` clause as short class name -> fully-qualified name, with the
-     * FQN normalized to a leading `\` (`Foo\Bar` -> `\Foo\Bar`).
-     *
-     * The first entry wins if a file imports two classes with the same short name — that case is
-     * already broken PHP, and first-wins keeps this agreeing with go-to-definition.
-     */
-    fun buildUseFqnIndex(file: PhelFile): Map<String, String> {
-        val nsDeclaration = findNamespaceDeclaration(file) ?: return emptyMap()
-        val index = mutableMapOf<String, String>()
-        for (useForm in findUseForms(nsDeclaration)) {
-            val forms = useForm.forms
-            for (i in 1 until forms.size) {
-                val form = forms[i]
-                val sym = PhelPsiUtils.asSymbol(form)
-                val raw = sym?.text ?: continue
-                val shortName = extractShortClassName(raw) ?: continue
-                val fqn = if (raw.startsWith("\\")) raw else "\\$raw"
-                index.putIfAbsent(shortName, fqn)
-            }
-        }
-        return index
-    }
+    fun buildUseFqnIndex(file: PhelFile): Map<String, String> = PhelUseClauseAnalyzer.buildUseFqnIndex(file)
 
     fun extractAliasMap(file: PhelFile): Map<String, String> {
         return CachedValuesManager.getCachedValue(file, ALIAS_MAP_KEY) {
             CachedValueProvider.Result.create(
-                computeAliasMap(file),
+                PhelRequireClauseAnalyzer.computeAliasMap(file),
                 PsiModificationTracker.MODIFICATION_COUNT,
             )
         }
-    }
-
-    private fun computeAliasMap(file: PhelFile): Map<String, String> {
-        val aliasMap = mutableMapOf<String, String>()
-
-        val nsDeclaration = findNamespaceDeclaration(file) ?: return aliasMap
-        val requireForms = findRequireForms(nsDeclaration)
-
-        for (requireForm in requireForms) {
-            val forms = requireForm.forms
-
-            var i = 1
-            while (i < forms.size) {
-                val form = forms[i]
-
-                // Get the namespace symbol
-                val namespaceSymbol = if (form is PhelSymbol) form
-                else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-
-                if (namespaceSymbol != null) {
-                    val namespace = namespaceSymbol.text
-
-                    // Check if next form is :as keyword
-                    if (i + 1 < forms.size) {
-                        val nextForm = forms[i + 1]
-                        val asKeyword = nextForm as? PhelKeyword
-                            ?: PsiTreeUtil.findChildOfType(nextForm, PhelKeyword::class.java)
-
-                        if (asKeyword?.text == ":as" && i + 2 < forms.size) {
-                            // Get the alias symbol
-                            val aliasForm = forms[i + 2]
-                            val aliasSymbol = if (aliasForm is PhelSymbol) aliasForm
-                            else PsiTreeUtil.findChildOfType(aliasForm, PhelSymbol::class.java)
-
-                            if (aliasSymbol != null) {
-                                val alias = aliasSymbol.text
-                                val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
-                                aliasMap[alias] = shortNamespace
-                                i += 3  // Skip namespace, :as, and alias
-                                continue
-                            }
-                        }
-                    }
-                }
-                i++
-            }
-        }
-
-        return aliasMap
     }
 
     /**
@@ -323,90 +204,15 @@ object PhelNamespaceUtils {
     fun extractReferredSymbols(file: PhelFile): Set<String> {
         return CachedValuesManager.getCachedValue(file, REFERRED_SYMBOLS_KEY) {
             CachedValueProvider.Result.create(
-                computeReferredSymbols(file),
+                PhelRequireClauseAnalyzer.computeReferredSymbols(file),
                 PsiModificationTracker.MODIFICATION_COUNT,
             )
         }
     }
 
-    private fun computeReferredSymbols(file: PhelFile): Set<String> {
-        val referredSymbols = mutableSetOf<String>()
+    fun isReferredSymbol(file: PhelFile, symbolName: String): Boolean =
+        extractReferredSymbols(file).contains(symbolName)
 
-        val nsDeclaration = findNamespaceDeclaration(file) ?: return referredSymbols
-        val requireForms = findRequireForms(nsDeclaration)
-
-        for (requireForm in requireForms) {
-            val forms = requireForm.forms
-
-            var i = 1
-            while (i < forms.size) {
-                val form = forms[i]
-
-                // Check if this is a :refer keyword
-                val keyword = form as? PhelKeyword
-                    ?: PsiTreeUtil.findChildOfType(form, PhelKeyword::class.java)
-
-                if (keyword?.text == ":refer" && i + 1 < forms.size) {
-                    // Next form should be a vector with symbols
-                    val vectorForm = forms[i + 1]
-
-                    // Extract symbols from the vector (vec contains PhelSymbol children)
-                    val symbols = PsiTreeUtil.findChildrenOfType(vectorForm, PhelSymbol::class.java)
-                    for (symbol in symbols) {
-                        val symbolText = symbol.text
-                        // Skip namespace-qualified symbols (either separator) and PHP FQNs.
-                        if (symbolText != null && !symbolText.contains("\\") && !symbolText.contains("/")) {
-                            referredSymbols.add(symbolText)
-                        }
-                    }
-
-                    i += 2 // Skip :refer and the vector
-                    continue
-                }
-
-                i++
-            }
-        }
-
-        return referredSymbols
-    }
-
-    fun isReferredSymbol(file: PhelFile, symbolName: String): Boolean {
-        return extractReferredSymbols(file).contains(symbolName)
-    }
-
-    /**
-     * If [symbolName] is referred from a `(:require [ns :refer [...]])` clause in [file],
-     * returns the source namespace (the head of that require clause). Returns null when
-     * the symbol isn't refer'd from any require, so callers can fall back to other lookups.
-     */
-    fun findReferSource(file: PhelFile, symbolName: String): String? {
-        val nsDeclaration = findNamespaceDeclaration(file) ?: return null
-        val requireForms = findRequireForms(nsDeclaration)
-
-        for (requireForm in requireForms) {
-            val forms = requireForm.forms
-            if (forms.isEmpty()) continue
-
-            val sourceNamespace = (forms[0] as? PhelSymbol)?.text
-                ?: PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)?.text
-                ?: continue
-
-            var i = 1
-            while (i < forms.size) {
-                val keyword = (forms[i] as? PhelKeyword)
-                    ?: PsiTreeUtil.findChildOfType(forms[i], PhelKeyword::class.java)
-                if (keyword?.text == ":refer" && i + 1 < forms.size) {
-                    val symbols = PsiTreeUtil.findChildrenOfType(forms[i + 1], PhelSymbol::class.java)
-                    if (symbols.any { it.text == symbolName }) {
-                        return sourceNamespace
-                    }
-                    i += 2
-                    continue
-                }
-                i++
-            }
-        }
-        return null
-    }
+    fun findReferSource(file: PhelFile, symbolName: String): String? =
+        PhelRequireClauseAnalyzer.findReferSource(file, symbolName)
 }
