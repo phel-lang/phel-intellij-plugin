@@ -68,6 +68,36 @@ class ArchitectureBoundaryTest {
         assertNoOffenders(offenders, "The build-time generator must not depend on runtime feature code.")
     }
 
+    /**
+     * The rules above all read "no file in package X imports Y" — which passes vacuously if package
+     * X no longer exists (renamed, moved, emptied). This guards the guards: it fails loudly if the
+     * scan stops covering a package a rule polices, so a boundary can never silently stop enforcing.
+     */
+    @Test
+    fun `the scan actually covers the packages these rules police`() {
+        val sources = mainSources()
+
+        // A plausible floor: the plugin is well over a hundred hand-written files. Catches a scan
+        // that finds the directory but somehow walks almost nothing.
+        assertTrue(sources.size >= 100, "expected the scan to find the plugin sources, found only ${sources.size}")
+
+        assertPackagePopulated(sources, "$ROOT.registry", "the registry-leaf and registry-data rules")
+        assertPackagePopulated(sources, "$ROOT.registry.data", "the registry-data encapsulation rule")
+        assertPackagePopulated(sources, "$ROOT.tools", "the build-time-tools rules")
+        for (feature in FEATURE_PACKAGES) {
+            assertPackagePopulated(sources, feature, "the feature-import rules")
+        }
+    }
+
+    private fun assertPackagePopulated(sources: List<KtSource>, pkg: String, guardedRules: String) {
+        val count = sources.count { it.packageName == pkg || it.packageName.startsWith("$pkg.") }
+        assertTrue(
+            count > 0,
+            "No sources found in `$pkg`. If it was renamed or moved, $guardedRules now enforce " +
+                    "nothing — update this test to point at the new location.",
+        )
+    }
+
     private fun assertNoOffenders(offenders: List<Pair<KtSource, Import>>, rule: String) {
         if (offenders.isEmpty()) return
         val detail = offenders.joinToString("\n") { (src, imp) -> "  ${src.relativePath}:${imp.line}  ${imp.fqName}" }
