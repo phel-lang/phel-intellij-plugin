@@ -50,6 +50,17 @@ Key classes: `PhelCompletionContributor` (completion), `PhelAnnotator` (highligh
 `PhelFunctionRegistry`, `PhelDocumentationProvider` (hover), `PhelReference` (resolve/nav),
 `PhelFoldingBuilder`, `PhelTypedHandler`, `PhelBraceMatcher`, `PhelCommenter`.
 
+## Enforced boundaries
+
+`ArchitectureBoundaryTest` (a plain source scan, no library) fails the build if a cross-package
+import breaks one of these — Kotlin's `internal` is whole-module and can't. To relax a rule, change
+the test deliberately, not by working around it.
+
+- `registry/data/**` (generated) is imported only from within `registry`; everyone else goes through
+  `PhelFunctionRegistry` / `PhelArityResolver`.
+- `registry` imports no feature package (it stays a leaf — a feature import re-creates the removed cycle).
+- `tools` (build-time generator) is imported by nothing at runtime, and imports no feature package.
+
 ## Rules
 
 - Every feature must be registered in `META-INF/plugin.xml`.
