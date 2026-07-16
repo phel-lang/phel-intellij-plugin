@@ -23,7 +23,7 @@ Walks <code>schema</code> and returns <code>value</code> with string-typed input
 """,
             example = "(coerce :int \"42\") ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/schema/coercer.phel#L221",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/coercer.phel#L221",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Coerces <code>value</code> against <code>schema</code>. Returns the coerced valu
 """,
             example = "(conform :int \"42\") ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/schema/coercer.phel#L231",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/coercer.phel#L231",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Sentinel keyword returned by coercion when a value cannot be coerced to the targ
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/schema/coercer.phel#L15",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/coercer.phel#L15",
                 docs = "",
             ),
         ),

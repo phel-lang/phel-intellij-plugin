@@ -23,7 +23,7 @@ Removes every hook registered for <code>namespace</code>.
 """,
             example = "(clear-on-reload \"my-app\\core\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/watch.phel#L16",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/watch.phel#L16",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Registers a zero-arg function to run every time <code>namespace</code> is reload
 """,
             example = "(register-on-reload \"my-app\\core\" :refresh (fn [] (println \"reloaded\")))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/watch.phel#L7",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/watch.phel#L7",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Executes every hook registered for <code>namespace</code>. Returns the number of
 """,
             example = "(run-on-reload-hooks \"my-app\\core\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/watch.phel#L22",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/watch.phel#L22",
                 docs = "",
             ),
         ),
@@ -80,7 +80,7 @@ Starts the file watcher on the given vector of paths. Blocks until the watcher i
 """,
             example = "(watch! [\"src/\" \"tests/\"])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/watch.phel#L33",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/watch.phel#L33",
                 docs = "",
             ),
         ),

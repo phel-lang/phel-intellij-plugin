@@ -29,7 +29,7 @@ Options:<br />
 """,
             example = "(read-string \"[\\\"~:foo\\\", 1]\") ; =&gt; [:foo 1]\n(read-string \"[\\\"~#point\\\", [1, 2]]\" {:handlers {\"point\" (fn [v] v)}}) ; =&gt; [1 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/transit.phel#L182",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/transit.phel#L182",
                 docs = "",
             ),
         ),
@@ -48,7 +48,7 @@ Serialises <code>value</code> to a Transit+JSON-Verbose string.
 """,
             example = "(write-string {:a 1}) ; =&gt; \"[\\\"~#cmap\\\",[\\\"~:a\\\",1]]\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/transit.phel#L283",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/transit.phel#L283",
                 docs = "",
             ),
         ),

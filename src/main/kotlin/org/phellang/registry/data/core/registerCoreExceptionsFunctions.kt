@@ -21,7 +21,7 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
             summary = "Returns the cause of an exception, or nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/exceptions.phel#L33",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/exceptions.phel#L33",
                 docs = "",
             ),
         ),
@@ -38,7 +38,7 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
             summary = "Returns the data map from an ex-info exception, or nil if not an ExceptionInfo.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/exceptions.phel#L20",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/exceptions.phel#L20",
                 docs = "",
             ),
         ),
@@ -55,7 +55,7 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
             summary = "Creates an exception with a message and a data map. Optionally takes a cause.",
             example = "(throw (ex-info \"Invalid input\" {:field :email}))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/exceptions.phel#L11",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/exceptions.phel#L11",
                 docs = "",
             ),
         ),
@@ -72,7 +72,7 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
             summary = "Returns the message of an exception.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/exceptions.phel#L27",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/exceptions.phel#L27",
                 docs = "",
             ),
         ),
