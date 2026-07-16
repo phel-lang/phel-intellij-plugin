@@ -9,7 +9,6 @@ import org.phellang.annotator.infrastructure.PhelAnnotationConstants.NAMESPACE_S
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.PHP_INTEROP
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.REGULAR_SYMBOL
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants.VARIADIC_PARAMETER
-import org.phellang.annotator.quickfixes.PhelImportNamespaceQuickFix
 import org.phellang.annotator.validators.PhelFunctionReferenceValidator
 import org.phellang.annotator.validators.PhelNamespaceValidator
 import org.phellang.registry.PhelFunctionRegistry
@@ -23,7 +22,6 @@ import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.SymbolCategory
 
 object PhelSymbolHighlighter {
-
     fun annotateSymbol(symbol: PhelSymbol, text: String, holder: AnnotationHolder) {
         if (!PhelAnnotationUtils.isValidText(text)) return
 
@@ -88,16 +86,13 @@ object PhelSymbolHighlighter {
             return
         }
 
-        // Namespace-qualified function calls - use "/" as separator
         if (text.contains("/") && !text.startsWith("/") && !text.endsWith("/")) {
-            // First, validate the namespace itself
             val namespaceProblems = PhelNamespaceValidator.validateNamespace(symbol)
             if (namespaceProblems.isNotEmpty()) {
                 namespaceProblems.forEach { PhelAnnotationUtils.report(holder, symbol, it) }
                 return
             }
 
-            // Namespace is valid - now check if the function exists in that namespace
             val functionProblems = PhelFunctionReferenceValidator.validateFunctionReference(symbol)
             if (functionProblems.isNotEmpty()) {
                 functionProblems.forEach { PhelAnnotationUtils.report(holder, symbol, it) }
@@ -113,7 +108,6 @@ object PhelSymbolHighlighter {
             return
         }
 
-        // Function call position
         if (PhelSymbolPositionAnalyzer.isInFunctionCallPosition(symbol)) {
             // Check if this is an imported function via :refer - use FUNCTION_CALL color
             if (containingFile != null && PhelNamespaceUtils.isReferredSymbol(containingFile, text)) {
