@@ -40,9 +40,10 @@ Remaining known cycles (do not re-flag unless worsened):
    `registry/indexing` already imports `language.psi`, so that trade swaps this cycle for a
    `language.psi ↔ registry` one. A real fix means lifting `language/psi/references` +
    `navigation` (feature code) out of the PSI package.
-2. **`completion.infrastructure ↔ completion.handlers`** — `PhelCompletionUtils` ↔
-   `NamespacedInsertHandler`. Intra-feature and benign: the handler is only constructed inside a
-   function body, so there is no class-initialization hazard.
+
+Resolved (flag if it reappears): `completion.infrastructure ↔ completion.handlers` — broken by
+moving `FULL_NAMESPACE_KEY` from `PhelCompletionUtils` into `NamespacedInsertHandler`; the edge is
+now one-way (infrastructure → handlers).
 
 # Methodology
 

@@ -5,7 +5,7 @@ description: Function registry and completion
 
 # Registry & Completion
 
-Registry of 350+ functions in `registry/` (`org.phellang.registry`) — a **leaf** package: it may
+Registry of 900+ functions in `registry/` (`org.phellang.registry`) — a **leaf** package: it may
 import `language/psi` and the platform, never a feature package. It is not a completion concern
 (annotator, inspection, documentation, inlay and core all consume it), which is why it does not
 live under `completion/`.

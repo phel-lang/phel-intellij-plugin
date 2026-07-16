@@ -10,7 +10,7 @@ Steps:
    - **LOW**: cross-sibling imports between feature packages that may be justified.
 5. Known architectural debt to ignore unless worsened:
    - `core.psi ↔ language.psi`: `PhelSymbolAnalyzer` imports PSI types; `language/psi/{references,navigation,impl}` import the analyzer back. Moving the analyzer into `language/psi` does not fix it — it would create `language.psi ↔ registry` instead, since `registry/indexing` imports `language.psi`.
-   - `completion.infrastructure ↔ completion.handlers`: `PhelCompletionUtils` ↔ `NamespacedInsertHandler`. Benign (no class-init hazard; constructed inside a function body).
+   - Resolved (flag if it reappears): `completion.infrastructure ↔ completion.handlers` was broken by moving `FULL_NAMESPACE_KEY` into `NamespacedInsertHandler`; the edge is now one-way (infrastructure → handlers).
 6. Omit findings already present in `.omc/research/ai-slop/04-cycles.md` (if the file exists) unless the evidence has changed.
 
 Output format:

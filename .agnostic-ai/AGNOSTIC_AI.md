@@ -6,7 +6,7 @@ IntelliJ IDEA plugin for the [Phel programming language](https://phel-lang.org/)
 - **API reference**: https://phel-lang.org/api.json
 - **Plugin SDK**: https://plugins.jetbrains.com/docs/intellij/welcome.html
 - **Marketplace**: https://plugins.jetbrains.com/plugin/28459-phel-lang
-- **Repository**: https://github.com/phel-lang/intellij-phel-support
+- **Repository**: https://github.com/phel-lang/phel-intellij-plugin
 
 > Path-scoped deep dives live under `.agnostic-ai/rules/` (emitted to Claude via globs). This file is the durable policy every target shares — keep it in sync when a rule changes a project-wide convention.
 
@@ -32,7 +32,7 @@ Plugin sources live under `src/main/kotlin/org/phellang/`:
 ## Build & Tooling
 
 - Gradle (Kotlin DSL), IntelliJ Platform Gradle Plugin, Grammar-Kit (JFlex + BNF), Java 21 toolchain, Kotlin 2.1.
-- Target IntelliJ IDEA 2025.1 (compat 2024.2 — 2026.1.x). `buildSearchableOptions` disabled.
+- Target IntelliJ IDEA 2025.2 (compat 2024.2 — 2026.2.x). `buildSearchableOptions` disabled.
 - Kotlin/Java compile tasks depend on lexer/parser generation automatically.
 - After editing `.flex`/`.bnf`, run `./gradlew generatePhelLexer generatePhelParser` (a PostToolUse hook does this for Claude).
 

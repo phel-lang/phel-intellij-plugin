@@ -13,8 +13,8 @@ Thank you for your interest in contributing! This guide will help you get starte
 ### Setup
 
 ```bash
-git clone git@github.com:phel-lang/intellij-phel-support.git
-cd intellij-phel-support
+git clone git@github.com:phel-lang/phel-intellij-plugin.git
+cd phel-intellij-plugin
 ./gradlew buildPlugin
 ```
 
@@ -86,7 +86,7 @@ All features (completions, inspections, annotators, etc.) must be registered in 
 
 ## Reporting Issues
 
-Please use [GitHub Issues](https://github.com/phel-lang/intellij-phel-support/issues) to report bugs or request features. Include:
+Please use [GitHub Issues](https://github.com/phel-lang/phel-intellij-plugin/issues) to report bugs or request features. Include:
 
 - IDE version and OS
 - Plugin version

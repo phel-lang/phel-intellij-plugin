@@ -56,10 +56,17 @@ build/distributions/phelplugin-X.Y.Z.zip
 3. Drag and drop the `phelplugin-X.Y.Z.zip` file from `build/distributions/`.
 4. Submit and wait for approval.
 
+Alternatively, with the `PUBLISH_TOKEN` (and `CERTIFICATE_CHAIN`, `PRIVATE_KEY`,
+`PRIVATE_KEY_PASSWORD` for signing) environment variables set, publish from the terminal:
+
+```bash
+./gradlew publishPlugin
+```
+
 ### 7. Commit and push
 
 ```bash
-git add -A
-git commit -m "Update registry and bump to X.Y.Z"
+git add build.gradle.kts src/main/kotlin/org/phellang/registry/data
+git commit -m "chore: bump plugin to X.Y.Z and update registry"
 git push origin main
 ```
