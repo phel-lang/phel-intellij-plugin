@@ -12,7 +12,6 @@ import org.phellang.language.psi.utils.PhelPsiUtils
  * Pure computation — [PhelNamespaceUtils] owns the per-file caching and delegates here.
  */
 internal object PhelUseClauseAnalyzer {
-
     /**
      * The short class names declared via `(:use ...)`. Both `\Foo\Bar` and `Foo\Bar` yield `Bar` —
      * the name a user actually types in `(Bar. …)`, `(.method bar)` or `Bar/staticFn`.
@@ -61,9 +60,7 @@ internal object PhelUseClauseAnalyzer {
         val forms = clause.forms
         if (forms.isEmpty()) return false
 
-        val firstKeyword = forms[0] as? PhelKeyword
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelKeyword::class.java)
-        if (firstKeyword?.text != ":use") return false
+        if (PhelPsiUtils.asKeyword(forms[0])?.text != ":use") return false
 
         return forms.drop(1).any { it === symbol || PsiTreeUtil.isAncestor(it, symbol, false) }
     }

@@ -12,7 +12,6 @@ import org.phellang.language.psi.*
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?>() {
-
     override fun addCompletions(
         parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
     ) {
@@ -22,7 +21,6 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
     }
 
     companion object {
-
         fun addNsKeywordCompletions(element: PsiElement, result: CompletionResultSet) {
             val nsContext = detectNsContext(element) ?: return
 
@@ -126,9 +124,7 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
                     return previousKeyword
                 }
 
-                val keyword = form as? PhelKeyword
-                    ?: PsiTreeUtil.findChildOfType(form, PhelKeyword::class.java)
-                previousKeyword = keyword?.text
+                previousKeyword = PhelPsiUtils.asKeyword(form)?.text
             }
 
             // Element is after all forms — return the last keyword seen
@@ -142,8 +138,7 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
                 // Skip the element being completed
                 if (PsiTreeUtil.isAncestor(form, element, false)) continue
 
-                val keyword = form as? PhelKeyword
-                    ?: PsiTreeUtil.findChildOfType(form, PhelKeyword::class.java)
+                val keyword = PhelPsiUtils.asKeyword(form)
                 if (keyword != null) {
                     val text = keyword.text
                     // Only track option keywords, not the form keyword itself
@@ -172,11 +167,7 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
             val symbol = PhelPsiUtils.asSymbol(firstForm)
             if (symbol != null) return symbol.text
 
-            val keyword = firstForm as? PhelKeyword
-                ?: PsiTreeUtil.findChildOfType(firstForm, PhelKeyword::class.java)
-            if (keyword != null) return keyword.text
-
-            return null
+            return PhelPsiUtils.asKeyword(firstForm)?.text
         }
 
         private val NS_TOP_LEVEL_KEYWORDS = listOf(

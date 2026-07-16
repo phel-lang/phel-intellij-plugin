@@ -11,7 +11,6 @@ import java.util.Optional
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelNamespaceUtils {
-
     private val USED_CLASSES_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.usedClasses")
     private val REFERRED_SYMBOLS_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.referredSymbols")
     private val ALIAS_MAP_KEY: Key<CachedValue<Map<String, String>>> = Key.create("phel.namespace.aliasMap")
@@ -37,10 +36,7 @@ object PhelNamespaceUtils {
             val forms = list.forms
             if (forms.isEmpty()) return@firstOrNull false
 
-            val firstForm = forms[0]
-            val firstSymbol = if (firstForm is PhelSymbol) firstForm
-            else PsiTreeUtil.findChildOfType(firstForm, PhelSymbol::class.java)
-            firstSymbol?.text == "ns"
+            PhelPsiUtils.asSymbol(forms[0])?.text == "ns"
         }
     }
 
@@ -85,10 +81,7 @@ object PhelNamespaceUtils {
             val forms = list.forms
             if (forms.isEmpty()) return@filter false
 
-            val firstForm = forms[0]
-            val firstKeyword = firstForm as? PhelKeyword
-                ?: PsiTreeUtil.findChildOfType(firstForm, PhelKeyword::class.java)
-            firstKeyword?.text == clauseKeyword
+            PhelPsiUtils.asKeyword(forms[0])?.text == clauseKeyword
         }
     }
 
@@ -191,12 +184,10 @@ object PhelNamespaceUtils {
         val nsDeclaration = findNamespaceDeclaration(file) ?: return false
         val phelNamespace = toPhelNamespace(shortNamespace)
 
-        // Check direct import
         if (isNamespaceRequired(nsDeclaration, phelNamespace)) {
             return true
         }
 
-        // Check if imported via alias
         val aliasMap = extractAliasMap(file)
         return aliasMap.values.contains(shortNamespace)
     }

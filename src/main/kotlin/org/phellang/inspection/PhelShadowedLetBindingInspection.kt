@@ -5,7 +5,6 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
@@ -15,7 +14,6 @@ import org.phellang.language.psi.PhelVisitor
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelShadowedLetBindingInspection : LocalInspectionTool() {
-
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhelVisitor() {
             override fun visitList(o: PhelList) {
@@ -90,7 +88,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
         for (form in forms.drop(1)) {
             if (form is PhelVec) {
                 for (p in form.forms) {
-                    val text = (p as? PhelSymbol)?.text ?: PsiTreeUtil.findChildOfType(p, PhelSymbol::class.java)?.text
+                    val text = PhelPsiUtils.asSymbol(p)?.text
                     if (text == name) return p
                 }
                 return null

@@ -12,7 +12,6 @@ import org.phellang.language.psi.utils.PhelPsiUtils
  * Pure computation — [PhelNamespaceUtils] owns the per-file caching and delegates here.
  */
 internal object PhelRequireClauseAnalyzer {
-
     /** One `(:require ...)` entry: the namespace as written, its short form, and its `:as` alias. */
     data class RequireImport(val fullNamespace: String, val shortNamespace: String, val alias: String?)
 
@@ -33,8 +32,8 @@ internal object PhelRequireClauseAnalyzer {
     /** alias -> short namespace, e.g. `s -> string` for `(:require phel\string :as s)`. */
     fun computeAliasMap(file: PhelFile): Map<String, String> =
         imports(file)
-            .filter { it.alias != null }
-            .associate { it.alias!! to it.shortNamespace }
+            .mapNotNull { import -> import.alias?.let { it to import.shortNamespace } }
+            .toMap()
 
     /** Symbols brought in unqualified via `(:require [ns :refer [a b c]])`. */
     fun computeReferredSymbols(file: PhelFile): Set<String> {
@@ -109,8 +108,6 @@ internal object PhelRequireClauseAnalyzer {
     }
 
     private fun keywordTextAt(forms: List<PhelForm>, index: Int): String? {
-        val form = forms.getOrNull(index) ?: return null
-        val keyword = form as? PhelKeyword ?: PsiTreeUtil.findChildOfType(form, PhelKeyword::class.java)
-        return keyword?.text
+        return PhelPsiUtils.asKeyword(forms.getOrNull(index))?.text
     }
 }
