@@ -1,7 +1,5 @@
 package org.phellang.registry
 
-import org.phellang.registry.PhelCompletionPriority
-
 data class CompletionInfo(
     val tailText: String,
     val priority: PhelCompletionPriority,

@@ -5,13 +5,9 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.options.colors.AttributesDescriptor
 import com.intellij.openapi.options.colors.ColorDescriptor
 import com.intellij.openapi.options.colors.ColorSettingsPage
-import org.phellang.editor.colorsettings.PhelColorSettingsConfiguration
-import org.phellang.editor.colorsettings.PhelColorSettingsProvider
-import org.phellang.editor.colorsettings.PhelDemoTextProvider
 import javax.swing.Icon
 
 class PhelColorSettingsPage : ColorSettingsPage {
-
     private val configuration = PhelColorSettingsConfiguration()
     private val attributesProvider = PhelColorSettingsProvider()
     private val demoTextProvider = PhelDemoTextProvider()
