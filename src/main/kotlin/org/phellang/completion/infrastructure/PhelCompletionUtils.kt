@@ -5,15 +5,11 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.util.Key
 import org.phellang.completion.handlers.NamespacedInsertHandler
 import javax.swing.Icon
 import org.phellang.registry.PhelCompletionPriority
 
 object PhelCompletionUtils {
-
-    val FULL_NAMESPACE_KEY: Key<String> = Key.create("PHEL_FULL_NAMESPACE")
-
     @JvmStatic
     fun addLocalSymbolCompletion(result: CompletionResultSet, name: String, type: String, icon: Icon?) {
         val priority = when (type) {
@@ -81,7 +77,7 @@ object PhelCompletionUtils {
         }
 
         if (fullNamespace != null) {
-            builder.putUserData(FULL_NAMESPACE_KEY, fullNamespace)
+            builder.putUserData(NamespacedInsertHandler.FULL_NAMESPACE_KEY, fullNamespace)
         }
 
         return builder
