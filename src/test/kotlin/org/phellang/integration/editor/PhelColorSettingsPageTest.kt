@@ -8,7 +8,6 @@ import org.phellang.syntax.PhelSyntaxHighlighter
 import org.phellang.editor.colorsettings.PhelColorSettingsPage
 
 class PhelColorSettingsPageTest {
-
     private lateinit var colorSettingsPage: PhelColorSettingsPage
 
     @BeforeEach
@@ -153,39 +152,27 @@ class PhelColorSettingsPageTest {
 
     @Test
     fun `color settings page should be ready for IDE integration`() {
-        // This test verifies that the color settings page provides everything needed
-        // for proper integration with IntelliJ's color settings system
-
         val page = colorSettingsPage
 
-        // Display name for the settings tree
         val displayName = page.displayName
         Assertions.assertNotNull(displayName)
         Assertions.assertFalse(displayName.trim().isEmpty())
 
-        // Icon for the settings tree
         val icon = page.icon
         Assertions.assertNotNull(icon)
 
-        // Syntax highlighter for basic highlighting
         val highlighter = page.highlighter
         Assertions.assertNotNull(highlighter)
 
-        // Demo text for preview
         val demoText = page.demoText
         Assertions.assertNotNull(demoText)
         Assertions.assertTrue(demoText.length > 50, "Demo text should be substantial")
 
-        // Attribute descriptors for customizable colors
         val attributes = page.attributeDescriptors
         Assertions.assertNotNull(attributes)
         Assertions.assertTrue(attributes.isNotEmpty(), "Should provide customizable attributes")
 
-        // Color descriptors (can be empty)
         val colors = page.colorDescriptors
         Assertions.assertNotNull(colors)
-
-        // Additional highlighting (can be null)
-        // No assertion needed for getAdditionalHighlightingTagToDescriptorMap()
     }
 }

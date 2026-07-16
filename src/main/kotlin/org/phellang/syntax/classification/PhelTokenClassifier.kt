@@ -5,16 +5,13 @@ import com.intellij.psi.tree.IElementType
 import org.phellang.language.psi.PhelTypes
 
 object PhelTokenClassifier {
-
     enum class TokenCategory {
         COMMENT, STRING, NUMBER, BOOLEAN, NIL, NAN, CHARACTER, PARENTHESES, BRACKETS, BRACES, QUOTE, SYNTAX_QUOTE,
         UNQUOTE, UNQUOTE_SPLICING, KEYWORD, METADATA, DOT_OPERATOR, SYMBOL, BAD_CHARACTER, UNKNOWN, REGEX, DEREF, TAG
     }
 
-    // Token types are interned singletons, so a direct map lookup classifies each token in
-    // O(1) instead of the sequential `when` chain that ran up to ~22 comparisons per token
-    // on the syntax-highlighting hot path. Each token type belongs to exactly one category,
-    // so the map is equivalent to the first-match ordering of the previous chain.
+    // Token types are interned singletons, so a map lookup classifies each token in O(1) on
+    // the syntax-highlighting hot path; each token type belongs to exactly one category.
     private val CATEGORY_BY_TOKEN: Map<IElementType, TokenCategory> = buildMap {
         put(PhelTypes.LINE_COMMENT, TokenCategory.COMMENT)
         put(PhelTypes.FORM_COMMENT, TokenCategory.COMMENT)
@@ -72,7 +69,6 @@ object PhelTokenClassifier {
         return tokenType == PhelTypes.STRING
     }
 
-
     fun isNumber(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.NUMBER || tokenType == PhelTypes.BINNUM
                 || tokenType == PhelTypes.OCTNUM || tokenType == PhelTypes.HEXNUM
@@ -121,7 +117,6 @@ object PhelTokenClassifier {
         return tokenType == PhelTypes.SYNTAX_QUOTE
     }
 
-
     fun isUnquote(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.TILDE
     }
@@ -129,7 +124,6 @@ object PhelTokenClassifier {
     fun isUnquoteSplicing(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.TILDE_AT
     }
-
 
     fun isKeyword(tokenType: IElementType): Boolean {
         return tokenType == PhelTypes.KEYWORD || tokenType == PhelTypes.KEYWORD_TOKEN

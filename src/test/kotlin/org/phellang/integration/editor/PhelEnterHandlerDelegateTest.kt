@@ -53,12 +53,8 @@ class PhelEnterHandlerDelegateTest {
     fun `should handle Phel files`() {
         `when`(mockPsiFile.fileType).thenReturn(PhelFileType.INSTANCE)
 
-        // We don't need to mock the entire document behavior for this integration test
-        // The important thing is that it recognizes Phel files and attempts to process them
-        // The detailed behavior is tested in the unit tests of individual components
-
-        // This will likely throw an exception due to null document, but that's expected
-        // in this simplified integration test. The key is that it doesn't return Continue immediately.
+        // The mock editor has no document, so entering the Phel-specific path throws.
+        // Returning Continue instead would mean the Phel file type was not recognized.
         assertThrows(Exception::class.java) {
             enterHandlerDelegate.preprocessEnter(
                 mockPsiFile, mockEditor, Ref(10), Ref(0), mockDataContext, mockOriginalHandler

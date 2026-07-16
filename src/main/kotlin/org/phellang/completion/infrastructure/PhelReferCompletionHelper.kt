@@ -12,7 +12,6 @@ import org.phellang.language.psi.files.PhelFile
 import org.phellang.registry.PhelCompletionPriority
 
 object PhelReferCompletionHelper {
-
     /**
      * Adds completions for symbols that can be referred from a namespace.
      * 
@@ -30,13 +29,11 @@ object PhelReferCompletionHelper {
     ) {
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
 
-        // Try standard library first
         val namespace = mapToNamespace(shortNamespace)
         if (namespace != null) {
             addStandardLibraryCompletions(result, namespace, shortNamespace, alreadyReferred)
         }
 
-        // Also check project symbols
         if (file != null) {
             addProjectSymbolCompletions(result, shortNamespace, file, alreadyReferred)
         }
@@ -57,7 +54,6 @@ object PhelReferCompletionHelper {
             // Extract just the function name (e.g., "test/deftest" -> "deftest")
             val functionName = function.name.substringAfter("/")
 
-            // Skip if already referred
             if (functionName in alreadyReferred) {
                 continue
             }
@@ -86,12 +82,10 @@ object PhelReferCompletionHelper {
         val symbols = index.getSymbolsForNamespace(shortNamespace)
 
         for (symbol in symbols) {
-            // Skip symbols from the current file
             if (symbol.file.path == file.virtualFile?.path) {
                 continue
             }
 
-            // Skip if already referred
             if (symbol.name in alreadyReferred) {
                 continue
             }

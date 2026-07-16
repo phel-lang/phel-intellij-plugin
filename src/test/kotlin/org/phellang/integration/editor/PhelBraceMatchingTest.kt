@@ -19,7 +19,6 @@ import java.util.stream.Stream
 
 @ExtendWith(MockitoExtension::class)
 class PhelBraceMatchingTest {
-
     @Mock
     private lateinit var mockFile: PsiFile
 
@@ -56,11 +55,9 @@ class PhelBraceMatchingTest {
         expectedConstructStart: Int,
         shouldAllowPairing: Boolean
     ) {
-        // Test construct start location
         val actualConstructStart = braceMatcher.getCodeConstructStart(mockFile, braceOffset)
         Assertions.assertEquals(expectedConstructStart, actualConstructStart, "Construct start for: $description")
 
-        // Test brace pairing logic with actual scenario parameters
         val actualAllowsPairing = braceMatcher.isPairedBracesAllowedBeforeType(openingBraceType, contextType)
         Assertions.assertEquals(shouldAllowPairing, actualAllowsPairing, "Pairing allowed for: $description")
     }

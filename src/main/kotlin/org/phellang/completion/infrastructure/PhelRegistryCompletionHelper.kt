@@ -6,12 +6,10 @@ import org.phellang.registry.PhelFunction
 import org.phellang.registry.PhelFunctionRegistry
 
 object PhelRegistryCompletionHelper {
-
     /**
-     * Offers every namespace the registry knows. The registry is generated from `api.json`, so a
-     * namespace added to `NamespaceConfig` is surfaced here automatically — previously this was a
-     * hand-maintained list of 13 that had drifted, leaving `edn`, `walk`, `transit`, the schema
-     * namespaces and others loaded but never suggested.
+     * Offers every namespace the registry knows. Iterating `Namespace.entries` (generated from
+     * `api.json`) rather than a hand-maintained list keeps a namespace added to `NamespaceConfig`
+     * from being loaded but never suggested.
      */
     @JvmStatic
     fun addStandardLibraryFunctions(result: CompletionResultSet, aliasMap: Map<String, String> = emptyMap()) {

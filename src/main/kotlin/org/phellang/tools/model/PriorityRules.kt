@@ -3,7 +3,6 @@ package org.phellang.tools.model
 import org.phellang.registry.PhelCompletionPriority
 
 object PriorityRules {
-
     private val arithmeticOperators = setOf(
         "%",
         "*",
@@ -265,52 +264,42 @@ object PriorityRules {
         val shortName = extractShortName(apiFunction.name)
         val namespace = apiFunction.namespace
 
-        // Check for deprecated functions first
         if (apiFunction.meta?.deprecated != null) {
             return PhelCompletionPriority.DEPRECATED_FUNCTIONS
         }
 
-        // Check for macros
         if (apiFunction.meta?.macro == true) {
             return PhelCompletionPriority.MACROS
         }
 
-        // Check for predicates (functions ending with ?)
         if (shortName.endsWith("?")) {
             return PhelCompletionPriority.PREDICATE_FUNCTIONS
         }
 
-        // Check for arithmetic operators
         if (shortName in arithmeticOperators) {
             return PhelCompletionPriority.ARITHMETIC_FUNCTIONS
         }
 
-        // Check for special forms
         if (shortName in specialForms || apiFunction.name in specialForms) {
             return PhelCompletionPriority.SPECIAL_FORMS
         }
 
-        // Check for control flow
         if (shortName in controlFlow) {
             return PhelCompletionPriority.CONTROL_FLOW
         }
 
-        // Check for collection operations (core namespace only)
         if (namespace == "core" && shortName in collectionOps) {
             return PhelCompletionPriority.COLLECTION_FUNCTIONS
         }
 
-        // Check for core essential functions
         if (namespace == "core" && shortName in coreFunctions) {
             return PhelCompletionPriority.CORE_FUNCTIONS
         }
 
-        // String functions get special priority
         if (namespace == "string") {
             return PhelCompletionPriority.STRING_FUNCTIONS
         }
 
-        // Fall back to namespace-based priority
         return namespacePriority[namespace] ?: PhelCompletionPriority.CORE_FUNCTIONS
     }
 

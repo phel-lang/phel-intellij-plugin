@@ -9,7 +9,6 @@ import org.phellang.annotator.infrastructure.PhelAnnotationConstants
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 
 class PhelAnnotatorWorkflowTest {
-
     @Test
     fun `annotator workflow should validate text before processing`() {
         // Test the workflow: text validation -> symbol analysis -> annotation
@@ -271,9 +270,6 @@ class PhelAnnotatorWorkflowTest {
 
     @Test
     fun `annotator workflow should integrate with comment analysis`() {
-        // Test integration between different analyzer components
-        // Note: This tests the public API without complex PSI mocking
-
         val validSymbols = listOf("test", "core\\map", "php/array")
 
         validSymbols.forEach { symbol ->

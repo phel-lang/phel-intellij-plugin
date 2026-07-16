@@ -11,7 +11,6 @@ import org.phellang.language.psi.files.PhelFile
 import org.phellang.registry.PhelCompletionPriority
 
 object PhelProjectCompletionHelper {
-
     @JvmStatic
     fun addProjectCompletions(
         result: CompletionResultSet, file: PhelFile, aliasMap: Map<String, String>
@@ -46,7 +45,6 @@ object PhelProjectCompletionHelper {
         // These will be auto-imported when selected
         val allSymbols = index.getAllSymbols()
         for (symbol in allSymbols) {
-            // Skip if from current file
             if (symbol.file.path == currentFilePath) {
                 continue
             }
@@ -56,12 +54,10 @@ object PhelProjectCompletionHelper {
                 continue
             }
 
-            // Skip current file's namespace
             if (symbol.shortNamespace == currentFileNamespace) {
                 continue
             }
 
-            // Add with qualified name (namespace/function)
             addProjectSymbolCompletion(result, symbol, symbol.qualifiedName)
         }
     }
@@ -73,12 +69,10 @@ object PhelProjectCompletionHelper {
     private fun transformWithAlias(
         symbol: PhelProjectSymbol, importInfo: PhelRequireClauseAnalyzer.RequireImport, aliasMap: Map<String, String>
     ): String {
-        // If the import has an alias, use it
         if (importInfo.alias != null) {
             return "${importInfo.alias}/${symbol.name}"
         }
 
-        // Check if there's an alias for this namespace in the aliasMap
         val alias = aliasMap.entries.find { it.value == symbol.shortNamespace }?.key
         return if (alias != null) {
             "$alias/${symbol.name}"

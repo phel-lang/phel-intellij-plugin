@@ -8,7 +8,6 @@ import org.phellang.editor.typing.context.PhelStringContextAnalyzer
 import org.phellang.editor.typing.pairing.PhelCharacterPairing
 
 class PhelTypingIntegrationTest {
-
     @Test
     fun `character pairing and string context should work together`() {
         val text = "\"hello world\""
@@ -25,7 +24,6 @@ class PhelTypingIntegrationTest {
         val shouldAutoClose = PhelCharacterPairing.shouldAutoClose(mockDocument, offset)
         Assertions.assertFalse(shouldAutoClose)
 
-        // Both should be consistent
         Assertions.assertTrue(isInsideString && !shouldAutoClose)
     }
 
@@ -77,7 +75,6 @@ class PhelTypingIntegrationTest {
     fun `component integration should maintain performance characteristics`() {
         val largeText = "\"" + "a".repeat(10000) + "\""
 
-        // Should handle large strings efficiently
         val startTime = System.currentTimeMillis()
 
         repeat(1000) {

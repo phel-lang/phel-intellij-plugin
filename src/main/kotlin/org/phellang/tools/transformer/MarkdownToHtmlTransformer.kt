@@ -12,12 +12,11 @@ package org.phellang.tools.transformer
  * - Newlines → <br />
  */
 object MarkdownToHtmlTransformer {
-
     fun transform(markdown: String): String {
         val codeBlockPlaceholders = mutableMapOf<String, String>()
         var placeholderIndex = 0
 
-        // Extract and preserve code blocks with placeholders
+        // Pull code blocks out first so the inline conversions below can't rewrite their contents.
         var result = markdown.replace(Regex("```(?:phel)?\\s*\\n([\\s\\S]*?)```")) { match ->
             val code = match.groupValues[1].trimEnd()
             val placeholder = "\u0000CODE_BLOCK_${placeholderIndex++}\u0000"
@@ -31,7 +30,6 @@ object MarkdownToHtmlTransformer {
         result = convertItalic(result)
         result = convertNewlines(result)
 
-        // Restore code blocks
         codeBlockPlaceholders.forEach { (placeholder, codeBlock) ->
             result = result.replace(placeholder, codeBlock)
         }
@@ -61,7 +59,6 @@ object MarkdownToHtmlTransformer {
         var result = text
         // Normalize multiple newlines to double newlines (paragraph breaks)
         result = result.replace(Regex("\\n{3,}"), "\n\n")
-        // Convert newlines to <br /> tags
         result = result.replace("\n\n", "<br /><br />\n")
         result = result.replace("\n", "<br />\n")
         // Clean up excessive <br /> tags

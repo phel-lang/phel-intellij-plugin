@@ -24,7 +24,6 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 
 class PhelFoldingIntegrationTest {
-
     private lateinit var foldingBuilder: PhelFoldingBuilder
     private lateinit var collector: PhelFoldingCollector
     private lateinit var mockDocument: Document
@@ -38,7 +37,6 @@ class PhelFoldingIntegrationTest {
 
     @Test
     fun `collector and conflict resolver should work together`() {
-        // Create mock PSI elements
         val outerList = Mockito.mock(PhelList::class.java)
         val innerVec = Mockito.mock(PhelVec::class.java)
 
@@ -48,17 +46,14 @@ class PhelFoldingIntegrationTest {
         Mockito.`when`(outerNode.getChildren(null)).thenReturn(arrayOf(innerNode))
         Mockito.`when`(innerNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(ArgumentMatchers.anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 25 // Simple line calculation
         }
 
-        // Collect descriptors
         val descriptors = collector.collectFoldingDescriptors(outerNode, mockDocument)
         Assertions.assertEquals(2, descriptors.size)
 
-        // Resolve conflicts
         val resolved = PhelFoldingConflictResolver.removeConflictingDescriptors(descriptors)
         Assertions.assertEquals(1, resolved.size)
         Assertions.assertEquals(TextRange(0, 100), resolved[0].range) // Should keep outer list
@@ -82,7 +77,6 @@ class PhelFoldingIntegrationTest {
         Mockito.`when`(letNode.getChildren(null)).thenReturn(arrayOf(vecNode))
         Mockito.`when`(vecNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(ArgumentMatchers.anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 50 // Simple line calculation
@@ -118,7 +112,6 @@ class PhelFoldingIntegrationTest {
         Mockito.`when`(list.children).thenReturn(arrayOf(form))
         Mockito.`when`(nsNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(0)).thenReturn(0)
         Mockito.`when`(mockDocument.getLineNumber(80)).thenReturn(3)
 
@@ -153,7 +146,6 @@ class PhelFoldingIntegrationTest {
         Mockito.`when`(node2.getChildren(null)).thenReturn(emptyArray())
         Mockito.`when`(node3.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(ArgumentMatchers.anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 25 // Simple line calculation
@@ -175,7 +167,6 @@ class PhelFoldingIntegrationTest {
         val commentNode = createMockNode(commentForm, TextRange(0, 30))
         Mockito.`when`(commentNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(0)).thenReturn(0)
         Mockito.`when`(mockDocument.getLineNumber(30)).thenReturn(1)
 

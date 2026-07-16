@@ -15,10 +15,8 @@ import org.phellang.editor.quote.integration.PhelTypingQuoteHandler
 import org.phellang.language.psi.PhelTypes
 
 class PhelQuoteHandlingIntegrationTest {
-
     @Test
     fun `complete quote handling workflow should work end-to-end`() {
-        // Test the complete integration between all quote handling components
         val editor = Mockito.mock(Editor::class.java)
         val document = Mockito.mock(Document::class.java)
         val caretModel = Mockito.mock(CaretModel::class.java)
@@ -33,15 +31,12 @@ class PhelQuoteHandlingIntegrationTest {
         val text = "hello world"
         Mockito.`when`(document.charsSequence).thenReturn(text)
 
-        // 1. Analyze the context
         val action = PhelTypingQuoteHandler.analyzeTypingContext(text, 5)
         Assertions.assertEquals(PhelTypingQuoteHandler.QuoteTypingAction.AUTO_CLOSE, action)
 
-        // 2. Handle the quote character
         val result = PhelTypingQuoteHandler.handleQuoteCharacter(editor, document, 5)
         Assertions.assertEquals(TypedHandlerDelegate.Result.STOP, result)
 
-        // 3. Verify the operations were performed
         Mockito.verify(document).insertString(5, "\"\"")
         Mockito.verify(caretModel).moveToOffset(6)
     }
@@ -58,14 +53,11 @@ class PhelQuoteHandlingIntegrationTest {
         val text = "hello\"world"
         Mockito.`when`(document.charsSequence).thenReturn(text)
 
-        // Position analyzer should detect quote
         Assertions.assertTrue(PhelQuotePositionAnalyzer.isAtQuoteCharacter(text, 5))
 
-        // Integration handler should skip
         val result = PhelTypingQuoteHandler.handleQuoteCharacter(editor, document, 5)
         Assertions.assertEquals(TypedHandlerDelegate.Result.STOP, result)
 
-        // Verify skip operation
         Mockito.verify(caretModel).moveToOffset(6)
         Mockito.verify(document, Mockito.never()).insertString(ArgumentMatchers.anyInt(), ArgumentMatchers.anyString())
     }
@@ -90,7 +82,6 @@ class PhelQuoteHandlingIntegrationTest {
         val quoteHandler = PhelQuoteHandler()
         val iterator = Mockito.mock(HighlighterIterator::class.java)
 
-        // Test with string token
         Mockito.`when`(iterator.tokenType).thenReturn(PhelTypes.STRING)
         Mockito.`when`(iterator.start).thenReturn(0)
         Mockito.`when`(iterator.end).thenReturn(10)
@@ -111,7 +102,6 @@ class PhelQuoteHandlingIntegrationTest {
 
         Mockito.`when`(document.charsSequence).thenReturn(largeText)
 
-        // Should handle large strings efficiently
         val startTime = System.currentTimeMillis()
 
         repeat(100) {

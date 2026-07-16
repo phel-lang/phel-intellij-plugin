@@ -11,7 +11,6 @@ import org.phellang.editor.folding.collectors.PhelFoldingCollector
 import org.phellang.language.psi.*
 
 class PhelFoldingCollectorTest {
-
     private lateinit var collector: PhelFoldingCollector
     private lateinit var mockDocument: Document
 
@@ -38,7 +37,6 @@ class PhelFoldingCollectorTest {
         val mockNode = createMockNode(mockList, TextRange(0, 50))
         `when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document to return different lines for multi-line validation
         `when`(mockDocument.getLineNumber(0)).thenReturn(0)
         `when`(mockDocument.getLineNumber(50)).thenReturn(2)
 
@@ -54,7 +52,6 @@ class PhelFoldingCollectorTest {
         val mockNode = createMockNode(mockVec, TextRange(0, 30))
         `when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document to return different lines for multi-line validation
         `when`(mockDocument.getLineNumber(0)).thenReturn(0)
         `when`(mockDocument.getLineNumber(30)).thenReturn(1)
 
@@ -71,7 +68,6 @@ class PhelFoldingCollectorTest {
         val mockNode = createMockNode(mockMap, TextRange(0, 40))
         `when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document to return different lines for multi-line validation
         `when`(mockDocument.getLineNumber(0)).thenReturn(0)
         `when`(mockDocument.getLineNumber(40)).thenReturn(2)
 
@@ -88,7 +84,6 @@ class PhelFoldingCollectorTest {
         val mockNode = createMockNode(mockComment, TextRange(0, 25))
         `when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document to return different lines for multi-line validation
         `when`(mockDocument.getLineNumber(0)).thenReturn(0)
         `when`(mockDocument.getLineNumber(25)).thenReturn(1)
 
@@ -105,7 +100,6 @@ class PhelFoldingCollectorTest {
         val mockNode = createMockNode(mockComment, TextRange(0, 20))
         `when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document to return same line for single-line validation
         `when`(mockDocument.getLineNumber(0)).thenReturn(0)
         `when`(mockDocument.getLineNumber(20)).thenReturn(0)
 
@@ -120,7 +114,6 @@ class PhelFoldingCollectorTest {
         val mockNode = createMockNode(mockList, TextRange(0, 10)) // Below minimum length
         `when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document to return different lines
         `when`(mockDocument.getLineNumber(0)).thenReturn(0)
         `when`(mockDocument.getLineNumber(10)).thenReturn(1)
 
@@ -140,7 +133,6 @@ class PhelFoldingCollectorTest {
         `when`(parentNode.getChildren(null)).thenReturn(arrayOf(childNode))
         `when`(childNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         `when`(mockDocument.getLineNumber(anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 25 // Simple line calculation
@@ -172,7 +164,6 @@ class PhelFoldingCollectorTest {
         `when`(mapNode.getChildren(null)).thenReturn(emptyArray())
         `when`(commentNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         `when`(mockDocument.getLineNumber(anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 30 // Simple line calculation
@@ -195,7 +186,6 @@ class PhelFoldingCollectorTest {
         val mockNode = createMockNode(mockList, TextRange(0, 30))
         `when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         `when`(mockDocument.getLineNumber(0)).thenReturn(0)
         `when`(mockDocument.getLineNumber(30)).thenReturn(1)
 
@@ -211,7 +201,6 @@ class PhelFoldingCollectorTest {
         val mockNode = createMockNode(mockList, TextRange(0, 25))
         `when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         `when`(mockDocument.getLineNumber(0)).thenReturn(0)
         `when`(mockDocument.getLineNumber(25)).thenReturn(1)
 
@@ -237,7 +226,6 @@ class PhelFoldingCollectorTest {
         `when`(level2Node.getChildren(null)).thenReturn(arrayOf(level3Node))
         `when`(level3Node.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         `when`(mockDocument.getLineNumber(anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 20 // Simple line calculation

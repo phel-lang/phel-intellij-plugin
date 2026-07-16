@@ -6,7 +6,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
 
 object PhelFoldingConflictResolver {
-
     private val BINDING_FORMS = setOf(
         "for", "let", "dofor", "if-let", "when-let", "binding"
     )
@@ -34,7 +33,6 @@ object PhelFoldingConflictResolver {
 
             // If this descriptor is completely contained within another
             if (otherRange.contains(thisRange) && otherRange != thisRange) {
-                // Check if the outer descriptor should take priority
                 val outerPsi = other.element.psi
                 val thisPsi = descriptor.element.psi
 

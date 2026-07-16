@@ -19,7 +19,6 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 
 class PhelFoldingBuilderTest {
-
     private lateinit var foldingBuilder: PhelFoldingBuilder
     private lateinit var mockDocument: Document
 
@@ -46,7 +45,6 @@ class PhelFoldingBuilderTest {
         val mockNode = createMockNode(mockList, TextRange(0, 50))
         Mockito.`when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(0)).thenReturn(0)
         Mockito.`when`(mockDocument.getLineNumber(50)).thenReturn(2)
 
@@ -67,7 +65,6 @@ class PhelFoldingBuilderTest {
         Mockito.`when`(parentNode.getChildren(null)).thenReturn(arrayOf(childNode))
         Mockito.`when`(childNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(ArgumentMatchers.anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 25 // Simple line calculation
@@ -91,7 +88,6 @@ class PhelFoldingBuilderTest {
         Mockito.`when`(parentNode.getChildren(null)).thenReturn(arrayOf(siblingNode))
         Mockito.`when`(siblingNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(ArgumentMatchers.anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 25 // Simple line calculation
@@ -192,7 +188,6 @@ class PhelFoldingBuilderTest {
         val mockNode = createMockNode(mockComment, TextRange(0, 30))
         Mockito.`when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(0)).thenReturn(0)
         Mockito.`when`(mockDocument.getLineNumber(30)).thenReturn(1)
 
@@ -208,7 +203,6 @@ class PhelFoldingBuilderTest {
         val mockNode = createMockNode(mockComment, TextRange(0, 20))
         Mockito.`when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for single-line validation
         Mockito.`when`(mockDocument.getLineNumber(0)).thenReturn(0)
         Mockito.`when`(mockDocument.getLineNumber(20)).thenReturn(0) // Same line
 
@@ -234,7 +228,6 @@ class PhelFoldingBuilderTest {
         Mockito.`when`(vecNode2.getChildren(null)).thenReturn(emptyArray())
         Mockito.`when`(mapNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(ArgumentMatchers.anyInt())).thenAnswer { invocation ->
             val offset = invocation.getArgument<Int>(0)
             offset / 30 // Simple line calculation
@@ -253,7 +246,6 @@ class PhelFoldingBuilderTest {
         val mockNode = createMockNode(mockList, TextRange(0, 25))
         Mockito.`when`(mockNode.getChildren(null)).thenReturn(emptyArray())
 
-        // Mock document for multi-line validation
         Mockito.`when`(mockDocument.getLineNumber(0)).thenReturn(0)
         Mockito.`when`(mockDocument.getLineNumber(25)).thenReturn(1)
 

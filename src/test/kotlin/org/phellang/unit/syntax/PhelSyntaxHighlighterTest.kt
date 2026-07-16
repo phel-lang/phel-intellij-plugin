@@ -9,7 +9,6 @@ import org.phellang.language.psi.PhelTypes
 import org.phellang.syntax.attributes.PhelTextAttributesRegistry
 
 class PhelSyntaxHighlighterTest {
-
     @Test
     fun `getHighlightingLexer should return PhelLexerAdapter`() {
         val syntaxHighlighter = PhelSyntaxHighlighter()
@@ -84,17 +83,9 @@ class PhelSyntaxHighlighterTest {
     }
 
     @Test
-    fun `getTokenHighlights should return empty array for unknown tokens`() {
+    fun `getTokenHighlights should return attributes for known tokens`() {
         val syntaxHighlighter = PhelSyntaxHighlighter()
 
-        // Create a mock token type that won't match any category
-        // Since we can't easily mock IElementType, we'll test this indirectly
-        // by ensuring our classifier handles unknown tokens properly
-
-        // This is tested through the integration with PhelTokenClassifier
-        // which returns UNKNOWN category for unrecognized tokens
-
-        // For now, we'll verify that all known tokens return non-empty arrays
         val knownTokens = listOf(
             PhelTypes.STRING,
             PhelTypes.NUMBER,
@@ -108,7 +99,6 @@ class PhelSyntaxHighlighterTest {
             assertTrue(attributes.isNotEmpty(), "Known token should have attributes: $tokenType")
         }
     }
-
 
     @Test
     fun `syntax highlighter should be consistent across multiple instances`() {
@@ -170,7 +160,6 @@ class PhelSyntaxHighlighterTest {
 
         val startTime = System.nanoTime()
 
-        // Process many tokens
         repeat(1000) {
             testTokens.forEach { tokenType ->
                 syntaxHighlighter.getTokenHighlights(tokenType)
@@ -191,7 +180,6 @@ class PhelSyntaxHighlighterTest {
 
         assertNotNull(lexer, "Lexer should be initialized")
 
-        // Test that lexer can be started
         assertDoesNotThrow {
             lexer.start("test")
         }
@@ -253,16 +241,12 @@ class PhelSyntaxHighlighterTest {
     }
 
     @Test
-    fun `syntax highlighter should use delegation pattern correctly`() {
+    fun `string token maps to exactly the registry string attribute`() {
         val syntaxHighlighter = PhelSyntaxHighlighter()
-
-        // Verify that the syntax highlighter is now much simpler and delegates to components
-        // This is tested by ensuring the behavior is correct and consistent
 
         val testToken = PhelTypes.STRING
         val attributes = syntaxHighlighter.getTokenHighlights(testToken)
 
-        // Should return exactly one attribute
         assertEquals(1, attributes.size, "Should delegate correctly to return single attribute")
         assertEquals(PhelTextAttributesRegistry.STRING, attributes[0], "Should delegate to correct registry")
     }
