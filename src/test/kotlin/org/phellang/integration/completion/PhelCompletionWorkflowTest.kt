@@ -8,7 +8,6 @@ import org.phellang.completion.engine.PhelMainCompletionProvider
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class PhelCompletionWorkflowTest {
-
     @Test
     fun `completion contributor should integrate with main provider`() {
         val contributor = PhelCompletionContributor()
@@ -55,7 +54,6 @@ class PhelCompletionWorkflowTest {
             providers.add(PhelMainCompletionProvider())
         }
 
-        // All instances should be created successfully
         assertEquals(5, contributors.size)
         assertEquals(5, providers.size)
 
@@ -137,7 +135,8 @@ class PhelCompletionWorkflowTest {
 
     @Test
     fun `completion workflow should handle concurrent access`() {
-        val results = ConcurrentLinkedQueue<Boolean>()
+        val successes = ConcurrentLinkedQueue<Boolean>()
+        val failures = ConcurrentLinkedQueue<Throwable>()
         val threads = mutableListOf<Thread>()
 
         repeat(5) {
@@ -149,9 +148,9 @@ class PhelCompletionWorkflowTest {
                     assertNotNull(contributor)
                     assertNotNull(provider)
 
-                    results.add(true)
-                } catch (_: Exception) {
-                    results.add(false)
+                    successes.add(true)
+                } catch (t: Throwable) {
+                    failures.add(t)
                 }
             }
             threads.add(thread)
@@ -160,7 +159,9 @@ class PhelCompletionWorkflowTest {
 
         threads.forEach { it.join() }
 
-        assertEquals(5, results.size)
-        assertTrue(results.all { it }, "Some threads failed to create completion components")
+        failures.firstOrNull()?.let { first ->
+            throw AssertionError("${failures.size} thread(s) failed to create completion components", first)
+        }
+        assertEquals(5, successes.size)
     }
 }
