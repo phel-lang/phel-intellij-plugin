@@ -7,7 +7,7 @@ class PhelCommenter : Commenter {
         return ";"
     }
 
-    // Phel has no block comments.
+    // Phel's `#| ... |#` block comments are deprecated, so none are offered here.
     override fun getBlockCommentPrefix(): String? = null
     override fun getBlockCommentSuffix(): String? = null
     override fun getCommentedBlockCommentPrefix(): String? = null
