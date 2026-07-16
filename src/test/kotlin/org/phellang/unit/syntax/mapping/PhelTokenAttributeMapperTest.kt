@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
-import org.phellang.syntax.attributes.PhelTextAttributesRegistry
+import org.phellang.core.highlighting.PhelTextAttributesRegistry
 import org.phellang.syntax.mapping.PhelTokenAttributeMapper
 import org.phellang.syntax.classification.PhelTokenClassifier.TokenCategory
 

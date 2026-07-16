@@ -1,8 +1,8 @@
-package org.phellang.unit.syntax.attributes
+package org.phellang.unit.core.highlighting
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.phellang.syntax.attributes.PhelTextAttributesRegistry
+import org.phellang.core.highlighting.PhelTextAttributesRegistry
 
 class PhelTextAttributesRegistryTest {
 

@@ -38,7 +38,9 @@ helpers in that module's subfolders. If the concern is new, create a new module 
 ## Layout
 
 `actions/` menu actions · `annotator/` highlighting + form-comment detection · `completion/` ·
-`core/` utils · `registry/` the shared Phel function/symbol model — API at the root, generated
+`core/` utils + `highlighting/` (the `TextAttributesKey` vocabulary shared by `syntax`, `annotator`
+and the colorsettings page — a leaf; the keys' external IDs persist in user color schemes, so they
+are contract, not internals) · `registry/` the shared Phel function/symbol model — API at the root, generated
 `register*Functions.kt` under `data/`, project symbol index under `indexing/` (a **leaf**: it may
 import `language/psi` and the platform, never a feature package) · `documentation/` hover ·
 `editor/` a namespace of editor modules (folding, typing, quote, matching, commenting,

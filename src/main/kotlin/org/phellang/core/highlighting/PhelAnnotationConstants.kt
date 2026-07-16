@@ -1,4 +1,4 @@
-package org.phellang.annotator.infrastructure
+package org.phellang.core.highlighting
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.CodeInsightColors

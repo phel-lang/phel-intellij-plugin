@@ -2,7 +2,7 @@ package org.phellang.syntax.mapping
 
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import org.phellang.syntax.classification.PhelTokenClassifier.TokenCategory
-import org.phellang.syntax.attributes.PhelTextAttributesRegistry
+import org.phellang.core.highlighting.PhelTextAttributesRegistry
 
 object PhelTokenAttributeMapper {
 

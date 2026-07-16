@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants
+import org.phellang.core.highlighting.PhelAnnotationConstants
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 
 class PhelAnnotatorWorkflowTest {

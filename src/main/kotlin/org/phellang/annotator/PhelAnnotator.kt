@@ -3,7 +3,7 @@ package org.phellang.annotator
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.psi.PsiElement
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.COMMENTED_OUT_FORM
+import org.phellang.core.highlighting.PhelAnnotationConstants.COMMENTED_OUT_FORM
 import org.phellang.annotator.analyzers.PhelCommentAnalyzer
 import org.phellang.annotator.highlighters.PhelElementHighlighter
 import org.phellang.annotator.highlighters.PhelRequireHighlighter
