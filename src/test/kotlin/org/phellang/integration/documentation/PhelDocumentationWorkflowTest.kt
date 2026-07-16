@@ -9,7 +9,6 @@ import org.phellang.documentation.resolvers.PhelSymbolDocumentationResolver
 import java.util.concurrent.ConcurrentLinkedQueue
 
 class PhelDocumentationWorkflowTest {
-
     @Test
     fun `documentation provider should integrate with all components`() {
         val provider = PhelDocumentationProvider()
@@ -128,7 +127,8 @@ class PhelDocumentationWorkflowTest {
 
     @Test
     fun `documentation workflow should handle concurrent access`() {
-        val results = ConcurrentLinkedQueue<Boolean>()
+        val successes = ConcurrentLinkedQueue<Boolean>()
+        val failures = ConcurrentLinkedQueue<Throwable>()
         val threads = mutableListOf<Thread>()
 
         repeat(5) {
@@ -142,9 +142,9 @@ class PhelDocumentationWorkflowTest {
                     assertNotNull(resolver)
                     assertNotNull(quickNavigateProvider)
 
-                    results.add(true)
-                } catch (_: Exception) {
-                    results.add(false)
+                    successes.add(true)
+                } catch (t: Throwable) {
+                    failures.add(t)
                 }
             }
             threads.add(thread)
@@ -153,8 +153,10 @@ class PhelDocumentationWorkflowTest {
 
         threads.forEach { it.join() }
 
-        assertEquals(5, results.size)
-        assertTrue(results.all { it }, "Some threads failed to create documentation components")
+        failures.firstOrNull()?.let { first ->
+            throw AssertionError("${failures.size} thread(s) failed to create documentation components", first)
+        }
+        assertEquals(5, successes.size)
     }
 
     @Test
