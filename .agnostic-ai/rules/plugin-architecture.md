@@ -62,6 +62,10 @@ the test deliberately, not by working around it.
   `PhelFunctionRegistry` / `PhelArityResolver`.
 - `registry` imports no feature package (it stays a leaf — a feature import re-creates the removed cycle).
 - `tools` (build-time generator) is imported by nothing at runtime, and imports no feature package.
+- A feature package reaches another only through a class at its **root**, never past it
+  (`editor` → `syntax.PhelSyntaxHighlighter` is fine; `editor` → `syntax.attributes.*` is not).
+  Shared vocabulary goes down into a leaf (`core`/`registry`/`language`) instead — this is why the
+  highlighting attribute keys live in `core/highlighting` and not under `syntax`/`annotator`.
 
 ## Rules
 
