@@ -10,7 +10,6 @@ import org.phellang.language.psi.files.PhelFile
  * jumps to the required module's `(ns …)` declaration.
  */
 class PhelRequireNavigationTest : PhelIntegrationTestCase() {
-
     fun testRequireResolvesToTargetNamespaceDeclaration() {
         myFixture.addFileToProject("src/util.phel", "(ns app\\util)\n(defn helper [] 1)\n")
         val caller = myFixture.addFileToProject(
@@ -58,7 +57,7 @@ class PhelRequireNavigationTest : PhelIntegrationTestCase() {
         assertEquals("string.phel", (target as PhelSymbol).containingFile.name)
     }
 
-    private fun resolveAtMarker(file: com.intellij.psi.PsiFile, marker: String): Any? {
+    private fun resolveAtMarker(file: com.intellij.psi.PsiFile, marker: String): com.intellij.psi.PsiElement? {
         val phelFile = PsiManager.getInstance(project).findFile(file.virtualFile) as PhelFile
         val offset = phelFile.text.indexOf(marker) + 1 // inside the namespace symbol
         return phelFile.findReferenceAt(offset)?.resolve()

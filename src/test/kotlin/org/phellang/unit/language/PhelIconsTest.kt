@@ -6,7 +6,6 @@ import org.phellang.language.infrastructure.PhelIcons
 import javax.swing.Icon
 
 class PhelIconsTest {
-
     @Test
     fun `should be singleton object`() {
         val icons1 = PhelIcons
@@ -54,7 +53,7 @@ class PhelIconsTest {
     @Test
     fun `should be thread-safe singleton`() {
         // Test concurrent access to singleton
-        val icons = mutableListOf<Any>()
+        val icons = mutableListOf<PhelIcons>()
 
         val threads = (1..10).map {
             Thread {

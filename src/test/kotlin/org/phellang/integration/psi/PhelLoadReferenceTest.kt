@@ -10,7 +10,6 @@ import org.phellang.language.psi.files.PhelFile
  * `(load "main")` / `(load "core/meta")` scenarios.
  */
 class PhelLoadReferenceTest : PhelIntegrationTestCase() {
-
     fun testLoadResolvesCallerRelativeSiblingWithoutExtension() {
         myFixture.addFileToProject("src/main.phel", "(ns app\\main)\n")
         val caller = myFixture.addFileToProject("src/comments.phel", "(ns app\\comments)\n(load \"main\")\n")
@@ -45,7 +44,7 @@ class PhelLoadReferenceTest : PhelIntegrationTestCase() {
     }
 
     /** Finds the string literal [marker] in [file] and resolves the reference at it. */
-    private fun resolveAtMarker(file: com.intellij.psi.PsiFile, marker: String): Any? {
+    private fun resolveAtMarker(file: com.intellij.psi.PsiFile, marker: String): com.intellij.psi.PsiElement? {
         val phelFile = PsiManager.getInstance(project).findFile(file.virtualFile) as PhelFile
         val offset = phelFile.text.indexOf(marker) + 1 // inside the opening quote
         return phelFile.findReferenceAt(offset)?.resolve()

@@ -14,7 +14,6 @@ import org.phellang.language.psi.files.PhelFile
  * which also isolates the fact that the PHP plugin is an optional, reflectively-loaded dependency.
  */
 object PhpClassResolver {
-
     /**
      * Member kinds surfaced from a PHP class. Private/protected members are excluded from completion
      * and resolution, since Phel can only call what is public from outside the class.
@@ -32,7 +31,7 @@ object PhpClassResolver {
     fun resolveAsPhpClass(symbol: PhelSymbol): List<PsiElement> {
         if (!PhpIndexBridge.isAvailable()) return emptyList()
         val fqn = computeTargetFqn(symbol) ?: return emptyList()
-        return PhpIndexBridge.findClassesByFqn(symbol.project, fqn).mapNotNull { it as? PsiElement }
+        return PhpIndexBridge.findClassesByFqn(symbol.project, fqn)
     }
 
     /**
