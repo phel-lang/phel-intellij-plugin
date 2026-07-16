@@ -5,12 +5,10 @@ import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelVec
 
 class PhelRemoveLetBindingQuickFix : LocalQuickFix {
-
     override fun getFamilyName(): String = "Remove unused let binding"
 
     // The platform runs applyFix inside a write action and a command: if the PSI edit below
@@ -40,12 +38,8 @@ class PhelRemoveLetBindingQuickFix : LocalQuickFix {
             if (parent is PhelVec && current is PhelForm) return current
             current = parent
         }
-        // Fallback: try ancestor PhelForm whose parent is a PhelVec.
-        val form = PsiTreeUtil.getParentOfType(element, PhelForm::class.java) ?: return null
-        return if (form.parent is PhelVec) form else null
+        return null
     }
-
-
 
     private fun leadingWhitespaceOrSelf(form: PhelForm): PsiElement {
         var node = form.prevSibling

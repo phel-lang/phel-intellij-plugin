@@ -4,12 +4,10 @@ import com.intellij.lang.ASTNode
 import com.intellij.lang.folding.FoldingBuilder
 import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.openapi.editor.Document
-import org.phellang.editor.folding.PhelFoldingDefaults
 import org.phellang.editor.folding.collectors.PhelFoldingCollector
 import org.phellang.editor.folding.resolvers.PhelFoldingConflictResolver
 
 class PhelFoldingBuilder : FoldingBuilder {
-
     private val collector = PhelFoldingCollector()
 
     override fun buildFoldRegions(node: ASTNode, document: Document): Array<FoldingDescriptor> {

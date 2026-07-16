@@ -24,16 +24,13 @@ fun main() {
     println()
 
     try {
-        // Determine output directory
         val outputDir = determineOutputDirectory()
         println("Output directory: ${outputDir.absolutePath}")
         println()
 
-        // Fetch API data
         val fetcher = ApiFetcher()
         val apiFunctions = fetcher.fetchApiFunctions()
 
-        // Print statistics by namespace
         println()
         println("Functions by namespace:")
         apiFunctions.groupBy { it.namespace }.toSortedMap().forEach { (namespace, functions) ->
@@ -41,7 +38,6 @@ fun main() {
         }
         println()
 
-        // Generate Kotlin files
         println("Generating Kotlin files...")
         val generator = KotlinCodeGenerator(File(outputDir, "data"))
         generator.generate(apiFunctions)
@@ -63,28 +59,12 @@ fun main() {
 }
 
 private fun determineOutputDirectory(): File {
-    val possiblePaths = listOf(
-        // When run from project root
-        "src/main/kotlin/org/phellang/registry",
-        // When run from Gradle with project dir
-        System.getProperty("user.dir")?.let { "$it/src/main/kotlin/org/phellang/registry" },
-        // Absolute path fallback
-        System.getenv("PROJECT_DIR")?.let { "$it/src/main/kotlin/org/phellang/registry" })
-
-    for (path in possiblePaths.filterNotNull()) {
-        val dir = File(path)
-        if (dir.exists() && dir.isDirectory) {
-            return dir
-        }
-    }
-
-    // If not found, try to create it relative to current directory
-    val defaultDir = File("src/main/kotlin/org/phellang/registry")
-    if (!defaultDir.exists()) {
+    // The updatePhelRegistry Gradle task pins workingDir to the project root.
+    val dir = File("src/main/kotlin/org/phellang/registry")
+    if (!dir.isDirectory) {
         throw IllegalStateException(
-            "Could not find output directory. " + "Please run this tool from the project root directory."
+            "Could not find output directory. Please run this tool from the project root directory."
         )
     }
-
-    return defaultDir
+    return dir
 }

@@ -6,13 +6,8 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler
 import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiFile
-import org.phellang.editor.enter.PhelEnterHandlerDocumentProcessor
-import org.phellang.editor.enter.PhelEnterHandlerIndentationCalculator
-import org.phellang.editor.enter.PhelEnterHandlerParenthesisManager
-import org.phellang.editor.enter.PhelEnterHandlerValidator
 
 class PhelEnterHandlerDelegate : EnterHandlerDelegate {
-
     private val validator = PhelEnterHandlerValidator()
     private val indentationCalculator = PhelEnterHandlerIndentationCalculator()
     private val parenthesisManager = PhelEnterHandlerParenthesisManager()
