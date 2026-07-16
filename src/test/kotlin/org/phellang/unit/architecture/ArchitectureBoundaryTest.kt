@@ -44,6 +44,33 @@ class ArchitectureBoundaryTest {
         )
     }
 
+    /**
+     * A feature package reaches another only through its root — the module rule: entry points at a
+     * module's root, internals in subfolders. `editor` importing `syntax.PhelSyntaxHighlighter` is
+     * fine (the ColorSettingsPage API demands it); importing `syntax.attributes.*` would not be.
+     *
+     * Shared vocabulary belongs in a leaf (`core`, `registry`, `language`), not in another feature's
+     * subfolder — that is how the highlighting attribute keys came to live in `core.highlighting`.
+     */
+    @Test
+    fun `no feature package imports another feature's internals`() {
+        val offenders = mainSources()
+            .flatMap { src ->
+                val own = FEATURE_PACKAGES.firstOrNull { src.packageName.startsWith("$it.") || src.packageName == it }
+                    ?: return@flatMap emptyList()
+                src.importsMatchingAny(FEATURE_PACKAGES - own)
+                    .filter { reachesPastRoot(it) }
+                    .map { src to it }
+            }
+
+        assertNoOffenders(
+            offenders,
+            "A feature package may only reach another through a class at its root. Importing past the " +
+                    "root binds you to another module's internals — move the shared type into a leaf " +
+                    "(`core`/`registry`/`language`) instead, or expose it at the owning module's root.",
+        )
+    }
+
     /** `tools` is the build-time generator; runtime plugin code must not depend on it. */
     @Test
     fun `runtime code does not import the build-time tools package`() {
@@ -96,6 +123,17 @@ class ArchitectureBoundaryTest {
             "No sources found in `$pkg`. If it was renamed or moved, $guardedRules now enforce " +
                     "nothing — update this test to point at the new location.",
         )
+    }
+
+    /**
+     * True when [imp] names something below a feature package's root. The segment after the package
+     * tells us which: a lowercase one is a subpackage (`syntax.attributes.Foo`), an uppercase one is
+     * a class at the root (`syntax.PhelSyntaxHighlighter`, or a member/nested import of it).
+     */
+    private fun reachesPastRoot(imp: Import): Boolean {
+        val feature = FEATURE_PACKAGES.firstOrNull { imp.fqName.startsWith("$it.") } ?: return false
+        val next = imp.fqName.removePrefix("$feature.").substringBefore('.')
+        return next.firstOrNull()?.isLowerCase() == true
     }
 
     private fun assertNoOffenders(offenders: List<Pair<KtSource, Import>>, rule: String) {
