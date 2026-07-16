@@ -8,7 +8,6 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
 object PhelReferSymbolValidator {
-
     fun validateReferSymbol(symbol: PhelSymbol): List<PhelValidationProblem> {
         val symbolName = symbol.text ?: return emptyList()
 
@@ -17,29 +16,24 @@ object PhelReferSymbolValidator {
             return emptyList()
         }
 
-        // Check if this symbol is inside a :refer vector
         val referContext = PhelReferUtils.getReferContext(symbol) ?: return emptyList()
 
         val namespace = referContext.namespace
         val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
 
-        // Check for duplicate first
         if (PhelReferUtils.isDuplicateInReferVector(symbol)) {
             return listOf(PhelValidationProblem("'$symbolName' is already referred"))
         }
 
-        // Check if symbol exists in standard library
         if (existsInStandardLibrary(shortNamespace, symbolName)) {
             return emptyList() // Valid
         }
 
-        // Check if symbol exists in project
         val containingFile = symbol.containingFile as? PhelFile
         if (containingFile != null && existsInProject(containingFile, shortNamespace, symbolName)) {
             return emptyList() // Valid
         }
 
-        // Symbol doesn't exist
         return listOf(PhelValidationProblem("Cannot resolve '$symbolName' in namespace '$namespace'"))
     }
 

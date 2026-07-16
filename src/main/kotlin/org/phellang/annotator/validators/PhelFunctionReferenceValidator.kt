@@ -10,11 +10,9 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
 object PhelFunctionReferenceValidator {
-
     fun validateFunctionReference(symbol: PhelSymbol): List<PhelValidationProblem> {
         val text = symbol.text ?: return emptyList()
 
-        // Only validate namespace-qualified symbols
         if (!text.contains("/")) {
             return emptyList()
         }
@@ -37,16 +35,13 @@ object PhelFunctionReferenceValidator {
             return emptyList()
         }
 
-        // Get alias map to resolve the actual namespace
         val aliasMap = PhelNamespaceUtils.extractAliasMap(containingFile)
         val resolvedNamespace = aliasMap[qualifier] ?: qualifier
 
-        // Check if function exists in standard library
         if (existsInStandardLibrary(resolvedNamespace, functionName)) {
             return emptyList() // Valid - exists in API
         }
 
-        // Check if function exists in project symbols
         if (existsInProjectSymbols(symbol, resolvedNamespace, functionName)) {
             return emptyList() // Valid - exists in project
         }
@@ -62,16 +57,13 @@ object PhelFunctionReferenceValidator {
     }
 
     private fun existsInStandardLibrary(namespace: String, functionName: String): Boolean {
-        // Try canonical name format: namespace/function
         val canonicalName = "$namespace/$functionName"
         if (PhelApiDocumentation.hasDocumentation(canonicalName)) {
             return true
         }
 
-        // Also check if it's a known standard library namespace
         val fullNamespace = PhelProjectNamespaceFinder.getStandardLibraryFullNamespace(namespace)
         if (fullNamespace != null) {
-            // Standard library namespace - check with full namespace too
             val fullName = "$fullNamespace/$functionName"
             if (PhelApiDocumentation.hasDocumentation(fullName)) {
                 return true
@@ -85,24 +77,20 @@ object PhelFunctionReferenceValidator {
         val project = symbol.project
         val index = PhelProjectSymbolIndex.getInstance(project)
 
-        // Try to find the symbol in the project index
         val projectSymbol = index.findSymbol(namespace, functionName)
         return projectSymbol != null
     }
 
     private fun isNamespaceKnown(symbol: PhelSymbol, qualifier: String, resolvedNamespace: String): Boolean {
-        // Check standard library
         if (PhelProjectNamespaceFinder.getStandardLibraryFullNamespace(resolvedNamespace) != null) {
             return true
         }
 
-        // Check project namespaces
         val projectNamespace = PhelProjectNamespaceFinder.findByShortName(symbol.project, resolvedNamespace)
         if (projectNamespace != null) {
             return true
         }
 
-        // Also check with the original qualifier (in case it's an alias)
         if (qualifier != resolvedNamespace) {
             val qualifierNamespace = PhelProjectNamespaceFinder.findByShortName(symbol.project, qualifier)
             if (qualifierNamespace != null) {

@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project
 import org.phellang.language.psi.files.PhelFile
 
 object PhelNamespaceImporter {
-
     fun ensureNamespaceImported(file: PhelFile, namespace: String): Boolean {
         if (PhelNamespaceUtils.isCoreNamespace(namespace)) {
             return true // Core namespace doesn't need import
@@ -39,13 +38,10 @@ object PhelNamespaceImporter {
     }
 
     private fun addNewRequireForm(project: Project, nsDeclaration: PhelList, namespace: String) {
-        // Create (:require phel\namespace)
         val requireForm = PhelPsiFactory.createList(project, "(:require $namespace)")
 
-        // Find insertion point (before closing paren)
         val closingParen = nsDeclaration.lastChild
 
-        // Add whitespace (newline + indentation), then require form
         val whitespace = PhelPsiFactory.createWhitespace(project, "\n  ")
         nsDeclaration.addBefore(whitespace, closingParen)
         nsDeclaration.addBefore(requireForm, closingParen)

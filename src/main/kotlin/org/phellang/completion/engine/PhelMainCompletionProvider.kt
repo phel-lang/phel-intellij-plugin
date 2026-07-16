@@ -16,7 +16,6 @@ import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.files.PhelFile
 
 class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
-
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
@@ -28,7 +27,6 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
 
             val completionContext = PhelCompletionContext(parameters)
 
-            // Suppress completions in inappropriate contexts
             if (completionContext.shouldSuppressCompletions()) {
                 return@safeOperation
             }
@@ -130,16 +128,13 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
     }
 
     private fun addGeneralCompletions(element: PsiElement, result: CompletionResultSet) {
-        // Extract alias map once for efficient lookup during completion
         val psiFile = element.containingFile as? PhelFile
         val aliasMap = psiFile?.let { PhelNamespaceUtils.extractAliasMap(it) } ?: emptyMap()
 
-        // Local symbols (parameters, let bindings, etc.)
         PhelLocalSymbolCompletions.addLocalSymbols(result, element)
 
         PhelRegistryCompletionHelper.addStandardLibraryFunctions(result, aliasMap)
 
-        // Project symbols (functions from other project files)
         if (psiFile != null) {
             PhelProjectCompletionHelper.addProjectCompletions(result, psiFile, aliasMap)
             PhelUsedClassCompletionHelper.addUsedClassCompletions(result, psiFile)

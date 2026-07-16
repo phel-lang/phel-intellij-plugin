@@ -4,7 +4,6 @@ import com.intellij.openapi.editor.Document
 import org.phellang.editor.typing.context.PhelStringContextAnalyzer
 
 object PhelCharacterPairing {
-
     private val OPENING_TO_CLOSING = mapOf(
         '(' to ')',
         '[' to ']',
@@ -24,12 +23,10 @@ object PhelCharacterPairing {
     fun shouldAutoClose(document: Document, offset: Int): Boolean {
         val text = document.charsSequence
 
-        // Don't auto-close if we're inside a string
         if (PhelStringContextAnalyzer.isInsideString(text, offset)) {
             return false
         }
 
-        // Don't auto-close if the character at the current position is a quote
         if (offset < text.length) {
             val charAtOffset = text[offset]
             if (charAtOffset == '"') {

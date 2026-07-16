@@ -15,7 +15,6 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service(Service.Level.PROJECT)
 class PhelProjectSymbolIndex(private val project: Project) : Disposable {
-
     /** Cache: shortNamespace -> List of symbols */
     private val symbolsByNamespace = ConcurrentHashMap<String, List<PhelProjectSymbol>>()
 
@@ -81,17 +80,14 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
 
         val oldSymbols = symbolsByFile[filePath] ?: emptyList()
 
-        // Remove old symbols from namespace + name indices
         for (symbol in oldSymbols) {
             removeFromMap(symbolsByNamespace, symbol.shortNamespace, filePath)
             removeFromMap(symbolsByName, symbol.name, filePath)
         }
 
-        // Scan file for new symbols from the current PSI state
         val newSymbols = PhelProjectSymbolScanner.scanFile(psiFile)
         symbolsByFile[filePath] = newSymbols
 
-        // Add new symbols to namespace + name indices
         for (symbol in newSymbols) {
             addToMap(symbolsByNamespace, symbol.shortNamespace, symbol)
             addToMap(symbolsByName, symbol.name, symbol)

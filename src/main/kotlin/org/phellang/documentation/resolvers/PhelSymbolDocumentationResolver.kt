@@ -16,7 +16,6 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
 class PhelSymbolDocumentationResolver {
-
     fun resolveDocumentation(element: PsiElement?, originalElement: PsiElement?): String? {
         val symbol = PhelPsiUtils.findTopmostSymbol(originalElement)
             ?: PhelPsiUtils.findTopmostSymbol(element)
@@ -51,12 +50,10 @@ class PhelSymbolDocumentationResolver {
         val namespace = PhelReferUtils.getReferNamespace(symbol) ?: return generateBasicDocumentation(symbol, symbolName)
         val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
 
-        // Try API documentation (standard library)
         val canonicalName = "$shortNamespace/$symbolName"
         val apiDoc = PhelApiDocumentation.getDocumentation(canonicalName)
         if (apiDoc != null) return apiDoc
 
-        // Try project symbols
         val projectDoc = resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
         if (projectDoc != null) return projectDoc
 
@@ -82,12 +79,10 @@ class PhelSymbolDocumentationResolver {
             // Check if qualifier is an alias (e.g., "s" -> "str")
             val resolvedNamespace = aliasMap[qualifier] ?: qualifier
 
-            // Try API documentation first (standard library)
             val canonicalName = "$resolvedNamespace/$functionName"
             val apiDoc = PhelApiDocumentation.getDocumentation(canonicalName)
             if (apiDoc != null) return apiDoc
 
-            // Also try with original qualifier for direct lookups
             val directDoc = PhelApiDocumentation.getDocumentation(symbolName)
             if (directDoc != null) return directDoc
 

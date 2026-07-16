@@ -1,7 +1,6 @@
 package org.phellang.tools.transformer
 
 object StringEscaper {
-
     /**
      * Escapes HTML special characters for display in documentation popups.
      */
@@ -23,12 +22,10 @@ object StringEscaper {
      * Uses regular quotes for simple strings without special characters.
      */
     fun toTripleQuotedString(text: String): String {
-        // For simple strings without special characters, use regular quotes
         if (!text.contains("\"") && !text.contains("\n") && !text.contains("<") && text.length < 80) {
             return toKotlinString(text)
         }
 
-        // For complex strings with HTML, quotes, or newlines, use triple quotes
         val escaped = text.replace("$", "\${'$'}")
         return "\"\"\"\n$escaped\n\"\"\""
     }

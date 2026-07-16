@@ -1,7 +1,6 @@
 package org.phellang.editor.typing.context
 
 object PhelStringContextAnalyzer {
-
     fun isInsideString(text: CharSequence, offset: Int): Boolean {
         if (offset < 0 || offset >= text.length) {
             return false
@@ -16,7 +15,6 @@ object PhelStringContextAnalyzer {
         while (i < offset && i < text.length) {
             val c = text[i]
             if (c == '"') {
-                // Check if this quote is escaped
                 if (!isEscapedQuote(text, i)) {
                     quoteCount++
                 }

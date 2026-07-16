@@ -128,20 +128,4 @@ class PhelQuoteHandlerTest {
         Assertions.assertFalse(quoteHandler.isClosingQuote(nonStringIterator, 9))
     }
 
-    @Test
-    fun `quote handler should integrate with IntelliJ quote handling system`() {
-        // Verify that the handler can be used in IntelliJ contexts
-        Assertions.assertNotNull(quoteHandler)
-
-        // The handler should be ready for IDE integration
-        Assertions.assertDoesNotThrow {
-            val iterator = Mockito.mock(HighlighterIterator::class.java)
-            Mockito.`when`(iterator.tokenType).thenReturn(PhelTypes.STRING)
-            Mockito.`when`(iterator.start).thenReturn(0)
-            Mockito.`when`(iterator.end).thenReturn(5)
-
-            quoteHandler.isOpeningQuote(iterator, 0)
-            quoteHandler.isClosingQuote(iterator, 4)
-        }
-    }
 }

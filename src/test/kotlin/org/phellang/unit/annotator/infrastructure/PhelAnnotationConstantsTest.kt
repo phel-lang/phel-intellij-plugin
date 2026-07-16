@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.phellang.annotator.infrastructure.PhelAnnotationConstants
 
 class PhelAnnotationConstantsTest {
-
     @Test
     fun `constants should have unique names`() {
         val constants = listOf(
@@ -121,7 +120,6 @@ class PhelAnnotationConstantsTest {
 
     @Test
     fun `lazy initialization should work correctly`() {
-        // Test that constants can be accessed multiple times without issues
         repeat(3) {
             assertNotNull(PhelAnnotationConstants.NAMESPACE_SYMBOL)
             assertNotNull(PhelAnnotationConstants.FUNCTION_NAME)
@@ -136,7 +134,6 @@ class PhelAnnotationConstantsTest {
 
     @Test
     fun `constants should be suitable for Phel language highlighting`() {
-        // Test that we have constants for key Phel language constructs
         val phelSpecificConstants = listOf(
             PhelAnnotationConstants.PHP_INTEROP,        // php/ interop
             PhelAnnotationConstants.ANONYMOUS_FUNCTION,     // #(...) syntax

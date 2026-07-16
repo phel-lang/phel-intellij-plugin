@@ -20,7 +20,6 @@ import org.phellang.language.psi.files.PhelFile
  * Validates (:require ...) statements to ensure imported namespaces exist.
  */
 object PhelImportValidator {
-
     private val USED_QUALIFIERS_KEY: Key<CachedValue<Set<String>>> =
         Key.create("phel.usedNamespaceQualifiers")
 
@@ -59,7 +58,6 @@ object PhelImportValidator {
         if (PhelProjectNamespaceFinder.isStandardLibrary(fullNamespace)) return null
         if (PhelProjectNamespaceFinder.namespaceExists(project, fullNamespace)) return null
 
-        // Namespace doesn't exist - try to find a suggestion
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
         val suggestion = PhelProjectNamespaceFinder.findByShortName(project, shortNamespace)
 
@@ -133,7 +131,6 @@ object PhelImportValidator {
 
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
 
-        // Get the alias if one exists for this namespace
         val aliasMap = PhelNamespaceUtils.extractAliasMap(containingFile)
         val alias = aliasMap.entries.find { it.value == shortNamespace }?.key
 

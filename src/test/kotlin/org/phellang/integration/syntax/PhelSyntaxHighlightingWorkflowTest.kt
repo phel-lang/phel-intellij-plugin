@@ -13,7 +13,6 @@ import org.phellang.syntax.mapping.PhelTokenAttributeMapper
 import org.phellang.syntax.classification.PhelTokenClassifier
 
 class PhelSyntaxHighlightingWorkflowTest {
-
     @Test
     fun `complete workflow should work for all token types`() {
         val syntaxHighlighter = PhelSyntaxHighlighter()
@@ -79,7 +78,6 @@ class PhelSyntaxHighlightingWorkflowTest {
 
         assertNotNull(lexer, "Lexer should not be null")
 
-        // Test lexer with simple Phel code
         val testCode = "(defn hello [name] (str \"Hello, \" name))"
         lexer.start(testCode)
 
@@ -110,7 +108,6 @@ class PhelSyntaxHighlightingWorkflowTest {
     fun `workflow should map tokens to correct attributes`(tokenTypeName: String, expectedAttributeName: String) {
         val syntaxHighlighter = PhelSyntaxHighlighter()
 
-        // Get token type by name
         val tokenType = when (tokenTypeName) {
             "LINE_COMMENT" -> PhelTypes.LINE_COMMENT
             "STRING" -> PhelTypes.STRING
@@ -122,7 +119,6 @@ class PhelSyntaxHighlightingWorkflowTest {
             else -> throw IllegalArgumentException("Unknown token type: $tokenTypeName")
         }
 
-        // Get expected attribute by name
         val expectedAttribute = when (expectedAttributeName) {
             "COMMENT" -> PhelTextAttributesRegistry.COMMENT
             "STRING" -> PhelTextAttributesRegistry.STRING
@@ -240,7 +236,6 @@ class PhelSyntaxHighlightingWorkflowTest {
 
         val startTime = System.nanoTime()
 
-        // Process many tokens
         repeat(1000) {
             testTokens.forEach { tokenType ->
                 syntaxHighlighter.getTokenHighlights(tokenType)
@@ -255,10 +250,9 @@ class PhelSyntaxHighlightingWorkflowTest {
     }
 
     @Test
-    fun `workflow should use new architecture consistently`() {
+    fun `each token type maps to its registry attribute`() {
         val syntaxHighlighter = PhelSyntaxHighlighter()
 
-        // Test that highlighting works with new architecture
         val commentAttributes = syntaxHighlighter.getTokenHighlights(PhelTypes.LINE_COMMENT)
         assertEquals(PhelTextAttributesRegistry.COMMENT, commentAttributes[0])
 

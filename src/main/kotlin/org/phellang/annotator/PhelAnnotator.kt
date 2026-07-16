@@ -12,9 +12,7 @@ import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.language.psi.*
 
 class PhelAnnotator : Annotator {
-
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        // Skip highlighting if this element is commented out by #_ form comment
         if (PhelCommentAnalyzer.isCommentedOutByFormComment(element)) {
             PhelAnnotationUtils.createAnnotation(holder, element, COMMENTED_OUT_FORM)
             return  // Don't apply other highlighting to commented-out forms
@@ -32,11 +30,9 @@ class PhelAnnotator : Annotator {
             is PhelSymbol -> {
                 if (PhelCommentAnalyzer.isInsideAnonFunction(element)) return
                 val text = element.text ?: return
-                // First check if this is a namespace in a (:require ...) form
                 if (PhelRequireHighlighter.annotateRequireNamespace(element, holder)) {
                     return  // Handled as require namespace
                 }
-                // Otherwise, apply regular symbol highlighting
                 PhelSymbolHighlighter.annotateSymbol(element, text, holder)
             }
 

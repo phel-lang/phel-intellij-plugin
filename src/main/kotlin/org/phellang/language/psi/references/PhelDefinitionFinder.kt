@@ -18,10 +18,9 @@ import org.phellang.language.psi.utils.SymbolCategory
  * friends — plus the parameter vectors those forms introduce.
  *
  * Shared by every resolver: scanning a file's lists for a matching definition is the one operation
- * they all perform, and it was previously written out four separate times.
+ * they all perform.
  */
 internal object PhelDefinitionFinder {
-
     /** Keywords that define new symbols. */
     private val DEFINING_KEYWORDS = setOf(
         "def", "defn", "defn-", "defmacro", "defmacro-",

@@ -4,7 +4,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
 
 object PhelPlaceholderGenerator {
-
     private val DEFINING_FORMS = setOf(
         "defn", "defn-", "defmacro", "defmacro-", "def", "def-", "defstruct", "definterface", "defexception", "declare"
     )
@@ -17,12 +16,10 @@ object PhelPlaceholderGenerator {
         val firstText = firstSymbol?.text ?: return "(...)"
 
         return when {
-            // Function definitions with names
             firstText in DEFINING_FORMS && forms.size >= 2 -> {
                 generateDefiningFormPlaceholder(firstText, forms[1])
             }
 
-            // Namespace declarations
             firstText == "ns" && forms.size >= 2 -> {
                 generateNamespacePlaceholder(forms[1])
             }

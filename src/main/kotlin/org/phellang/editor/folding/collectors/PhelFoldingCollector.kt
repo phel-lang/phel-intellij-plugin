@@ -8,7 +8,6 @@ import org.phellang.editor.folding.placeholders.PhelPlaceholderGenerator
 import org.phellang.language.psi.*
 
 class PhelFoldingCollector {
-
     fun collectFoldingDescriptors(node: ASTNode, document: Document): List<FoldingDescriptor> {
         val descriptors = mutableListOf<FoldingDescriptor>()
         collectFoldingDescriptorsRecursive(node, document, descriptors)
@@ -20,14 +19,12 @@ class PhelFoldingCollector {
     ) {
         val psi = node.psi
 
-        // Handle different PSI element types
         when (psi) {
             is PhelList -> handleListFolding(psi, document, descriptors)
             is PhelVec -> handleVectorFolding(psi, document, descriptors)
             is PhelMap -> handleMapFolding(psi, document, descriptors)
         }
 
-        // Handle comment folding separately
         if (psi is PhelFormCommentMacro) {
             handleCommentFolding(psi, document, descriptors)
         }

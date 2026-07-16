@@ -11,7 +11,6 @@ import java.io.File
 import java.nio.file.Files
 
 class RegistryWiringGeneratorTest {
-
     private lateinit var tempDir: File
 
     @BeforeEach
@@ -87,7 +86,7 @@ class RegistryWiringGeneratorTest {
         assertTrue(registryText.contains("functions[Namespace.CORE] = registerCoreFunctions()"))
 
         // The generated payload lives in `registry/data`, below the model package, so the registry
-        // needs an import for *every* namespace — not just the ones in a subfolder as before.
+        // needs an import for *every* namespace — including flat (non-subfolder) ones.
         assertTrue(
             registryText.contains("import org.phellang.registry.data.registerCoreFunctions"),
             "a flat namespace needs an import from the data package"
