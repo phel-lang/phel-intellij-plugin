@@ -2,8 +2,6 @@ package org.phellang.documentation.resolvers
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.completion.documentation.PhelApiDocumentation
-import org.phellang.completion.documentation.PhelBasicDocumentation
 import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelForm

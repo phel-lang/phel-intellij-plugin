@@ -1,17 +1,13 @@
-package org.phellang.completion.documentation
+package org.phellang.documentation.resolvers
 
 import org.phellang.registry.PhelFunctionRegistry
 import java.util.concurrent.ConcurrentHashMap
 
 object PhelApiDocumentation {
 
-    // Rendered HTML documentation, keyed by fully-qualified function name. Built lazily on
-    // first request instead of eagerly rendering every function up front — highlighting only
-    // needs to know whether a name exists (see [hasDocumentation]), not its rendered HTML.
+    // Rendered HTML documentation, keyed by fully-qualified function name. Built lazily on first
+    // request rather than eagerly rendering all 900+ registry functions: hover asks for one at a time.
     private val rendered = ConcurrentHashMap<String, String>()
-
-    /** True when the standard-library registry has a function with this exact name. */
-    fun hasDocumentation(name: String): Boolean = PhelFunctionRegistry.getFunction(name) != null
 
     /** Rendered HTML documentation for [name], or null when no such standard-library function exists. */
     fun getDocumentation(name: String): String? {

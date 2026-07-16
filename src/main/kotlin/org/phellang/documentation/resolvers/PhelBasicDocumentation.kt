@@ -1,4 +1,4 @@
-package org.phellang.completion.documentation
+package org.phellang.documentation.resolvers
 
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.core.psi.PhelSymbolAnalyzer
