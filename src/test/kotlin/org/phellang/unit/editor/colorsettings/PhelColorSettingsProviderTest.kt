@@ -3,9 +3,9 @@ package org.phellang.unit.editor.colorsettings
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants
+import org.phellang.core.highlighting.PhelAnnotationConstants
 import org.phellang.editor.colorsettings.PhelColorSettingsProvider
-import org.phellang.syntax.attributes.PhelTextAttributesRegistry
+import org.phellang.core.highlighting.PhelTextAttributesRegistry
 
 class PhelColorSettingsProviderTest {
 

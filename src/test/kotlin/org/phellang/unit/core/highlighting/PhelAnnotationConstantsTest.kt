@@ -1,9 +1,9 @@
-package org.phellang.unit.annotator.infrastructure
+package org.phellang.unit.core.highlighting
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants
+import org.phellang.core.highlighting.PhelAnnotationConstants
 
 class PhelAnnotationConstantsTest {
     @Test

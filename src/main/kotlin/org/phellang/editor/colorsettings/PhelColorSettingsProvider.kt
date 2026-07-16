@@ -1,8 +1,8 @@
 package org.phellang.editor.colorsettings
 
 import com.intellij.openapi.options.colors.AttributesDescriptor
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants
-import org.phellang.syntax.attributes.PhelTextAttributesRegistry
+import org.phellang.core.highlighting.PhelAnnotationConstants
+import org.phellang.core.highlighting.PhelTextAttributesRegistry
 
 class PhelColorSettingsProvider {
 

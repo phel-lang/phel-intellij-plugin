@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.phellang.syntax.PhelSyntaxHighlighter
 import org.phellang.language.lexer.PhelLexerAdapter
 import org.phellang.language.psi.PhelTypes
-import org.phellang.syntax.attributes.PhelTextAttributesRegistry
+import org.phellang.core.highlighting.PhelTextAttributesRegistry
 
 class PhelSyntaxHighlighterTest {
     @Test

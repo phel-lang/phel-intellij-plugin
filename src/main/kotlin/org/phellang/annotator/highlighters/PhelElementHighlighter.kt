@@ -1,8 +1,8 @@
 package org.phellang.annotator.highlighters
 
 import com.intellij.lang.annotation.AnnotationHolder
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.ANONYMOUS_FUNCTION
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.KEYWORD
+import org.phellang.core.highlighting.PhelAnnotationConstants.ANONYMOUS_FUNCTION
+import org.phellang.core.highlighting.PhelAnnotationConstants.KEYWORD
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.language.psi.*
 

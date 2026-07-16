@@ -1,14 +1,14 @@
 package org.phellang.annotator.highlighters
 
 import com.intellij.lang.annotation.AnnotationHolder
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.DEPRECATED_SYMBOL
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_PARAMETER
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_CALL
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.FUNCTION_NAME
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.NAMESPACE_SYMBOL
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.PHP_INTEROP
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.REGULAR_SYMBOL
-import org.phellang.annotator.infrastructure.PhelAnnotationConstants.VARIADIC_PARAMETER
+import org.phellang.core.highlighting.PhelAnnotationConstants.DEPRECATED_SYMBOL
+import org.phellang.core.highlighting.PhelAnnotationConstants.FUNCTION_PARAMETER
+import org.phellang.core.highlighting.PhelAnnotationConstants.FUNCTION_CALL
+import org.phellang.core.highlighting.PhelAnnotationConstants.FUNCTION_NAME
+import org.phellang.core.highlighting.PhelAnnotationConstants.NAMESPACE_SYMBOL
+import org.phellang.core.highlighting.PhelAnnotationConstants.PHP_INTEROP
+import org.phellang.core.highlighting.PhelAnnotationConstants.REGULAR_SYMBOL
+import org.phellang.core.highlighting.PhelAnnotationConstants.VARIADIC_PARAMETER
 import org.phellang.annotator.validators.PhelFunctionReferenceValidator
 import org.phellang.annotator.validators.PhelNamespaceValidator
 import org.phellang.registry.PhelFunctionRegistry

@@ -1,4 +1,4 @@
-package org.phellang.syntax.attributes
+package org.phellang.core.highlighting
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.HighlighterColors
