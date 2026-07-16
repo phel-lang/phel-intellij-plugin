@@ -37,25 +37,23 @@ import org.phellang.registry.data.test.registerTestRoseFunctions
 import org.phellang.registry.data.test.registerTestSelectorFunctions
 import org.phellang.registry.data.test.registerTestShrinkFunctions
 // endregion GENERATED IMPORTS — updatePhelRegistry
-import org.phellang.registry.PhelCompletionPriority
 
 /**
  * Based on official Phel API documentation: https://phel-lang.org/documentation/api/
  */
 object PhelFunctionRegistry {
-
     private val functions = mutableMapOf<Namespace, List<PhelFunction>>()
 
     // `functions` is populated once in init and never mutated afterwards, so the flattened
     // view can be computed a single time and reused by every read path.
     private val flattenedFunctions: List<PhelFunction> by lazy { functions.values.flatten() }
 
-    // Cache of deprecated function names for fast lookup
+    // Deprecated names are stored under both the full and the short name, so lookups work
+    // with or without a namespace prefix.
     private val deprecatedFunctionNames: Set<String> by lazy {
         flattenedFunctions
             .filter { it.isDeprecated }
             .flatMap { func ->
-                // Store both full name and short name for flexible lookup
                 val shortName = func.name.substringAfter("/")
                 if (shortName != func.name) {
                     listOf(func.name, shortName)
@@ -127,7 +125,7 @@ object PhelFunctionRegistry {
         return functionNamesByPriority[priority]?.contains(name) == true
     }
 
-    // First-wins lookup by exact name, mirroring the previous `find { it.name == name }`.
+    // First-wins by exact name: duplicate names across namespaces keep the earliest entry.
     private val functionsByName: Map<String, PhelFunction> by lazy {
         val map = HashMap<String, PhelFunction>()
         for (fn in flattenedFunctions) {
@@ -140,17 +138,12 @@ object PhelFunctionRegistry {
         return functionsByName[name]
     }
 
-    fun getAllFunctions(): List<PhelFunction> {
-        return flattenedFunctions
-    }
-
     fun isDeprecated(functionName: String): Boolean {
-        // Check exact match first
         if (functionName in deprecatedFunctionNames) {
             return true
         }
 
-        // If the input has a namespace prefix (e.g., "core/put"), try short name
+        // A namespace-prefixed input (e.g. "core/put") may only be stored under its short name.
         val shortName = functionName.substringAfter("/")
         return shortName in deprecatedFunctionNames
     }

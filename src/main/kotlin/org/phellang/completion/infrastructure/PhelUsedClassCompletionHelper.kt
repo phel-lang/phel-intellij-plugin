@@ -3,10 +3,8 @@ package org.phellang.completion.infrastructure
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.language.psi.PhelNamespaceUtils
-import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.references.PhpClassResolver
 import org.phellang.registry.PhelCompletionPriority
@@ -22,7 +20,6 @@ import org.phellang.registry.PhelCompletionPriority
  *    plugin is available — silently no-ops otherwise).
  */
 object PhelUsedClassCompletionHelper {
-
     @JvmStatic
     fun addUsedClassCompletions(result: CompletionResultSet, file: PhelFile) {
         val classes = PhelNamespaceUtils.extractUsedClasses(file)
@@ -41,7 +38,6 @@ object PhelUsedClassCompletionHelper {
             }
         }
     }
-
 
     private fun memberLookup(
         className: String,

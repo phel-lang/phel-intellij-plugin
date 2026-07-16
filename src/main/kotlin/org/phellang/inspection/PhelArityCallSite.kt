@@ -4,9 +4,7 @@ import com.intellij.psi.PsiElement
 import org.phellang.core.psi.PhelLocalBindingScope
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
-import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
-import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
@@ -18,7 +16,6 @@ import org.phellang.language.psi.utils.PhelPsiUtils
  * question from "does this call have the right number of arguments".
  */
 internal object PhelArityCallSite {
-
     /** True when the arity check must not run for [list] with head [name]. */
     fun shouldSkip(list: PhelList, head: PhelSymbol, name: String, forms: List<PhelForm>): Boolean {
         if (name in SKIP_HEADS) return true
@@ -75,7 +72,6 @@ internal object PhelArityCallSite {
         // [list] is an argument (not the head form) of the threading macro.
         return !headRange.contains(list.textRange.startOffset)
     }
-
 
     private fun enclosingList(list: PhelList): PhelList? =
         generateSequence(list.parent) { it.parent }.filterIsInstance<PhelList>().firstOrNull()

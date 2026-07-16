@@ -1,13 +1,11 @@
 package org.phellang.editor.paredit
 
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 
 object PhelParedit {
-
     fun slurpForward(file: PsiFile, offset: Int): List<PhelTextEdit>? {
         val container = PhelParediContainers.findEnclosingContainer(file, offset) ?: return null
         val wrapper = container.parent as? PhelForm ?: return null
