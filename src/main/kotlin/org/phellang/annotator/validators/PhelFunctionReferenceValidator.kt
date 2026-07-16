@@ -1,6 +1,6 @@
 package org.phellang.annotator.validators
 
-import org.phellang.completion.documentation.PhelApiDocumentation
+import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.registry.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelInteropShorthands
@@ -58,14 +58,14 @@ object PhelFunctionReferenceValidator {
 
     private fun existsInStandardLibrary(namespace: String, functionName: String): Boolean {
         val canonicalName = "$namespace/$functionName"
-        if (PhelApiDocumentation.hasDocumentation(canonicalName)) {
+        if (PhelFunctionRegistry.getFunction(canonicalName) != null) {
             return true
         }
 
         val fullNamespace = PhelProjectNamespaceFinder.getStandardLibraryFullNamespace(namespace)
         if (fullNamespace != null) {
             val fullName = "$fullNamespace/$functionName"
-            if (PhelApiDocumentation.hasDocumentation(fullName)) {
+            if (PhelFunctionRegistry.getFunction(fullName) != null) {
                 return true
             }
         }
