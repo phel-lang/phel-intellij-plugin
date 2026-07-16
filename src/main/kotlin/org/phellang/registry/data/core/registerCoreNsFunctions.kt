@@ -23,7 +23,7 @@ Returns the canonical (dot-separated) form of a namespace string. Pass user-supp
 """,
             example = "(canonical-ns \"phel\\core\") ; =&gt; \"phel.core\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L17",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L17",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Creates the given namespace if it does not already exist. Returns the namespace 
 """,
             example = "(create-ns \"my-app.tmp\") ; =&gt; \"my-app.tmp\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L60",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L60",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Returns the display (dot-separated) form of a namespace string. Equivalent to <c
 """,
             example = "(display-ns \"phel\\core\") ; =&gt; \"phel.core\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L24",
                 docs = "",
             ),
         ),
@@ -80,7 +80,7 @@ Returns the namespace name in display form if it is loaded, or nil if no namespa
 """,
             example = "(find-ns \"phel.core\") ; =&gt; \"phel.core\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L51",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L51",
                 docs = "",
             ),
         ),
@@ -99,7 +99,7 @@ Returns the <code>Var</code> named by the fully-qualified symbol, or nil if no m
 """,
             example = "(find-var 'phel.core/map) ; =&gt; #'phel.core/map",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L147",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L147",
                 docs = "",
             ),
         ),
@@ -118,7 +118,7 @@ Finds or creates a definition named by name-str in namespace ns-str. When a valu
 """,
             example = "(intern \"user\" \"x\" 42) ; =&gt; user/x",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L97",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L97",
                 docs = "",
             ),
         ),
@@ -137,7 +137,7 @@ Loads and evaluates a Phel source file. Reads the file content and evaluates it 
 """,
             example = "(load-file \"src/my-module.phel\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L201",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L201",
                 docs = "",
             ),
         ),
@@ -154,7 +154,7 @@ Loads and evaluates a Phel source file. Reads the file content and evaluates it 
             summary = "Returns all namespaces currently loaded, in dot-separated display form.",
             example = "(loaded-namespaces) ; =&gt; [\"phel.core\" \"phel.repl\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L31",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L31",
                 docs = "",
             ),
         ),
@@ -174,7 +174,7 @@ Returns a hash-map of {alias => namespace} for all require aliases in the<br />
 """,
             example = "(ns-aliases *ns*) ; =&gt; {\"repl\" \"phel.repl\" ...}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L175",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L175",
                 docs = "",
             ),
         ),
@@ -195,7 +195,7 @@ Returns a hash-map of {name => value} for every definition in the<br />
 """,
             example = "(ns-interns \"phel\\core\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L88",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L88",
                 docs = "",
             ),
         ),
@@ -215,7 +215,7 @@ Returns a hash-map of {name => value} for all public definitions in the<br />
 """,
             example = "(ns-publics \"phel\\core\") ; =&gt; {\"map\" &lt;fn&gt; \"filter\" &lt;fn&gt; ...}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L164",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L164",
                 docs = "",
             ),
         ),
@@ -235,7 +235,7 @@ Returns a hash-map of {name => source-namespace} for all referred symbols<br />
 """,
             example = "(ns-refers *ns*) ; =&gt; {\"doc\" \"phel.repl\" ...}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L188",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L188",
                 docs = "",
             ),
         ),
@@ -254,7 +254,7 @@ Removes the namespace and all of its definitions from the registry. Use with cau
 """,
             example = "(remove-ns \"my-app\\tmp\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L69",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L69",
                 docs = "",
             ),
         ),
@@ -282,7 +282,7 @@ With one argument, returns nil when the symbol is not defined. With two<br />
 """,
             example = "(var-get #'phel.core/map) ; =&gt; &lt;function:map&gt;\n(var-get (intern \"user\" \"x\" 42)) ; =&gt; 42\n(var-get 'user/missing ::none) ; =&gt; :user/none",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/core/ns.phel#L112",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/ns.phel#L112",
                 docs = "",
             ),
         ),

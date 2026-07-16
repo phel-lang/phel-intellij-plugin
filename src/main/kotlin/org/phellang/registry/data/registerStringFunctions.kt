@@ -23,7 +23,7 @@ True if s is nil, empty, or contains only whitespace. Non-breaking separators (<
 """,
             example = "(blank? \"   \") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L155",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L155",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ True if s is nil, empty, or contains only whitespace. Non-breaking separators (<
             summary = "Converts first character to upper-case and all other characters to lower-case.",
             example = "(capitalize \"hELLO wORLD\") ; =&gt; \"Hello world\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L110",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L110",
                 docs = "",
             ),
         ),
@@ -60,7 +60,7 @@ This is a convenience function for converting strings to character sequences. Pr
 """,
             example = "(chars \"hello\") ; =&gt; [\"h\" \"e\" \"l\" \"l\" \"o\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L21",
                 docs = "",
             ),
         ),
@@ -79,7 +79,7 @@ True if s contains substr. Synonym for <code>includes?</code>.
 """,
             example = "(contains? \"hello world\" \"lo wo\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L191",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L191",
                 docs = "",
             ),
         ),
@@ -96,7 +96,7 @@ True if s contains substr. Synonym for <code>includes?</code>.
             summary = "True if s ends with substr.",
             example = "(ends-with? \"hello world\" \"world\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L174",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L174",
                 docs = "",
             ),
         ),
@@ -113,7 +113,7 @@ True if s contains substr. Synonym for <code>includes?</code>.
             summary = "Returns a new string with each character escaped according to cmap.",
             example = "(escape \"hello\" {\"h\" \"H\" \"o\" \"O\"}) ; =&gt; \"HellO\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L205",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L205",
                 docs = "",
             ),
         ),
@@ -130,7 +130,7 @@ True if s contains substr. Synonym for <code>includes?</code>.
             summary = "True if s includes substr.",
             example = "(includes? \"hello world\" \"world\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L182",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L182",
                 docs = "",
             ),
         ),
@@ -149,7 +149,7 @@ Returns the index of the first occurrence of value in s, or nil if not found. Th
 """,
             example = "(index-of \"hello world\" \"world\") ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L214",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L214",
                 docs = "",
             ),
         ),
@@ -166,7 +166,7 @@ Returns the index of the first occurrence of value in s, or nil if not found. Th
             summary = "Returns a string of all elements in coll, separated by an optional separator.",
             example = "(join \", \" [\"apple\" \"banana\" \"cherry\"]) ; =&gt; \"apple, banana, cherry\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L31",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L31",
                 docs = "",
             ),
         ),
@@ -185,7 +185,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
 """,
             example = "(last-index-of \"hello world world\" \"world\") ; =&gt; 12",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L233",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L233",
                 docs = "",
             ),
         ),
@@ -202,7 +202,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Converts string to all lower-case.",
             example = "(lower-case \"HELLO World\") ; =&gt; \"hello world\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L120",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L120",
                 docs = "",
             ),
         ),
@@ -219,7 +219,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Returns a string padded on both sides to length len.",
             example = "(pad-both \"hello\" 11) ; =&gt; \"   hello   \"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L283",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L283",
                 docs = "",
             ),
         ),
@@ -236,7 +236,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Returns a string padded on the left side to length len.",
             example = "(pad-left \"hello\" 10) ; =&gt; \"     hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L269",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L269",
                 docs = "",
             ),
         ),
@@ -253,7 +253,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Returns a string padded on the right side to length len.",
             example = "(pad-right \"hello\" 10) ; =&gt; \"hello     \"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L276",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L276",
                 docs = "",
             ),
         ),
@@ -270,7 +270,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Escapes special characters in a replacement string for literal use.",
             example = "(re-quote-replacement \"\$1.00\") ; =&gt; \"\\\$1.00\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L198",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L198",
                 docs = "",
             ),
         ),
@@ -287,7 +287,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Returns a string containing n copies of s.",
             example = "(repeat \"ha\" 3) ; =&gt; \"hahaha\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L56",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L56",
                 docs = "",
             ),
         ),
@@ -304,7 +304,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Replaces all instances of match with replacement in s.",
             example = "(replace \"hello world\" \"world\" \"there\") ; =&gt; \"hello there\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L74",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L74",
                 docs = "",
             ),
         ),
@@ -321,7 +321,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Replaces the first instance of match with replacement in s.",
             example = "(replace-first \"hello world world\" \"world\" \"there\") ; =&gt; \"hello there world\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L86",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L86",
                 docs = "",
             ),
         ),
@@ -338,7 +338,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Returns s with its characters reversed.",
             example = "(reverse \"hello\") ; =&gt; \"olleh\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L48",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L48",
                 docs = "",
             ),
         ),
@@ -355,7 +355,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Splits string on a regular expression, returning a vector of parts.",
             example = "(split \"hello world foo bar\" #\"\\s+\") ; =&gt; [\"hello\" \"world\" \"foo\" \"bar\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L14",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L14",
                 docs = "",
             ),
         ),
@@ -372,7 +372,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Splits s on \\n or \\r\\n. Trailing empty lines are not returned.",
             example = "(split-lines \"hello\\nworld\\ntest\") ; =&gt; [\"hello\" \"world\" \"test\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L257",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L257",
                 docs = "",
             ),
         ),
@@ -389,7 +389,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "True if s starts with substr.",
             example = "(starts-with? \"hello world\" \"hello\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L166",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L166",
                 docs = "",
             ),
         ),
@@ -406,7 +406,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Returns the substring of s from start (inclusive) to end (exclusive).",
             example = "(subs \"hello world\" 0 5) ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L38",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L38",
                 docs = "",
             ),
         ),
@@ -423,7 +423,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Removes whitespace from both ends of string.",
             example = "(trim \"  hello  \") ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L134",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L134",
                 docs = "",
             ),
         ),
@@ -440,7 +440,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Removes all trailing newline or return characters from string.",
             example = "(trim-newline \"hello\\n\\n\") ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L98",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L98",
                 docs = "",
             ),
         ),
@@ -457,7 +457,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Removes whitespace from the left side of string.",
             example = "(triml \"  hello  \") ; =&gt; \"hello  \"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L141",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L141",
                 docs = "",
             ),
         ),
@@ -474,7 +474,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Removes whitespace from the right side of string.",
             example = "(trimr \"  hello  \") ; =&gt; \"  hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L148",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L148",
                 docs = "",
             ),
         ),
@@ -491,7 +491,7 @@ Returns the index of the last occurrence of value in s, or nil if not found. The
             summary = "Converts string to all upper-case.",
             example = "(upper-case \"hello World\") ; =&gt; \"HELLO WORLD\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.47.0/src/phel/string.phel#L127",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/string.phel#L127",
                 docs = "",
             ),
         ),
