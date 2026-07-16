@@ -5,7 +5,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelReferUtils {
-
     data class ReferContext(
         val namespace: String,
         val containingVec: PhelVec
@@ -23,33 +22,24 @@ object PhelReferUtils {
 
     @JvmStatic
     fun getReferContext(element: PsiElement): ReferContext? {
-        // Find the containing vector
         val containingVec = PsiTreeUtil.getParentOfType(element, PhelVec::class.java) ?: return null
 
-        // Find the containing require form
         val requireForm = PsiTreeUtil.getParentOfType(containingVec, PhelList::class.java) ?: return null
 
         val forms = requireForm.forms
         if (forms.isEmpty()) return null
 
-        // First form should be :require keyword
-        val firstForm = forms[0]
-        val firstKeyword = firstForm as? PhelKeyword
-            ?: PsiTreeUtil.findChildOfType(firstForm, PhelKeyword::class.java)
-        if (firstKeyword?.text != ":require") return null
+        if (PhelPsiUtils.asKeyword(forms[0])?.text != ":require") return null
 
-        // Find the namespace and check if our vector follows :refer
+        // The namespace symbol precedes :refer; remember it so the context can carry it.
         var namespace: String? = null
 
         for (i in 1 until forms.size) {
             val form = forms[i]
 
-            // Check for keyword
-            val keyword = form as? PhelKeyword
-                ?: PsiTreeUtil.findChildOfType(form, PhelKeyword::class.java)
+            val keyword = PhelPsiUtils.asKeyword(form)
 
             if (keyword?.text == ":refer" && i + 1 < forms.size) {
-                // Check if the next form is our containing vector
                 if (forms[i + 1] === containingVec || PsiTreeUtil.isAncestor(forms[i + 1], containingVec, false)) {
                     return if (namespace != null) {
                         ReferContext(namespace, containingVec)
@@ -59,7 +49,6 @@ object PhelReferUtils {
                 }
             }
 
-            // If not a keyword, might be the namespace
             if (keyword == null) {
                 val namespaceSymbol = PhelPsiUtils.asSymbol(form)
                 if (namespaceSymbol != null && namespace == null) {
@@ -75,11 +64,9 @@ object PhelReferUtils {
     fun getAlreadyReferredSymbols(element: PsiElement, excludeElement: PsiElement? = null): Set<String> {
         val containingVec = PsiTreeUtil.getParentOfType(element, PhelVec::class.java) ?: return emptySet()
 
-        // Get all symbols in the vector
         val symbols = PsiTreeUtil.findChildrenOfType(containingVec, PhelSymbol::class.java)
 
         return symbols.mapNotNull { symbol ->
-            // Skip the excluded element
             if (excludeElement != null && symbol === excludeElement) {
                 return@mapNotNull null
             }
@@ -99,17 +86,13 @@ object PhelReferUtils {
         val symbolName = symbol.text ?: return false
         val containingVec = PsiTreeUtil.getParentOfType(symbol, PhelVec::class.java) ?: return false
 
-        // Get all symbols in the vector
         val allSymbols = PsiTreeUtil.findChildrenOfType(containingVec, PhelSymbol::class.java)
 
-        // Check if there's a symbol with the same name before this one
         for (otherSymbol in allSymbols) {
-            // Stop when we reach our symbol
             if (otherSymbol === symbol) {
                 return false
             }
 
-            // If we find the same name before our symbol, it's a duplicate
             if (otherSymbol.text == symbolName) {
                 return true
             }

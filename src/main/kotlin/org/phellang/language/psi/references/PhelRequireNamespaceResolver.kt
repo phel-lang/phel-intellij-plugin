@@ -4,9 +4,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelAccess
-import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
@@ -14,6 +12,7 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.PhelVendorUtils
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Resolves the namespace at the head of a `(:require ...)` spec to the `(ns ...)` form of the module
@@ -23,7 +22,6 @@ import org.phellang.language.psi.files.PhelFile
  * ordinary symbol resolution.
  */
 internal object PhelRequireNamespaceResolver {
-
     fun resolve(symbol: PhelSymbol): List<PsiElement> {
         if (!isRequireNamespaceHead(symbol)) return emptyList()
 
@@ -77,9 +75,7 @@ internal object PhelRequireNamespaceResolver {
     /** The `(ns <name> ...)` name symbol to navigate to, falling back to the whole form. */
     private fun navigationTarget(nsDeclaration: PhelList): PsiElement {
         val nameForm = nsDeclaration.forms.getOrNull(1)
-        val nameSymbol = nameForm as? PhelSymbol
-            ?: nameForm?.let { PsiTreeUtil.findChildOfType(it, PhelSymbol::class.java) }
-        return nameSymbol ?: nsDeclaration
+        return PhelPsiUtils.asSymbol(nameForm) ?: nsDeclaration
     }
 
     private fun isRequireNamespaceHead(symbol: PhelSymbol): Boolean {
@@ -101,8 +97,6 @@ internal object PhelRequireNamespaceResolver {
     }
 
     private fun isRequireClause(list: PhelList): Boolean {
-        val head = list.forms.firstOrNull() ?: return false
-        val keyword = head as? PhelKeyword ?: PsiTreeUtil.findChildOfType(head, PhelKeyword::class.java)
-        return keyword?.text == ":require"
+        return PhelPsiUtils.asKeyword(list.forms.firstOrNull())?.text == ":require"
     }
 }

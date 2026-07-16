@@ -9,7 +9,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVisitor
@@ -26,7 +25,6 @@ import org.phellang.language.psi.utils.PhelPsiUtils
  * Phel form — not a deprecation.
  */
 class PhelBackslashNamespaceInspection : LocalInspectionTool() {
-
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhelVisitor() {
             override fun visitSymbol(symbol: PhelSymbol) {
@@ -52,9 +50,7 @@ class PhelBackslashNamespaceInspection : LocalInspectionTool() {
         // (:require ns ...) — first form is the keyword.
         // `:use` is deliberately excluded: it imports PHP classes, whose FQNs must
         // use backslashes (e.g. `(:use \DateTimeImmutable)`).
-        val firstKeyword = forms[0] as? PhelKeyword
-            ?: PsiTreeUtil.findChildOfType(forms[0], PhelKeyword::class.java)
-        if (firstKeyword?.text == ":require") {
+        if (PhelPsiUtils.asKeyword(forms[0])?.text == ":require") {
             return true
         }
 

@@ -5,7 +5,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
 
 object PhelPsiUtils {
-
     @JvmStatic
     fun findTopmostSymbol(element: PsiElement?): PhelSymbol? {
         if (element == null) return null
@@ -35,6 +34,20 @@ object PhelPsiUtils {
             is PhelSymbol -> form
             is PhelAccess -> form.symbol ?: PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
             else -> PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
+        }
+    }
+
+    /**
+     * Resolves a form to its [PhelKeyword] — the keyword analog of [asSymbol]. Clause keywords
+     * like `:require` may sit inside a wrapper form, so a plain `as? PhelKeyword` cast misses
+     * them; fall back to the first child keyword.
+     */
+    @JvmStatic
+    fun asKeyword(form: PsiElement?): PhelKeyword? {
+        return when (form) {
+            null -> null
+            is PhelKeyword -> form
+            else -> PsiTreeUtil.findChildOfType(form, PhelKeyword::class.java)
         }
     }
 

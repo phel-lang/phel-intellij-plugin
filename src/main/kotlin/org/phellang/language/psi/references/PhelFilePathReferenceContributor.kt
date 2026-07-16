@@ -12,12 +12,9 @@ import com.intellij.psi.PsiReferenceContributor
 import com.intellij.psi.PsiReferenceProvider
 import com.intellij.psi.PsiReferenceRegistrar
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelLiteral
-import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
@@ -98,8 +95,7 @@ private class PhelFilePathReferenceProvider : PsiReferenceProvider() {
         }
 
         // (:require-file "path" …) — any string after the keyword is a path.
-        val headKeyword = head as? PhelKeyword ?: PsiTreeUtil.findChildOfType(head, PhelKeyword::class.java)
-        if (headKeyword?.text == ":require-file" && head !== literal) {
+        if (PhelPsiUtils.asKeyword(head)?.text == ":require-file" && head !== literal) {
             return LoadFormKind.PATH_WITH_EXTENSION
         }
 
@@ -117,7 +113,6 @@ private class PhelLoadReference(
     rangeInElement: TextRange,
     private val path: String,
 ) : PsiReferenceBase<PhelLiteral>(literal, rangeInElement) {
-
     override fun resolve(): PsiElement? {
         val targetFile = resolveTargetFile() ?: return null
         return PsiManager.getInstance(element.project).findFile(targetFile)

@@ -1,22 +1,19 @@
 package org.phellang.annotator.validators
 
 import com.intellij.openapi.project.Project
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.annotator.quickfixes.PhelImportNamespaceQuickFix
 import org.phellang.language.psi.utils.PhelPsiUtils
-import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
+import org.phellang.language.psi.PhelRequireClauseAnalyzer
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
 object PhelNamespaceValidator {
-
     fun validateNamespace(symbol: PhelSymbol): List<PhelValidationProblem> {
         val text = symbol.text ?: return emptyList()
 
-        // Only validate namespace-qualified symbols
         if (!text.contains("/")) {
             return emptyList()
         }
@@ -43,7 +40,6 @@ object PhelNamespaceValidator {
             return emptyList()
         }
 
-        // Check if the qualifier is imported or aliased AND the namespace exists
         val importStatus = checkImportStatus(containingFile, qualifier)
 
         when (importStatus) {
@@ -65,7 +61,6 @@ object PhelNamespaceValidator {
             }
 
             ImportStatus.NOT_IMPORTED -> {
-                // Not imported - check if we can suggest an import
             }
         }
 
@@ -93,73 +88,25 @@ object PhelNamespaceValidator {
     }
 
     private fun checkImportStatus(file: PhelFile, qualifier: String): ImportStatus {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return ImportStatus.NOT_IMPORTED
+        val imports = PhelRequireClauseAnalyzer.imports(file)
 
-        // Check alias map
-        val aliasMap = PhelNamespaceUtils.extractAliasMap(file)
-        if (aliasMap.containsKey(qualifier)) {
-            val aliasedNamespace = aliasMap[qualifier]
-            if (aliasedNamespace != null) {
-                val fullNamespace = getFullNamespaceForAlias(file, aliasedNamespace)
-                if (fullNamespace != null) {
-                    return if (namespaceExistsWithStdLib(file.project, fullNamespace)) {
-                        ImportStatus.VALID
-                    } else {
-                        ImportStatus.IMPORTED_BUT_NOT_EXISTS
-                    }
-                }
-            }
+        // An `:as` alias takes priority; otherwise match the import's short namespace.
+        val import = imports.firstOrNull { it.alias == qualifier }
+            ?: imports.firstOrNull { it.shortNamespace == qualifier }
+            ?: return ImportStatus.NOT_IMPORTED
+
+        return if (namespaceExistsWithStdLib(file.project, import.fullNamespace)) {
+            ImportStatus.VALID
+        } else {
+            ImportStatus.IMPORTED_BUT_NOT_EXISTS
         }
-
-        // Check direct imports
-        val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
-        for (requireForm in requireForms) {
-            for (form in requireForm.forms) {
-                val namespaceSymbol = if (form is PhelSymbol) form
-                else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-
-                if (namespaceSymbol == null) continue
-                val fullNamespace = namespaceSymbol.text
-                val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
-                if (shortNamespace != qualifier) continue
-                return if (namespaceExistsWithStdLib(file.project, fullNamespace)) {
-                    ImportStatus.VALID
-                } else {
-                    ImportStatus.IMPORTED_BUT_NOT_EXISTS
-                }
-            }
-        }
-
-        return ImportStatus.NOT_IMPORTED
-    }
-
-    private fun getFullNamespaceForAlias(file: PhelFile, aliasTarget: String): String? {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return null
-        val requireForms = PhelNamespaceUtils.findRequireForms(nsDeclaration)
-
-        for (requireForm in requireForms) {
-            for (form in requireForm.forms) {
-                val namespaceSymbol = if (form is PhelSymbol) form
-                else PsiTreeUtil.findChildOfType(form, PhelSymbol::class.java)
-
-                if (namespaceSymbol == null) continue
-                val fullNamespace = namespaceSymbol.text
-                val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
-                if (shortNamespace == aliasTarget) {
-                    return fullNamespace
-                }
-            }
-        }
-        return null
     }
 
     private fun namespaceExistsWithStdLib(project: Project, fullNamespace: String): Boolean {
-        // Check if it's a standard library namespace
         if (PhelProjectNamespaceFinder.isStandardLibrary(fullNamespace)) {
             return true
         }
 
-        // Check project files using shared utility
         return PhelProjectNamespaceFinder.namespaceExists(project, fullNamespace)
     }
 }

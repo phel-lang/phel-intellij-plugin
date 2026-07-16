@@ -4,13 +4,11 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
+import org.phellang.language.psi.PhelRequireClauseAnalyzer
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
-import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Resolves a namespace-qualified symbol — `utils/greet`, `m/square`, `string/join` — to its
@@ -21,7 +19,6 @@ import org.phellang.language.psi.utils.PhelPsiUtils
  * since a PHP class qualifier must never be matched against a Phel namespace.
  */
 internal object PhelQualifiedSymbolResolver {
-
     fun resolve(symbol: PhelSymbol, qualifier: String, symbolName: String): List<PsiElement> {
         val containingFile = symbol.containingFile as? PhelFile ?: return emptyList()
         val project = symbol.project
@@ -72,46 +69,9 @@ internal object PhelQualifiedSymbolResolver {
      * falls back to matching files by short namespace.
      */
     private fun resolveQualifierToNamespace(file: PhelFile, qualifier: String): String? {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return null
-
-        for (requireForm in PhelNamespaceUtils.findRequireForms(nsDeclaration)) {
-            val forms = requireForm.forms
-
-            var i = 1
-            while (i < forms.size) {
-                val namespaceSymbol = PhelPsiUtils.asSymbol(forms.getOrNull(i))
-                if (namespaceSymbol == null) {
-                    i++
-                    continue
-                }
-
-                val fullNamespace = namespaceSymbol.text
-                val alias = aliasFollowing(forms, i)
-
-                if (alias != null) {
-                    if (alias == qualifier) return fullNamespace
-                    i += 3   // namespace, :as, alias
-                    continue
-                }
-
-                if (PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace) == qualifier) {
-                    return fullNamespace
-                }
-                i++
-            }
-        }
-
-        return null
-    }
-
-    /** The alias in `<ns> :as <alias>` starting at [index], or null when no `:as` follows. */
-    private fun aliasFollowing(forms: List<org.phellang.language.psi.PhelForm>, index: Int): String? {
-        if (index + 2 >= forms.size) return null
-
-        val next = forms[index + 1]
-        val asKeyword = next as? PhelKeyword ?: PsiTreeUtil.findChildOfType(next, PhelKeyword::class.java)
-        if (asKeyword?.text != ":as") return null
-
-        return PhelPsiUtils.asSymbol(forms[index + 2])?.text
+        return PhelRequireClauseAnalyzer.imports(file).firstOrNull { spec ->
+            // An aliased import is referenced by its alias only; a plain one by its short name.
+            if (spec.alias != null) spec.alias == qualifier else spec.shortNamespace == qualifier
+        }?.fullNamespace
     }
 }
