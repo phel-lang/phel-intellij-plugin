@@ -7,8 +7,14 @@ description: Phel syntax reference
 
 Lisp transpiling to PHP; Clojure/Janet dialect. Source of truth: https://phel-lang.org/.
 
-**Comments**: `#` or `;` line. `#_` comments next form (stackable `#_#_` = two). No block comments.
+**Comments**: `;` line. `#_` comments next form (stackable `#_#_` = two).
 `[#_:one :two :three]` → `[:two :three]`.
+
+**Deprecated — never emit, never lex** (Phel still accepts these with an `E_USER_DEPRECATED`;
+the plugin lexer deliberately does not support any of them, so don't "fix" that as a gap):
+bare `#` line comments (use `;`) · `#| ... |#` nesting block comments (use `;` or `#_`) ·
+`|()` short fn (use `#()`) · `,` / `,@` unquote+splice (use `~` / `~@`; the plugin lexes `,`
+as whitespace).
 
 **Keywords**: `:kw` · `:ns/kw` · `::foo` (current-ns) · `::alias/foo`.
 
