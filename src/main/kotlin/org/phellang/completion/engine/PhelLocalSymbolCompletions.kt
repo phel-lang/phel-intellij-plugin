@@ -18,7 +18,6 @@ private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
 object PhelLocalSymbolCompletions {
     val PARAMETER_ICON = AllIcons.Nodes.Parameter
-    val METHOD_ICON = AllIcons.Nodes.Method
     val VARIABLE_ICON = AllIcons.Nodes.Variable
 
     /**
@@ -74,7 +73,6 @@ object PhelLocalSymbolCompletions {
 
                         if (functionType in FUNCTION_INTRO_FORMS) {
                             val paramVec = PhelSymbolAnalyzer.findParameterVector(current) ?: break
-                            // Extract parameters from the vector
                             val paramChildren = paramVec.children
                             for (paramChild in paramChildren) {
                                 if (paramChild !is PhelSymbol && paramChild !is PhelAccessImpl) continue
@@ -106,7 +104,6 @@ object PhelLocalSymbolCompletions {
         var current = position.parent
         var depth = 0
 
-        // Walk up the PSI tree to find let bindings
         while (current != null && depth < 10) {
             if (current is PhelList) {
                 val children = current.children
@@ -115,9 +112,7 @@ object PhelLocalSymbolCompletions {
                     if (firstChild is PhelSymbol || firstChild is PhelAccessImpl) {
                         val bindingType = firstChild.text
 
-                        // Check if this is a binding form
                         if (bindingType == "let" || bindingType == "for" || bindingType == "loop" || bindingType == "binding") {
-                            // Find the binding vector (second element)
                             if (children.size > 1) {
                                 val bindingElement = children[1]
                                 if (bindingElement is PhelVec) {
@@ -153,14 +148,12 @@ object PhelLocalSymbolCompletions {
     private fun addLocalDefinitionSymbolsSimple(
         result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
     ) {
-        val file = position.containingFile as PhelFile? ?: return
+        val file = position.containingFile as? PhelFile ?: return
 
-        // Iterate through all top-level forms in the current file
         for (child in file.children) {
             if (child !is PhelList) continue
             val children: Array<PsiElement> = child.children
 
-            // Look for definition forms: (defn name ...), (def name ...), etc.
             if (children.size < 2) continue
 
             val firstElement = children[0]
@@ -188,7 +181,6 @@ object PhelLocalSymbolCompletions {
             if (nameElement !is PhelSymbol && nameElement !is PhelAccessImpl) continue
 
             val symbolName = nameElement.text
-            // Use the highest priority for local function definitions
             val priority = when (defType) {
                 "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
                 else -> PhelCompletionPriority.PROJECT_SYMBOLS

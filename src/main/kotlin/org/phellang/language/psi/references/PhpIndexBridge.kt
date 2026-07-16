@@ -19,7 +19,6 @@ import java.lang.reflect.InvocationTargetException
  * call degrades to "nothing found" and lets the Phel-only resolution stay authoritative.
  */
 internal object PhpIndexBridge {
-
     private val LOG = Logger.getInstance(PhpIndexBridge::class.java)
 
     const val CONSTRUCTOR_NAME = "__construct"
@@ -36,17 +35,20 @@ internal object PhpIndexBridge {
         return phpIndexClass != null
     }
 
-    /** The PHP declarations for [fqn] — classes, interfaces, traits and enums alike. */
-    fun findClassesByFqn(project: Project, fqn: String): List<Any> {
+    /**
+     * The PHP declarations for [fqn] — classes, interfaces, traits and enums alike. Every
+     * `PhpClass` the PHP plugin returns is a [PsiElement]; anything else would be an API-shape
+     * surprise and is dropped, consistent with the bridge's degrade-to-nothing contract.
+     */
+    fun findClassesByFqn(project: Project, fqn: String): List<PsiElement> {
         val phpIndex = phpIndexClass ?: return emptyList()
         return try {
             val instance = phpIndex.getMethod("getInstance", Project::class.java).invoke(null, project)
             // `getAnyByFQN` covers interfaces such as `PersistentMapInterface`, which
             // `getClassesByFQN` would miss.
             val getByFqn = phpIndex.getMethod("getAnyByFQN", String::class.java)
-            @Suppress("UNCHECKED_CAST")
-            val phpTypes = getByFqn.invoke(instance, fqn) as? Collection<Any> ?: return emptyList()
-            phpTypes.toList()
+            val phpTypes = getByFqn.invoke(instance, fqn) as? Collection<*> ?: return emptyList()
+            phpTypes.filterIsInstance<PsiElement>()
         } catch (t: Throwable) {
             rethrowIfPlatformControlFlow(t)
             LOG.warn("PHP type lookup failed for '$fqn'", t)
@@ -55,7 +57,7 @@ internal object PhpIndexBridge {
     }
 
     /** The declaration(s) of [memberName] on [phpClass] — a method or a field/constant. */
-    fun findMemberInClass(phpClass: Any, memberName: String): List<PsiElement> {
+    fun findMemberInClass(phpClass: PsiElement, memberName: String): List<PsiElement> {
         val results = mutableListOf<PsiElement>()
 
         // Methods (including the constructor when memberName == "__construct").
@@ -72,7 +74,7 @@ internal object PhpIndexBridge {
     }
 
     /** The public members of [phpClass] surfaced for completion — private/protected are excluded. */
-    fun collectMembers(phpClass: Any): List<PhpMemberInfo> {
+    fun collectMembers(phpClass: PsiElement): List<PhpMemberInfo> {
         val out = mutableListOf<PhpMemberInfo>()
 
         membersOf(phpClass, "getMethods").forEach { method ->
@@ -111,7 +113,7 @@ internal object PhpIndexBridge {
         }
     }
 
-    private fun membersOf(phpClass: Any, accessor: String): Collection<*> =
+    private fun membersOf(phpClass: PsiElement, accessor: String): Collection<*> =
         tryInvokeCollection(phpClass::class.java, phpClass, accessor) ?: emptyList<Any>()
 
     private fun methodSignature(method: Any?, name: String): String {

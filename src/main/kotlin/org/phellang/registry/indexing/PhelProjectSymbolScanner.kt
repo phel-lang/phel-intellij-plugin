@@ -10,13 +10,11 @@ import org.phellang.language.psi.PhelLiteral
 import org.phellang.language.psi.PhelMap
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
-import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelProjectSymbolScanner {
-
     private val PRIVATE_KEYWORDS = setOf("defn-", "def-", "defmacro-")
 
     fun scanFile(psiFile: PhelFile): List<PhelProjectSymbol> {
@@ -129,13 +127,10 @@ object PhelProjectSymbolScanner {
 
             // Multi-arity: each arity is a list whose first form is a vector.
             if (form is PhelList) {
-                val listForms = form.forms
-                if (listForms.isNotEmpty() && listForms[0] is PhelVec) {
-                    val paramVec = listForms[0] as PhelVec
-                    val params = extractParameterNames(paramVec)
-                    val sig = if (params.isEmpty()) "($name)" else "($name ${params.joinToString(" ")})"
-                    signatures.add(sig)
-                }
+                val paramVec = form.forms.firstOrNull() as? PhelVec ?: continue
+                val params = extractParameterNames(paramVec)
+                val sig = if (params.isEmpty()) "($name)" else "($name ${params.joinToString(" ")})"
+                signatures.add(sig)
             }
         }
 
