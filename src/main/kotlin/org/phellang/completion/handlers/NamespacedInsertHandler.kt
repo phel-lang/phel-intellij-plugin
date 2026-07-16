@@ -4,12 +4,16 @@ import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.openapi.command.WriteCommandAction
-import org.phellang.completion.infrastructure.PhelCompletionUtils
+import com.intellij.openapi.util.Key
 import org.phellang.language.psi.PhelNamespaceImporter
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.files.PhelFile
 
 class NamespacedInsertHandler : InsertHandler<LookupElement?> {
+    companion object {
+        val FULL_NAMESPACE_KEY: Key<String> = Key.create("PHEL_FULL_NAMESPACE")
+    }
+
     override fun handleInsert(context: InsertionContext, item: LookupElement) {
         val editor = context.editor
         val document = editor.document
@@ -18,7 +22,6 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
         var symbolStart = caretOffset
         val text = document.charsSequence
 
-        // Move back to find the beginning of the symbol
         while (symbolStart > 0) {
             val c = text[symbolStart - 1]
             // Stop at whitespace, opening parenthesis, or other delimiters
@@ -34,7 +37,6 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
         document.replaceString(symbolStart, symbolEnd, item.lookupString)
         editor.caretModel.moveToOffset(symbolStart + item.lookupString.length)
 
-        // Auto-import namespace if needed
         val psiFile = context.file as? PhelFile
         autoImportNamespaceIfNeeded(context, psiFile, item)
     }
@@ -52,7 +54,7 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
             return
         }
 
-        val fullNamespace = item.getUserData(PhelCompletionUtils.FULL_NAMESPACE_KEY)
+        val fullNamespace = item.getUserData(FULL_NAMESPACE_KEY)
         if (fullNamespace != null) {
             WriteCommandAction.runWriteCommandAction(context.project) {
                 PhelNamespaceImporter.ensureNamespaceImportedByFullName(psiFile, fullNamespace)
