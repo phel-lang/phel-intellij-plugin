@@ -12,7 +12,7 @@ import org.phellang.language.psi.PhelReaderConditionalSplice
 import org.phellang.language.psi.PhelSet
 import org.phellang.language.psi.PhelVec
 
-internal object PhelParediContainers {
+internal object PhelPareditContainers {
 
     fun findEnclosingContainer(file: PsiFile, offset: Int): PsiElement? {
         for (candidate in candidatesAt(file, offset)) {

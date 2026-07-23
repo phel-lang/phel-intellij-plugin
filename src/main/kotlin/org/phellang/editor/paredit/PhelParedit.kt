@@ -7,7 +7,7 @@ import org.phellang.language.psi.PhelForm
 
 object PhelParedit {
     fun slurpForward(file: PsiFile, offset: Int): List<PhelTextEdit>? {
-        val container = PhelParediContainers.findEnclosingContainer(file, offset) ?: return null
+        val container = PhelPareditContainers.findEnclosingContainer(file, offset) ?: return null
         val wrapper = container.parent as? PhelForm ?: return null
         val nextForm = PsiTreeUtil.getNextSiblingOfType(wrapper, PhelForm::class.java) ?: return null
         val close = container.lastChild ?: return null
@@ -19,7 +19,7 @@ object PhelParedit {
     }
 
     fun barfForward(file: PsiFile, offset: Int): List<PhelTextEdit>? {
-        val container = PhelParediContainers.findEnclosingContainer(file, offset) ?: return null
+        val container = PhelPareditContainers.findEnclosingContainer(file, offset) ?: return null
         val close = container.lastChild ?: return null
         val children = formChildrenOf(container)
         if (children.size < 2) return null
@@ -32,7 +32,7 @@ object PhelParedit {
     }
 
     fun slurpBackward(file: PsiFile, offset: Int): List<PhelTextEdit>? {
-        val container = PhelParediContainers.findEnclosingContainer(file, offset) ?: return null
+        val container = PhelPareditContainers.findEnclosingContainer(file, offset) ?: return null
         val wrapper = container.parent as? PhelForm ?: return null
         val prevForm = PsiTreeUtil.getPrevSiblingOfType(wrapper, PhelForm::class.java) ?: return null
         val open = container.firstChild ?: return null
@@ -44,7 +44,7 @@ object PhelParedit {
     }
 
     fun barfBackward(file: PsiFile, offset: Int): List<PhelTextEdit>? {
-        val container = PhelParediContainers.findEnclosingContainer(file, offset) ?: return null
+        val container = PhelPareditContainers.findEnclosingContainer(file, offset) ?: return null
         val open = container.firstChild ?: return null
         val children = formChildrenOf(container)
         if (children.size < 2) return null
@@ -57,7 +57,7 @@ object PhelParedit {
     }
 
     fun wrap(file: PsiFile, offset: Int, open: Char, close: Char): List<PhelTextEdit>? {
-        val form = PhelParediContainers.findFormAtCaret(file, offset) ?: return null
+        val form = PhelPareditContainers.findFormAtCaret(file, offset) ?: return null
         return listOf(
             PhelTextEdit.insert(form.textRange.endOffset, close.toString()),
             PhelTextEdit.insert(form.textRange.startOffset, open.toString()),
@@ -65,7 +65,7 @@ object PhelParedit {
     }
 
     fun splice(file: PsiFile, offset: Int): List<PhelTextEdit>? {
-        val container = PhelParediContainers.findEnclosingContainer(file, offset) ?: return null
+        val container = PhelPareditContainers.findEnclosingContainer(file, offset) ?: return null
         val open = container.firstChild ?: return null
         val close = container.lastChild ?: return null
         if (open === close) return null
@@ -77,8 +77,8 @@ object PhelParedit {
     }
 
     fun raise(file: PsiFile, offset: Int): List<PhelTextEdit>? {
-        val form = PhelParediContainers.findFormAtCaret(file, offset) ?: return null
-        val container = PhelParediContainers.findEnclosingContainer(file, offset) ?: return null
+        val form = PhelPareditContainers.findFormAtCaret(file, offset) ?: return null
+        val container = PhelPareditContainers.findEnclosingContainer(file, offset) ?: return null
         val containerWrapper = container.parent as? PhelForm ?: return null
         if (form === containerWrapper) return null
 
