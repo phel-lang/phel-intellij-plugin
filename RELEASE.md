@@ -23,13 +23,18 @@ In IntelliJ, run the **Update Registry Repository** task (or from terminal):
 
 Run the **Run Plugin** task in IntelliJ (or `./gradlew runIde`). This opens a sandboxed IDE instance with the plugin loaded. Verify everything works as expected.
 
-### 3. Bump the version
+### 3. Bump the version and update the changelog
 
-Update `version` on line 5 of `build.gradle.kts`:
+Update `version` in `build.gradle.kts`:
 
 ```kotlin
 version = "X.Y.Z"
 ```
+
+Then promote the `## [Unreleased]` entries in `CHANGELOG.md` into a new `## [X.Y.Z] - YYYY-MM-DD`
+section (or run `./gradlew patchChangelog`, which does this for you). The Marketplace "What's new"
+notes are generated from this section: `patchPluginXml` renders the entry matching `version` into
+`<change-notes>`, so releasing with an empty changelog ships empty release notes.
 
 ### 4. Update IDE compatibility (if needed)
 
@@ -66,7 +71,7 @@ Alternatively, with the `PUBLISH_TOKEN` (and `CERTIFICATE_CHAIN`, `PRIVATE_KEY`,
 ### 7. Commit and push
 
 ```bash
-git add build.gradle.kts src/main/kotlin/org/phellang/registry/data
+git add build.gradle.kts CHANGELOG.md src/main/kotlin/org/phellang/registry/data
 git commit -m "chore: bump plugin to X.Y.Z and update registry"
 git push origin main
 ```

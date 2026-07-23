@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginProjectConfigurationTask
@@ -11,6 +12,7 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.18.1"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
     id("org.jetbrains.kotlinx.kover") version "0.9.8"
+    id("org.jetbrains.changelog") version "2.5.0"
 }
 
 tasks.withType<Wrapper> {
@@ -111,6 +113,14 @@ java {
 
 kotlin {
     jvmToolchain(21)
+}
+
+// CHANGELOG.md is the single source of the Marketplace "What's new" section: patchPluginXml
+// (below) renders the entry matching the current version into <change-notes>. `groups` lists
+// the Keep a Changelog sections this project uses, so `patchChangelog` scaffolds them at release.
+changelog {
+    repositoryUrl.set("https://github.com/phel-lang/phel-intellij-plugin")
+    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security", "Performance"))
 }
 
 kover {
@@ -273,6 +283,20 @@ tasks {
         patchPluginXml {
             sinceBuild.set("243")
             untilBuild.set("262.*")
+
+            // Render the CHANGELOG entry for the current version (falling back to Unreleased when
+            // this version has no section yet) as the Marketplace <change-notes>. Lazy so the file
+            // is read at task time, not configuration time.
+            changeNotes.set(project.provider {
+                with(changelog) {
+                    renderItem(
+                        (getOrNull(project.version.toString()) ?: getUnreleased())
+                            .withHeader(false)
+                            .withEmptySections(false),
+                        Changelog.OutputType.HTML,
+                    )
+                }
+            })
         }
 
         signPlugin {
