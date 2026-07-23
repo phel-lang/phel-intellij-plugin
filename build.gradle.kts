@@ -1,5 +1,6 @@
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginProjectConfigurationTask
 
 group = "org.phellang"
 version = "0.5.3"
@@ -154,6 +155,24 @@ val generatorCompileTasks = sourceSets["generator"].let {
     setOf(it.compileJavaTaskName, it.getCompileTaskName("kotlin"))
 }
 
+// Mute only the two informational items that reflect this plugin's deliberate, documented
+// compatibility policy, so every *other* configuration issue still surfaces — the CI gate
+// (.github/workflows/build.yml) fails the build when any unmuted issue is reported. Keep this list
+// as narrow as possible; do not mute real problems.
+//
+//  - since-build (243) is intentionally lower than the platform we build against (252): that is how
+//    the plugin declares support for older IDEs, and the IntelliJ Plugin Verifier exercises the
+//    whole range for real.
+//  - until-build (262.*) is a deliberate upper bound (compat 2024.3 — 2026.2.x). The verifier
+//    suggests dropping it for open-ended forward compatibility on 243+; whether to do so is a
+//    separate forward-compat policy decision, not part of this change.
+tasks.named<VerifyPluginProjectConfigurationTask>("verifyPluginProjectConfiguration") {
+    mutedMessages.addAll(
+        "since-build is lower than target platform version",
+        "until-build property should be removed",
+    )
+}
+
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
@@ -167,8 +186,14 @@ tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         compilerOptions {
             jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+            // languageVersion must be >= the Kotlin the target platform bundles (252 -> 2.1);
+            // apiVersion must be <= the Kotlin API the minimum supported IDE (since-build 243 =
+            // IDEA 2024.3) guarantees, which is 2.0. The Kotlin 2.4 compiler no longer accepts
+            // apiVersion 1.9, so 2.0 is also the floor — which is why since-build cannot stay at 242
+            // (2024.2 only ships Kotlin API 1.9). languageVersion 2.1 is deprecation-flagged by the
+            // 2.4 compiler; it stays until the minimum platform bundles >= 2.2 (since-build >= 253).
             languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
-            apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
+            apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
         }
         if (name !in generatorCompileTasks) {
             dependsOn(generatePhelLexer, generatePhelParser)
@@ -211,7 +236,6 @@ tasks {
 
         pluginVerification {
             ides {
-                create("IC", "2024.2")
                 create("IC", "2024.3")
                 create("IC", "2025.1")
                 create("IC", "2025.2")
@@ -220,7 +244,7 @@ tasks {
         }
 
         patchPluginXml {
-            sinceBuild.set("242")
+            sinceBuild.set("243")
             untilBuild.set("262.*")
         }
 

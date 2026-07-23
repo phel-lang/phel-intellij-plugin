@@ -42,6 +42,28 @@ jobs:
       - name: Build plugin
         run: .github/scripts/gradle-retry.sh buildPlugin
 
+      # Enforce the plugin project configuration check. verifyPluginProjectConfiguration only logs a
+      # warning and exits 0 (it reports to Gradle's Problems API at WARNING severity), so on its own
+      # it can never fail CI — the whole point of this issue. Capture its output and fail when any
+      # unmuted issue is reported. Deliberate policy items (since-build, until-build) are muted in
+      # build.gradle.kts, so this trips only on new or real configuration problems.
+      - name: Enforce plugin project configuration
+        shell: bash
+        run: |
+          set -uo pipefail
+          output="$(.github/scripts/gradle-retry.sh verifyPluginProjectConfiguration 2>&1)"
+          status=$?
+          echo "$output"
+          if [ "$status" -ne 0 ]; then
+            echo "::error::verifyPluginProjectConfiguration task failed."
+            exit "$status"
+          fi
+          if grep -q "plugin configuration issues were found" <<<"$output"; then
+            echo "::error::verifyPluginProjectConfiguration reported configuration issues. Fix them, or if an item reflects deliberate policy, mute its exact message via mutedMessages in build.gradle.kts."
+            exit 1
+          fi
+          echo "Plugin project configuration is clean."
+
       # Prepare plugin archive content for creating artifact
       - name: Prepare Plugin Artifact
         id: artifact
