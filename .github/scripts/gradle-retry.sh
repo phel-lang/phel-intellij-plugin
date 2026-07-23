@@ -54,10 +54,23 @@ for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
 
     echo "::warning::Attempt ${attempt}/${MAX_ATTEMPTS} hit the bundled-plugin race (intellij-platform-gradle-plugin#2192)."
 
-    # IdeLayoutIndexService is a shared build service, so the daemon keeps the incomplete index
-    # and replays it: without this the retries fail in ~1s instead of re-reading the jars. Stop
-    # the daemon so the next attempt rebuilds the index from scratch.
+    # The incomplete index survives in two places, and a retry has to clear both.
+    #
+    # IdeLayoutIndexService is a shared build service, so the daemon replays it in-process:
+    # without the stop, retries failed in ~1s having never re-read the jars.
     ./gradlew --stop >/dev/null 2>&1 || true
+    #
+    # It also survives on disk. With only the daemon stopped, retries still failed in ~10s on a
+    # provably fresh daemon ("1 stopped Daemon could not be reused") and without the originating
+    # ClosedFileSystemException, while re-running the whole job on a clean runner has always
+    # worked. So the interrupted read leaves the extracted IDE unusable, and it has to be
+    # re-extracted. The archive stays in modules-2, so this costs extraction, not a download.
+    shopt -s nullglob
+    stale=(~/.gradle/caches/*/transforms ~/.gradle/caches/transforms-*)
+    if [ ${#stale[@]} -gt 0 ]; then
+        echo "Re-extracting the IDE: dropping ${stale[*]}"
+        rm -rf "${stale[@]}"
+    fi
 done
 
 echo "::error::Still hitting the bundled-plugin race after ${MAX_ATTEMPTS} attempts."
