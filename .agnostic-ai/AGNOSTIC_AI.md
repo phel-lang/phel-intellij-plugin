@@ -32,7 +32,7 @@ Plugin sources live under `src/main/kotlin/org/phellang/`:
 ## Build & Tooling
 
 - Gradle (Kotlin DSL), IntelliJ Platform Gradle Plugin, Grammar-Kit (JFlex + BNF), Java 21 toolchain, Kotlin 2.1.
-- Target IntelliJ IDEA 2025.2 (compat 2024.2 — 2026.2.x). `buildSearchableOptions` disabled.
+- Target IntelliJ IDEA 2025.2 (compat 2024.3 — 2026.2.x). `buildSearchableOptions` disabled.
 - Kotlin/Java compile tasks depend on lexer/parser generation automatically.
 - After editing `.flex`/`.bnf`, run `./gradlew generatePhelLexer generatePhelParser` (a PostToolUse hook does this for Claude).
 
