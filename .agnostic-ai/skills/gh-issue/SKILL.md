@@ -42,8 +42,11 @@ Read both the issue body **and every comment** as requirements input. Maintainer
 4. **Enter Plan Mode** to design the implementation:
    - Explore the codebase to understand affected areas
    - Identify files that need changes
-   - Consider the module architecture (Gacela facades, module boundaries)
-   - Plan the TDD approach (what tests to write first)
+   - Consider the module rule from `.claude/rules/plugin-architecture.md`: a module's
+     entry points live at its root, its internals in subfolders. Registered classes go at
+     the root of the module that owns them.
+   - Plan the TDD approach (what tests to write first): unit tests under
+     `src/test/kotlin/org/phellang/unit/`, integration under `.../integration/`
 
 5. **Create implementation plan** with:
    - Summary of what the issue requires
@@ -60,13 +63,19 @@ Read both the issue body **and every comment** as requirements input. Maintainer
 
 7. **Run full test suite**:
    ```bash
-   composer test
+   ./gradlew test
    ```
-   Fix ALL errors before proceeding.
+   Fix ALL errors before proceeding. If `.flex` / `.bnf` changed, run
+   `./gradlew generatePhelLexer generatePhelParser` and commit the regenerated
+   `src/main/gen/` sources. If `NamespaceConfig.kt` changed, run `./gradlew updatePhelRegistry`.
+
+   Note: the integration suite is nondeterministically flaky. A failure that does not
+   reproduce in an isolated targeted run is not a real failure — confirm before chasing it.
 
 ### Phase 4: Ship
 
-8. **Update CHANGELOG.md** — add entry under `## Unreleased`
+8. **Update CHANGELOG.md** — add entry under `## Unreleased`, **only if the file exists**.
+   It does not exist yet in this repo (that is issue #213); skip this step until it does.
 
 9. **Commit changes**:
    ```bash
@@ -81,10 +90,12 @@ Read both the issue body **and every comment** as requirements input. Maintainer
     - duplication introduced by the new code (extract or reuse)
     - dead branches, unused params, leftover debug
     - naming drift vs. surrounding module conventions
-    - violations of `.claude/rules/php.md`, `modules.md`, `compiler.md`
+    - violations of `.claude/rules/plugin-architecture.md` (module rule, package
+      boundaries enforced by `ArchitectureBoundaryTest`), `lexer-parser.md`,
+      `completion-registry.md`, `testing.md`
     - over-engineering: speculative abstractions, premature interfaces
 
-    Apply fixes. Re-run `composer test`. Commit as a separate `ref(...)` commit — must be the final commit on the branch before PR:
+    Apply fixes. Re-run `./gradlew test`. Commit as a separate `ref(...)` commit — must be the final commit on the branch before PR:
     ```bash
     git commit -m "ref(<scope>): polish <area> after #<issue-number>
 
@@ -92,7 +103,23 @@ Read both the issue body **and every comment** as requirements input. Maintainer
     ```
     If review surfaces zero changes, record that fact in the PR body instead of skipping silently.
 
-11. **Create PR** using `/pr #<issue-number>`
+11. **Create PR**. Push with tracking, then open it with a summary and test plan.
+    Per `.claude/rules/git-workflow.md`: assign `JesusValeraDev`, add the label matching
+    the issue, and use `Closes #<issue-number>` so the issue auto-closes on merge.
+    ```bash
+    git push -u origin <branch-name>
+    gh pr create \
+      --assignee JesusValeraDev \
+      --label <label-from-issue> \
+      --title "<type>: <description>" \
+      --body "<summary>
+
+    ## Test plan
+    <verification steps>
+
+    Closes #<issue-number>"
+    ```
+    Never reference an AI assistant in the PR title, body, or trailers.
 
 ### Phase 5: Verify & Merge
 
@@ -121,11 +148,13 @@ Read both the issue body **and every comment** as requirements input. Maintainer
 - [ ] Plan created and approved
 - [ ] Tests written first (TDD)
 - [ ] Implementation complete
-- [ ] `composer test` passes
-- [ ] Changelog updated
+- [ ] `./gradlew test` passes
+- [ ] New/moved plugin features registered in `src/main/resources/META-INF/plugin.xml`
+- [ ] `src/main/gen/` regenerated and committed if `.flex` / `.bnf` changed
+- [ ] Changelog updated (skip while `CHANGELOG.md` does not exist)
 - [ ] Feature commit with issue reference
 - [ ] Final refactor commit (last commit on branch, separate `ref(...)`)
-- [ ] PR created via `/pr`
+- [ ] PR created with assignee, label, and `Closes #X`
 - [ ] CI green (`gh pr checks --watch`)
 - [ ] PR merged via `--admin --squash` (or `--auto` fallback if admin blocked)
 - [ ] Local `main` synced to `origin/main`

@@ -2,7 +2,7 @@
 description: Walk over all open GitHub issues that are unassigned or assigned to the current user, and process each one via the /gh-issue skill, sequentially.
 argument-hint: "[--limit N] [--label foo] [--dry-run]"
 disable-model-invocation: true
-allowed-tools: "Read, Bash(gh *), Bash(git *), Bash(composer *), Skill(gh-issue), Skill(pr)"
+allowed-tools: "Read, Bash(gh *), Bash(git *), Bash(./gradlew *), Skill(gh-issue)"
 ---
 
 # GitHub Issues Watcher
@@ -80,11 +80,11 @@ For each issue in the queue:
    - self-assign via `gh issue edit <num> --add-assignee @me` (no-op if already assigned)
    - branch from fresh `main` (prefix from labels: `fix/`, `feat/`, `docs/`)
    - TDD implementation
-   - `composer test` green locally
-   - changelog entry under `## Unreleased`
+   - `./gradlew test` green locally
+   - changelog entry under `## Unreleased` (skipped while `CHANGELOG.md` does not exist)
    - commit with `Related to #<num>`
    - **mandatory final refactor pass** over every touched file (separate `ref(...)` commit) before opening the PR
-   - PR opened via `/pr #<num>`
+   - PR opened with assignee `JesusValeraDev`, matching label, and `Closes #<num>`
 
 3. After `/gh-issue` returns, wait for CI green on the PR:
    ```bash
@@ -109,7 +109,8 @@ For each issue in the queue:
 Halt the loop and surface the failure when:
 
 - `/gh-issue` errors out or leaves the worktree dirty.
-- `composer test` fails after implementation.
+- `./gradlew test` fails after implementation (and the failure reproduces in an isolated
+  targeted run — the integration suite is nondeterministically flaky).
 - CI stays red after one fix attempt.
 - Merge is blocked by branch protection beyond `--admin` bypass.
 - `--limit` reached.
@@ -126,10 +127,10 @@ With `--dry-run`, only execute Phase 1 and print the queue. No assignment, no br
 - `gh` authenticated, can read issues, open and merge PRs.
 - Worktree clean.
 - `main` exists and tracks `origin/main`.
-- `/gh-issue` and `/pr` skills available in this session.
+- `/gh-issue` skill available in this session.
 
 ## Notes
 
-- Commits inside `/gh-issue` should use `git commit --no-verify` (project rule: 6 env-failing tests block the local pre-commit hook).
-- Treat GitHub CI as the full quality gate; locally run focused tests during implementation, full `composer test` once before commit.
+- This repo has no pre-commit hook; commit normally. Do not pass `--no-verify`.
+- Treat GitHub CI as the full quality gate; locally run focused tests during implementation, full `./gradlew test` once before commit.
 - Never split bundled changes into multiple PRs unless the issue explicitly demands it.
