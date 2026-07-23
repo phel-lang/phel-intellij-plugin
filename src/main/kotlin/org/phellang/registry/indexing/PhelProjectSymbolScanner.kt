@@ -8,6 +8,7 @@ import org.phellang.language.psi.PhelKeyword
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelLiteral
 import org.phellang.language.psi.PhelMap
+import org.phellang.language.psi.PhelMetadata
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelVec
@@ -16,6 +17,10 @@ import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelProjectSymbolScanner {
     private val PRIVATE_KEYWORDS = setOf("defn-", "def-", "defmacro-")
+
+    private const val PRIVATE_KEY = ":private"
+
+    private const val DOC_KEY = ":doc"
 
     fun scanFile(psiFile: PhelFile): List<PhelProjectSymbol> {
         val namespace = PhelNamespaceUtils.extractNamespaceFromFile(psiFile) ?: return emptyList()
@@ -76,12 +81,59 @@ object PhelProjectSymbolScanner {
         )
     }
 
+    /**
+     * Phel marks a definition private with the `defn-` family (handled by [PRIVATE_KEYWORDS]), a
+     * `^` flag on the name symbol, or a keyword/map in the metadata slot between the name and the
+     * value — `(def x :private 1)` and `(def x {:private true} 1)`.
+     *
+     * The body is never consulted: a definition that merely mentions `:private` in its docstring
+     * or references a `:private-mode` keyword stays public.
+     */
     private fun isPrivateDefinition(forms: List<PhelForm>): Boolean {
-        for (form in forms) {
-            val text = form.text ?: continue
-            if (text.contains(":private")) return true
+        return hasPrivateNameFlag(forms[1]) || hasPrivateMetadataSlot(forms)
+    }
+
+    /** `^:private` / `^{:private true}` attached to the name symbol. */
+    private fun hasPrivateNameFlag(nameForm: PhelForm): Boolean {
+        val metadata = PsiTreeUtil.getChildrenOfType(nameForm, PhelMetadata::class.java) ?: return false
+
+        return metadata.any { meta ->
+            PsiTreeUtil.getChildOfType(meta, PhelKeyword::class.java)?.text == PRIVATE_KEY ||
+                PsiTreeUtil.getChildOfType(meta, PhelMap::class.java)?.let { declaresPrivate(it) } == true
+        }
+    }
+
+    /**
+     * The metadata slot sits between the name and the value, so the last form is always the value
+     * (or body) and never metadata — that is what keeps `(def defaults {:visibility :private-ish})`
+     * public while `(def x {:private true} 1)` is private.
+     */
+    private fun hasPrivateMetadataSlot(forms: List<PhelForm>): Boolean {
+        for (i in 2 until forms.size - 1) {
+            when (val form = forms[i]) {
+                is PhelKeyword -> if (form.text == PRIVATE_KEY) return true
+                is PhelMap -> if (declaresPrivate(form)) return true
+                // A docstring may precede the flag; anything else ends the metadata slot.
+                is PhelLiteral -> if (extractStringLiteral(form) == null) return false
+                else -> return false
+            }
         }
         return false
+    }
+
+    /** True when [map] binds `:private` to `true`; `{:private false}` is explicitly public. */
+    private fun declaresPrivate(map: PhelMap): Boolean {
+        return mapValueFor(map, PRIVATE_KEY)?.text == "true"
+    }
+
+    /** The form bound to [key] in [map], or null when the key is absent. */
+    private fun mapValueFor(map: PhelMap, key: String): PhelForm? {
+        val children = map.forms
+        for (i in 0 until children.size - 1) {
+            val child = children[i]
+            if (child is PhelKeyword && child.text == key) return children[i + 1]
+        }
+        return null
     }
 
     private fun extractSignature(keyword: String, name: String, forms: List<PhelForm>): String {
@@ -173,16 +225,8 @@ object PhelProjectSymbolScanner {
 
     private fun extractDocFromMap(form: PhelForm): String? {
         val map = form as? PhelMap ?: return null
-
-        val children = map.forms
-        for (i in 0 until children.size - 1) {
-            val child = children[i]
-            if (child is PhelKeyword && child.text == ":doc") {
-                return extractStringLiteral(children[i + 1])
-            }
-        }
-
-        return null
+        val doc = mapValueFor(map, DOC_KEY) ?: return null
+        return extractStringLiteral(doc)
     }
 
     private fun extractStringLiteral(form: PhelForm): String? {
