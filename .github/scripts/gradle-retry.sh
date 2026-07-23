@@ -53,6 +53,11 @@ for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
     fi
 
     echo "::warning::Attempt ${attempt}/${MAX_ATTEMPTS} hit the bundled-plugin race (intellij-platform-gradle-plugin#2192)."
+
+    # IdeLayoutIndexService is a shared build service, so the daemon keeps the incomplete index
+    # and replays it: without this the retries fail in ~1s instead of re-reading the jars. Stop
+    # the daemon so the next attempt rebuilds the index from scratch.
+    ./gradlew --stop >/dev/null 2>&1 || true
 done
 
 echo "::error::Still hitting the bundled-plugin race after ${MAX_ATTEMPTS} attempts."
