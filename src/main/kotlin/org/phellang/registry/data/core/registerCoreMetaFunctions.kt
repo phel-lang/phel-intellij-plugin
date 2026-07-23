@@ -23,7 +23,7 @@ Gets the metadata attached to a value. For a quoted symbol (<code>(meta 'foo)</c
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/meta.phel#L23",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/meta.phel#L23",
                 docs = "",
             ),
         ),
@@ -41,7 +41,7 @@ Gets the metadata attached to a value. For a quoted symbol (<code>(meta 'foo)</c
             example = null,
             deprecation = DeprecationInfo(version = "0.32.0", replacement = "with-meta"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/meta.phel#L68",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/meta.phel#L68",
                 docs = "",
             ),
         ),
@@ -58,7 +58,7 @@ Gets the metadata attached to a value. For a quoted symbol (<code>(meta 'foo)</c
             summary = "Returns an object with (apply f (meta obj) args) as its new metadata.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/meta.phel#L75",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/meta.phel#L75",
                 docs = "",
             ),
         ),
@@ -77,7 +77,7 @@ Returns <code>obj</code> with the given metadata <code>meta</code> attached.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/meta.phel#L62",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/meta.phel#L62",
                 docs = "",
             ),
         ),

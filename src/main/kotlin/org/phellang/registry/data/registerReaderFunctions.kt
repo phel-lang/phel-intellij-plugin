@@ -24,7 +24,7 @@ Re-registering an existing tag overwrites the previous handler.
 """,
             example = "(register-tag \"date\" my-ns/parse-date)\n  ; later: #date \"2026-04-20\" =&gt; (my-ns/parse-date \"2026-04-20\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/reader.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/reader.phel#L19",
                 docs = "",
             ),
         ),
@@ -41,7 +41,7 @@ Re-registering an existing tag overwrites the previous handler.
             summary = "Returns a sorted vector of the currently registered reader tag names.",
             example = "(registered-tags) ; =&gt; [\"inst\" \"regex\" \"uuid\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/reader.phel#L45",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/reader.phel#L45",
                 docs = "",
             ),
         ),
@@ -60,7 +60,7 @@ Returns true if a handler is registered for reader tag <code>tag-name</code>.
 """,
             example = "(tag-registered? \"inst\") ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/reader.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/reader.phel#L30",
                 docs = "",
             ),
         ),
@@ -79,7 +79,7 @@ Removes any handler registered for reader tag <code>tag-name</code>. Built-in ta
 """,
             example = "(unregister-tag \"date\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/reader.phel#L37",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/reader.phel#L37",
                 docs = "",
             ),
         ),

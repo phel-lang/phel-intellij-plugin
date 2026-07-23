@@ -24,7 +24,7 @@ Returns <code>true</code> when a <code>[:map ...]</code> entry is declared with<
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L177",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L177",
                 docs = "",
             ),
         ),
@@ -43,7 +43,7 @@ Options map for a <code>[:map ...]</code> entry <code>[key opts? schema]</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L163",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L163",
                 docs = "",
             ),
         ),
@@ -62,7 +62,7 @@ Inner schema of a <code>[:map ...]</code> entry, skipping the options map when p
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L170",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L170",
                 docs = "",
             ),
         ),
@@ -81,7 +81,7 @@ Like <code>resolve-or-throw</code>, but returns <code>default</code> when <code>
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L38",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L38",
                 docs = "",
             ),
         ),
@@ -105,7 +105,7 @@ Every head-dispatching caller uses this so the error shape is<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L24",
                 docs = "",
             ),
         ),
@@ -124,7 +124,7 @@ Returns the positional arguments of <code>schema</code> (children past the head 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L65",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L65",
                 docs = "",
             ),
         ),
@@ -143,7 +143,7 @@ Returns the head (kind keyword) of <code>schema</code>. Keyword schemas are thei
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L49",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L49",
                 docs = "",
             ),
         ),
@@ -162,7 +162,7 @@ Returns the options map of <code>schema</code> or <code>{}</code> if none.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L74",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L74",
                 docs = "",
             ),
         ),
@@ -181,7 +181,7 @@ Returns <code>true</code> if <code>value</code> conforms to <code>schema</code>,
 """,
             example = "(valid? :int 1) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/validator.phel#L280",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/validator.phel#L280",
                 docs = "",
             ),
         ),

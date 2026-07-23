@@ -23,7 +23,7 @@ Pretty-print a value for humans (colored when stdout is a terminal) and return i
 """,
             example = "(-&gt; {:a [1 2 3]} inspect (get :a))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/pprint.phel#L119",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/pprint.phel#L119",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ Pretty-print a value for humans (colored when stdout is a terminal) and return i
             summary = "Pretty-print a data structure to stdout with line breaks and indentation.",
             example = "(pprint {:a [1 2 3] :b {:c 4 :d 5}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/pprint.phel#L100",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/pprint.phel#L100",
                 docs = "",
             ),
         ),
@@ -57,7 +57,7 @@ Pretty-print a value for humans (colored when stdout is a terminal) and return i
             summary = "Pretty-print a data structure to a string with line breaks and indentation.",
             example = "(pprint-str {:a [1 2 3] :b {:c 4 :d 5}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/pprint.phel#L91",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/pprint.phel#L91",
                 docs = "",
             ),
         ),

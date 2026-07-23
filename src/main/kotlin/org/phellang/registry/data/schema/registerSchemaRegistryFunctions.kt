@@ -23,7 +23,7 @@ Removes every user-registered schema. Returns <code>nil</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/registry.phel#L48",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/registry.phel#L48",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Returns the schema registered under <code>name</code>, or <code>nil</code> if no
 """,
             example = "(deref-ref :email)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/registry.phel#L29",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/registry.phel#L29",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Registers <code>schema</code> under <code>name</code> (usually a keyword). Overw
 """,
             example = "(register! :email [:and :string [:re #\"@\"]])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/registry.phel#L13",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/registry.phel#L13",
                 docs = "",
             ),
         ),
@@ -80,7 +80,7 @@ Returns <code>true</code> if a schema is registered under <code>name</code>.
 """,
             example = "(registered? :email) ; =&gt; true/false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/registry.phel#L36",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/registry.phel#L36",
                 docs = "",
             ),
         ),
@@ -99,7 +99,7 @@ Returns the current registry as a plain map. Intended for inspection and testing
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/registry.phel#L43",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/registry.phel#L43",
                 docs = "",
             ),
         ),
@@ -118,7 +118,7 @@ Removes the schema bound to <code>name</code>. Returns <code>nil</code>.
 """,
             example = "(unregister! :email)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/schema/registry.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/schema/registry.phel#L21",
                 docs = "",
             ),
         ),
