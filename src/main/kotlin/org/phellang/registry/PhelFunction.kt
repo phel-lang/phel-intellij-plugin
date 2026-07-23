@@ -23,7 +23,10 @@ data class DocumentationInfo(
 ) {
     fun toHtml(signature: String): String = buildString {
         append("<br />")
-        signature.takeIf(String::isNotBlank)?.let { append("<code>$it</code><br /><br />") }
+        // Multi-arity signatures are newline-separated (see KotlinCodeGenerator); render each
+        // arity on its own line, mirroring the project-symbol popup (PhelDocHtml.projectSymbol).
+        signature.takeIf(String::isNotBlank)
+            ?.let { append("<code>${it.replace("\n", "<br />")}</code><br /><br />") }
         append(summary)
         append("<br />")
 
