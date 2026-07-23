@@ -13,56 +13,10 @@ class PhelProjectSymbolScannerTest {
         assertNotNull(PhelProjectSymbolScanner)
     }
 
-    @Nested
-    inner class PrivateDefinitionDetection {
-
-        @Test
-        fun `all private keywords are recognized`() {
-            // All shorthand forms for private definitions
-            val privateKeywords = setOf("defn-", "def-", "defmacro-")
-
-            assertTrue("defn-" in privateKeywords)
-            assertTrue("def-" in privateKeywords)
-            assertTrue("defmacro-" in privateKeywords)
-            assertFalse("defn" in privateKeywords)
-            assertFalse("def" in privateKeywords)
-            assertFalse("defmacro" in privateKeywords)
-        }
-
-        @Test
-        fun `names ending with dash are NOT private by themselves`() {
-            // A name ending with - is still public
-            // Only defn- keyword makes a function private
-            val namesWithDash = listOf("helper-", "process-data-", "validate-")
-
-            for (name in namesWithDash) {
-                // These should be public functions (the dash is just part of the name)
-                assertTrue(name.endsWith("-"), "$name ends with dash but is still public")
-            }
-        }
-
-        @Test
-        fun `text containing private attribute is private`() {
-            val privateTexts = listOf(
-                "^:private", "(def ^:private name value)", "{:private true}"
-            )
-
-            for (text in privateTexts) {
-                assertTrue(text.contains(":private"), "$text should be detected as private")
-            }
-        }
-
-        @Test
-        fun `regular defn with dash in name is public`() {
-            // Functions like "process-data" or even "my-fn-" are public
-            val publicFunctions = listOf("defn process-data", "defn my-fn-", "defn validate-input")
-
-            for (fn in publicFunctions) {
-                assertTrue(fn.startsWith("defn "), "$fn uses public defn keyword")
-                assertFalse(fn.startsWith("defn-"), "$fn is not private defn-")
-            }
-        }
-    }
+    // Privacy detection is covered by PhelProjectSymbolScannerPrivacyTest, which parses real
+    // definitions and calls scanFile. The cases that used to live here asserted String.contains
+    // over local literals without involving the scanner, so they passed while the scanner was
+    // dropping every public definition that merely mentioned `:private`.
 
     @Nested
     inner class QualifiedNameConstruction {
