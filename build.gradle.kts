@@ -35,6 +35,11 @@ sourceSets {
         }
         kotlin {
             srcDirs("src/main/kotlin", "src/main/gen")
+            // The build-time registry generator lives under src/main/kotlin for the tools tests to
+            // reach, but it is compiled by the isolated `generator` source set below and must not be
+            // part of the plugin's main output — otherwise it ships in the distribution jar and drags
+            // gson in with it. Tests get it via the generator output (see `dependencies`).
+            exclude("org/phellang/tools/**")
         }
     }
     test {
@@ -77,8 +82,19 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
-    implementation("com.google.code.gson:gson:2.14.0")
+    // gson is used only by the build-time generator under org/phellang/tools/**, never by runtime
+    // plugin code (ArchitectureBoundaryTest enforces this), so it is not a plugin `implementation`
+    // dependency and never ships in the distribution. The generator source set and the tools tests
+    // each get their own copy; the tests also read the generator's compiled output for the tools
+    // classes, which the main source set deliberately excludes.
     "generatorImplementation"("com.google.code.gson:gson:2.14.0")
+    // The main source set receives the Kotlin stdlib transitively from the IntelliJ Platform, but
+    // the isolated generator source set does not depend on the platform. With the auto-added stdlib
+    // now disabled (kotlin.stdlib.default.dependency=false, see gradle.properties) it must declare
+    // its own — it is a plain JVM program, not plugin code that ships.
+    "generatorImplementation"(kotlin("stdlib"))
+    testImplementation("com.google.code.gson:gson:2.14.0")
+    testImplementation(sourceSets["generator"].output)
 }
 
 configurations.all {
