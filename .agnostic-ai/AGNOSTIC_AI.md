@@ -46,4 +46,4 @@ Plugin sources live under `src/main/kotlin/org/phellang/`:
 ## Commits & PRs
 
 - Conventional commits; use `ref:` (not `refactor:`). Never reference an AI assistant in commit messages or trailers.
-- PRs: assign to `Chemaclass`, add a matching label, and use `Closes #X` to auto-close issues.
+- PRs: assign to `JesusValeraDev`, add a matching label, and use `Closes #X` to auto-close issues.

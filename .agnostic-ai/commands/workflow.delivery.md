@@ -21,7 +21,7 @@ Required workflow:
      - verification
      - findings and remediation summary
      - remaining risk or follow-ups
-   - Assign to `Chemaclass`, add a matching label, and use `Closes #X` to auto-close the issue.
+   - Assign to `JesusValeraDev`, add a matching label, and use `Closes #X` to auto-close the issue.
    - If `gh` is available and the user authorized PR creation, create or draft it; otherwise leave a ready-to-paste PR summary.
    - If the work used a dedicated feature worktree and the PR is now open, tell the user the worktree path still exists and ask whether to remove it. Never remove it automatically unless the user says yes.
 6. Final handoff: end with a concise checklist of verification, commit, PR, and worktree-cleanup status, plus remaining approvals or blockers.

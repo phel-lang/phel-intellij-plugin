@@ -87,7 +87,7 @@ test/brace-matching
 2. **Run full diff**: `git diff main...HEAD`
 3. **Write a thorough PR summary** with context
 4. **Include a test plan** with verification steps
-5. **Assign to `Chemaclass`**, add a matching label, and use `Closes #X` to auto-close the issue
+5. **Assign to `JesusValeraDev`**, add a matching label, and use `Closes #X` to auto-close the issue
 6. **Push with tracking**: `git push -u origin branch-name`
 
 ## Before Pushing
