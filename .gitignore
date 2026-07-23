@@ -105,6 +105,8 @@ agnostic-ai.local.yaml
 .claude/skills/eval_template/SKILL.md
 .claude/skills/eval_template/eval_template.md
 .claude/skills/eval_template/grader_prompt.md
+.claude/skills/gh-issue/SKILL.md
+.claude/skills/gh-issues/SKILL.md
 .claude/skills/grader_prompt/SKILL.md
 .claude/skills/grader_prompt/eval_template.md
 .claude/skills/grader_prompt/grader_prompt.md
