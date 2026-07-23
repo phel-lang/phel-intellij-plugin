@@ -1,0 +1,37 @@
+<html>
+<body>
+<p>Reports a call that passes the wrong number of arguments to a known function.</p>
+
+<p>The argument count of a call site is compared against the arities the function actually accepts,
+    resolved from the Phel standard library and from project definitions. Both fixed-arity and
+    variadic (<code>&amp; rest</code>) signatures are understood, including multi-arity functions.</p>
+
+<h3>Example:</h3>
+<pre><code>
+;; inc takes exactly one argument
+(inc 1 2)   ;; reported: Wrong number of args (2) passed to 'inc'. Expected: 1.
+
+(inc 1)     ;; fine
+</code></pre>
+
+<h3>What is checked</h3>
+<p>Only real function calls with a trustworthy textual argument count are inspected. To avoid false
+    positives, the following are deliberately <em>not</em> checked:</p>
+<ul>
+    <li>Special forms and macros with variable argument shapes (<code>if</code>, <code>when</code>,
+        <code>let</code>, <code>fn</code>, <code>defn</code>, <code>cond</code>, <code>and</code>,
+        <code>or</code>, and similar).</li>
+    <li>PHP interop calls (<code>php/...</code>, <code>.method</code>).</li>
+    <li>Quoted or data forms — inside <code>quote</code>, <code>var</code>, or a <code>'</code> /
+        <code>`</code> reader macro.</li>
+    <li>Arguments of a threading macro (<code>-&gt;</code>, <code>-&gt;&gt;</code>,
+        <code>as-&gt;</code>, <code>some-&gt;</code>, …), where the macro shifts the effective
+        argument count.</li>
+    <li>Heads that resolve to a local binding rather than the standard-library function of the same
+        name.</li>
+</ul>
+
+<p>This inspection is registered at error severity because a genuine arity mismatch is a call Phel
+    will reject at compile time.</p>
+</body>
+</html>
