@@ -20,6 +20,8 @@ object PhelProjectSymbolScanner {
 
     private const val PRIVATE_KEY = ":private"
 
+    private const val DOC_KEY = ":doc"
+
     fun scanFile(psiFile: PhelFile): List<PhelProjectSymbol> {
         val namespace = PhelNamespaceUtils.extractNamespaceFromFile(psiFile) ?: return emptyList()
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
@@ -121,14 +123,17 @@ object PhelProjectSymbolScanner {
 
     /** True when [map] binds `:private` to `true`; `{:private false}` is explicitly public. */
     private fun declaresPrivate(map: PhelMap): Boolean {
+        return mapValueFor(map, PRIVATE_KEY)?.text == "true"
+    }
+
+    /** The form bound to [key] in [map], or null when the key is absent. */
+    private fun mapValueFor(map: PhelMap, key: String): PhelForm? {
         val children = map.forms
         for (i in 0 until children.size - 1) {
             val child = children[i]
-            if (child is PhelKeyword && child.text == PRIVATE_KEY) {
-                return children[i + 1].text == "true"
-            }
+            if (child is PhelKeyword && child.text == key) return children[i + 1]
         }
-        return false
+        return null
     }
 
     private fun extractSignature(keyword: String, name: String, forms: List<PhelForm>): String {
@@ -220,16 +225,8 @@ object PhelProjectSymbolScanner {
 
     private fun extractDocFromMap(form: PhelForm): String? {
         val map = form as? PhelMap ?: return null
-
-        val children = map.forms
-        for (i in 0 until children.size - 1) {
-            val child = children[i]
-            if (child is PhelKeyword && child.text == ":doc") {
-                return extractStringLiteral(children[i + 1])
-            }
-        }
-
-        return null
+        val doc = mapValueFor(map, DOC_KEY) ?: return null
+        return extractStringLiteral(doc)
     }
 
     private fun extractStringLiteral(form: PhelForm): String? {
