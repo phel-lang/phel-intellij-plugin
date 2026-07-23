@@ -9,7 +9,7 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import org.phellang.language.psi.files.PhelFile
 
-class PhelParediActionHandler(
+class PhelPareditActionHandler(
     private val operation: (PsiFile, Int) -> List<PhelTextEdit>?,
 ) : EditorActionHandler() {
 
