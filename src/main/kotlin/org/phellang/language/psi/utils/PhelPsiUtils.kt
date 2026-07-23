@@ -1,6 +1,7 @@
 package org.phellang.language.psi.utils
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
 
@@ -52,26 +53,61 @@ object PhelPsiUtils {
     }
 
     /**
-     * The forms of [list] with `#_`-discarded forms removed. A `#_` (FORM_COMMENT) leaf
+     * The forms of [container] with `#_`-discarded forms removed. A `#_` (FORM_COMMENT) leaf
      * discards the next form, and they stack (`#_#_` drops two), so callers that count
      * call arguments must not treat a discarded form as a real argument. Without this,
      * `(push #_skip coll x)` reads as three args instead of two.
+     *
+     * [container] is any form container — a list, vector, map, or the file itself for a
+     * top-level `#_`.
      */
     @JvmStatic
-    fun activeForms(list: PhelList): List<PhelForm> {
+    fun activeForms(container: PsiElement): List<PhelForm> {
         val result = mutableListOf<PhelForm>()
+        forEachChildForm(container) { form, discarded -> if (!discarded) result.add(form) }
+        return result
+    }
+
+    /**
+     * True when [element] is inside a form discarded by `#_`. Walks the ancestor chain, so a
+     * symbol nested anywhere inside a discarded compound form (`#_(alpha beta)`) is reported
+     * too, not just the discarded form itself.
+     *
+     * This is the same language rule as [activeForms] over the same PSI walk — the `#_` is a
+     * leaf sibling of the form it discards, never its parent.
+     */
+    @JvmStatic
+    fun isDiscardedByFormComment(element: PsiElement): Boolean {
+        var current: PsiElement? = element
+        while (current != null && current !is PsiFile) {
+            if (current is PhelForm && isDiscardedInParent(current)) return true
+            current = current.parent
+        }
+        return false
+    }
+
+    private fun isDiscardedInParent(form: PhelForm): Boolean {
+        val parent = form.parent ?: return false
+        var result = false
+        forEachChildForm(parent) { child, discarded -> if (child === form) result = discarded }
+        return result
+    }
+
+    /** Walks [container]'s direct children, reporting each form and whether `#_` discarded it. */
+    private inline fun forEachChildForm(container: PsiElement, action: (PhelForm, Boolean) -> Unit) {
         var pendingDiscards = 0
-        var child = list.firstChild
+        var child = container.firstChild
         while (child != null) {
             when {
                 child.node?.elementType == PhelTypes.FORM_COMMENT -> pendingDiscards++
                 child is PhelForm -> {
-                    if (pendingDiscards > 0) pendingDiscards-- else result.add(child)
+                    val discarded = pendingDiscards > 0
+                    if (discarded) pendingDiscards--
+                    action(child, discarded)
                 }
             }
             child = child.nextSibling
         }
-        return result
     }
 
     @JvmStatic
