@@ -14,13 +14,15 @@ class PhelUnusedLetBindingInspection : LocalInspectionTool() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhelVisitor() {
             override fun visitList(o: PhelList) {
-                val forms = o.forms
+                // activeForms, not forms: a `#_`-discarded form must not shift the head/binding-vec
+                // reads or the name/value pairing in the binding vector.
+                val forms = PhelPsiUtils.activeForms(o)
                 if (forms.size < 2) return
                 val head = PhelPsiUtils.asSymbol(forms[0]) ?: return
                 if (head.text !in LET_LIKE_FORMS) return
 
                 val bindingVec = forms[1] as? PhelVec ?: return
-                val bindings = bindingVec.forms
+                val bindings = PhelPsiUtils.activeForms(bindingVec)
 
                 val body = forms.drop(2)
                 if (body.isEmpty()) return
