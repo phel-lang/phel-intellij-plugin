@@ -10,6 +10,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.4.10"
     id("org.jetbrains.intellij.platform") version "2.18.1"
     id("org.jetbrains.grammarkit") version "2023.3.0.3"
+    id("org.jetbrains.kotlinx.kover") version "0.9.8"
 }
 
 tasks.withType<Wrapper> {
@@ -110,6 +111,32 @@ java {
 
 kotlin {
     jvmToolchain(21)
+}
+
+kover {
+    currentProject {
+        // The isolated build-time generator source set is not shipped code (its output is kept out
+        // of the distribution) and its plain-JVM Kotlin compilation trips Kover's instrumentation.
+        // Leave it out of coverage entirely.
+        sources {
+            excludedSourceSets.add("generator")
+        }
+    }
+    reports {
+        filters {
+            excludes {
+                // Grammar-Kit / JFlex output under src/main/gen: never hand-written and not
+                // unit-tested directly, so counting it would only dilute the coverage signal. The
+                // generated PSI interfaces in language.psi are left in (they share the package with
+                // hand-written code and carry almost no executable lines).
+                classes(
+                    "org.phellang.language.PhelLexer",
+                    "org.phellang.language.parser.*",
+                    "org.phellang.language.psi.impl.*",
+                )
+            }
+        }
+    }
 }
 
 val generatePhelLexer = tasks.register<GenerateLexerTask>("generatePhelLexer") {

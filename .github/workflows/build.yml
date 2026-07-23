@@ -113,9 +113,11 @@ jobs:
         with:
           cache-read-only: true
 
-      # Run tests
+      # Run tests and generate the Kover coverage report. Both depend on `test`, so it runs once
+      # under Kover instrumentation and koverXmlReport writes build/reports/kover/report.xml for the
+      # upload step below.
       - name: Run Tests
-        run: .github/scripts/gradle-retry.sh check
+        run: .github/scripts/gradle-retry.sh check koverXmlReport
 
       # Collect Tests Result of failed tests
       - name: Collect Tests Result
