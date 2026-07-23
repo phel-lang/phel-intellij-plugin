@@ -1,0 +1,26 @@
+<html>
+<body>
+<p>Reports a binding in a <code>let</code>-like form whose name is never used.</p>
+
+<p>A binding name is flagged when it appears in neither the body of the form nor the value of any
+    later binding. Phel binds sequentially, so a value can only refer to names introduced before it;
+    both places are taken into account.</p>
+
+<p>Applies to the binding-introducing forms <code>let</code>, <code>if-let</code>,
+    <code>when-let</code>, <code>loop</code>, <code>for</code>, <code>foreach</code>,
+    <code>binding</code> and <code>dofor</code>.</p>
+
+<h3>Example:</h3>
+<pre><code>
+(let [x 1
+      y 2]   ;; 'y' is reported: Binding 'y' is never used.
+  (println x))
+</code></pre>
+
+<h3>Ignored names</h3>
+<p>Names conventionally used to discard a value are never reported: <code>_</code>, any name starting
+    with <code>_</code>, and names starting with <code>&amp;</code> (rest markers).</p>
+
+<p>A quick-fix removes the unused binding pair from the binding vector.</p>
+</body>
+</html>

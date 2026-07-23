@@ -1,0 +1,26 @@
+<html>
+<body>
+<p>Reports a <code>let</code>-like binding that shadows an outer binding of the same name.</p>
+
+<p>When a binding reuses a name already introduced by an enclosing scope, the inner name hides the
+    outer one for the rest of the form. This is legal Phel, but it is a frequent source of confusion,
+    so it is surfaced as a weak warning.</p>
+
+<p>The outer binding is found in an enclosing <code>let</code>-like form
+    (<code>let</code>, <code>if-let</code>, <code>when-let</code>, <code>loop</code>, <code>for</code>,
+    <code>foreach</code>, <code>binding</code>, <code>dofor</code>) or in the parameter vector of an
+    enclosing function form (<code>fn</code>, <code>defn</code>, <code>defn-</code>,
+    <code>defmacro</code>, <code>defmacro-</code>).</p>
+
+<h3>Example:</h3>
+<pre><code>
+(defn f [x]
+  (let [x (inc x)]   ;; reported: Binding 'x' shadows an outer binding.
+    x))
+</code></pre>
+
+<h3>Ignored names</h3>
+<p>The placeholder <code>_</code> and names starting with <code>&amp;</code> (rest markers) are never
+    reported.</p>
+</body>
+</html>
