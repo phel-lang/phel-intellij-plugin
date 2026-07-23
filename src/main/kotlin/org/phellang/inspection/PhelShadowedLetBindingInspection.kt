@@ -17,14 +17,16 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : PhelVisitor() {
             override fun visitList(o: PhelList) {
-                val forms = o.forms
+                // activeForms, not forms: a `#_`-discarded form must not shift the head/binding-vec
+                // reads or the name/value pairing in the binding vector.
+                val forms = PhelPsiUtils.activeForms(o)
                 if (forms.size < 2) return
                 val head = PhelPsiUtils.asSymbol(forms[0]) ?: return
                 val headText = head.text ?: return
                 if (headText !in BINDING_INTRO_FORMS) return
 
                 val bindingVec = forms[1] as? PhelVec ?: return
-                val bindings = bindingVec.forms
+                val bindings = PhelPsiUtils.activeForms(bindingVec)
 
                 var i = 0
                 while (i < bindings.size) {
@@ -52,7 +54,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
         var current: PsiElement? = innerForm.parent
         while (current != null) {
             if (current is PhelList) {
-                val parentForms = current.forms
+                val parentForms = PhelPsiUtils.activeForms(current)
                 val head = PhelPsiUtils.asSymbol(parentForms.firstOrNull())
                 val headText = head?.text
                 if (headText != null) {
@@ -71,7 +73,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
 
     private fun findInBindingVec(forms: List<PhelForm>, name: String): PsiElement? {
         val vec = forms.getOrNull(1) as? PhelVec ?: return null
-        val bindings = vec.forms
+        val bindings = PhelPsiUtils.activeForms(vec)
         var i = 0
         while (i < bindings.size) {
             val s = PhelPsiUtils.asSymbol(bindings[i])
@@ -87,7 +89,7 @@ class PhelShadowedLetBindingInspection : LocalInspectionTool() {
         // (defn name "doc" [params] ...) — scan first vec.
         for (form in forms.drop(1)) {
             if (form is PhelVec) {
-                for (p in form.forms) {
+                for (p in PhelPsiUtils.activeForms(form)) {
                     val text = PhelPsiUtils.asSymbol(p)?.text
                     if (text == name) return p
                 }

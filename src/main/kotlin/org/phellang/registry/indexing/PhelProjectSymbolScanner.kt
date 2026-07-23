@@ -47,7 +47,9 @@ object PhelProjectSymbolScanner {
         shortNamespace: String,
         virtualFile: com.intellij.openapi.vfs.VirtualFile
     ): PhelProjectSymbol? {
-        val forms = list.forms
+        // activeForms, not list.forms: a `#_`-discarded form must not shift the positional reads
+        // below. `(defn #_old new [x] …)` has to index `new`, not `old`.
+        val forms = PhelPsiUtils.activeForms(list)
         if (forms.size < 2) return null
 
         val keywordSymbol = PhelPsiUtils.asSymbol(forms[0])
@@ -128,7 +130,7 @@ object PhelProjectSymbolScanner {
 
     /** The form bound to [key] in [map], or null when the key is absent. */
     private fun mapValueFor(map: PhelMap, key: String): PhelForm? {
-        val children = map.forms
+        val children = PhelPsiUtils.activeForms(map)
         for (i in 0 until children.size - 1) {
             val child = children[i]
             if (child is PhelKeyword && child.text == key) return children[i + 1]
@@ -179,7 +181,7 @@ object PhelProjectSymbolScanner {
 
             // Multi-arity: each arity is a list whose first form is a vector.
             if (form is PhelList) {
-                val paramVec = form.forms.firstOrNull() as? PhelVec ?: continue
+                val paramVec = PhelPsiUtils.activeForms(form).firstOrNull() as? PhelVec ?: continue
                 val params = extractParameterNames(paramVec)
                 val sig = if (params.isEmpty()) "($name)" else "($name ${params.joinToString(" ")})"
                 signatures.add(sig)
@@ -199,7 +201,7 @@ object PhelProjectSymbolScanner {
 
     private fun extractParameterNames(paramVec: PhelVec): List<String> {
         val params = mutableListOf<String>()
-        for (form in paramVec.forms) {
+        for (form in PhelPsiUtils.activeForms(paramVec)) {
             val text = form.text
             if (!text.isNullOrBlank()) params.add(text)
         }

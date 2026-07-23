@@ -30,6 +30,18 @@ class PhelShadowedLetBindingInspectionIntegrationTest : PhelIntegrationTestCase(
         assertTrue("distinct names should not be flagged: $warnings", warnings.isEmpty())
     }
 
+    /** A `#_` before the real binding must not shift the pairing that finds the shadow. */
+    fun testDiscardInBindingVectorStillDetectsShadow() {
+        val warnings = inspect("(ns app\\m)\n(defn f []\n  (let [x 1]\n    (let [#_gap x 2]\n      x)))\n")
+        assertEquals(listOf("Binding 'x' shadows an outer binding."), warnings)
+    }
+
+    /** The outer scope is still recognized as a binding form when a `#_` precedes its vector. */
+    fun testDiscardBeforeOuterBindingVectorStillShadows() {
+        val warnings = inspect("(ns app\\m)\n(defn f []\n  (let #_junk [x 1]\n    (let [x 2]\n      x)))\n")
+        assertEquals(listOf("Binding 'x' shadows an outer binding."), warnings)
+    }
+
     private fun inspect(text: String): List<String> {
         val file = myFixture.configureByText("a.phel", text) as PhelFile
         val holder = ProblemsHolder(InspectionManager.getInstance(project), file, true)
