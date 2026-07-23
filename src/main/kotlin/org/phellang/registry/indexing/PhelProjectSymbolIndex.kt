@@ -76,26 +76,34 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         }
     }
 
+    /** Serializes the per-file remove-then-add so concurrent refreshers can't duplicate a file. */
+    private val refreshLock = Any()
+
     /**
-     * Refreshes the index from the current PSI state (used for live updates during editing).
+     * Refreshes the index from the current PSI state (used for live updates during editing and by
+     * the background VFS refresh). The scan runs outside [refreshLock] since it only reads PSI, but
+     * the swap of a file's entries is done under the lock: without it two threads refreshing the
+     * same file — the VFS listener's pooled thread and the PSI listener, say — can both read the
+     * same old set and both append, duplicating every symbol.
      */
     fun refreshFileFromPsi(psiFile: PhelFile) {
         val virtualFile = psiFile.virtualFile ?: return
         val filePath = virtualFile.path
 
-        val oldSymbols = symbolsByFile[filePath] ?: emptyList()
-
-        for (symbol in oldSymbols) {
-            removeFromMap(symbolsByNamespace, symbol.shortNamespace, filePath)
-            removeFromMap(symbolsByName, symbol.name, filePath)
-        }
-
         val newSymbols = PhelProjectSymbolScanner.scanFile(psiFile)
-        symbolsByFile[filePath] = newSymbols
 
-        for (symbol in newSymbols) {
-            addToMap(symbolsByNamespace, symbol.shortNamespace, symbol)
-            addToMap(symbolsByName, symbol.name, symbol)
+        synchronized(refreshLock) {
+            val oldSymbols = symbolsByFile[filePath] ?: emptyList()
+            for (symbol in oldSymbols) {
+                removeFromMap(symbolsByNamespace, symbol.shortNamespace, filePath)
+                removeFromMap(symbolsByName, symbol.name, filePath)
+            }
+
+            symbolsByFile[filePath] = newSymbols
+            for (symbol in newSymbols) {
+                addToMap(symbolsByNamespace, symbol.shortNamespace, symbol)
+                addToMap(symbolsByName, symbol.name, symbol)
+            }
         }
     }
 
