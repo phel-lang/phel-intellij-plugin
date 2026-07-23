@@ -3,6 +3,7 @@ package org.phellang.registry.indexing
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
@@ -12,6 +13,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import org.phellang.registry.PhelProjectSymbol
 import org.phellang.language.psi.files.PhelFile
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
 
 @Service(Service.Level.PROJECT)
 class PhelProjectSymbolIndex(private val project: Project) : Disposable {
@@ -24,9 +26,12 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     /** Cache: file path -> List of symbols */
     private val symbolsByFile = ConcurrentHashMap<String, List<PhelProjectSymbol>>()
 
-    /** Whether the index has been built */
+    /** Whether a full-project scan has completed. Only ever set true by a scan that finished. */
     @Volatile
     private var indexBuilt = false
+
+    /** Single-flight guard so at most one thread runs the full scan at a time. */
+    private val buildInProgress = AtomicBoolean(false)
 
     init {
         // Register file change listener to keep index in sync (for file saves)
@@ -123,17 +128,29 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     }
 
     private fun ensureIndexBuilt() {
-        if (!indexBuilt) {
-            synchronized(this) {
-                if (!indexBuilt) {
-                    buildIndex()
-                    indexBuilt = true
-                }
+        if (indexBuilt) return
+
+        // Single-flight without holding a monitor across the read action. The old
+        // `synchronized(this) { runReadAction { … } }` acquired the read lock while holding the
+        // monitor — a lock-ordering deadlock shape against the EDT taking the monitor inside a
+        // write action. A concurrent caller that finds a build already running returns whatever is
+        // indexed so far rather than blocking on the monitor.
+        if (!buildInProgress.compareAndSet(false, true)) return
+        try {
+            // `indexBuilt` flips only when a scan actually completed. A build cut short by
+            // cancellation (ProcessCanceledException) or a disposed project leaves it false, so the
+            // next call rebuilds instead of trusting a partial/empty index.
+            if (buildIndex()) {
+                indexBuilt = true
             }
+        } finally {
+            buildInProgress.set(false)
         }
     }
 
-    private fun buildIndex() {
+    /** @return true only if the scan ran to completion (not disposed, not cancelled). */
+    private fun buildIndex(): Boolean {
+        var completed = false
         ApplicationManager.getApplication().runReadAction {
             if (project.isDisposed) return@runReadAction
             val phelFiles = FilenameIndex.getAllFilesByExt(
@@ -141,21 +158,26 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
             )
 
             val psiManager = PsiManager.getInstance(project)
-
-            for (virtualFile in phelFiles) {
-                if (!virtualFile.isValid) continue
-                val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
-
-                val symbols = PhelProjectSymbolScanner.scanFile(psiFile)
-
-                if (symbols.isNotEmpty()) {
-                    symbolsByFile[virtualFile.path] = symbols
-                    for (symbol in symbols) {
-                        addToMap(symbolsByNamespace, symbol.shortNamespace, symbol)
-                        addToMap(symbolsByName, symbol.name, symbol)
-                    }
-                }
+            val psiFiles = phelFiles.mapNotNull { vf ->
+                if (vf.isValid) psiManager.findFile(vf) as? PhelFile else null
             }
+
+            indexFiles(psiFiles)
+            completed = true
+        }
+        return completed
+    }
+
+    /**
+     * Scans [files] into the index, checking for cancellation before each one so a large project's
+     * scan can be abandoned (e.g. the user keeps typing during completion). Re-scanning replaces a
+     * file's prior entries via [refreshFileFromPsi], so re-running after a cancelled build is safe
+     * and never duplicates. Caller must hold read access.
+     */
+    internal fun indexFiles(files: List<PhelFile>) {
+        for (file in files) {
+            ProgressManager.checkCanceled()
+            refreshFileFromPsi(file)
         }
     }
 
