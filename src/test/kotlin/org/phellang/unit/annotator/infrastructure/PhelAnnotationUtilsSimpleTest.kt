@@ -57,6 +57,15 @@ class PhelAnnotationUtilsSimpleTest {
     }
 
     @Test
+    fun `isValidText treats any non-whitespace content as valid, including non-ASCII and control chars`() {
+        // isValidText is "not null or blank": a non-whitespace character of any script keeps it valid.
+        val valid = listOf("\u0000", "\uFFFF", "\uD83D\uDE00", "\u6D4B\u8BD5", "valid symbol", " \t symbol \n ")
+        valid.forEach {
+            assertTrue(PhelAnnotationUtils.isValidText(it), "should be valid: ${it.map(Char::code)}")
+        }
+    }
+
+    @Test
     fun `isValidText should handle special Phel symbols`() {
         // Test various Phel-specific symbol patterns
         assertTrue(PhelAnnotationUtils.isValidText("defn"))
@@ -152,6 +161,10 @@ class PhelAnnotationUtilsSimpleTest {
         // Test large range
         val largeRange = TextRange(0, 10000)
         `when`(mockElement.textRange).thenReturn(largeRange)
+        assertTrue(PhelAnnotationUtils.shouldAnnotate(mockElement))
+
+        // Extreme upper bound: still just a positive-length range.
+        `when`(mockElement.textRange).thenReturn(TextRange(0, Integer.MAX_VALUE))
         assertTrue(PhelAnnotationUtils.shouldAnnotate(mockElement))
     }
 }
