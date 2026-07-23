@@ -7,7 +7,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
-
+  
 jobs:
 
   # Prepare the environment and build the plugin
@@ -38,32 +38,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      # Gradle extracts the IntelliJ IDEA distribution through an artifact transform into an
-      # "immutable workspace" under caches/<version>/transforms, and verifies it by hashing the
-      # directory. setup-gradle restores that directory from a deduplicated gradle-transforms-v1-*
-      # cache entry, and a perturbed or partially written entry makes Gradle report
-      #   The contents of the immutable workspace ... have been modified
-      # discard the extracted IDE, and fail every lookup against it with
-      #   Could not find bundled plugin with ID: 'com.intellij.java'
-      # gradle-home-cache-excludes does NOT cover these entries (the enhanced cache provider
-      # restores them by its own hardcoded paths), so drop them before Gradle starts and let it
-      # re-extract. The IDE archive still comes from the cached modules-2 dependencies, so the
-      # cost is extraction, not a download.
-      - name: Drop restored artifact transforms
-        shell: bash
-        run: |
-          shopt -s nullglob
-          dirs=(~/.gradle/caches/*/transforms ~/.gradle/caches/transforms-*)
-          if [ ${#dirs[@]} -eq 0 ]; then
-            echo "No restored transform caches to drop"
-          else
-            printf 'Dropping %s\n' "${dirs[@]}"
-            rm -rf "${dirs[@]}"
-          fi
-
       # Build plugin
       - name: Build plugin
-        run: ./gradlew buildPlugin
+        run: .github/scripts/gradle-retry.sh buildPlugin
 
       # Prepare plugin archive content for creating artifact
       - name: Prepare Plugin Artifact
@@ -114,32 +91,9 @@ jobs:
         with:
           cache-read-only: true
 
-      # Gradle extracts the IntelliJ IDEA distribution through an artifact transform into an
-      # "immutable workspace" under caches/<version>/transforms, and verifies it by hashing the
-      # directory. setup-gradle restores that directory from a deduplicated gradle-transforms-v1-*
-      # cache entry, and a perturbed or partially written entry makes Gradle report
-      #   The contents of the immutable workspace ... have been modified
-      # discard the extracted IDE, and fail every lookup against it with
-      #   Could not find bundled plugin with ID: 'com.intellij.java'
-      # gradle-home-cache-excludes does NOT cover these entries (the enhanced cache provider
-      # restores them by its own hardcoded paths), so drop them before Gradle starts and let it
-      # re-extract. The IDE archive still comes from the cached modules-2 dependencies, so the
-      # cost is extraction, not a download.
-      - name: Drop restored artifact transforms
-        shell: bash
-        run: |
-          shopt -s nullglob
-          dirs=(~/.gradle/caches/*/transforms ~/.gradle/caches/transforms-*)
-          if [ ${#dirs[@]} -eq 0 ]; then
-            echo "No restored transform caches to drop"
-          else
-            printf 'Dropping %s\n' "${dirs[@]}"
-            rm -rf "${dirs[@]}"
-          fi
-
       # Run tests
       - name: Run Tests
-        run: ./gradlew check
+        run: .github/scripts/gradle-retry.sh check
 
       # Collect Tests Result of failed tests
       - name: Collect Tests Result
@@ -187,32 +141,9 @@ jobs:
         with:
           cache-read-only: true
 
-      # Gradle extracts the IntelliJ IDEA distribution through an artifact transform into an
-      # "immutable workspace" under caches/<version>/transforms, and verifies it by hashing the
-      # directory. setup-gradle restores that directory from a deduplicated gradle-transforms-v1-*
-      # cache entry, and a perturbed or partially written entry makes Gradle report
-      #   The contents of the immutable workspace ... have been modified
-      # discard the extracted IDE, and fail every lookup against it with
-      #   Could not find bundled plugin with ID: 'com.intellij.java'
-      # gradle-home-cache-excludes does NOT cover these entries (the enhanced cache provider
-      # restores them by its own hardcoded paths), so drop them before Gradle starts and let it
-      # re-extract. The IDE archive still comes from the cached modules-2 dependencies, so the
-      # cost is extraction, not a download.
-      - name: Drop restored artifact transforms
-        shell: bash
-        run: |
-          shopt -s nullglob
-          dirs=(~/.gradle/caches/*/transforms ~/.gradle/caches/transforms-*)
-          if [ ${#dirs[@]} -eq 0 ]; then
-            echo "No restored transform caches to drop"
-          else
-            printf 'Dropping %s\n' "${dirs[@]}"
-            rm -rf "${dirs[@]}"
-          fi
-
       # Run Verify Plugin task and IntelliJ Plugin Verifier tool
       - name: Run Plugin Verification tasks
-        run: ./gradlew verifyPlugin
+        run: .github/scripts/gradle-retry.sh verifyPlugin
 
       # Collect Plugin Verifier Result
       - name: Collect Plugin Verifier Result
