@@ -80,13 +80,13 @@ object PhelPsiUtils {
     fun isDiscardedByFormComment(element: PsiElement): Boolean {
         var current: PsiElement? = element
         while (current != null && current !is PsiFile) {
-            if (current is PhelForm && isDiscarded(current)) return true
+            if (current is PhelForm && isDiscardedInParent(current)) return true
             current = current.parent
         }
         return false
     }
 
-    private fun isDiscarded(form: PhelForm): Boolean {
+    private fun isDiscardedInParent(form: PhelForm): Boolean {
         val parent = form.parent ?: return false
         var result = false
         forEachChildForm(parent) { child, discarded -> if (child === form) result = discarded }

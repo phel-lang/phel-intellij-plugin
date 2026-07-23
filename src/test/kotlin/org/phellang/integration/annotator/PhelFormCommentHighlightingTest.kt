@@ -56,17 +56,18 @@ class PhelFormCommentHighlightingTest : PhelIntegrationTestCase() {
     /** Asserts exactly [expected] symbols are greyed, both via the analyzer and end to end. */
     private fun assertDiscarded(source: String, vararg expected: String) {
         val file = myFixture.configureByText("a.phel", source)
+        val symbols = PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)
 
-        val actual = PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)
+        val analyzerVerdict = symbols
             .filter { PhelCommentAnalyzer.isCommentedOutByFormComment(it) }
             .map { it.text }
-        assertEquals("analyzer verdict for `$source`", expected.toList(), actual)
+        assertEquals("analyzer verdict for `$source`", expected.toList(), analyzerVerdict)
 
-        val greyedRanges = myFixture.doHighlighting()
+        val greyed = myFixture.doHighlighting()
             .filter { it.forcedTextAttributesKey == COMMENTED_OUT_FORM }
-            .map { it.startOffset to it.endOffset }
-        val greyedSymbols = PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)
-            .filter { symbol -> greyedRanges.any { it.first <= symbol.textRange.startOffset && symbol.textRange.endOffset <= it.second } }
+            .map { it.startOffset..it.endOffset }
+        val greyedSymbols = symbols
+            .filter { symbol -> greyed.any { symbol.textRange.startOffset in it && symbol.textRange.endOffset in it } }
             .map { it.text }
         assertEquals("annotator highlighting for `$source`", expected.toList(), greyedSymbols)
     }
