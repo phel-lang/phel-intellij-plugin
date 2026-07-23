@@ -6,7 +6,6 @@ import org.phellang.registry.data.registerAsyncFunctions
 import org.phellang.registry.data.registerBase64Functions
 import org.phellang.registry.data.registerCliFunctions
 import org.phellang.registry.data.registerCoreFunctions
-import org.phellang.registry.data.registerDebugFunctions
 import org.phellang.registry.data.registerEdnFunctions
 import org.phellang.registry.data.registerHtmlFunctions
 import org.phellang.registry.data.registerHttpClientFunctions
@@ -21,6 +20,7 @@ import org.phellang.registry.data.registerReflectFunctions
 import org.phellang.registry.data.registerReplFunctions
 import org.phellang.registry.data.registerRouterFunctions
 import org.phellang.registry.data.registerStringFunctions
+import org.phellang.registry.data.registerTraceFunctions
 import org.phellang.registry.data.registerTransitFunctions
 import org.phellang.registry.data.registerWalkFunctions
 import org.phellang.registry.data.registerWatchFunctions
@@ -71,7 +71,6 @@ object PhelFunctionRegistry {
         functions[Namespace.BASE64] = registerBase64Functions()
         functions[Namespace.CLI] = registerCliFunctions()
         functions[Namespace.CORE] = registerCoreFunctions()
-        functions[Namespace.DEBUG] = registerDebugFunctions()
         functions[Namespace.EDN] = registerEdnFunctions()
         functions[Namespace.HTML] = registerHtmlFunctions()
         functions[Namespace.HTTP] = registerHttpFunctions()
@@ -98,6 +97,7 @@ object PhelFunctionRegistry {
         functions[Namespace.TEST_ROSE] = registerTestRoseFunctions()
         functions[Namespace.TEST_SELECTOR] = registerTestSelectorFunctions()
         functions[Namespace.TEST_SHRINK] = registerTestShrinkFunctions()
+        functions[Namespace.TRACE] = registerTraceFunctions()
         functions[Namespace.TRANSIT] = registerTransitFunctions()
         functions[Namespace.WALK] = registerWalkFunctions()
         functions[Namespace.WATCH] = registerWatchFunctions()
