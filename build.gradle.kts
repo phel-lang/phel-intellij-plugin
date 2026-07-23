@@ -42,6 +42,18 @@ sourceSets {
             srcDirs("src/test/kotlin")
         }
     }
+    // Isolated source set for the registry generator. It must compile WITHOUT the files it
+    // generates, otherwise `updatePhelRegistry` cannot bootstrap a missing/stale registry/data.
+    create("generator") {
+        kotlin {
+            srcDirs("src/main/kotlin")
+            include(
+                "org/phellang/tools/**",
+                // The only registry type the generator references.
+                "org/phellang/registry/PhelCompletionPriority.kt",
+            )
+        }
+    }
 }
 
 // Configure IntelliJ Platform Dependencies
@@ -66,6 +78,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.23.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
     implementation("com.google.code.gson:gson:2.14.0")
+    "generatorImplementation"("com.google.code.gson:gson:2.14.0")
 }
 
 configurations.all {
@@ -111,18 +124,27 @@ val updatePhelRegistry = tasks.register<JavaExec>("updatePhelRegistry") {
     group = "tools"
     description = "Fetches Phel API from phel-lang.org and regenerates PhelFunctionRegistry files"
     mainClass.set("org.phellang.tools.ApiGeneratorKt")
-    classpath = sourceSets["main"].runtimeClasspath
+    // Deliberately NOT sourceSets["main"]: the main source set does not compile until the files
+    // this task generates exist, so depending on it would make a missing registry/data unrecoverable.
+    classpath = sourceSets["generator"].runtimeClasspath
     workingDir = projectDir
 
-    // Ensure the project is compiled first
-    dependsOn("classes")
+    dependsOn("generatorClasses")
+}
+
+// The generator source set is intentionally free of lexer/parser (and PSI) dependencies, so its
+// compile tasks must not be wired to grammar generation.
+val generatorCompileTasks = sourceSets["generator"].let {
+    setOf(it.compileJavaTaskName, it.getCompileTaskName("kotlin"))
 }
 
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
         options.release.set(21)
-        dependsOn(generatePhelLexer, generatePhelParser)
+        if (name !in generatorCompileTasks) {
+            dependsOn(generatePhelLexer, generatePhelParser)
+        }
     }
 
     // Configure Kotlin compilation for main sources
@@ -132,7 +154,9 @@ tasks {
             languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
             apiVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
         }
-        dependsOn(generatePhelLexer, generatePhelParser)
+        if (name !in generatorCompileTasks) {
+            dependsOn(generatePhelLexer, generatePhelParser)
+        }
     }
 
     test {

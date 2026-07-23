@@ -35,7 +35,7 @@ Two-arity convenience:<br />
 """,
             example = "(application {:name \"mytool\" :commands [spec]})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L407",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L407",
                 docs = "",
             ),
         ),
@@ -52,7 +52,7 @@ Two-arity convenience:<br />
             summary = "Read (and coerce) an argument value by name.",
             example = "(arg ctx \"port\") ; coerced when spec has :coerce :int",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L102",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L102",
                 docs = "",
             ),
         ),
@@ -71,7 +71,7 @@ Build an <code>ArgvInput</code> from a vector of string tokens. Positional args 
 """,
             example = "(argv [\"greet\" \"--loud\" \"alice\"])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L466",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L466",
                 docs = "",
             ),
         ),
@@ -90,7 +90,7 @@ Like <code>argv</code> but also wires a STDIN stream so <code>ask</code>/<code>c
 """,
             example = "(argv-with-stdin [\"greet\"] \"alice\\n\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L473",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L473",
                 docs = "",
             ),
         ),
@@ -109,7 +109,7 @@ Free-text prompt. <code>default</code> optional.
 """,
             example = "(ask ctx \"Your name?\" \"alice\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L167",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L167",
                 docs = "",
             ),
         ),
@@ -126,7 +126,7 @@ Free-text prompt. <code>default</code> optional.
             summary = "Prompt without echoing (passwords).",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L174",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L174",
                 docs = "",
             ),
         ),
@@ -145,7 +145,7 @@ Build a <code>BufferedOutput</code> that captures writes into a string.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L484",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L484",
                 docs = "",
             ),
         ),
@@ -162,7 +162,7 @@ Build a <code>BufferedOutput</code> that captures writes into a string.
             summary = "Boxed caution message.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L164",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L164",
                 docs = "",
             ),
         ),
@@ -179,7 +179,7 @@ Build a <code>BufferedOutput</code> that captures writes into a string.
             summary = "Single-choice prompt over a vector of options.",
             example = "(choice ctx \"Env?\" [\"dev\" \"stg\" \"prod\"] \"dev\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L186",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L186",
                 docs = "",
             ),
         ),
@@ -212,7 +212,7 @@ Modes     :required :optional :array (:args) + :none :negatable (:opts)<br />
 """,
             example = "(command {:name \"greet\" :run (fn [ctx] (success ctx \"Hi!\"))})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L344",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L344",
                 docs = "",
             ),
         ),
@@ -229,7 +229,7 @@ Modes     :required :optional :array (:args) + :none :negatable (:opts)<br />
             summary = "Yellow comment line.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L143",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L143",
                 docs = "",
             ),
         ),
@@ -248,7 +248,7 @@ Yes/no prompt. <code>default?</code> defaults to true.
 """,
             example = "(when (confirm ctx \"Deploy?\") ...)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L179",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L179",
                 docs = "",
             ),
         ),
@@ -265,7 +265,7 @@ Yes/no prompt. <code>default?</code> defaults to true.
             summary = "Write only when -vvv (debug).",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L137",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L137",
                 docs = "",
             ),
         ),
@@ -282,7 +282,7 @@ Yes/no prompt. <code>default?</code> defaults to true.
             summary = "Red error line.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L144",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L144",
                 docs = "",
             ),
         ),
@@ -299,7 +299,7 @@ Yes/no prompt. <code>default?</code> defaults to true.
             summary = "Green info line.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L142",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L142",
                 docs = "",
             ),
         ),
@@ -316,7 +316,7 @@ Yes/no prompt. <code>default?</code> defaults to true.
             summary = "Write only when -v or higher.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L135",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L135",
                 docs = "",
             ),
         ),
@@ -333,7 +333,7 @@ Yes/no prompt. <code>default?</code> defaults to true.
             summary = "Write only when -vv or higher.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L136",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L136",
                 docs = "",
             ),
         ),
@@ -350,7 +350,7 @@ Yes/no prompt. <code>default?</code> defaults to true.
             summary = "Bulleted list of items.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L165",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L165",
                 docs = "",
             ),
         ),
@@ -367,7 +367,7 @@ Yes/no prompt. <code>default?</code> defaults to true.
             summary = "Boxed note.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L163",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L163",
                 docs = "",
             ),
         ),
@@ -386,7 +386,7 @@ Build a <code>NullOutput</code> that discards writes.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L488",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L488",
                 docs = "",
             ),
         ),
@@ -403,7 +403,7 @@ Build a <code>NullOutput</code> that discards writes.
             summary = "Read (and coerce) an option value by name.",
             example = "(opt ctx \"verbose\") ; true when --verbose present and :mode :none",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L110",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L110",
                 docs = "",
             ),
         ),
@@ -422,7 +422,7 @@ Drain a <code>BufferedOutput</code> into a string.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L492",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L492",
                 docs = "",
             ),
         ),
@@ -441,7 +441,7 @@ Test helper. Accepts a <code>BufferedOutput</code>, a string, or a map <code>{:o
 """,
             example = "(is (output-contains? res \"hello\"))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L497",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L497",
                 docs = "",
             ),
         ),
@@ -458,7 +458,7 @@ Test helper. Accepts a <code>BufferedOutput</code>, a string, or a map <code>{:o
             summary = "Advance by n.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L251",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L251",
                 docs = "",
             ),
         ),
@@ -480,7 +480,7 @@ Options:<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L236",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L236",
                 docs = "",
             ),
         ),
@@ -497,7 +497,7 @@ Options:<br />
             summary = "Finish + newline.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L252",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L252",
                 docs = "",
             ),
         ),
@@ -514,7 +514,7 @@ Options:<br />
             summary = "Start the bar.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L250",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L250",
                 docs = "",
             ),
         ),
@@ -536,7 +536,7 @@ Run an Application and return its exit code.<br /><br />
 """,
             example = "(run (application \"t\" [spec]))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L448",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L448",
                 docs = "",
             ),
         ),
@@ -555,7 +555,7 @@ Iterate <code>coll</code> and invoke <code>(step-fn item bar)</code> for each, h
 """,
             example = "(run-with-progress ctx files (fn [f _] (process f)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L254",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L254",
                 docs = "",
             ),
         ),
@@ -572,7 +572,7 @@ Iterate <code>coll</code> and invoke <code>(step-fn item bar)</code> for each, h
             summary = "Sub-heading.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L160",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L160",
                 docs = "",
             ),
         ),
@@ -592,7 +592,7 @@ Return a vector of lines from STDIN (trailing <code>\r\n</code> stripped).<br />
 """,
             example = "(for [l :in (stdin-lines) :when (not= l \"\")] l)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L269",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L269",
                 docs = "",
             ),
         ),
@@ -612,7 +612,7 @@ Return a cached <code>SymfonyStyle</code> bound to the context so successive<br 
 """,
             example = "(-&gt; (style ctx) (php/-&gt; (success \"Done!\")))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L150",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L150",
                 docs = "",
             ),
         ),
@@ -629,7 +629,7 @@ Return a cached <code>SymfonyStyle</code> bound to the context so successive<br 
             summary = "Boxed success message.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L161",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L161",
                 docs = "",
             ),
         ),
@@ -651,7 +651,7 @@ Options:<br />
 """,
             example = "(table ctx [\"id\" \"name\"] [[1 \"alice\"] [2 \"bob\"]])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L206",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L206",
                 docs = "",
             ),
         ),
@@ -668,7 +668,7 @@ Options:<br />
             summary = "Heavy heading.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L159",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L159",
                 docs = "",
             ),
         ),
@@ -685,7 +685,7 @@ Options:<br />
             summary = "Boxed warning message.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L162",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L162",
                 docs = "",
             ),
         ),
@@ -702,7 +702,7 @@ Options:<br />
             summary = "Write text without trailing newline.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L125",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L125",
                 docs = "",
             ),
         ),
@@ -719,7 +719,7 @@ Options:<br />
             summary = "Write a line.",
             example = "(writeln ctx \"ready\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/cli.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/cli.phel#L118",
                 docs = "",
             ),
         ),

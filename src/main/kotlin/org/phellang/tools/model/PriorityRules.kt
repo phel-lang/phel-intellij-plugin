@@ -239,7 +239,6 @@ object PriorityRules {
         "ai" to PhelCompletionPriority.AI_FUNCTIONS,
         "base64" to PhelCompletionPriority.BASE64_FUNCTIONS,
         "core" to PhelCompletionPriority.CORE_FUNCTIONS,
-        "debug" to PhelCompletionPriority.DEBUG_FUNCTIONS,
         "html" to PhelCompletionPriority.HTML_FUNCTIONS,
         "http" to PhelCompletionPriority.HTTP_FUNCTIONS,
         "http_client" to PhelCompletionPriority.HTTP_CLIENT_FUNCTIONS,
@@ -248,7 +247,8 @@ object PriorityRules {
         "php" to PhelCompletionPriority.PHP_INTEROP,
         "repl" to PhelCompletionPriority.REPL_FUNCTIONS,
         "string" to PhelCompletionPriority.STRING_FUNCTIONS,
-        "test" to PhelCompletionPriority.TEST_FUNCTIONS
+        "test" to PhelCompletionPriority.TEST_FUNCTIONS,
+        "trace" to PhelCompletionPriority.DEBUG_FUNCTIONS
     )
 
     /**

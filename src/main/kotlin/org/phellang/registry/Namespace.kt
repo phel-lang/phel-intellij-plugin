@@ -7,7 +7,6 @@ enum class Namespace {
     BASE64,
     CLI,
     CORE,
-    DEBUG,
     EDN,
     HTML,
     HTTP,
@@ -34,6 +33,7 @@ enum class Namespace {
     TEST_ROSE,
     TEST_SELECTOR,
     TEST_SHRINK,
+    TRACE,
     TRANSIT,
     WALK,
     WATCH,
@@ -45,7 +45,6 @@ enum class Namespace {
             "ai" to AI,
             "base64" to BASE64,
             "core" to CORE,
-            "debug" to DEBUG,
             "edn" to EDN,
             "html" to HTML,
             "http" to HTTP,
@@ -57,6 +56,7 @@ enum class Namespace {
             "repl" to REPL,
             "string" to STRING,
             "test" to TEST,
+            "trace" to TRACE,
             "transit" to TRANSIT,
         )
 

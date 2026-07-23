@@ -39,7 +39,8 @@ fun main() {
         println()
 
         println("Generating Kotlin files...")
-        val generator = KotlinCodeGenerator(File(outputDir, "data"))
+        val dataDir = File(outputDir, "data").apply { mkdirs() }
+        val generator = KotlinCodeGenerator(dataDir)
         generator.generate(apiFunctions)
 
         // Sync the hand-wired enum + registry to NamespaceConfig (kills the bootstrap deadlock).
@@ -59,12 +60,12 @@ fun main() {
 }
 
 private fun determineOutputDirectory(): File {
-    // The updatePhelRegistry Gradle task pins workingDir to the project root.
-    val dir = File("src/main/kotlin/org/phellang/registry")
-    if (!dir.isDirectory) {
+    // The updatePhelRegistry Gradle task pins workingDir to the project root. Anchor on a file the
+    // generator never writes, so a wiped registry/data still resolves instead of failing the guard.
+    if (!File("src/main/kotlin/org/phellang").isDirectory) {
         throw IllegalStateException(
             "Could not find output directory. Please run this tool from the project root directory."
         )
     }
-    return dir
+    return File("src/main/kotlin/org/phellang/registry").apply { mkdirs() }
 }

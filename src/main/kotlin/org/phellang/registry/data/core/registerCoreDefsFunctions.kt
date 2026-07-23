@@ -21,7 +21,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Ignores the body of the comment.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L179",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L179",
                 docs = "",
             ),
         ),
@@ -38,7 +38,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a private value that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L104",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L104",
                 docs = "",
             ),
         ),
@@ -70,7 +70,7 @@ Defines a native PHP enum. Each case is named by a keyword followed by an<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L153",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L153",
                 docs = "",
             ),
         ),
@@ -91,7 +91,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L137",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L137",
                 docs = "",
             ),
         ),
@@ -108,7 +108,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a macro.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L109",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L109",
                 docs = "",
             ),
         ),
@@ -125,7 +125,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a private macro that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L119",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L119",
                 docs = "",
             ),
         ),
@@ -142,7 +142,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a new global function.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L99",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L99",
                 docs = "",
             ),
         ),
@@ -159,7 +159,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a private function that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L114",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L114",
                 docs = "",
             ),
         ),
@@ -178,7 +178,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L124",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L124",
                 docs = "",
             ),
         ),
@@ -195,7 +195,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
             summary = "Creates a PHP Array from a sequential data structure.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/defs.phel#L22",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L22",
                 docs = "",
             ),
         ),

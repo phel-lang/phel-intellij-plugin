@@ -23,7 +23,7 @@ Registers <code>f</code> as a tap. Every call to <code>tap></code> invokes each 
 """,
             example = "(add-tap println)\n(tap&gt; 42) ; prints 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/tap.phel#L15",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/tap.phel#L15",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Removes <code>f</code> from the tap set. Returns nil.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/tap.phel#L23",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/tap.phel#L23",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Sends <code>x</code> to every registered tap. Exceptions thrown by individual ta
 """,
             example = "(add-tap println)\n(tap&gt; {:event :login :user \"alice\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/tap.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/tap.phel#L30",
                 docs = "",
             ),
         ),

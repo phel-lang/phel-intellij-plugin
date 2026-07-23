@@ -21,7 +21,7 @@ internal fun registerCoreCollectionsFunctions(): List<PhelFunction> = listOf(
             summary = "Creates a new Set from the given arguments. Shortcut: #{}",
             example = "(hash-set 1 2 3) ; =&gt; #{1 2 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/collections.phel#L15",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/collections.phel#L15",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ Creates a new sorted map. Keys are in natural sorted order. The number of parame
 """,
             example = "(sorted-map :c 3 :a 1 :b 2) ; keys iterate as :a :b :c",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/collections.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/collections.phel#L21",
                 docs = "",
             ),
         ),
@@ -59,7 +59,7 @@ Creates a new sorted map using the given comparator for key ordering. The compar
 """,
             example = "(sorted-map-by (fn [a b] (compare b a)) :a 1 :b 2) ; keys iterate as :b :a",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/collections.phel#L28",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/collections.phel#L28",
                 docs = "",
             ),
         ),
@@ -76,7 +76,7 @@ Creates a new sorted map using the given comparator for key ordering. The compar
             summary = "Creates a new sorted set. Elements are in natural sorted order.",
             example = "(sorted-set 3 1 2) ; iterates as 1 2 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/collections.phel#L35",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/collections.phel#L35",
                 docs = "",
             ),
         ),
@@ -93,7 +93,7 @@ Creates a new sorted map using the given comparator for key ordering. The compar
             summary = "Creates a new sorted set using the given comparator for element ordering.",
             example = "(sorted-set-by (fn [a b] (compare b a)) 3 1 2) ; iterates as 3 2 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/core/collections.phel#L42",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/collections.phel#L42",
                 docs = "",
             ),
         ),

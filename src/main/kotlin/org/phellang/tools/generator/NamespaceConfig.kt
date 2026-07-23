@@ -14,7 +14,6 @@ object NamespaceConfig {
         "base64" to NamespaceInfo("registerBase64Functions", "registerBase64Functions.kt"),
         "cli" to NamespaceInfo("registerCliFunctions", "registerCliFunctions.kt"),
         "core" to NamespaceInfo("registerCoreFunctions", "registerCoreFunctions.kt"),
-        "debug" to NamespaceInfo("registerDebugFunctions", "registerDebugFunctions.kt"),
         "edn" to NamespaceInfo("registerEdnFunctions", "registerEdnFunctions.kt"),
         "html" to NamespaceInfo("registerHtmlFunctions", "registerHtmlFunctions.kt"),
         "http" to NamespaceInfo("registerHttpFunctions", "registerHttpFunctions.kt"),
@@ -41,6 +40,7 @@ object NamespaceConfig {
         "test.rose" to NamespaceInfo("registerTestRoseFunctions", "registerTestRoseFunctions.kt", "test"),
         "test.selector" to NamespaceInfo("registerTestSelectorFunctions", "registerTestSelectorFunctions.kt", "test"),
         "test.shrink" to NamespaceInfo("registerTestShrinkFunctions", "registerTestShrinkFunctions.kt", "test"),
+        "trace" to NamespaceInfo("registerTraceFunctions", "registerTraceFunctions.kt"),
         "transit" to NamespaceInfo("registerTransitFunctions", "registerTransitFunctions.kt"),
         "walk" to NamespaceInfo("registerWalkFunctions", "registerWalkFunctions.kt"),
         "watch" to NamespaceInfo("registerWatchFunctions", "registerWatchFunctions.kt")

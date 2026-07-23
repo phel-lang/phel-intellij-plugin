@@ -21,7 +21,7 @@ internal fun registerTestGenFunctions(): List<PhelFunction> = listOf(
             summary = "Generator of booleans.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L62",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L62",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ Generator of printable ASCII characters (space through <code>~</code>).
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L111",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L111",
                 docs = "",
             ),
         ),
@@ -57,7 +57,7 @@ Generator of printable ASCII characters (space through <code>~</code>).
             summary = "Generator of ASCII letters.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L115",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L115",
                 docs = "",
             ),
         ),
@@ -74,7 +74,7 @@ Generator of printable ASCII characters (space through <code>~</code>).
             summary = "Generator of ASCII letters and digits.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L119",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L119",
                 docs = "",
             ),
         ),
@@ -93,7 +93,7 @@ Generator of integers in the closed interval <code>[lo hi]</code>.
 """,
             example = "((choose 1 6) 100) ; =&gt; 1..6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L84",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L84",
                 docs = "",
             ),
         ),
@@ -112,7 +112,7 @@ Number of trials <code>quick-check</code> runs by default.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L34",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L34",
                 docs = "",
             ),
         ),
@@ -131,7 +131,7 @@ Magnitude used when no <code>:size</code> option is supplied.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L30",
                 docs = "",
             ),
         ),
@@ -160,7 +160,7 @@ Shape: <code>(defspec name options args-gen property)</code>.
 """,
             example = "(defspec addition-commutes {:num-tests 200}\n              (tuple int int)\n              (fn [a b] (= (+ a b) (+ b a))))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L429",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L429",
                 docs = "",
             ),
         ),
@@ -179,7 +179,7 @@ Generator that picks a random element from <code>coll</code>.
 """,
             example = "((elements [:a :b :c]) 100) ; =&gt; :a, :b or :c",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L212",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L212",
                 docs = "",
             ),
         ),
@@ -198,7 +198,7 @@ Generator of floats in <code>[0, 1)</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L80",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L80",
                 docs = "",
             ),
         ),
@@ -217,7 +217,7 @@ Returns a generator that applies <code>f</code> to values produced by <code>g</c
 """,
             example = "((fmap inc (return 1)) 100) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L180",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L180",
                 docs = "",
             ),
         ),
@@ -236,7 +236,7 @@ Generator that picks one of the <code>[weight gen]</code> pairs with probability
 """,
             example = "((frequency [[9 (return :a)] [1 (return :b)]]) 100)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L232",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L232",
                 docs = "",
             ),
         ),
@@ -255,7 +255,7 @@ Runs <code>g</code> once and returns a single value. Accepts <code>:size</code> 
 """,
             example = "(generate int) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L309",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L309",
                 docs = "",
             ),
         ),
@@ -274,7 +274,7 @@ Generator of integers in <code>[-size, size]</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L70",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L70",
                 docs = "",
             ),
         ),
@@ -293,7 +293,7 @@ Generator of keywords with alphabetic names, length in <code>[1, max(1, size)]</
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L162",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L162",
                 docs = "",
             ),
         ),
@@ -310,7 +310,7 @@ Generator of keywords with alphabetic names, length in <code>[1, max(1, size)]</
             summary = "Generator of arbitrary PHP-range integers.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L76",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L76",
                 docs = "",
             ),
         ),
@@ -329,7 +329,7 @@ Generator of lists whose elements come from <code>g</code>. Length in <code>[0, 
 """,
             example = "((list-of int) 3) ; =&gt; (-1 2 0)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L278",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L278",
                 docs = "",
             ),
         ),
@@ -348,7 +348,7 @@ Generator of hash-maps with keys from <code>kg</code> and values from <code>vg</
 """,
             example = "((map-of keyword int) 2) ; =&gt; {:a 1 :b -3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L285",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L285",
                 docs = "",
             ),
         ),
@@ -367,7 +367,7 @@ Generator of non-negative integers in <code>[0, size]</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L66",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L66",
                 docs = "",
             ),
         ),
@@ -386,7 +386,7 @@ Generator that selects uniformly from <code>gens</code> and runs the chosen one.
 """,
             example = "((one-of [int boolean]) 100)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L222",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L222",
                 docs = "",
             ),
         ),
@@ -415,7 +415,7 @@ Options:<br />
 """,
             example = "(quick-check 50 (tuple int int) (fn [a b] (= (+ a b) (+ b a))))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L365",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L365",
                 docs = "",
             ),
         ),
@@ -434,7 +434,7 @@ Returns a generator equivalent to <code>g</code> but with <code>size</code> forc
 """,
             example = "((resize 5 nat) 1000) ; =&gt; value in [0, 5]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L206",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L206",
                 docs = "",
             ),
         ),
@@ -453,7 +453,7 @@ Generator that always yields <code>x</code>.
 """,
             example = "((return 42) 100) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L174",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L174",
                 docs = "",
             ),
         ),
@@ -472,7 +472,7 @@ Runs <code>g</code> <code>num-samples</code> times (default 10) and returns a ve
 """,
             example = "(sample int 5) ; =&gt; [3 -7 0 1 -2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L317",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L317",
                 docs = "",
             ),
         ),
@@ -491,7 +491,7 @@ Generator of hash-sets with elements from <code>g</code>. Cardinality in <code>[
 """,
             example = "((set-of nat) 3) ; =&gt; (set 1 2 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L295",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L295",
                 docs = "",
             ),
         ),
@@ -510,7 +510,7 @@ Builds a generator from a function <code>f</code> of <code>size</code>. The retu
 """,
             example = "(sized (fn [n] (return n)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L200",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L200",
                 docs = "",
             ),
         ),
@@ -529,7 +529,7 @@ Renders the human-readable failure message for a <code>defspec</code> outcome ma
 """,
             example = "(spec-failure-message \"my-spec\" {:result :failed ...})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L389",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L389",
                 docs = "",
             ),
         ),
@@ -548,7 +548,7 @@ Generator of printable ASCII strings, length in <code>[0, size]</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L134",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L134",
                 docs = "",
             ),
         ),
@@ -567,7 +567,7 @@ Generator of ASCII alphabetic strings, length in <code>[0, size]</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L138",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L138",
                 docs = "",
             ),
         ),
@@ -586,7 +586,7 @@ Generator of ASCII alphanumeric strings, length in <code>[0, size]</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L142",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L142",
                 docs = "",
             ),
         ),
@@ -606,7 +606,7 @@ Generator yielding only values from <code>g</code> that satisfy <code>pred</code
 """,
             example = "((such-that even? nat) 100)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L186",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L186",
                 docs = "",
             ),
         ),
@@ -625,7 +625,7 @@ Generator of symbols with alphabetic names, length in <code>[1, max(1, size)]</c
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L166",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L166",
                 docs = "",
             ),
         ),
@@ -644,7 +644,7 @@ Generator of a fixed-length vector produced by running each of the given generat
 """,
             example = "((tuple int boolean) 10) ; =&gt; [3 true]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L251",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L251",
                 docs = "",
             ),
         ),
@@ -664,7 +664,7 @@ Generator of vectors. Length is <code>[0, size]</code> with one arg, exactly <co
 """,
             example = "((vector-of int) 3) ; =&gt; [-1 2 0]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/test/gen.phel#L264",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/test/gen.phel#L264",
                 docs = "",
             ),
         ),

@@ -62,7 +62,6 @@ class PhelReferSymbolValidatorTest {
             return when (shortNamespace.lowercase()) {
                 "base64" -> Namespace.BASE64
                 "core" -> Namespace.CORE
-                "debug" -> Namespace.DEBUG
                 "html" -> Namespace.HTML
                 "http" -> Namespace.HTTP
                 "json" -> Namespace.JSON
@@ -70,6 +69,7 @@ class PhelReferSymbolValidatorTest {
                 "repl" -> Namespace.REPL
                 "str" -> Namespace.STRING
                 "test" -> Namespace.TEST
+                "trace" -> Namespace.TRACE
                 else -> null
             }
         }
@@ -173,7 +173,6 @@ class PhelReferSymbolValidatorTest {
             return when (shortNamespace.lowercase()) {
                 "base64" -> Namespace.BASE64
                 "core" -> Namespace.CORE
-                "debug" -> Namespace.DEBUG
                 "html" -> Namespace.HTML
                 "http" -> Namespace.HTTP
                 "json" -> Namespace.JSON
@@ -181,6 +180,7 @@ class PhelReferSymbolValidatorTest {
                 "repl" -> Namespace.REPL
                 "str" -> Namespace.STRING
                 "test" -> Namespace.TEST
+                "trace" -> Namespace.TRACE
                 else -> null
             }
         }

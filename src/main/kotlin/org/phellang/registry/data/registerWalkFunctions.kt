@@ -21,7 +21,7 @@ internal fun registerWalkFunctions(): List<PhelFunction> = listOf(
             summary = "Convert string map keys to keywords, recursively.",
             example = "(keywordize-keys {\"name\" \"phel\"}) ; =&gt; {:name \"phel\"}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/walk.phel#L59",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/walk.phel#L59",
                 docs = "",
             ),
         ),
@@ -38,7 +38,7 @@ internal fun registerWalkFunctions(): List<PhelFunction> = listOf(
             summary = "Bottom-up tree walk — applies f after recursing into children.",
             example = "(postwalk inc [1 [2 3]]) ; =&gt; [2 [3 4]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/walk.phel#L25",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/walk.phel#L25",
                 docs = "",
             ),
         ),
@@ -55,7 +55,7 @@ internal fun registerWalkFunctions(): List<PhelFunction> = listOf(
             summary = "Replace values bottom-up using a substitution map.",
             example = "(postwalk-replace {:a :b} [:a :c]) ; =&gt; [:b :c]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/walk.phel#L41",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/walk.phel#L41",
                 docs = "",
             ),
         ),
@@ -72,7 +72,7 @@ internal fun registerWalkFunctions(): List<PhelFunction> = listOf(
             summary = "Top-down tree walk — applies f before recursing into children.",
             example = "(prewalk identity [1 [2 3]]) ; =&gt; [1 [2 3]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/walk.phel#L33",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/walk.phel#L33",
                 docs = "",
             ),
         ),
@@ -89,7 +89,7 @@ internal fun registerWalkFunctions(): List<PhelFunction> = listOf(
             summary = "Replace values top-down using a substitution map.",
             example = "(prewalk-replace {:a :b} [:a :c]) ; =&gt; [:b :c]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/walk.phel#L50",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/walk.phel#L50",
                 docs = "",
             ),
         ),
@@ -106,7 +106,7 @@ internal fun registerWalkFunctions(): List<PhelFunction> = listOf(
             summary = "Convert keyword map keys to strings, recursively.",
             example = "(stringify-keys {:name \"phel\"}) ; =&gt; {\"name\" \"phel\"}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/walk.phel#L74",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/walk.phel#L74",
                 docs = "",
             ),
         ),
@@ -123,7 +123,7 @@ internal fun registerWalkFunctions(): List<PhelFunction> = listOf(
             summary = "Generic tree walker for nested data structures.",
             example = "(walk inc identity [1 2 3]) ; =&gt; [2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/walk.phel#L3",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/walk.phel#L3",
                 docs = "",
             ),
         ),

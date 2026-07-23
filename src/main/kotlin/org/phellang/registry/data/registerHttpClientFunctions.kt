@@ -21,7 +21,7 @@ internal fun registerHttpClientFunctions(): List<PhelFunction> = listOf(
             summary = "Makes a DELETE request. Returns an http/response struct.",
             example = "(delete \"https://api.example.com/1\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/http-client.phel#L128",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http-client.phel#L128",
                 docs = "",
             ),
         ),
@@ -38,7 +38,7 @@ internal fun registerHttpClientFunctions(): List<PhelFunction> = listOf(
             summary = "Makes a GET request. Returns an http/response struct.",
             example = "(get \"https://example.com\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/http-client.phel#L104",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http-client.phel#L104",
                 docs = "",
             ),
         ),
@@ -55,7 +55,7 @@ internal fun registerHttpClientFunctions(): List<PhelFunction> = listOf(
             summary = "Makes a HEAD request. Returns an http/response struct.",
             example = "(head \"https://example.com\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/http-client.phel#L144",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http-client.phel#L144",
                 docs = "",
             ),
         ),
@@ -72,7 +72,7 @@ internal fun registerHttpClientFunctions(): List<PhelFunction> = listOf(
             summary = "Makes a PATCH request. Returns an http/response struct.",
             example = "(patch \"https://api.example.com/1\" {:json {:name \"Charlie\"}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/http-client.phel#L136",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http-client.phel#L136",
                 docs = "",
             ),
         ),
@@ -89,7 +89,7 @@ internal fun registerHttpClientFunctions(): List<PhelFunction> = listOf(
             summary = "Makes a POST request. Returns an http/response struct.",
             example = "(post \"https://api.example.com\" {:json {:name \"Alice\"}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/http-client.phel#L112",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http-client.phel#L112",
                 docs = "",
             ),
         ),
@@ -106,7 +106,7 @@ internal fun registerHttpClientFunctions(): List<PhelFunction> = listOf(
             summary = "Makes a PUT request. Returns an http/response struct.",
             example = "(put \"https://api.example.com/1\" {:json {:name \"Bob\"}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/http-client.phel#L120",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http-client.phel#L120",
                 docs = "",
             ),
         ),
@@ -123,7 +123,7 @@ internal fun registerHttpClientFunctions(): List<PhelFunction> = listOf(
             summary = "Makes an HTTP request. Returns an http/response struct.",
             example = "(request :get \"https://example.com\" {:headers {:accept \"application/json\"}})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.48.0/src/phel/http-client.phel#L69",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http-client.phel#L69",
                 docs = "",
             ),
         ),
