@@ -3,6 +3,7 @@
 [![Build](https://github.com/phel-lang/phel-intellij-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/phel-lang/phel-intellij-plugin/actions/workflows/build.yml)
 [![Version](https://img.shields.io/jetbrains/plugin/v/28459.svg)](https://plugins.jetbrains.com/plugin/28459)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/28459.svg)](https://plugins.jetbrains.com/plugin/28459)
+[![Coverage](https://codecov.io/gh/phel-lang/phel-intellij-plugin/graph/badge.svg)](https://app.codecov.io/gh/phel-lang/phel-intellij-plugin)
 
 [![Plugin Icon](src/main/resources/META-INF/pluginIcon.svg)](https://plugins.jetbrains.com/plugin/28459-phel-lang)
 
