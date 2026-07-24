@@ -155,6 +155,19 @@ object PhelNamespaceUtils {
         return namespace == null || namespace == "core"
     }
 
+    /**
+     * Qualifiers that must never produce a `(:require …)`.
+     *
+     * `core` is referred into every namespace automatically. `php` is not a namespace at all: it is
+     * the interop prefix the compiler reads directly (`php/strlen`, `php/->`, `php/+`), so there is
+     * no `phel.php` to require and emitting one names something that does not exist.
+     */
+    fun isNeverRequired(qualifier: String?): Boolean {
+        return isCoreNamespace(qualifier) || qualifier == PHP_INTEROP_QUALIFIER
+    }
+
+    const val PHP_INTEROP_QUALIFIER = "php"
+
     fun isNamespaceImportedOrAliased(file: PhelFile, shortNamespace: String): Boolean {
         if (isCoreNamespace(shortNamespace)) {
             return true

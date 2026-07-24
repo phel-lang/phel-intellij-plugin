@@ -47,6 +47,10 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
         val lookupString = item.lookupString
         val qualifier = PhelNamespaceUtils.extractNamespace(lookupString) ?: return
 
+        // Guards both branches below: `php/` is an interop prefix, not a namespace, so neither the
+        // full-name nor the short-name path may import it.
+        if (PhelNamespaceUtils.isNeverRequired(qualifier)) return
+
         // Check if the qualifier is an alias (meaning namespace is already imported)
         val aliasMap = PhelNamespaceUtils.extractAliasMap(psiFile)
         if (aliasMap.containsKey(qualifier)) {
