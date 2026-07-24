@@ -16,6 +16,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
 - `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), linked from the README and `CONTRIBUTING.md` (#229).
 - The standard-library documentation popup now shows a deprecation notice with the suggested replacement, kept
   consistent with the deprecated-function inspection (#230).
+- Completion and hover documentation for native PHP functions called through `php/` (e.g. `(php/strlen s)`,
+  `(php/array_map f xs)`) — the core-extension built-ins, generated from the official PHP documentation
+  (`php/doc-en`) and each linking to its php.net page (#240).
 
 ### Fixed
 

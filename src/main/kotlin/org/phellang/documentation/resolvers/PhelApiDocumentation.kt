@@ -13,7 +13,17 @@ object PhelApiDocumentation {
     fun getDocumentation(name: String): String? {
         val function = PhelFunctionRegistry.getFunction(name) ?: return null
         return rendered.computeIfAbsent(name) {
-            "<h3>${function.name}</h3>${function.toHtmlDocumentation()}"
+            buildString {
+                append("<h3>").append(function.name).append("</h3>")
+                append(function.toHtmlDocumentation())
+                // Native PHP functions document at php.net (their prose is not in Phel's api.json).
+                // Only php/ entries link out; the dormant links on Phel stdlib entries stay unrendered.
+                if (function.name.startsWith("php/")) {
+                    function.documentation.links.docs.takeIf(String::isNotBlank)?.let {
+                        append("<a href=\"").append(it).append("\">php.net documentation</a><br />")
+                    }
+                }
+            }
         }
     }
 }

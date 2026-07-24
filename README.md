@@ -61,3 +61,9 @@ automatically during compilation.
 
 Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md), and please follow our
 [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Acknowledgements
+
+Documentation for native PHP functions (the `php/` completions and hover docs) is derived from the official
+[PHP Documentation](https://github.com/php/doc-en), licensed under
+[CC-BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode).
