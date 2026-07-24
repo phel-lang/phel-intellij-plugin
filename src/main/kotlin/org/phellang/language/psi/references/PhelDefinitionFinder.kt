@@ -4,21 +4,20 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.psi.PhelSymbolAnalyzer
-import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
-import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.PhelVendorUtils
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.SymbolCategory
 
 /**
  * Matches a name against the definitions a Phel file declares — `(def x …)`, `(defn f [..] …)` and
- * friends — plus the parameter vectors those forms introduce.
+ * friends.
  *
  * Shared by every resolver: scanning a file's lists for a matching definition is the one operation
- * they all perform.
+ * they all perform. Locating the parameter vector those forms introduce is a different question,
+ * answered by `PhelSymbolAnalyzer.findParameterVector`.
  */
 internal object PhelDefinitionFinder {
     /** Keywords that define new symbols. */
@@ -65,20 +64,4 @@ internal object PhelDefinitionFinder {
                 PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.SPECIAL_FORMS) ||
                 PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.MACROS)
     }
-
-    /**
-     * The parameter vector a function-defining form introduces, or null when [keyword] doesn't
-     * introduce one. `fn` carries it at index 1; `defn` and friends carry it after the name, past
-     * any docstring or metadata — `(defn name "doc" {:meta} [params] …)`.
-     */
-    fun findParameterVector(forms: List<PhelForm>, keyword: String): PhelVec? = when (keyword) {
-        "fn" -> forms.getOrNull(1)?.let(::asVector)
-        "defn", "defn-", "defmacro", "defmacro-" ->
-            forms.drop(2).firstNotNullOfOrNull(::asVector)
-
-        else -> null
-    }
-
-    private fun asVector(form: PhelForm): PhelVec? =
-        form as? PhelVec ?: PsiTreeUtil.findChildOfType(form, PhelVec::class.java)
 }

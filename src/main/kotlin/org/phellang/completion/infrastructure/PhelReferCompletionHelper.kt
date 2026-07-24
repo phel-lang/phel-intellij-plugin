@@ -5,7 +5,7 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import org.phellang.registry.Namespace
 import org.phellang.registry.PhelFunctionRegistry
-import org.phellang.registry.indexing.PhelProjectSymbolIndex
+import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.files.PhelFile
@@ -29,7 +29,7 @@ object PhelReferCompletionHelper {
     ) {
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
 
-        val namespace = mapToNamespace(shortNamespace)
+        val namespace = Namespace.fromShortName(shortNamespace)
         if (namespace != null) {
             addStandardLibraryCompletions(result, namespace, shortNamespace, alreadyReferred)
         }
@@ -38,9 +38,6 @@ object PhelReferCompletionHelper {
             addProjectSymbolCompletions(result, shortNamespace, file, alreadyReferred)
         }
     }
-
-    private fun mapToNamespace(shortNamespace: String): Namespace? =
-        Namespace.fromShortName(shortNamespace)
 
     private fun addStandardLibraryCompletions(
         result: CompletionResultSet,

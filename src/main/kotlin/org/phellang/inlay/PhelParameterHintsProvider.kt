@@ -9,11 +9,12 @@ import com.intellij.codeInsight.hints.declarative.SharedBypassCollector
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import org.phellang.core.psi.PhelLocalBindingScope
 import org.phellang.registry.PhelArity
-import org.phellang.registry.PhelArityResolver
+import org.phellang.indexing.PhelArityResolver
 import org.phellang.registry.selectFor
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
+import org.phellang.language.psi.analysis.PhelLocalBindingScope
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelParameterHintsProvider : InlayHintsProvider {
@@ -31,7 +32,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             val headSymbol = PhelPsiUtils.asSymbol(forms[0]) ?: return
             val headName = headSymbol.text ?: return
 
-            if (headName in SKIP_HEADS) return
+            if (headName in PhelSpecialForms.VARIADIC_HEADS) return
             if (headName.startsWith("php/") || headName.startsWith(".") || headName.startsWith("php-")) {
                 return
             }
@@ -67,58 +68,3 @@ class PhelParameterHintsProvider : InlayHintsProvider {
 
     }
 }
-
-// Special forms and macros where param-name hints would be noise.
-private val SKIP_HEADS = setOf(
-    "if",
-    "if-not",
-    "when",
-    "when-not",
-    "if-let",
-    "when-let",
-    "if-some",
-    "when-some",
-    "do",
-    "let",
-    "loop",
-    "recur",
-    "fn",
-    "defn",
-    "defn-",
-    "def",
-    "def-",
-    "defmacro",
-    "defmacro-",
-    "defstruct",
-    "definterface",
-    "defexception",
-    "declare",
-    "ns",
-    "quote",
-    "var",
-    "try",
-    "catch",
-    "finally",
-    "throw",
-    "case",
-    "cond",
-    "condp",
-    "and",
-    "or",
-    "->",
-    "->>",
-    "as->",
-    "some->",
-    "some->>",
-    "doto",
-    "binding",
-    "for",
-    "foreach",
-    "dofor",
-    "comment",
-    "deftest",
-    "is",
-    "are",
-    "testing",
-    "with-output-buffer"
-)

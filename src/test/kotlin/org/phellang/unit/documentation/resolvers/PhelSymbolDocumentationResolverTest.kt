@@ -67,7 +67,7 @@ class PhelSymbolDocumentationResolverTest {
         val symbol = mock(PhelSymbol::class.java)
         `when`(symbol.text).thenReturn("param-name")
 
-        // Note: Since we're using real PhelSymbolAnalyzer, the result will depend on the actual implementation
+        // Real (non-mocked) analyzer, so this only asserts loosely.
         val result = resolver.resolveDocumentation(symbol, symbol)
 
         assertNotNull(result)

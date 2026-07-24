@@ -3,9 +3,6 @@ package org.phellang.annotator.validators
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.annotator.quickfixes.PhelFixImportQuickFix
 import org.phellang.annotator.quickfixes.PhelRemoveImportQuickFix
@@ -15,6 +12,7 @@ import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.cachedPerPsi
 
 /**
  * Validates (:require ...) statements to ensure imported namespaces exist.
@@ -147,12 +145,7 @@ object PhelImportValidator {
      * per-file scan is cached and shared across all imports rather than re-run per import.
      */
     private fun usedNamespaceQualifiers(file: PhelFile): Set<String> {
-        return CachedValuesManager.getCachedValue(file, USED_QUALIFIERS_KEY) {
-            CachedValueProvider.Result.create(
-                computeUsedNamespaceQualifiers(file),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
+        return cachedPerPsi(file, USED_QUALIFIERS_KEY) { computeUsedNamespaceQualifiers(file) }
     }
 
     private fun computeUsedNamespaceQualifiers(file: PhelFile): Set<String> {

@@ -3,9 +3,10 @@ package org.phellang.language.psi.navigation
 import com.intellij.navigation.ItemPresentation
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.utils.PhelPsiUtils
-import org.phellang.core.psi.PhelSymbolAnalyzer
+import org.phellang.language.psi.PhelDefinitionKind
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import javax.swing.Icon
 import kotlin.math.min
 
@@ -14,9 +15,9 @@ class PhelItemPresentation(private val myElement: PhelSymbol) : ItemPresentation
         val name = PhelPsiUtils.getName(myElement) ?: return null
 
         if (PhelSymbolAnalyzer.isDefinition(myElement)) {
-            val type = getTypeFromDefiningKeyword(PhelPsiUtils.getDefiningKeyword(myElement))
-            if (type != null) {
-                return "$name [$type]"
+            val kind = PhelDefinitionKind.fromKeyword(PhelPsiUtils.getDefiningKeyword(myElement))
+            if (kind != null) {
+                return "$name [${kind.noun}]"
             }
         }
 
@@ -41,15 +42,4 @@ class PhelItemPresentation(private val myElement: PhelSymbol) : ItemPresentation
                 listText
             }
         }
-
-    private fun getTypeFromDefiningKeyword(keyword: String?): String? = when (keyword) {
-        "def", "def-" -> "variable"
-        "defn", "defn-" -> "function"
-        "defmacro", "defmacro-" -> "macro"
-        "defstruct" -> "struct"
-        "definterface" -> "interface"
-        "defexception" -> "exception"
-        "declare" -> "declaration"
-        else -> null
-    }
 }

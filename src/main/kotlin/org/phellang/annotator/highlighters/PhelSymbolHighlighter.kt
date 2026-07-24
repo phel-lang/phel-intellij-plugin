@@ -14,10 +14,10 @@ import org.phellang.annotator.validators.PhelNamespaceValidator
 import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.annotator.analyzers.PhelSymbolPositionAnalyzer
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.SymbolCategory
 

@@ -1,4 +1,4 @@
-package org.phellang.core.psi
+package org.phellang.language.psi.analysis
 
 import com.intellij.psi.PsiElement
 import org.phellang.language.psi.PhelForm

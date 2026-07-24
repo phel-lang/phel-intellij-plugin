@@ -5,13 +5,15 @@ import com.intellij.icons.AllIcons
 import com.intellij.psi.PsiElement
 import org.phellang.registry.PhelCompletionPriority
 import org.phellang.completion.infrastructure.PhelCompletionUtils
-import org.phellang.core.psi.PhelSymbolAnalyzer
+import org.phellang.completion.infrastructure.PhelLocalSymbolKind
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.PhelAccess
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
-import org.phellang.language.psi.impl.PhelAccessImpl
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
+import org.phellang.language.psi.utils.PhelPsiUtils
 import javax.swing.Icon
 
 private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
@@ -46,14 +48,14 @@ object PhelLocalSymbolCompletions {
     private fun addSymbolCompletion(
         result: CompletionResultSet,
         symbolName: String,
-        typeText: String,
+        kind: PhelLocalSymbolKind,
         icon: Icon?,
         addedSymbols: MutableSet<String>
     ) {
         if (!addedSymbols.contains(symbolName) && symbolName.isNotBlank()) {
             addedSymbols.add(symbolName)
 
-            PhelCompletionUtils.addLocalSymbolCompletion(result, symbolName, typeText, icon)
+            PhelCompletionUtils.addLocalSymbolCompletion(result, symbolName, kind, icon)
         }
     }
 
@@ -68,22 +70,22 @@ object PhelLocalSymbolCompletions {
                 val children = current.children
                 if (children.isNotEmpty()) {
                     val firstChild = children[0]
-                    if (firstChild is PhelSymbol || firstChild is PhelAccessImpl) {
+                    if (firstChild is PhelSymbol || firstChild is PhelAccess) {
                         val functionType = firstChild.text
 
                         if (functionType in FUNCTION_INTRO_FORMS) {
                             val paramVec = PhelSymbolAnalyzer.findParameterVector(current) ?: break
-                            val paramChildren = paramVec.children
-                            for (paramChild in paramChildren) {
-                                if (paramChild !is PhelSymbol && paramChild !is PhelAccessImpl) continue
-
-                                val paramName = paramChild.text
+                            // activeForms, not children: a `#_`-discarded parameter is still in
+                            // the tree but is not bound, so offering it completes a name that
+                            // does not exist at runtime.
+                            for (paramForm in PhelPsiUtils.activeForms(paramVec)) {
+                                val paramName = PhelPsiUtils.asSymbol(paramForm)?.text
                                 if (paramName.isNullOrEmpty()) continue
 
                                 addSymbolCompletion(
                                     result,
                                     paramName,
-                                    "Function Parameter",
+                                    PhelLocalSymbolKind.FUNCTION_PARAMETER,
                                     PARAMETER_ICON,
                                     addedSymbols
                                 )
@@ -109,29 +111,29 @@ object PhelLocalSymbolCompletions {
                 val children = current.children
                 if (children.isNotEmpty()) {
                     val firstChild = children[0]
-                    if (firstChild is PhelSymbol || firstChild is PhelAccessImpl) {
+                    if (firstChild is PhelSymbol || firstChild is PhelAccess) {
                         val bindingType = firstChild.text
 
                         if (bindingType == "let" || bindingType == "for" || bindingType == "loop" || bindingType == "binding") {
                             if (children.size > 1) {
                                 val bindingElement = children[1]
                                 if (bindingElement is PhelVec) {
-                                    // Extract bindings from the vector (every other element is a binding name)
-                                    val bindingChildren = bindingElement.children
-                                    for (i in bindingChildren.indices step 2) {
-                                        val bindingChild = bindingChildren[i]
-                                        if (bindingChild !is PhelSymbol && bindingChild !is PhelAccessImpl) continue
-
-                                        val bindingName = bindingChild.text
+                                    // Name/value pairs, so every other form is a name. Counted over
+                                    // activeForms rather than children: `#_` leaves the form it
+                                    // discards in the tree, and one discarded entry shifts the
+                                    // parity, which drops every later name from the results.
+                                    val bindingForms = PhelPsiUtils.activeForms(bindingElement)
+                                    for (i in bindingForms.indices step 2) {
+                                        val bindingName = PhelPsiUtils.asSymbol(bindingForms[i])?.text
                                         if (bindingName.isNullOrEmpty()) continue
 
-                                        val typeText = when (bindingType) {
-                                            "let" -> "Let Binding"
-                                            "loop" -> "Loop Binding"
-                                            else -> "Local Variable"
+                                        val kind = when (bindingType) {
+                                            "let" -> PhelLocalSymbolKind.LET_BINDING
+                                            "loop" -> PhelLocalSymbolKind.LOOP_BINDING
+                                            else -> PhelLocalSymbolKind.LOCAL_VARIABLE
                                         }
                                         addSymbolCompletion(
-                                            result, bindingName, typeText, VARIABLE_ICON, addedSymbols
+                                            result, bindingName, kind, VARIABLE_ICON, addedSymbols
                                         )
                                     }
                                 }
@@ -158,7 +160,7 @@ object PhelLocalSymbolCompletions {
 
             val firstElement = children[0]
 
-            if (firstElement !is PhelSymbol && firstElement !is PhelAccessImpl) continue
+            if (firstElement !is PhelSymbol && firstElement !is PhelAccess) continue
 
             val defType = firstElement.text
             val localDefinitionTypes = arrayOf(
@@ -178,7 +180,7 @@ object PhelLocalSymbolCompletions {
             if (!localDefinitionTypes.contains(defType)) continue
 
             val nameElement = children[1]
-            if (nameElement !is PhelSymbol && nameElement !is PhelAccessImpl) continue
+            if (nameElement !is PhelSymbol && nameElement !is PhelAccess) continue
 
             val symbolName = nameElement.text
             val priority = when (defType) {

@@ -11,16 +11,9 @@ import org.phellang.registry.PhelCompletionPriority
 
 object PhelCompletionUtils {
     @JvmStatic
-    fun addLocalSymbolCompletion(result: CompletionResultSet, name: String, type: String, icon: Icon?) {
-        val priority = when (type) {
-            "Parameter", "Function Parameter" -> PhelCompletionPriority.CURRENT_SCOPE_LOCALS
-            "Let Binding", "Local Variable", "Loop Binding" -> PhelCompletionPriority.CURRENT_SCOPE_LOCALS
-            "Function", "Function (recursive)", "Global Variable" -> PhelCompletionPriority.RECENT_DEFINITIONS
-            else -> PhelCompletionPriority.PROJECT_SYMBOLS
-        }
-
-        val element = createLookupElement(name, icon, null, type, bold = true)
-        result.addElement(PrioritizedLookupElement.withPriority(element, priority.value))
+    fun addLocalSymbolCompletion(result: CompletionResultSet, name: String, kind: PhelLocalSymbolKind, icon: Icon?) {
+        val element = createLookupElement(name, icon, null, kind.displayText, bold = true)
+        result.addElement(PrioritizedLookupElement.withPriority(element, kind.priority.value))
     }
 
     @JvmStatic

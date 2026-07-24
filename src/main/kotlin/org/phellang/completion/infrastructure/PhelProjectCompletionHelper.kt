@@ -3,7 +3,7 @@ package org.phellang.completion.infrastructure
 import com.intellij.codeInsight.completion.CompletionResultSet
 import org.phellang.registry.PhelProjectSymbol
 import org.phellang.registry.SymbolType
-import org.phellang.registry.indexing.PhelProjectSymbolIndex
+import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelRequireClauseAnalyzer

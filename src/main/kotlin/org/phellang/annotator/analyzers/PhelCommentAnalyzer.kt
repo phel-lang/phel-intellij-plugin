@@ -4,11 +4,9 @@ import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.CachedValue
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
 import org.phellang.language.psi.*
 import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.language.psi.utils.cachedPerPsi
 
 object PhelCommentAnalyzer {
     private const val FORM_COMMENT_MARKER = "#_"
@@ -31,12 +29,7 @@ object PhelCommentAnalyzer {
     }
 
     private fun fileHasFormComment(file: PsiFile): Boolean {
-        return CachedValuesManager.getCachedValue(file, HAS_FORM_COMMENT_KEY) {
-            CachedValueProvider.Result.create(
-                file.text.contains(FORM_COMMENT_MARKER),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
+        return cachedPerPsi(file, HAS_FORM_COMMENT_KEY) { file.text.contains(FORM_COMMENT_MARKER) }
     }
 
     fun isInsideAnonFunction(element: PsiElement): Boolean {
@@ -57,11 +50,6 @@ object PhelCommentAnalyzer {
     }
 
     private fun fileHasAnonFunction(file: PsiFile): Boolean {
-        return CachedValuesManager.getCachedValue(file, HAS_ANON_FN_KEY) {
-            CachedValueProvider.Result.create(
-                file.text.contains(ANON_FN_MARKER),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
+        return cachedPerPsi(file, HAS_ANON_FN_KEY) { file.text.contains(ANON_FN_MARKER) }
     }
 }

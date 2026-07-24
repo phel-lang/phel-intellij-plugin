@@ -42,7 +42,6 @@ class PhelSymbolPositionAnalyzerSimpleTest {
 
     @Test
     fun `hasNamespacePrefix should be consistent with Phel namespace syntax`() {
-        // These should match the Phel namespace syntax patterns
         val validNamespaces = listOf(
             "core\\map", "phel\\str", "user\\my-function", "project\\utils\\helper", "test-ns\\test-func"
         )
@@ -75,7 +74,6 @@ class PhelSymbolPositionAnalyzerSimpleTest {
 
     @Test
     fun `hasNamespacePrefix should handle performance with large strings`() {
-        // Test performance with larger namespace strings
         val largeNamespaces = listOf(
             "very\\long\\nested\\namespace\\structure\\with\\many\\levels\\symbol",
             "a".repeat(100) + "\\" + "b".repeat(100),
@@ -92,7 +90,6 @@ class PhelSymbolPositionAnalyzerSimpleTest {
 
     @Test
     fun `hasNamespacePrefix should handle Unicode characters`() {
-        // Test with Unicode characters in namespace names
         val unicodeNamespaces = listOf(
             "测试\\symbol", "тест\\функция", "テスト\\シンボル", "emoji😀\\test"
         )
@@ -110,7 +107,6 @@ class PhelSymbolPositionAnalyzerSimpleTest {
             "namespace\\symbol" to true, "no-namespace" to false, "\\invalid" to false, "valid\\test" to true
         )
 
-        // Test multiple times to ensure consistency
         repeat(3) {
             testCases.forEach { (input, expected) ->
                 assertEquals(

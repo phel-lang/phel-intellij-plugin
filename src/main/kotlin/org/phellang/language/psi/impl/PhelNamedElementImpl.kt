@@ -7,9 +7,9 @@ import com.intellij.psi.PsiNameIdentifierOwner
 import com.intellij.psi.PsiReference
 import com.intellij.util.IncorrectOperationException
 import org.jetbrains.annotations.NonNls
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelPsiFactory
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.navigation.PhelItemPresentation
 import org.phellang.language.psi.references.PhelReference
 import org.phellang.language.psi.utils.PhelPsiUtils

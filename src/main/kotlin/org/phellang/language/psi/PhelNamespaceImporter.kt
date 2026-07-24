@@ -5,8 +5,8 @@ import org.phellang.language.psi.files.PhelFile
 
 object PhelNamespaceImporter {
     fun ensureNamespaceImported(file: PhelFile, namespace: String): Boolean {
-        if (PhelNamespaceUtils.isCoreNamespace(namespace)) {
-            return true // Core namespace doesn't need import
+        if (PhelNamespaceUtils.isNeverRequired(namespace)) {
+            return true // Already available: `core` is auto-referred, `php` is the interop prefix
         }
 
         val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false

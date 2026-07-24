@@ -2,7 +2,7 @@ package org.phellang.integration.registry
 
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.files.PhelFile
-import org.phellang.registry.indexing.PhelProjectSymbolScanner
+import org.phellang.indexing.PhelProjectSymbolScanner
 
 /**
  * The scanner must read a definition's forms with `#_`-discarded forms stripped. Reading the raw

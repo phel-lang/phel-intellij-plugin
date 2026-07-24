@@ -8,11 +8,12 @@ import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.utils.PhelPsiUtils
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.lexer.PhelLexerAdapter
+import org.phellang.language.psi.PhelDefinitionKind
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelTypes
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.elements.PhelTokenSets
 import kotlin.math.min
 
@@ -33,16 +34,7 @@ class PhelFindUsagesProvider : FindUsagesProvider {
     override fun getType(element: PsiElement): String {
         if (element is PhelSymbol) {
             if (PhelSymbolAnalyzer.isDefinition(element)) {
-                return when (PhelPsiUtils.getDefiningKeyword(element)) {
-                    "def", "def-" -> "variable"
-                    "defn", "defn-" -> "function"
-                    "defmacro", "defmacro-" -> "macro"
-                    "defstruct" -> "struct"
-                    "definterface" -> "interface"
-                    "defexception" -> "exception"
-                    "declare" -> "declaration"
-                    else -> "symbol"
-                }
+                return PhelDefinitionKind.fromKeyword(PhelPsiUtils.getDefiningKeyword(element))?.noun ?: "symbol"
             }
             return "symbol"
         }

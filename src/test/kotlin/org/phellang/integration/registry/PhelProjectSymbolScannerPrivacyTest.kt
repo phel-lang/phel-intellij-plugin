@@ -2,7 +2,7 @@ package org.phellang.integration.registry
 
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.files.PhelFile
-import org.phellang.registry.indexing.PhelProjectSymbolScanner
+import org.phellang.indexing.PhelProjectSymbolScanner
 
 /**
  * Privacy detection must read the definition's metadata, never its body. Scanning body text for

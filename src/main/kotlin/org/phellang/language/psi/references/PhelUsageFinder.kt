@@ -5,11 +5,11 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.utils.SymbolCategory

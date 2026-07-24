@@ -3,7 +3,7 @@ package org.phellang.unit.language.psi
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.language.psi.PhelReferUtils
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 
 class PhelReferUtilsTest {
 
@@ -15,7 +15,7 @@ class PhelReferUtilsTest {
             // This is a data class test - we can't create actual PhelVec without PSI
             // but we can test the structure expectations
             val namespace = "phel\\test"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
             assertEquals("test", shortNamespace)
         }
@@ -26,39 +26,39 @@ class PhelReferUtilsTest {
 
         @Test
         fun `should extract short namespace from full namespace`() {
-            assertEquals("test", PhelReferUtils.extractShortNamespace("phel\\test"))
-            assertEquals("str", PhelReferUtils.extractShortNamespace("phel\\str"))
-            assertEquals("json", PhelReferUtils.extractShortNamespace("phel\\json"))
-            assertEquals("html", PhelReferUtils.extractShortNamespace("phel\\html"))
-            assertEquals("http", PhelReferUtils.extractShortNamespace("phel\\http"))
+            assertEquals("test", PhelProjectNamespaceFinder.extractShortNamespace("phel\\test"))
+            assertEquals("str", PhelProjectNamespaceFinder.extractShortNamespace("phel\\str"))
+            assertEquals("json", PhelProjectNamespaceFinder.extractShortNamespace("phel\\json"))
+            assertEquals("html", PhelProjectNamespaceFinder.extractShortNamespace("phel\\html"))
+            assertEquals("http", PhelProjectNamespaceFinder.extractShortNamespace("phel\\http"))
         }
 
         @Test
         fun `should handle project namespaces`() {
-            assertEquals("utils", PhelReferUtils.extractShortNamespace("my-app\\utils"))
-            assertEquals("handlers", PhelReferUtils.extractShortNamespace("my-app\\api\\handlers"))
-            assertEquals("helpers", PhelReferUtils.extractShortNamespace("project\\utils\\helpers"))
+            assertEquals("utils", PhelProjectNamespaceFinder.extractShortNamespace("my-app\\utils"))
+            assertEquals("handlers", PhelProjectNamespaceFinder.extractShortNamespace("my-app\\api\\handlers"))
+            assertEquals("helpers", PhelProjectNamespaceFinder.extractShortNamespace("project\\utils\\helpers"))
         }
 
         @Test
         fun `should return same string if no backslash`() {
-            assertEquals("simple", PhelReferUtils.extractShortNamespace("simple"))
-            assertEquals("test", PhelReferUtils.extractShortNamespace("test"))
+            assertEquals("simple", PhelProjectNamespaceFinder.extractShortNamespace("simple"))
+            assertEquals("test", PhelProjectNamespaceFinder.extractShortNamespace("test"))
         }
 
         @Test
         fun `should handle empty string`() {
-            assertEquals("", PhelReferUtils.extractShortNamespace(""))
+            assertEquals("", PhelProjectNamespaceFinder.extractShortNamespace(""))
         }
 
         @Test
         fun `should handle trailing backslash`() {
-            assertEquals("", PhelReferUtils.extractShortNamespace("phel\\"))
+            assertEquals("", PhelProjectNamespaceFinder.extractShortNamespace("phel\\"))
         }
 
         @Test
         fun `should handle leading backslash`() {
-            assertEquals("test", PhelReferUtils.extractShortNamespace("\\test"))
+            assertEquals("test", PhelProjectNamespaceFinder.extractShortNamespace("\\test"))
         }
     }
 
@@ -70,7 +70,7 @@ class PhelReferUtilsTest {
             // In (:require phel\test :refer [...])
             // The namespace should be "phel\test"
             val fullNamespace = "phel\\test"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(fullNamespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
 
             assertEquals("test", shortNamespace)
         }
@@ -80,7 +80,7 @@ class PhelReferUtilsTest {
             // For deftest in phel\test, canonical name is "test/deftest"
             val namespace = "phel\\test"
             val symbolName = "deftest"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
             val canonicalName = "$shortNamespace/$symbolName"
 
             assertEquals("test/deftest", canonicalName)
@@ -98,7 +98,7 @@ class PhelReferUtilsTest {
             )
 
             testCases.forEach { (namespace, symbol, expected) ->
-                val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+                val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
                 val canonicalName = "$shortNamespace/$symbol"
                 assertEquals(expected, canonicalName, "Failed for $namespace + $symbol")
             }
@@ -226,7 +226,7 @@ class PhelReferUtilsTest {
         fun `scenario - test namespace imports`() {
             // (:require phel\test :refer [deftest is])
             val namespace = "phel\\test"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
             assertEquals("test", shortNamespace)
             assertEquals("test/deftest", "$shortNamespace/deftest")
@@ -237,7 +237,7 @@ class PhelReferUtilsTest {
         fun `scenario - string namespace imports`() {
             // (:require phel\str :refer [join split])
             val namespace = "phel\\str"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
             assertEquals("str", shortNamespace)
             assertEquals("str/join", "$shortNamespace/join")
@@ -248,7 +248,7 @@ class PhelReferUtilsTest {
         fun `scenario - project namespace imports`() {
             // (:require my-app\handlers :refer [handle-request])
             val namespace = "my-app\\handlers"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
             assertEquals("handlers", shortNamespace)
             assertEquals("handlers/handle-request", "$shortNamespace/handle-request")
@@ -324,7 +324,7 @@ class PhelReferUtilsTest {
         @Test
         fun `should handle deeply nested namespace`() {
             val namespace = "org\\company\\project\\module\\submodule"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
             assertEquals("submodule", shortNamespace)
         }
@@ -332,7 +332,7 @@ class PhelReferUtilsTest {
         @Test
         fun `should handle namespace with hyphen`() {
             val namespace = "my-app\\my-module"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
             assertEquals("my-module", shortNamespace)
         }
@@ -340,7 +340,7 @@ class PhelReferUtilsTest {
         @Test
         fun `should handle namespace with numbers`() {
             val namespace = "app2\\module3"
-            val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
             assertEquals("module3", shortNamespace)
         }

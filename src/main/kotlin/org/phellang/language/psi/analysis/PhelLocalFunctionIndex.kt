@@ -1,15 +1,13 @@
-package org.phellang.core.psi
+package org.phellang.language.psi.analysis
 
 import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
 import org.phellang.language.psi.PhelAccess
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.cachedPerPsi
 
 /** The names of functions a file defines, used to paint a call to one of them as a local reference. */
 internal object PhelLocalFunctionIndex {
@@ -33,12 +31,7 @@ internal object PhelLocalFunctionIndex {
      * each time would make the scan quadratic in the size of the file.
      */
     private fun namesDefinedIn(file: PhelFile): Set<String> =
-        CachedValuesManager.getCachedValue(file, LOCAL_FUNCTION_NAMES_KEY) {
-            CachedValueProvider.Result.create(
-                computeNames(file),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
+        cachedPerPsi(file, LOCAL_FUNCTION_NAMES_KEY) { computeNames(file) }
 
     private fun computeNames(file: PhelFile): Set<String> = file.children
         .filterIsInstance<PhelList>()

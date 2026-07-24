@@ -52,7 +52,6 @@ class PhelIconsTest {
 
     @Test
     fun `should be thread-safe singleton`() {
-        // Test concurrent access to singleton
         val icons = mutableListOf<PhelIcons>()
 
         val threads = (1..10).map {
@@ -73,7 +72,6 @@ class PhelIconsTest {
 
     @Test
     fun `FILE icon should be thread-safe`() {
-        // Test concurrent access to FILE icon
         val fileIcons = mutableListOf<Icon>()
 
         val threads = (1..10).map {

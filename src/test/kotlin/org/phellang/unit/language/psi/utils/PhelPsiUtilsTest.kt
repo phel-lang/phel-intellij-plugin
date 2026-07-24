@@ -1,4 +1,4 @@
-package org.phellang.unit.core.psi
+package org.phellang.unit.language.psi.utils
 
 import com.intellij.openapi.util.TextRange
 import org.junit.jupiter.api.Assertions.*

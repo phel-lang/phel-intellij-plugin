@@ -287,37 +287,14 @@ class PhelFoldingIntegrationTest {
         Assertions.assertEquals(TextRange(0, 200), resolved[0].range)
     }
 
+    // `getTextRange()` and `getNode()` are declared on PsiElement itself, so the stubs are the same
+    // whatever Phel element the mock stands for. This used to be a five-branch `when` over
+    // PhelList/PhelVec/PhelMap/PhelFormCommentMacro/PhelSymbol whose arms were all identical.
     private fun createMockNode(psiElement: PsiElement, textRange: TextRange): ASTNode {
         val node = Mockito.mock(ASTNode::class.java)
         Mockito.`when`(node.psi).thenReturn(psiElement)
-
-        // Mock the textRange property and node property for PSI elements
-        when (psiElement) {
-            is PhelList -> {
-                Mockito.`when`(psiElement.textRange).thenReturn(textRange)
-                Mockito.`when`(psiElement.node).thenReturn(node)
-            }
-
-            is PhelVec -> {
-                Mockito.`when`(psiElement.textRange).thenReturn(textRange)
-                Mockito.`when`(psiElement.node).thenReturn(node)
-            }
-
-            is PhelMap -> {
-                Mockito.`when`(psiElement.textRange).thenReturn(textRange)
-                Mockito.`when`(psiElement.node).thenReturn(node)
-            }
-
-            is PhelFormCommentMacro -> {
-                Mockito.`when`(psiElement.textRange).thenReturn(textRange)
-                Mockito.`when`(psiElement.node).thenReturn(node)
-            }
-
-            is PhelSymbol -> {
-                Mockito.`when`(psiElement.textRange).thenReturn(textRange)
-                Mockito.`when`(psiElement.node).thenReturn(node)
-            }
-        }
+        Mockito.`when`(psiElement.textRange).thenReturn(textRange)
+        Mockito.`when`(psiElement.node).thenReturn(node)
 
         return node
     }

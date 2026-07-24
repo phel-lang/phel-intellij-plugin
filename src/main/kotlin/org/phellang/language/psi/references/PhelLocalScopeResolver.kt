@@ -6,6 +6,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 
 /**
  * Resolves a symbol to a binding introduced in an enclosing scope: a `let`-like binding vector, or a
@@ -81,11 +82,7 @@ internal object PhelLocalScopeResolver {
 
     /** The parameter symbols a function-defining form declares, or null when it declares none. */
     private fun parametersOf(list: PhelList): List<PhelSymbol>? {
-        val forms = list.forms
-        if (forms.size < 2) return null
-
-        val keyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)?.text ?: return null
-        val paramVec = PhelDefinitionFinder.findParameterVector(forms, keyword) ?: return null
+        val paramVec = PhelSymbolAnalyzer.findParameterVector(list) ?: return null
 
         return paramVec.forms.mapNotNull { PsiTreeUtil.findChildOfType(it, PhelSymbol::class.java) }
     }

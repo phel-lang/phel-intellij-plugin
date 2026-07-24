@@ -1,4 +1,4 @@
-package org.phellang.registry.indexing
+package org.phellang.indexing
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
@@ -66,14 +66,6 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
     fun findSymbol(shortNamespace: String, name: String): PhelProjectSymbol? {
         ensureIndexBuilt()
         return symbolsByNamespace[shortNamespace]?.find { it.name == name }
-    }
-
-    fun refreshFile(file: VirtualFile) {
-        ApplicationManager.getApplication().runReadAction {
-            if (project.isDisposed || !file.isValid) return@runReadAction
-            val psiFile = PsiManager.getInstance(project).findFile(file) as? PhelFile ?: return@runReadAction
-            refreshFileFromPsi(psiFile)
-        }
     }
 
     /** Serializes the per-file remove-then-add so concurrent refreshers can't duplicate a file. */

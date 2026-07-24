@@ -1,4 +1,4 @@
-package org.phellang.registry.indexing
+package org.phellang.indexing
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.openapi.application.ApplicationManager

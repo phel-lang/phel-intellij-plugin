@@ -5,7 +5,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.util.ProgressIndicatorBase
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.files.PhelFile
-import org.phellang.registry.indexing.PhelProjectSymbolIndex
+import org.phellang.indexing.PhelProjectSymbolIndex
 
 /**
  * The lazy full-project scan must be cancellable and idempotent: a scan abandoned mid-way (the user

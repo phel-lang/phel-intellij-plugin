@@ -100,8 +100,4 @@ object PhelReferUtils {
 
         return false
     }
-
-    @JvmStatic
-    fun extractShortNamespace(fullNamespace: String): String =
-        PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
 }
