@@ -1,6 +1,7 @@
 package org.phellang.unit.documentation.resolvers
 
 import com.intellij.psi.PsiElement
+import java.util.concurrent.CopyOnWriteArrayList
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -85,7 +86,10 @@ class PhelSymbolDocumentationResolverTest {
 
     @Test
     fun `should maintain thread safety`() {
-        val resolvers = mutableListOf<PhelSymbolDocumentationResolver>()
+        // Thread-safe on purpose: the workers below add concurrently, so a plain ArrayList would
+        // race and drop an add (the flake behind #243). The resolver has no shared construction
+        // state, so the collection was the only unsafe part.
+        val resolvers = CopyOnWriteArrayList<PhelSymbolDocumentationResolver>()
         val threads = mutableListOf<Thread>()
 
         repeat(5) {
