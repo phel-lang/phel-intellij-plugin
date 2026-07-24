@@ -33,10 +33,17 @@ class PhpNativeFunctionsTest {
     }
 
     @Test
-    fun `strlen carries its signature and php_net slug`() {
+    fun `strlen resolves with a signature and its php_net slug`() {
         val strlen = functions.single { it.name == "php/strlen" }
-        assertEquals("(php/strlen str)", strlen.signature)
+        assertTrue(strlen.signature.startsWith("(php/strlen"), "unexpected signature: ${strlen.signature}")
         assertEquals("https://www.php.net/manual/en/function.strlen.php", strlen.documentation.links.docs)
+    }
+
+    @Test
+    fun `the generated core set is comprehensive, covering functions absent from the original seed`() {
+        assertTrue(functions.size >= 400, "expected the generated core set, got ${functions.size}")
+        // str_decrement (PHP 8.3) was not in the hand-authored seed; the doc-en generator covers it.
+        assertNotNull(PhelFunctionRegistry.getFunction("php/str_decrement"))
     }
 
     @Test

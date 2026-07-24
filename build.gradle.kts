@@ -187,6 +187,18 @@ val updatePhelRegistry = tasks.register<JavaExec>("updatePhelRegistry") {
     dependsOn("generatorClasses")
 }
 
+// Task to regenerate registry/PhpNativeFunctions.kt from the official PHP docs (php/doc-en).
+// Separate from updatePhelRegistry (which owns the api.json-driven files under registry/data/).
+val updatePhpRegistry = tasks.register<JavaExec>("updatePhpRegistry") {
+    group = "tools"
+    description = "Fetches PHP function docs from github.com/php/doc-en and regenerates PhpNativeFunctions.kt"
+    mainClass.set("org.phellang.tools.PhpApiGeneratorKt")
+    classpath = sourceSets["generator"].runtimeClasspath
+    workingDir = projectDir
+
+    dependsOn("generatorClasses")
+}
+
 // The generator source set is intentionally free of lexer/parser (and PSI) dependencies, so its
 // compile tasks must not be wired to grammar generation.
 val generatorCompileTasks = sourceSets["generator"].let {
