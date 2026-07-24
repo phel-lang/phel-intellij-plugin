@@ -212,14 +212,19 @@ jobs:
         uses: actions/checkout@v7
 
       # Keep a single draft: drop any previous drafts before recreating the current one.
+      # Delete by release ID, never by tag name. A draft may carry the same tagName as an already
+      # published release (GitHub allows it, since a draft is not bound to a tag until published),
+      # and `gh release delete <tag>` then resolves to — and destroys — the published release.
       - name: Remove old draft releases
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release list --repo "$GITHUB_REPOSITORY" --json isDraft,tagName \
-            --jq '.[] | select(.isDraft) | .tagName' \
-            | while read -r tag; do
-                [ -n "$tag" ] && gh release delete "$tag" --repo "$GITHUB_REPOSITORY" --yes || true
+          gh api "repos/$GITHUB_REPOSITORY/releases" --paginate \
+            --jq '.[] | select(.draft) | .id' \
+            | while read -r id; do
+                [ -n "$id" ] || continue
+                gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$id" \
+                  && echo "Deleted draft release id=$id"
               done
 
       - name: Create release draft
