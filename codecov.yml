@@ -1,0 +1,47 @@
+# Codecov configuration for the Phel IntelliJ plugin.
+#
+# Deliberately conservative: Codecov reports coverage and comments on PRs, but its
+# status checks are *informational* only, so they never fail CI or block a merge.
+# Tighten (drop `informational`, raise targets) once the signal is trusted.
+
+codecov:
+  # Let GitHub Actions finish before Codecov posts its status.
+  require_ci_to_pass: true
+  notify:
+    # Exactly one coverage upload (the Test job's Kover XML), so report after it.
+    after_n_builds: 1
+
+coverage:
+  precision: 2
+  round: down
+  # Color range for the badge / sunburst: red below 70%, green approaching 100%.
+  range: "70...100"
+
+  status:
+    project:
+      default:
+        # Compare against the base commit rather than a fixed number.
+        target: auto
+        # Tolerate small dips (rounding, moved code) without going red.
+        threshold: 1%
+        informational: true
+    patch:
+      default:
+        # Coverage of just the lines changed in the PR.
+        target: auto
+        threshold: 1%
+        informational: true
+
+# Not tracked by Codecov. Kover already excludes the generated classes from the
+# report; these globs keep the Codecov UI clean and cover the build-time generator
+# (never shipped) and test sources too.
+ignore:
+  - "src/main/gen/**"                        # generated lexer / parser / PSI
+  - "src/main/kotlin/org/phellang/tools/**"  # build-time registry generator (not shipped)
+  - "src/test/**"
+
+# One tidy PR comment, updated in place on each push.
+comment:
+  layout: "reach, diff, files"
+  behavior: default
+  require_changes: false
