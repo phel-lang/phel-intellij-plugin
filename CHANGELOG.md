@@ -10,6 +10,8 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-24
+
 ### Added
 
 - `trace` namespace support; registry refreshed to **Phel 0.49.0**.
