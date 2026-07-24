@@ -14,6 +14,8 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 - `trace` namespace support; registry refreshed to **Phel 0.49.0**.
 - `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), linked from the README and `CONTRIBUTING.md` (#229).
+- The standard-library documentation popup now shows a deprecation notice with the suggested replacement, kept
+  consistent with the deprecated-function inspection (#230).
 
 ### Fixed
 

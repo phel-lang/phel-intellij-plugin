@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import org.phellang.registry.DeprecationInfo
 import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.inspection.deprecated.DeprecationMessageBuilder
-import org.phellang.inspection.deprecated.ReplacementParser
+import org.phellang.registry.ReplacementParser
 
 class PhelDeprecatedFunctionInspectionIntegrationTest {
 
