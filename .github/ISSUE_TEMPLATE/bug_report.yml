@@ -1,0 +1,84 @@
+name: Bug Report
+description: Report a bug in the Phel IntelliJ Plugin
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. Filling out the fields below helps us
+        reproduce and fix the problem quickly. Please check the existing issues first to avoid duplicates.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How can we reproduce the behavior?
+      placeholder: |
+        1. Open a .phel file
+        2. Type '...'
+        3. See the error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened?
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: Sample code
+      description: Relevant .phel code, if applicable. This is automatically formatted into code, so no backticks are needed.
+      render: clojure
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / stack trace
+      description: Relevant log output or the IDE stack trace (Help | Collect Logs and Diagnostic Data), if any. Automatically formatted, so no backticks are needed.
+      render: text
+    validations:
+      required: false
+  - type: input
+    id: ide-version
+    attributes:
+      label: IDE version
+      description: The IDE and version you are running.
+      placeholder: e.g. IntelliJ IDEA 2025.2, PhpStorm 2024.3
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: Found under Settings | Plugins | Phel Lang.
+      placeholder: e.g. 0.5.3
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows
+        - Other
+    validations:
+      required: true

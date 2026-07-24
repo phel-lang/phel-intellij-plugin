@@ -1,0 +1,30 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement to the Phel IntelliJ Plugin. Please check the existing
+        issues first to avoid duplicates.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What feature or improvement would you like?
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: Why is this useful? What problem does it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Optional — how you think it could work.
+    validations:
+      required: false

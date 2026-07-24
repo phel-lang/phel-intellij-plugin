@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Phel language documentation
+    url: https://phel-lang.org/
+    about: Questions about Phel syntax or semantics — check the official language docs first.
+  - name: IntelliJ Platform plugin development help
+    url: https://plugins.jetbrains.com/docs/intellij/getting-help.html
+    about: Help with JetBrains plugin development and the IntelliJ Platform SDK.
