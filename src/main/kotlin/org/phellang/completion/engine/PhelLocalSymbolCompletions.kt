@@ -13,6 +13,7 @@ import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
+import org.phellang.language.psi.utils.PhelPsiUtils
 import javax.swing.Icon
 
 private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
@@ -74,11 +75,11 @@ object PhelLocalSymbolCompletions {
 
                         if (functionType in FUNCTION_INTRO_FORMS) {
                             val paramVec = PhelSymbolAnalyzer.findParameterVector(current) ?: break
-                            val paramChildren = paramVec.children
-                            for (paramChild in paramChildren) {
-                                if (paramChild !is PhelSymbol && paramChild !is PhelAccess) continue
-
-                                val paramName = paramChild.text
+                            // activeForms, not children: a `#_`-discarded parameter is still in
+                            // the tree but is not bound, so offering it completes a name that
+                            // does not exist at runtime.
+                            for (paramForm in PhelPsiUtils.activeForms(paramVec)) {
+                                val paramName = PhelPsiUtils.asSymbol(paramForm)?.text
                                 if (paramName.isNullOrEmpty()) continue
 
                                 addSymbolCompletion(
@@ -117,13 +118,13 @@ object PhelLocalSymbolCompletions {
                             if (children.size > 1) {
                                 val bindingElement = children[1]
                                 if (bindingElement is PhelVec) {
-                                    // Extract bindings from the vector (every other element is a binding name)
-                                    val bindingChildren = bindingElement.children
-                                    for (i in bindingChildren.indices step 2) {
-                                        val bindingChild = bindingChildren[i]
-                                        if (bindingChild !is PhelSymbol && bindingChild !is PhelAccess) continue
-
-                                        val bindingName = bindingChild.text
+                                    // Name/value pairs, so every other form is a name. Counted over
+                                    // activeForms rather than children: `#_` leaves the form it
+                                    // discards in the tree, and one discarded entry shifts the
+                                    // parity, which drops every later name from the results.
+                                    val bindingForms = PhelPsiUtils.activeForms(bindingElement)
+                                    for (i in bindingForms.indices step 2) {
+                                        val bindingName = PhelPsiUtils.asSymbol(bindingForms[i])?.text
                                         if (bindingName.isNullOrEmpty()) continue
 
                                         val kind = when (bindingType) {
