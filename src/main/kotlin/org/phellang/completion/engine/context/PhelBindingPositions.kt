@@ -3,9 +3,9 @@ package org.phellang.completion.engine.context
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelVec
-import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
-import org.phellang.language.psi.utils.SymbolCategory
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * The caret sitting inside a vector that *declares* names — a parameter list or a binding vector.
@@ -45,7 +45,15 @@ internal object PhelBindingPositions {
         return false
     }
 
-    /** `(let [<caret> 1] ...)` — the name half of a binding pair, not the value half. */
+    /**
+     * `(let [<caret> 1] ...)` — the name half of a binding pair, not the value half.
+     *
+     * Gated on [PhelSpecialForms.LET_LIKE], the canonical set of forms that take a binding vector.
+     * It used to gate on the CONTROL_FLOW completion priority, which holds only `foreach`, `if` and
+     * `not` — so this never fired for `let`, `loop`, `if-let`, `when-let`, `binding` or `dofor`, and
+     * their name halves were suppressed only as a side effect of the name predicate over-claiming
+     * the whole vector.
+     */
     fun isBindingName(element: PsiElement): Boolean {
         val vector = PsiTreeUtil.getParentOfType(element, PhelVec::class.java) ?: return false
         val list = PsiTreeUtil.getParentOfType(vector, PhelList::class.java) ?: return false
@@ -54,15 +62,21 @@ internal object PhelBindingPositions {
         if (children.size < 2) return false
 
         val head = PhelFormHead.symbolTextOf(children[0]) ?: return false
-        if (!PhelSymbolAnalyzer.isSymbolType(head, SymbolCategory.CONTROL_FLOW)) return false
+        if (head !in PhelSpecialForms.LET_LIKE) return false
         if (children[1] !== vector) return false
 
         return isNameHalfOfAPair(element, vector)
     }
 
-    /** Bindings are name/value pairs, so the names are the even-indexed entries. */
+    /**
+     * Bindings are name/value pairs, so the names are the even-indexed entries.
+     *
+     * Counted over activeForms rather than children, matching the collector that offers these
+     * names: `#_` leaves the form it discards in the tree, and one discarded entry flips the parity
+     * so every later name reads as a value and vice versa.
+     */
     private fun isNameHalfOfAPair(element: PsiElement, vector: PhelVec): Boolean {
-        val entries = vector.children
+        val entries = PhelPsiUtils.activeForms(vector)
 
         for (i in entries.indices step 2) {
             if (PhelFormHead.isPartOf(element, entries[i])) return true

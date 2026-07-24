@@ -3,6 +3,8 @@ package org.phellang.completion.engine.context
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelMap
+import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.utils.SymbolCategory
 
@@ -28,7 +30,10 @@ internal object PhelNamePositions {
         if (!isSpecialForm(head)) return false
         if (forms.size < 2) return false
 
-        return PhelFormHead.isPartOf(element, forms[1])
+        val nameSlot = forms[1]
+        if (!declaresANameHere(nameSlot)) return false
+
+        return PhelFormHead.isPartOf(element, nameSlot)
     }
 
     /** The same slot read through the list's raw children, which is what catches a partial parse. */
@@ -40,8 +45,23 @@ internal object PhelNamePositions {
         val head = PhelFormHead.symbolTextOf(children[0]) ?: return false
         if (!isSpecialForm(head)) return false
 
-        return PhelFormHead.isPartOf(element, children[1])
+        val nameSlot = children[1]
+        if (!declaresANameHere(nameSlot)) return false
+
+        return PhelFormHead.isPartOf(element, nameSlot)
     }
+
+    /**
+     * A name is always a symbol, so a collection in the slot means the form declares no name there.
+     *
+     * `let` and `loop` are special forms whose second form is a *binding vector*. Without this
+     * guard the name predicate claims the entire vector, which suppressed completion at every
+     * position inside it — including the value half of each pair, where an ordinary expression
+     * belongs. Declining here hands those vectors to [PhelBindingPositions], which knows that only
+     * the even-indexed entries name anything.
+     */
+    private fun declaresANameHere(nameSlot: PsiElement): Boolean =
+        nameSlot !is PhelVec && nameSlot !is PhelList && nameSlot !is PhelMap
 
     private fun isInsideSpecialForm(list: PhelList): Boolean {
         val parent = PsiTreeUtil.getParentOfType(list, PhelList::class.java) ?: return false

@@ -52,18 +52,36 @@ class PhelCompletionSuppressionTest : PhelIntegrationTestCase() {
 
     fun testSuppressedOnTheNameHalfOfALetBinding() = assertSuppressed("(defn f [] (let [<caret> 1] 1))")
 
+    /** The value half of a binding is an ordinary expression position. */
+    fun testOffersCompletionsOnTheValueHalfOfALetBinding() =
+        assertOffersCompletions("(defn f [] (let [x <caret>] x))")
+
+    fun testOffersCompletionsOnTheValueHalfOfALoopBinding() =
+        assertOffersCompletions("(defn f [] (loop [acc <caret>] acc))")
+
+    fun testOffersCompletionsOnALaterValueInTheSameVector() =
+        assertOffersCompletions("(defn f [] (let [a 1 b <caret>] b))")
+
+    fun testSuppressedOnTheNameHalfOfALoopBinding() =
+        assertSuppressed("(defn f [] (loop [<caret> 0] 1))")
+
+    fun testSuppressedOnALaterNameInTheSameVector() =
+        assertSuppressed("(defn f [] (let [a 1 <caret> 2] a))")
+
+    fun testSuppressedOnTheNameHalfOfAnIfLetBinding() =
+        assertSuppressed("(defn f [] (if-let [<caret> 1] 1 2))")
+
     /**
-     * Known gap, asserted so a change is noticed rather than assumed.
+     * `#_` discards the form after it without removing it from the tree, so counting raw children
+     * flips the name/value parity and inverts both answers below.
      *
-     * The value half of a binding is an ordinary expression position and ought to complete, but
-     * `let`'s binding vector *is* its second form, so the name-position predicate claims the whole
-     * vector — values included. It cannot simply be excluded: `isBindingName` gates on the
-     * CONTROL_FLOW priority, which does not contain `let`, so today the name half is suppressed
-     * only as a side effect of that same over-broad claim. Fixing this means giving the binding
-     * predicate an explicit set of binding forms, then narrowing the name predicate to symbols.
+     * With the discard stripped, `keep` is the name and the caret after it is its value; in the
+     * second case the caret itself is the name.
      */
-    fun testValueHalfOfALetBindingIsSuppressedTooBroadly() =
-        assertSuppressed("(defn f [] (let [x <caret>] x))")
+    fun testDiscardedEntryDoesNotFlipTheNameValueParity() {
+        assertOffersCompletions("(defn f [] (let [#_gone keep <caret>] 1))")
+        assertSuppressed("(defn f [] (let [#_gone <caret> 1] 1))")
+    }
 
     fun testOffersCompletionsInACallPosition() = assertOffersCompletions("(defn f [] (<caret>))")
 
