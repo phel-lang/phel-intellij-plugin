@@ -38,6 +38,11 @@ enum class Namespace {
     WALK,
     WATCH,
     // endregion GENERATED — updatePhelRegistry
+
+    // Hand-wired: native PHP library functions surfaced through the php/ prefix. Kept outside the
+    // GENERATED region so updatePhelRegistry preserves it (RegistryWiringGenerator only rewrites
+    // between the markers). See registry/PhpNativeFunctions.kt.
+    PHP_NATIVE,
     ;
 
     companion object {
