@@ -59,4 +59,5 @@ automatically during compilation.
 
 ## Contributing
 
-Issues and pull requests are welcome.
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md), and please follow our
+[Code of Conduct](CODE_OF_CONDUCT.md).

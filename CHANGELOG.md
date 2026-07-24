@@ -13,6 +13,7 @@ refreshed, since completion, hover and arity checking are all driven by it.
 ### Added
 
 - `trace` namespace support; registry refreshed to **Phel 0.49.0**.
+- `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), linked from the README and `CONTRIBUTING.md` (#229).
 
 ### Fixed
 
