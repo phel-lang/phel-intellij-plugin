@@ -138,6 +138,37 @@ class PhelLexerTest {
         assertEquals("BAD_CHARACTER", types[0].toString())
     }
 
+    // --- Character literals ---
+
+    @Test
+    fun `octal char literal should tokenize as CHAR for one to three digits`() {
+        for (src in listOf("\\o7", "\\o77", "\\o123")) {
+            val tokens = tokenize(src)
+            assertEquals(1, tokens.size, "unexpected token count for $src")
+            assertEquals(PhelTypes.CHAR, tokens[0].first, "unexpected token type for $src")
+            assertEquals(src, tokens[0].second)
+        }
+    }
+
+    @Test
+    fun `over-long octal escape should fall through to SYM`() {
+        // `\o1234` exceeds the 3-digit octal escape, so it is a symbol, matching
+        // the language lexer's `o[0-7]{1,3}` + identifier-continuation lookahead.
+        val tokens = tokenize("\\o1234")
+        assertEquals(1, tokens.size)
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+    }
+
+    @Test
+    fun `php class FQN should tokenize as SYM not CHAR`() {
+        for (src in listOf("\\DateTime", "\\Phel\\Lang\\Symbol")) {
+            val tokens = tokenize(src)
+            assertEquals(1, tokens.size, "unexpected token count for $src")
+            assertEquals(PhelTypes.SYM, tokens[0].first, "unexpected token type for $src")
+            assertEquals(src, tokens[0].second)
+        }
+    }
+
     // --- Radix literals ---
 
     @Test

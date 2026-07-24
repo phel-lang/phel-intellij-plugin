@@ -28,7 +28,7 @@ BINNUM=[+-]? "0b" [01_]+ N?
 OCTNUM=[+-]? "0o" [0-7_]+ N?
 RADIXNUM=[0-9]{1,2}r[0-9a-zA-Z]+
 RATIO=[+-]? [0-9]+ "/" [0-9]+
-CHARACTER=\\([btrnf]|u[0-9a-fA-F]{4}|o[0-7]{3}|backspace|tab|newline|formfeed|return|space|.)
+CHARACTER=\\([btrnf]|u[0-9a-fA-F]{4}|o[0-7]{1,3}|backspace|tab|newline|formfeed|return|space|.)
 BAD_LITERAL=\" ([^\\\"]|\\.|\\\")*
 
 // Atoms: first char excludes reader macro chars (' # @ ; ~ ^ `) and whitespace (comma is whitespace now)
