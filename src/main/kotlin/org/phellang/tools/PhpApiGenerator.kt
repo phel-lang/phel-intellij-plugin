@@ -18,6 +18,7 @@ import kotlin.system.exitProcess
 private val CORE_EXTENSIONS = setOf(
     "strings", "array", "math", "json", "var", "ctype",
     "datetime", "filesystem", "pcre", "url", "funchand", "classobj",
+    "mbstring", "spl",
 )
 
 fun main() {

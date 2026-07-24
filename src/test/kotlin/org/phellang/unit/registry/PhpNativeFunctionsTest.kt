@@ -41,9 +41,12 @@ class PhpNativeFunctionsTest {
 
     @Test
     fun `the generated core set is comprehensive, covering functions absent from the original seed`() {
-        assertTrue(functions.size >= 400, "expected the generated core set, got ${functions.size}")
+        assertTrue(functions.size >= 500, "expected the generated core set, got ${functions.size}")
         // str_decrement (PHP 8.3) was not in the hand-authored seed; the doc-en generator covers it.
         assertNotNull(PhelFunctionRegistry.getFunction("php/str_decrement"))
+        // mbstring and spl extensions are part of the core set.
+        assertNotNull(PhelFunctionRegistry.getFunction("php/mb_strlen"))
+        assertNotNull(PhelFunctionRegistry.getFunction("php/iterator_to_array"))
     }
 
     @Test
