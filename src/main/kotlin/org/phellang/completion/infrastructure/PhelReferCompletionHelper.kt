@@ -29,7 +29,7 @@ object PhelReferCompletionHelper {
     ) {
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
 
-        val namespace = mapToNamespace(shortNamespace)
+        val namespace = Namespace.fromShortName(shortNamespace)
         if (namespace != null) {
             addStandardLibraryCompletions(result, namespace, shortNamespace, alreadyReferred)
         }
@@ -38,9 +38,6 @@ object PhelReferCompletionHelper {
             addProjectSymbolCompletions(result, shortNamespace, file, alreadyReferred)
         }
     }
-
-    private fun mapToNamespace(shortNamespace: String): Namespace? =
-        Namespace.fromShortName(shortNamespace)
 
     private fun addStandardLibraryCompletions(
         result: CompletionResultSet,

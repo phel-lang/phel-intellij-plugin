@@ -3,6 +3,7 @@ package org.phellang.editor.folding.collectors
 import com.intellij.lang.ASTNode
 import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.openapi.editor.Document
+import com.intellij.psi.PsiElement
 import org.phellang.editor.folding.validators.PhelFoldingValidator
 import org.phellang.editor.folding.placeholders.PhelPlaceholderGenerator
 import org.phellang.language.psi.*
@@ -20,9 +21,11 @@ class PhelFoldingCollector {
         val psi = node.psi
 
         when (psi) {
-            is PhelList -> handleListFolding(psi, document, descriptors)
-            is PhelVec -> handleVectorFolding(psi, document, descriptors)
-            is PhelMap -> handleMapFolding(psi, document, descriptors)
+            // Lisp philosophy: fold any multi-line bracketed expression. Conflicts between an outer
+            // form and the vectors/maps inside it are resolved in post-processing, not here.
+            is PhelList -> addFold(psi, document, descriptors) { PhelPlaceholderGenerator.generateListPlaceholder(psi) }
+            is PhelVec -> addFold(psi, document, descriptors) { "[...]" }
+            is PhelMap -> addFold(psi, document, descriptors) { "{...}" }
         }
 
         if (psi is PhelFormCommentMacro) {
@@ -35,35 +38,17 @@ class PhelFoldingCollector {
         }
     }
 
-    private fun handleListFolding(
-        list: PhelList, document: Document, descriptors: MutableList<FoldingDescriptor>
+    /**
+     * Adds a fold for [element] when its range is foldable. [placeholder] is a lambda so the list
+     * placeholder is not built for a range that will be rejected.
+     */
+    private fun addFold(
+        element: PsiElement, document: Document, descriptors: MutableList<FoldingDescriptor>, placeholder: () -> String
     ) {
-        val range = list.textRange
+        val range = element.textRange
         if (!PhelFoldingValidator.isValidFoldingRange(range, document)) return
 
-        // Lisp philosophy: Fold any multi-line parenthetical expression
-        val placeholderText = PhelPlaceholderGenerator.generateListPlaceholder(list)
-        descriptors.add(FoldingDescriptor(list.node, range, null, placeholderText))
-    }
-
-    private fun handleVectorFolding(
-        vector: PhelVec, document: Document, descriptors: MutableList<FoldingDescriptor>
-    ) {
-        val range = vector.textRange
-        if (!PhelFoldingValidator.isValidFoldingRange(range, document)) return
-
-        // Add all potential vector folding - conflicts will be resolved in post-processing
-        descriptors.add(FoldingDescriptor(vector.node, range, null, "[...]"))
-    }
-
-    private fun handleMapFolding(
-        map: PhelMap, document: Document, descriptors: MutableList<FoldingDescriptor>
-    ) {
-        val range = map.textRange
-        if (!PhelFoldingValidator.isValidFoldingRange(range, document)) return
-
-        // Add all potential map folding - conflicts will be resolved in post-processing
-        descriptors.add(FoldingDescriptor(map.node, range, null, "{...}"))
+        descriptors.add(FoldingDescriptor(element.node, range, null, placeholder()))
     }
 
     private fun handleCommentFolding(

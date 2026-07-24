@@ -2,13 +2,9 @@ package org.phellang.editor.folding.resolvers
 
 import com.intellij.lang.folding.FoldingDescriptor
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
 
 object PhelFoldingConflictResolver {
-    private val BINDING_FORMS = setOf(
-        "for", "let", "dofor", "if-let", "when-let", "binding"
-    )
 
     fun removeConflictingDescriptors(descriptors: List<FoldingDescriptor>): List<FoldingDescriptor> {
         val result = mutableListOf<FoldingDescriptor>()
@@ -45,25 +41,11 @@ object PhelFoldingConflictResolver {
         return true
     }
 
-    private fun shouldPrioritizeOuter(outerPsi: PsiElement, innerPsi: PsiElement): Boolean {
-        // Always prioritize lists over vectors/maps contained within them
-        if (outerPsi is PhelList && (innerPsi is PhelVec || innerPsi is PhelMap)) {
-            // Especially prioritize binding constructs
-            if (isBindingConstruct(outerPsi)) {
-                return true
-            }
-
-            // General priority for lists over inner structures  
-            return true
-        }
-
-        return false
-    }
-
-    private fun isBindingConstruct(list: PhelList): Boolean {
-        val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java)
-        if (forms == null || forms.isEmpty()) return false
-        val firstSymbol = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)
-        return firstSymbol?.text in BINDING_FORMS
-    }
+    /**
+     * A list always wins over a vector or map nested inside it, whatever head the list carries.
+     * Folding the outer `(...)` already hides the inner `[...]` / `{...}`, so keeping both would
+     * offer the reader a fold region they can never see the effect of.
+     */
+    private fun shouldPrioritizeOuter(outerPsi: PsiElement, innerPsi: PsiElement): Boolean =
+        outerPsi is PhelList && (innerPsi is PhelVec || innerPsi is PhelMap)
 }

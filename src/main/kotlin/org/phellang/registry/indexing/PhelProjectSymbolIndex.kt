@@ -68,14 +68,6 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         return symbolsByNamespace[shortNamespace]?.find { it.name == name }
     }
 
-    fun refreshFile(file: VirtualFile) {
-        ApplicationManager.getApplication().runReadAction {
-            if (project.isDisposed || !file.isValid) return@runReadAction
-            val psiFile = PsiManager.getInstance(project).findFile(file) as? PhelFile ?: return@runReadAction
-            refreshFileFromPsi(psiFile)
-        }
-    }
-
     /** Serializes the per-file remove-then-add so concurrent refreshers can't duplicate a file. */
     private val refreshLock = Any()
 

@@ -9,6 +9,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelLiteral
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelReferUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
@@ -46,7 +47,7 @@ class PhelSymbolDocumentationResolver {
 
     private fun resolveReferSymbolDocumentation(symbol: PhelSymbol, symbolName: String): String {
         val namespace = PhelReferUtils.getReferNamespace(symbol) ?: return generateBasicDocumentation(symbol, symbolName)
-        val shortNamespace = PhelReferUtils.extractShortNamespace(namespace)
+        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
         val canonicalName = "$shortNamespace/$symbolName"
         val apiDoc = PhelApiDocumentation.getDocumentation(canonicalName)
@@ -98,7 +99,7 @@ class PhelSymbolDocumentationResolver {
             if (file != null) {
                 val sourceNamespace = PhelNamespaceUtils.findReferSource(file, symbolName)
                 if (sourceNamespace != null) {
-                    val shortNamespace = PhelReferUtils.extractShortNamespace(sourceNamespace)
+                    val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(sourceNamespace)
                     val canonicalName = "$shortNamespace/$symbolName"
                     PhelApiDocumentation.getDocumentation(canonicalName)?.let { return it }
                     val projectDoc = resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
