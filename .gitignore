@@ -138,3 +138,7 @@ agnostic-ai.local.yaml
 AGENTS.md
 CLAUDE.md
 # <<< agnostic-ai (managed) <<<
+
+# Plugin signing artifacts — the certificate and private key live in CI secrets, never in git.
+*.pem
+*.crt
