@@ -1,11 +1,13 @@
 package org.phellang.completion.engine
 
-import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProvider
+import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
-import org.phellang.completion.handlers.*
+import org.phellang.completion.handlers.PhelTemplateInsertHandler
 import org.phellang.completion.infrastructure.PhelProjectCompletionHelper
 import org.phellang.completion.infrastructure.PhelReferCompletionHelper
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
@@ -16,58 +18,34 @@ import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.files.PhelFile
 
 class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
+
     override fun addCompletions(
         parameters: CompletionParameters,
         context: ProcessingContext,
-        rawResult: CompletionResultSet
+        rawResult: CompletionResultSet,
     ) {
         PhelErrorHandler.safeOperation("completion") {
-            val element = parameters.position
-            val result = rawResult.withPhelPrefix(parameters)
+            complete(parameters, rawResult.withPhelPrefix(parameters))
+        }
+    }
 
-            val completionContext = PhelCompletionContext(parameters)
+    private fun complete(parameters: CompletionParameters, result: CompletionResultSet) {
+        val element = parameters.position
+        val completionContext = PhelCompletionContext(parameters)
 
-            if (completionContext.shouldSuppressCompletions()) {
-                return@safeOperation
-            }
+        if (completionContext.shouldSuppressCompletions()) return
 
-            // Check if we're inside an ns form — add ns keyword suggestions
-            // and suppress general completions at ns keyword positions
-            val nsContext = PhelNsKeywordCompletionProvider.detectNsContext(element)
-            if (nsContext != null) {
-                PhelNsKeywordCompletionProvider.addNsKeywordCompletions(element, result)
+        // Inside an ns form the keyword suggestions are the only relevant ones, so general function
+        // completions are suppressed rather than merged in.
+        if (PhelNsKeywordCompletionProvider.detectNsContext(element) != null) {
+            PhelNsKeywordCompletionProvider.addNsKeywordCompletions(element, result)
+            return
+        }
 
-                // At keyword positions (NS_BODY_KEYWORD, REQUIRE_OPTION, USE_OPTION),
-                // don't show general function completions — they're not relevant
-                return@safeOperation
-            }
-
-            when {
-                // Inside :refer vector - suggest functions from the required namespace
-                completionContext.isInsideReferVector() -> {
-                    val namespace = completionContext.getReferNamespace()
-                    if (namespace != null) {
-                        val psiFile = completionContext.element.containingFile as? PhelFile
-                        val alreadyReferred = completionContext.getAlreadyReferredSymbols()
-                        PhelReferCompletionHelper.addReferCompletions(result, namespace, psiFile, alreadyReferred)
-                    }
-                }
-
-                // At top level (nothing written) - suggest structural completions
-                completionContext.shouldSuggestNewForm() -> {
-                    addTemplateCompletions(result)
-                }
-
-                // Inside parentheses - suggest function completions
-                completionContext.isInsideParentheses() -> {
-                    addGeneralCompletions(completionContext.element, result)
-                }
-
-                // Default case - general completions
-                else -> {
-                    addGeneralCompletions(completionContext.element, result)
-                }
-            }
+        when {
+            completionContext.isInsideReferVector() -> addReferCompletions(completionContext, result)
+            completionContext.shouldSuggestNewForm() -> addTemplateCompletions(result)
+            else -> addGeneralCompletions(element, result)
         }
     }
 
@@ -95,36 +73,25 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
         return withPrefixMatcher(PlainPrefixMatcher(prefix))
     }
 
+    /** Inside a `:refer` vector, only the required namespace's own symbols make sense. */
+    private fun addReferCompletions(completionContext: PhelCompletionContext, result: CompletionResultSet) {
+        val namespace = completionContext.getReferNamespace() ?: return
+        val psiFile = completionContext.element.containingFile as? PhelFile
+
+        PhelReferCompletionHelper.addReferCompletions(
+            result, namespace, psiFile, completionContext.getAlreadyReferredSymbols()
+        )
+    }
+
     private fun addTemplateCompletions(result: CompletionResultSet) {
-        result.addElement(
-            LookupElementBuilder.create("()").withTypeText("(...)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(PhelTemplateInsertHandler.PARENTHESIS)
-        )
-
-        result.addElement(
-            LookupElementBuilder.create("defn").withTypeText("(defn name [args] body)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(PhelTemplateInsertHandler.DEFN)
-        )
-
-        result.addElement(
-            LookupElementBuilder.create("def").withTypeText("(def name value)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(PhelTemplateInsertHandler.DEF)
-        )
-
-        result.addElement(
-            LookupElementBuilder.create("let").withTypeText("(let [bindings] body)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(PhelTemplateInsertHandler.LET)
-        )
-
-        result.addElement(
-            LookupElementBuilder.create("if").withTypeText("(if condition then else)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(PhelTemplateInsertHandler.IF)
-        )
-
-        result.addElement(
-            LookupElementBuilder.create("fn").withTypeText("(fn [args] body)").withIcon(PhelIcons.FILE)
-                .withInsertHandler(PhelTemplateInsertHandler.FN)
-        )
+        for (template in FORM_TEMPLATES) {
+            result.addElement(
+                LookupElementBuilder.create(template.lookupString)
+                    .withTypeText(template.preview)
+                    .withIcon(PhelIcons.FILE)
+                    .withInsertHandler(template.insertHandler)
+            )
+        }
     }
 
     private fun addGeneralCompletions(element: PsiElement, result: CompletionResultSet) {
@@ -132,12 +99,29 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
         val aliasMap = psiFile?.let { PhelNamespaceUtils.extractAliasMap(it) } ?: emptyMap()
 
         PhelLocalSymbolCompletions.addLocalSymbols(result, element)
-
         PhelRegistryCompletionHelper.addStandardLibraryFunctions(result, aliasMap)
 
         if (psiFile != null) {
             PhelProjectCompletionHelper.addProjectCompletions(result, psiFile, aliasMap)
             PhelUsedClassCompletionHelper.addUsedClassCompletions(result, psiFile)
         }
+    }
+
+    /** A structural suggestion offered at top level, where there is no form to complete against. */
+    private class FormTemplate(
+        val lookupString: String,
+        val preview: String,
+        val insertHandler: PhelTemplateInsertHandler,
+    )
+
+    private companion object {
+        val FORM_TEMPLATES = listOf(
+            FormTemplate("()", "(...)", PhelTemplateInsertHandler.PARENTHESIS),
+            FormTemplate("defn", "(defn name [args] body)", PhelTemplateInsertHandler.DEFN),
+            FormTemplate("def", "(def name value)", PhelTemplateInsertHandler.DEF),
+            FormTemplate("let", "(let [bindings] body)", PhelTemplateInsertHandler.LET),
+            FormTemplate("if", "(if condition then else)", PhelTemplateInsertHandler.IF),
+            FormTemplate("fn", "(fn [args] body)", PhelTemplateInsertHandler.FN),
+        )
     }
 }
