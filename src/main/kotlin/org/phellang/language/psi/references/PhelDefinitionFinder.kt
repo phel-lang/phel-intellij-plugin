@@ -4,10 +4,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVendorUtils
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.SymbolCategory
 

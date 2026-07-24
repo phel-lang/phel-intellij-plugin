@@ -9,12 +9,12 @@ import com.intellij.codeInsight.hints.declarative.SharedBypassCollector
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import org.phellang.core.psi.PhelLocalBindingScope
 import org.phellang.registry.PhelArity
 import org.phellang.registry.PhelArityResolver
 import org.phellang.registry.selectFor
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
+import org.phellang.language.psi.analysis.PhelLocalBindingScope
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 class PhelParameterHintsProvider : InlayHintsProvider {

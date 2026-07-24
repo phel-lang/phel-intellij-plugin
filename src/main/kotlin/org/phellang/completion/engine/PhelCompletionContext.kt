@@ -3,8 +3,8 @@ package org.phellang.completion.engine
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.*
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.SymbolCategory
 

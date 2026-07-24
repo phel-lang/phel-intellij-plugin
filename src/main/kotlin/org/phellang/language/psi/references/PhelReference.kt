@@ -7,9 +7,9 @@ import com.intellij.psi.PsiPolyVariantReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.ResolveResult
 import com.intellij.util.IncorrectOperationException
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.utils.PhelPsiUtils
 import java.util.Collections
 import java.util.IdentityHashMap

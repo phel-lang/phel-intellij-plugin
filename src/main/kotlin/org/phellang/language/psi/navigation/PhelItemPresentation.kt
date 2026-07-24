@@ -3,10 +3,10 @@ package org.phellang.language.psi.navigation
 import com.intellij.navigation.ItemPresentation
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.utils.PhelPsiUtils
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelDefinitionKind
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import javax.swing.Icon
 import kotlin.math.min
 

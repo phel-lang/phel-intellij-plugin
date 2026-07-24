@@ -2,11 +2,11 @@ package org.phellang.language.psi.references
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 
 /**
  * Resolves a symbol to a binding introduced in an enclosing scope: a `let`-like binding vector, or a

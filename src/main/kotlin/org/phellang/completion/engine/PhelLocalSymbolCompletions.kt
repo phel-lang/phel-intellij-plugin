@@ -6,13 +6,13 @@ import com.intellij.psi.PsiElement
 import org.phellang.registry.PhelCompletionPriority
 import org.phellang.completion.infrastructure.PhelCompletionUtils
 import org.phellang.completion.infrastructure.PhelLocalSymbolKind
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.PhelAccess
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import javax.swing.Icon
 
 private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING

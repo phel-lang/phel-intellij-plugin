@@ -96,6 +96,31 @@ class ArchitectureBoundaryTest {
     }
 
     /**
+     * `core` and `language` are both leaves: the substrate every feature package builds on. Two
+     * leaves that import each other are not leaves at all. `core.psi` held the PSI analysis while
+     * `language.psi.{impl,navigation,references}` imported it back, so neither package could be read
+     * without the other. That analysis now lives in `language.psi.analysis`, beside the PSI it walks,
+     * and `core` keeps only what needs no PSI: the highlighting keys and the error handler.
+     *
+     * The rules above each police one direction. A cycle needs two, so this one checks both.
+     */
+    @Test
+    fun `core and language do not import each other`() {
+        val sources = mainSources()
+        val offenders = sources.filter { it.packageName.startsWith("$ROOT.core") }
+            .flatMap { src -> src.importsMatching("$ROOT.language").map { src to it } } +
+                sources.filter { it.packageName.startsWith("$ROOT.language") }
+                    .flatMap { src -> src.importsMatching("$ROOT.core").map { src to it } }
+
+        assertNoOffenders(
+            offenders,
+            "`core` and `language` may not import each other: that is a cycle between the two leaves " +
+                    "every feature package stands on. PSI analysis belongs in `language.psi.analysis`, " +
+                    "beside the PSI it walks; `core` is for what needs no PSI at all.",
+        )
+    }
+
+    /**
      * The rules above all read "no file in package X imports Y" — which passes vacuously if package
      * X no longer exists (renamed, moved, emptied). This guards the guards: it fails loudly if the
      * scan stops covering a package a rule polices, so a boundary can never silently stop enforcing.
@@ -111,6 +136,8 @@ class ArchitectureBoundaryTest {
         assertPackagePopulated(sources, "$ROOT.registry", "the registry-leaf and registry-data rules")
         assertPackagePopulated(sources, "$ROOT.registry.data", "the registry-data encapsulation rule")
         assertPackagePopulated(sources, "$ROOT.tools", "the build-time-tools rules")
+        assertPackagePopulated(sources, "$ROOT.core", "the core-and-language leaf rule")
+        assertPackagePopulated(sources, "$ROOT.language", "the core-and-language leaf rule")
         for (feature in FEATURE_PACKAGES) {
             assertPackagePopulated(sources, feature, "the feature-import rules")
         }

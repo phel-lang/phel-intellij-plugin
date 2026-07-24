@@ -9,7 +9,8 @@ Steps:
    - **MEDIUM**: wrong-layer imports (foundation reaching up into feature packages).
    - **LOW**: cross-sibling imports between feature packages that may be justified.
 5. Known architectural debt to ignore unless worsened:
-   - `core.psi ↔ language.psi`: `PhelSymbolAnalyzer` imports PSI types; `language/psi/{references,navigation,impl}` import the analyzer back. Moving the analyzer into `language/psi` does not fix it — it would create `language.psi ↔ registry` instead, since `registry/indexing` imports `language.psi`.
+   - `language.psi ↔ registry`: `language/psi/analysis/PhelSymbolAnalyzer.kt` imports `registry.PhelFunctionRegistry` / `PhelCompletionPriority` to answer "is this name a known special form / macro", and `registry/indexing` imports `language.psi` to scan Phel files. Confined to those two import lines in one file. A real fix means lifting `language/psi/{references,navigation}` (feature code) out of the PSI package, or moving `registry/indexing` off `registry`'s root; both are larger than a package move.
+   - Resolved (flag if it reappears): `core.psi ↔ language.psi` was broken by moving the PSI analysis from `core/psi` to `language/psi/analysis`; `core` now imports nothing from `org.phellang` at all. Enforced by `ArchitectureBoundaryTest."core and language do not import each other"`.
    - Resolved (flag if it reappears): `completion.infrastructure ↔ completion.handlers` was broken by moving `FULL_NAMESPACE_KEY` into `NamespacedInsertHandler`; the edge is now one-way (infrastructure → handlers).
 6. Omit findings already present in `.omc/research/ai-slop/04-cycles.md` (if the file exists) unless the evidence has changed.
 

@@ -1,8 +1,8 @@
 package org.phellang.documentation.resolvers
 
 import org.phellang.language.psi.utils.PhelPsiUtils
-import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 
 object PhelBasicDocumentation {
     fun generateBasicDocForElement(element: PhelSymbol): String = categorizeSymbol(element)

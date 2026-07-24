@@ -34,16 +34,26 @@ the cycle that move removed — flag it.
 
 Remaining known cycles (do not re-flag unless worsened):
 
-1. **`core.psi ↔ language.psi`** — `core/psi/PhelSymbolAnalyzer.kt` imports the PSI types, and
-   `language/psi/{references,navigation,impl}` import the analyzer back. Note the obvious fix
-   (moving the analyzer into `language/psi/`) does NOT work: the analyzer needs the registry, and
-   `registry/indexing` already imports `language.psi`, so that trade swaps this cycle for a
-   `language.psi ↔ registry` one. A real fix means lifting `language/psi/references` +
-   `navigation` (feature code) out of the PSI package.
+1. **`language.psi ↔ registry`** — `language/psi/analysis/PhelSymbolAnalyzer.kt:4-5` imports
+   `registry.PhelFunctionRegistry` / `PhelCompletionPriority` to answer "is this name a known
+   special form / macro", and `registry/indexing` imports `language.psi` to scan Phel files.
+   Confined to those two import lines in one file. Until the analysis moved out of `core/psi` the
+   same loop ran three hops through `core` (`language.psi → core.psi → registry → language.psi`);
+   it is now direct, and therefore visible. A real fix means lifting `language/psi/references` +
+   `navigation` (feature code) out of the PSI package, or moving `registry/indexing` off
+   `registry`'s root — both larger than a package move.
 
-Resolved (flag if it reappears): `completion.infrastructure ↔ completion.handlers` — broken by
-moving `FULL_NAMESPACE_KEY` from `PhelCompletionUtils` into `NamespacedInsertHandler`; the edge is
-now one-way (infrastructure → handlers).
+Resolved (flag if it reappears):
+
+- `core.psi ↔ language.psi` — broken by moving the PSI analysis (`PhelSymbolAnalyzer`,
+  `PhelParameterAnalyzer`, `PhelLetBindingAnalyzer`, `PhelLocalBindingScope`,
+  `PhelLocalFunctionIndex`, `PhelFormWalker`) from `core/psi` into `language/psi/analysis`, beside
+  the PSI it walks. `core` now imports nothing from `org.phellang` at all: it holds only the
+  highlighting keys and the error handler. Enforced by
+  `ArchitectureBoundaryTest."core and language do not import each other"`.
+- `completion.infrastructure ↔ completion.handlers` — broken by moving `FULL_NAMESPACE_KEY` from
+  `PhelCompletionUtils` into `NamespacedInsertHandler`; the edge is now one-way
+  (infrastructure → handlers).
 
 # Methodology
 
@@ -72,8 +82,7 @@ Use `Bash` only for the import enumeration: `grep -rh "^import org\.phellang\." 
 - <foundation_pkg → feature_pkg>: file.kt:LINE: import ...
 
 ## Existing baseline cycles (informational)
-- core ↔ completion (via PhelSymbolAnalyzer) — unchanged
-- language → completion (via PhelReference) — unchanged
+- language.psi ↔ registry (via PhelSymbolAnalyzer ← → registry/indexing) — unchanged
 
 ## Resolved cycles (improvement)
 - ...

@@ -1,11 +1,11 @@
 package org.phellang.inspection
 
 import com.intellij.psi.PsiElement
-import org.phellang.core.psi.PhelLocalBindingScope
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelLocalBindingScope
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
