@@ -167,6 +167,13 @@ val generatePhelParser = tasks.register<GenerateParserTask>("generatePhelParser"
     )
 }
 
+// generatePhelLexer's purgeOldFiles recursively clears src/main/gen/org/phellang/language/, the
+// parent of the parser's psi/ and parser/ output. With no order between the two generators, a
+// parser-then-lexer schedule (which the configuration cache and parallel execution are free to
+// pick) lets the lexer's purge delete the PSI classes the parser just wrote, after which
+// compileKotlin cannot resolve them. Pin the lexer to run first so its purge precedes the parser.
+generatePhelParser.configure { mustRunAfter(generatePhelLexer) }
+
 // Task to update PhelFunctionRegistry from the official Phel API
 val updatePhelRegistry = tasks.register<JavaExec>("updatePhelRegistry") {
     group = "tools"

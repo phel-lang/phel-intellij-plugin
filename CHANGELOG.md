@@ -29,8 +29,10 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 - The build keeps the Kotlin stdlib, gson and the registry generator out of the distribution jar.
 - CI enforces the plugin project-configuration check and uploads real Kover coverage to Codecov.
-- Gradle configuration cache enabled; the configuration-time `System.setProperty` / `settingsEvaluated`
-  deprecation-suppression side effects were removed and folded into `gradle.properties` (#228).
+- Gradle configuration cache enabled: removed the configuration-time `System.setProperty` /
+  `settingsEvaluated` deprecation-suppression side effects (folded into `gradle.properties`), made the
+  change-notes provider cache-safe, and pinned the lexer to generate before the parser so its purge no
+  longer races the parser's generated PSI output (#228).
 - Issue templates migrated to GitHub issue forms, with a `config.yml` routing support questions to the Phel and
   IntelliJ Platform docs (#227).
 
