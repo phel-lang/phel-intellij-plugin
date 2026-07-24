@@ -1,0 +1,60 @@
+name: Attach signed asset
+
+# Manually sign the plugin for a given release tag and attach the signed zip to that GitHub Release,
+# WITHOUT re-publishing to the Marketplace. Recovery utility for a release whose signed asset is
+# missing (e.g. it was lost) when local signing is not an option — CI holds the signing secrets.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to sign and attach the asset to (e.g. v1.0.0)"
+        required: true
+
+concurrency:
+  group: attach-signed-asset-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  attach:
+    name: Sign and attach
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # upload the release asset
+    steps:
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          large-packages: false
+
+      # Check out the exact commit the release tag points at.
+      - name: Fetch Sources
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      # signPlugin depends on buildPlugin, so this builds and signs. No PUBLISH_TOKEN: nothing is
+      # uploaded to the Marketplace.
+      - name: Sign plugin
+        env:
+          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
+        run: .github/scripts/gradle-retry.sh signPlugin
+
+      - name: Attach signed distribution to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ inputs.tag }}" \
+            ./build/distributions/*-signed.zip \
+            --repo "$GITHUB_REPOSITORY" --clobber
