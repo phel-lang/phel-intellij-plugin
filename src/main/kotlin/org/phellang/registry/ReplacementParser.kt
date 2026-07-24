@@ -1,4 +1,4 @@
-package org.phellang.inspection.deprecated
+package org.phellang.registry
 
 object ReplacementParser {
 

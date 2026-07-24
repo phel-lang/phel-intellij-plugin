@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import org.phellang.language.psi.PhelNamespaceImporter
 import org.phellang.language.psi.PhelPsiFactory
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.registry.ReplacementParser
 
 class PhelDeprecatedFunctionQuickFix(private val replacement: String) : LocalQuickFix {
 

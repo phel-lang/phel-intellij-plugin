@@ -8,7 +8,23 @@ data class CompletionInfo(
 data class DeprecationInfo(
     val version: String,
     val replacement: String? = null,
-)
+) {
+    // In api.json the `version` field sometimes carries a "Use xyz" message instead of a version.
+    private val versionCarriesUseMessage: Boolean
+        get() = version.startsWith("Use ", ignoreCase = true)
+
+    /** The version string, or null when the `version` field actually carries a "Use xyz" message. */
+    val displayVersion: String?
+        get() = version.takeUnless { versionCarriesUseMessage }
+
+    /** The replacement in its raw `phel\ns\fn` form (from the field or a "Use xyz" version), or null. */
+    val rawReplacement: String?
+        get() = if (versionCarriesUseMessage) version.removePrefix("Use ").trim() else replacement
+
+    /** The replacement formatted for display as `ns/fn`, or null when the deprecation names none. */
+    val displayReplacement: String?
+        get() = rawReplacement?.let(ReplacementParser::formatForDisplay)
+}
 
 data class DocumentationLinks(
     val github: String = "",
@@ -27,6 +43,10 @@ data class DocumentationInfo(
         // arity on its own line, mirroring the project-symbol popup (PhelDocHtml.projectSymbol).
         signature.takeIf(String::isNotBlank)
             ?.let { append("<code>${it.replace("\n", "<br />")}</code><br /><br />") }
+        // Deprecation notice. Driven by DeprecationInfo's display helpers so the popup and the
+        // deprecated-function inspection (DeprecationMessageBuilder) always name the same version
+        // and replacement.
+        deprecation?.let { appendDeprecationNotice(it) }
         append(summary)
         append("<br />")
 
@@ -36,6 +56,14 @@ data class DocumentationInfo(
             append("</code></pre>")
         }
         append("<br />")
+    }
+
+    private fun StringBuilder.appendDeprecationNotice(deprecation: DeprecationInfo) {
+        append("<b>&#9888; Deprecated")
+        deprecation.displayVersion?.let { append(" since ").append(it) }
+        append("</b>")
+        deprecation.displayReplacement?.let { append(". Use <code>").append(it).append("</code> instead") }
+        append(".<br /><br />")
     }
 }
 

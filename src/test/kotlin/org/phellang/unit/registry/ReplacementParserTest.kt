@@ -1,9 +1,9 @@
-package org.phellang.unit.inspection.deprecated
+package org.phellang.unit.registry
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.phellang.inspection.deprecated.ReplacementParser
+import org.phellang.registry.ReplacementParser
 
 class ReplacementParserTest {
 
