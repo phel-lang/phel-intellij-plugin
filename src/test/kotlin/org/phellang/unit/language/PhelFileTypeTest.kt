@@ -57,7 +57,6 @@ class PhelFileTypeTest {
     fun `should be consistent across multiple calls`() {
         val fileType = PhelFileType.INSTANCE
 
-        // Test consistency of all methods
         assertEquals("Phel file", fileType.name)
         assertEquals("Phel file", fileType.name) // Second call
 
@@ -124,7 +123,6 @@ class PhelFileTypeTest {
 
     @Test
     fun `should be thread-safe singleton`() {
-        // Test concurrent access to singleton
         val instances = mutableListOf<PhelFileType>()
 
         val threads = (1..10).map {

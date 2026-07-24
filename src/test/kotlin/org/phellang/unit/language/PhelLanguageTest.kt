@@ -33,7 +33,6 @@ class PhelLanguageTest {
 
     @Test
     fun `should have correct case sensitivity`() {
-        // Phel language case sensitivity behavior
         assertFalse(PhelLanguage.isCaseSensitive)
     }
 
@@ -86,7 +85,6 @@ class PhelLanguageTest {
 
     @Test
     fun `should be thread-safe singleton`() {
-        // Test concurrent access to singleton
         val languages = mutableListOf<Language>()
         
         val threads = (1..10).map {
