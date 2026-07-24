@@ -228,6 +228,12 @@ jobs:
           VERSION: ${{ needs.build.outputs.version }}
           CHANGELOG: ${{ needs.build.outputs.changelog }}
         run: |
+          # Old drafts were already removed, so if a release for this version still exists it is a
+          # published one — the version has not been bumped since it shipped. Nothing to draft.
+          if gh release view "v$VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release v$VERSION is already published; nothing to draft until the next version bump."
+            exit 0
+          fi
           gh release create "v$VERSION" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
