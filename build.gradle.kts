@@ -19,12 +19,6 @@ tasks.withType<Wrapper> {
     gradleVersion = "9.3.0"
 }
 
-System.setProperty("org.gradle.internal.deprecation.disable", "true")
-
-gradle.settingsEvaluated {
-    System.setProperty("org.gradle.internal.deprecation.disable", "true")
-}
-
 repositories {
     mavenCentral()
     intellijPlatform {
@@ -173,6 +167,13 @@ val generatePhelParser = tasks.register<GenerateParserTask>("generatePhelParser"
     )
 }
 
+// generatePhelLexer's purgeOldFiles recursively clears src/main/gen/org/phellang/language/, the
+// parent of the parser's psi/ and parser/ output. With no order between the two generators, a
+// parser-then-lexer schedule (which the configuration cache and parallel execution are free to
+// pick) lets the lexer's purge delete the PSI classes the parser just wrote, after which
+// compileKotlin cannot resolve them. Pin the lexer to run first so its purge precedes the parser.
+generatePhelParser.configure { mustRunAfter(generatePhelLexer) }
+
 // Task to update PhelFunctionRegistry from the official Phel API
 val updatePhelRegistry = tasks.register<JavaExec>("updatePhelRegistry") {
     group = "tools"
@@ -285,12 +286,14 @@ tasks {
             untilBuild.set("262.*")
 
             // Render the CHANGELOG entry for the current version (falling back to Unreleased when
-            // this version has no section yet) as the Marketplace <change-notes>. Lazy so the file
-            // is read at task time, not configuration time.
+            // this version has no section yet) as the Marketplace <change-notes>. Capture the
+            // version into a local before the provider: referencing `project` inside the lambda
+            // would make it unserializable for the configuration cache.
+            val pluginVersion = project.version.toString()
             changeNotes.set(project.provider {
                 with(changelog) {
                     renderItem(
-                        (getOrNull(project.version.toString()) ?: getUnreleased())
+                        (getOrNull(pluginVersion) ?: getUnreleased())
                             .withHeader(false)
                             .withEmptySections(false),
                         Changelog.OutputType.HTML,
