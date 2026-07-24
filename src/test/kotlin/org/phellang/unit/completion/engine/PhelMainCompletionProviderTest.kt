@@ -29,7 +29,9 @@ class PhelMainCompletionProviderTest {
 
     @Test
     fun `should maintain thread safety`() {
-        val providers = mutableListOf<PhelMainCompletionProvider>()
+        // Thread-safe collection: the assertion is about constructing the provider concurrently,
+        // not about racing on an unsynchronized list (which would drop concurrent adds).
+        val providers = java.util.concurrent.CopyOnWriteArrayList<PhelMainCompletionProvider>()
         val threads = mutableListOf<Thread>()
         
         repeat(5) {
