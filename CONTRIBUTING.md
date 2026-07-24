@@ -96,4 +96,4 @@ Please use [GitHub Issues](https://github.com/phel-lang/phel-intellij-plugin/iss
 
 ## Code of Conduct
 
-Be respectful and constructive. We follow the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct.
+Be respectful and constructive. This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md); by participating you are expected to uphold it.
