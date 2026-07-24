@@ -40,9 +40,11 @@ helpers in that module's subfolders. If the concern is new, create a new module 
 `actions/` menu actions · `annotator/` highlighting + form-comment detection · `completion/` ·
 `core/` utils + `highlighting/` (the `TextAttributesKey` vocabulary shared by `syntax`, `annotator`
 and the colorsettings page — a leaf; the keys' external IDs persist in user color schemes, so they
-are contract, not internals) · `registry/` the shared Phel function/symbol model — API at the root, generated
-`register*Functions.kt` under `data/`, project symbol index under `indexing/` (a **leaf**: it may
-import `language/psi` and the platform, never a feature package) · `documentation/` hover ·
+are contract, not internals) · `registry/` the shared Phel function/symbol model — API at the root,
+generated `register*Functions.kt` under `data/` (the **bottom leaf**: platform only, nothing else
+under `org.phellang`) · `indexing/` the project symbol index and `PhelArityResolver`, i.e. everything
+that needs PSI to answer a registry-shaped question; sits above `registry` and `language` ·
+`documentation/` hover ·
 `editor/` a namespace of editor modules (folding, typing, quote, matching, commenting,
 colorsettings, enter, indentation, paredit, format, structure) · `inspection/` (+ `quickfixes/`,
 `deprecated/`) · `language/` filetype/icons/lexer + `parser/` grammar + `psi/` ·
@@ -59,8 +61,13 @@ import breaks one of these — Kotlin's `internal` is whole-module and can't. To
 the test deliberately, not by working around it.
 
 - `registry/data/**` (generated) is imported only from within `registry`; everyone else goes through
-  `PhelFunctionRegistry` / `PhelArityResolver`.
-- `registry` imports no feature package (it stays a leaf — a feature import re-creates the removed cycle).
+  `PhelFunctionRegistry` (stdlib catalogue) or `indexing.PhelArityResolver` (stdlib + project).
+- `registry` imports **nothing** under `org.phellang` but itself — not `language`, not `core`. It is
+  the leaf everything else stands on. It once imported `language/psi` for the project symbol index,
+  which closed a `language → registry → language` loop the moment `PhelSymbolAnalyzer` moved into
+  `language`. PSI-aware code lives in `indexing/` instead.
+- Dependency order: `registry` ← `language` ← `indexing` ← feature packages. `core` is separate and
+  imports nothing under `org.phellang`; `core` and `language` may not import each other.
 - `tools` (build-time generator) is imported by nothing at runtime, and imports no feature package.
 - A feature package reaches another only through a class at its **root**, never past it
   (`editor` → `syntax.PhelSyntaxHighlighter` is fine; `editor` → `syntax.attributes.*` is not).

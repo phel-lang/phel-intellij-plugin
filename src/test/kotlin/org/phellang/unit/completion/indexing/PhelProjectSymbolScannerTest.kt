@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.phellang.registry.SymbolType
-import org.phellang.registry.indexing.PhelProjectSymbolScanner
+import org.phellang.indexing.PhelProjectSymbolScanner
 
 class PhelProjectSymbolScannerTest {
 

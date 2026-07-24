@@ -1,7 +1,7 @@
 package org.phellang.annotator.validators
 
 import org.phellang.registry.PhelFunctionRegistry
-import org.phellang.registry.indexing.PhelProjectSymbolIndex
+import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils

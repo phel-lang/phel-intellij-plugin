@@ -5,7 +5,7 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import org.phellang.registry.Namespace
 import org.phellang.registry.PhelFunctionRegistry
-import org.phellang.registry.indexing.PhelProjectSymbolIndex
+import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.files.PhelFile

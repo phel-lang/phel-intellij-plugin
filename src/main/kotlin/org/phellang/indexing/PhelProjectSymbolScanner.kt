@@ -1,4 +1,4 @@
-package org.phellang.registry.indexing
+package org.phellang.indexing
 
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.registry.PhelProjectSymbol

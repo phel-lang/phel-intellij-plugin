@@ -28,22 +28,22 @@ The shared function model was moved out of `completion/` into its own top-level 
 inlay and core all consume it — and being under `completion/` is what forced the old
 `core ↔ completion` and `completion.data ↔ completion.infrastructure` cycles.
 
-**`registry` must stay a leaf**: it may import `language/psi` and the platform, nothing else.
-An import of `completion/`, `annotator/`, `editor/` or `inspection/` from `registry/` re-creates
-the cycle that move removed — flag it.
+**`registry` must stay a leaf**: it imports the platform and nothing else under `org.phellang` —
+not `language`, not `core`. Any `org.phellang` import from `registry/` other than `registry` itself
+is HIGH: that is exactly how the `language → registry → language` loop formed. Enforced by
+`ArchitectureBoundaryTest."registry imports nothing outside itself"`.
 
-Remaining known cycles (do not re-flag unless worsened):
+Dependency order: `registry` ← `language` ← `indexing` ← feature packages. `core` sits outside it
+and imports nothing under `org.phellang`.
 
-1. **`language.psi ↔ registry`** — `language/psi/analysis/PhelSymbolAnalyzer.kt:4-5` imports
-   `registry.PhelFunctionRegistry` / `PhelCompletionPriority` to answer "is this name a known
-   special form / macro", and `registry/indexing` imports `language.psi` to scan Phel files.
-   Confined to those two import lines in one file. Until the analysis moved out of `core/psi` the
-   same loop ran three hops through `core` (`language.psi → core.psi → registry → language.psi`);
-   it is now direct, and therefore visible. A real fix means lifting `language/psi/references` +
-   `navigation` (feature code) out of the PSI package, or moving `registry/indexing` off
-   `registry`'s root — both larger than a package move.
+Remaining known cycles: none.
 
 Resolved (flag if it reappears):
+
+- `language.psi ↔ registry` — broken by moving `registry/indexing/**` and `registry/PhelArityResolver.kt`
+  into a new top-level `indexing/`. `registry` is now a pure catalogue with zero `org.phellang`
+  imports, so `language → registry` is a legal one-way edge. The PSI-aware half (symbol index, arity
+  resolution across stdlib + project) always belonged above both, not inside the leaf.
 
 - `core.psi ↔ language.psi` — broken by moving the PSI analysis (`PhelSymbolAnalyzer`,
   `PhelParameterAnalyzer`, `PhelLetBindingAnalyzer`, `PhelLocalBindingScope`,

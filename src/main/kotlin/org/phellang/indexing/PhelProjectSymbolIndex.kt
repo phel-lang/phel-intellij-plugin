@@ -1,4 +1,4 @@
-package org.phellang.registry.indexing
+package org.phellang.indexing
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager

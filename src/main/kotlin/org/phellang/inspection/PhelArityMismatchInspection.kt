@@ -4,7 +4,7 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
-import org.phellang.registry.PhelArityResolver
+import org.phellang.indexing.PhelArityResolver
 import org.phellang.registry.accepts
 import org.phellang.registry.describe
 import org.phellang.language.psi.PhelList

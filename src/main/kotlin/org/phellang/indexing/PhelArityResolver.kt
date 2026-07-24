@@ -1,7 +1,8 @@
-package org.phellang.registry
+package org.phellang.indexing
 
 import com.intellij.openapi.project.Project
-import org.phellang.registry.indexing.PhelProjectSymbolIndex
+import org.phellang.registry.PhelArity
+import org.phellang.registry.PhelFunctionRegistry
 
 /**
  * Resolves the call arities for a function name, used by both the arity-mismatch inspection

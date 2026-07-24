@@ -4,7 +4,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.testFramework.LightVirtualFile
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.files.PhelFile
-import org.phellang.registry.indexing.PhelFileChangeListener
+import org.phellang.indexing.PhelFileChangeListener
 
 /**
  * VFS_CHANGES is an application-level topic, so the listener sees `.phel` events for files anywhere

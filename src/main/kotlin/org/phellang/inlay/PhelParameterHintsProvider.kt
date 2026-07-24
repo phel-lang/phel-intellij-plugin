@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import org.phellang.registry.PhelArity
-import org.phellang.registry.PhelArityResolver
+import org.phellang.indexing.PhelArityResolver
 import org.phellang.registry.selectFor
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms

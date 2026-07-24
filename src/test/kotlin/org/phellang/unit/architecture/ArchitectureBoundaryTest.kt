@@ -30,17 +30,31 @@ class ArchitectureBoundaryTest {
         )
     }
 
-    /** `registry` is a leaf: it may use `language`/`core` and the platform, never a feature package. */
+    /**
+     * `registry` is the bottom of the graph: a catalogue generated from `api.json` plus the model
+     * types describing it. It may use the platform and nothing else under `org.phellang`.
+     *
+     * Stronger than "no feature package" on purpose. `registry` used to import `language.psi` for
+     * the project symbol index, which closed a `language -> registry -> language` loop once
+     * `PhelSymbolAnalyzer` moved into `language`. Anything needing PSI belongs in `indexing`, which
+     * sits above both; only a rule at this strength keeps that from being undone one import at a
+     * time.
+     */
     @Test
-    fun `registry does not import any feature package`() {
+    fun `registry imports nothing outside itself`() {
         val offenders = mainSources()
             .filter { it.packageName.startsWith("$ROOT.registry") }
-            .flatMap { src -> src.importsMatchingAny(FEATURE_PACKAGES).map { src to it } }
+            .flatMap { src ->
+                src.importsMatching(ROOT)
+                    .filterNot { it.fqName.startsWith("$ROOT.registry.") }
+                    .map { src to it }
+            }
 
         assertNoOffenders(
             offenders,
-            "`registry` must stay a leaf — importing a feature package re-creates the cycle its " +
-                    "extraction removed. Move the shared type down into `registry` or `language` instead.",
+            "`registry` must import nothing under `org.phellang` but itself — it is the leaf every " +
+                    "other package stands on. If it needs PSI, the code belongs in `indexing` " +
+                    "(project symbol index, arity resolution) or in the feature that asked for it.",
         )
     }
 
@@ -135,6 +149,7 @@ class ArchitectureBoundaryTest {
 
         assertPackagePopulated(sources, "$ROOT.registry", "the registry-leaf and registry-data rules")
         assertPackagePopulated(sources, "$ROOT.registry.data", "the registry-data encapsulation rule")
+        assertPackagePopulated(sources, "$ROOT.indexing", "the registry-leaf rule, which sends PSI-aware code here")
         assertPackagePopulated(sources, "$ROOT.tools", "the build-time-tools rules")
         assertPackagePopulated(sources, "$ROOT.core", "the core-and-language leaf rule")
         assertPackagePopulated(sources, "$ROOT.language", "the core-and-language leaf rule")
