@@ -4,6 +4,7 @@ import com.intellij.psi.PsiElement
 import org.phellang.core.psi.PhelLocalBindingScope
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.utils.PhelPsiUtils
 
@@ -18,7 +19,7 @@ import org.phellang.language.psi.utils.PhelPsiUtils
 internal object PhelArityCallSite {
     /** True when the arity check must not run for [list] with head [name]. */
     fun shouldSkip(list: PhelList, head: PhelSymbol, name: String, forms: List<PhelForm>): Boolean {
-        if (name in SKIP_HEADS) return true
+        if (name in PhelSpecialForms.VARIADIC_HEADS) return true
         if (name.startsWith("php/") || name.startsWith(".") || name.startsWith("php-")) return true
         // The dummy identifier the platform injects at the caret mid-completion.
         if (name.contains("IntelliJIdeaRulezzz")) return true
@@ -78,16 +79,5 @@ internal object PhelArityCallSite {
 
     private val THREADING_HEADS = setOf(
         "->", "->>", "as->", "some->", "some->>", "cond->", "cond->>", "doto",
-    )
-
-    /** Special forms and macros that legitimately accept variable arg shapes. */
-    private val SKIP_HEADS = setOf(
-        "if", "if-not", "when", "when-not", "if-let", "when-let", "if-some", "when-some",
-        "do", "let", "loop", "recur", "fn", "defn", "defn-", "def", "def-", "defmacro", "defmacro-",
-        "defstruct", "definterface", "defexception", "declare", "ns", "quote", "var",
-        "try", "catch", "finally", "throw", "case", "cond", "condp", "and", "or",
-        "->", "->>", "as->", "some->", "some->>", "doto", "binding", "for", "foreach", "dofor",
-        "comment", "deftest", "is", "are", "testing", "with-output-buffer",
-        "import", "require", "use", "set!", "..", ".",
     )
 }
