@@ -49,11 +49,11 @@ jobs:
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         run: .github/scripts/gradle-retry.sh publishPlugin
 
-      # Attach the built distribution to the GitHub release.
-      - name: Attach distribution to the release
+      # Attach the signed distribution (the artifact that ships to the Marketplace) to the release.
+      - name: Attach signed distribution to the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload "${{ github.event.release.tag_name }}" \
-            ./build/distributions/*.zip \
+            ./build/distributions/*-signed.zip \
             --repo "$GITHUB_REPOSITORY" --clobber
