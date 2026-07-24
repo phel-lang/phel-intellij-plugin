@@ -2,6 +2,7 @@ package org.phellang.language.psi.references
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import org.phellang.core.psi.PhelSymbolAnalyzer
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
@@ -81,11 +82,7 @@ internal object PhelLocalScopeResolver {
 
     /** The parameter symbols a function-defining form declares, or null when it declares none. */
     private fun parametersOf(list: PhelList): List<PhelSymbol>? {
-        val forms = list.forms
-        if (forms.size < 2) return null
-
-        val keyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java)?.text ?: return null
-        val paramVec = PhelDefinitionFinder.findParameterVector(forms, keyword) ?: return null
+        val paramVec = PhelSymbolAnalyzer.findParameterVector(list) ?: return null
 
         return paramVec.forms.mapNotNull { PsiTreeUtil.findChildOfType(it, PhelSymbol::class.java) }
     }
