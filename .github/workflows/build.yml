@@ -14,6 +14,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.properties.outputs.version }}
+      changelog: ${{ steps.properties.outputs.changelog }}
     steps:
 
       # Free GitHub Actions Environment Disk Space
@@ -41,6 +44,23 @@ jobs:
       # Build plugin
       - name: Build plugin
         run: .github/scripts/gradle-retry.sh buildPlugin
+
+      # Expose the plugin version and the changelog notes for the release-draft job below.
+      - name: Export version and changelog
+        id: properties
+        shell: bash
+        run: |
+          VERSION="$(grep -E '^version = ' build.gradle.kts | head -1 | cut -d'"' -f2)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          # The current version's changelog section, falling back to Unreleased when it is not
+          # promoted yet (matches patchPluginXml's changeNotes logic in build.gradle.kts).
+          CHANGELOG="$(./gradlew getChangelog --no-header --console=plain -q 2>/dev/null \
+            || ./gradlew getChangelog --unreleased --no-header --console=plain -q 2>/dev/null || true)"
+          {
+            echo "changelog<<CHANGELOG_EOF"
+            echo "$CHANGELOG"
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
 
       # Enforce the plugin project configuration check. verifyPluginProjectConfiguration only logs a
       # warning and exits 0 (it reports to Gradle's Problems API at WARNING severity), so on its own
@@ -176,3 +196,41 @@ jobs:
         with:
           name: pluginVerifier-result
           path: ${{ github.workspace }}/build/reports/pluginVerifier
+
+  # Refresh a DRAFT GitHub Release for the current version on every green push to main. A draft
+  # publishes nothing; the actual Marketplace publish happens only when a human publishes the
+  # release, which triggers release.yml.
+  releaseDraft:
+    name: Release draft
+    if: github.event_name != 'pull_request'
+    needs: [ build, test, verify ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v7
+
+      # Keep a single draft: drop any previous drafts before recreating the current one.
+      - name: Remove old draft releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release list --repo "$GITHUB_REPOSITORY" --json isDraft,tagName \
+            --jq '.[] | select(.isDraft) | .tagName' \
+            | while read -r tag; do
+                [ -n "$tag" ] && gh release delete "$tag" --repo "$GITHUB_REPOSITORY" --yes || true
+              done
+
+      - name: Create release draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+          CHANGELOG: ${{ needs.build.outputs.changelog }}
+        run: |
+          gh release create "v$VERSION" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --draft \
+            --title "v$VERSION" \
+            --notes "${CHANGELOG:-_No changelog entries for this version._}"

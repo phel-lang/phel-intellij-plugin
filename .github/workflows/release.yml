@@ -1,0 +1,59 @@
+name: Release
+
+# Publishing a GitHub Release (the draft that build.yml keeps refreshed) signs the plugin and
+# uploads it to the JetBrains Marketplace, then attaches the distribution to the release. Requires
+# the four signing/publish secrets: CERTIFICATE_CHAIN, PRIVATE_KEY, PRIVATE_KEY_PASSWORD, PUBLISH_TOKEN.
+on:
+  release:
+    types: [ prereleased, released ]
+
+concurrency:
+  group: release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Publish to JetBrains Marketplace
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # attach the distribution asset to the release
+    steps:
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          large-packages: false
+
+      # Check out the exact commit the release was cut from.
+      - name: Fetch Sources
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      # Build, sign, and upload to the Marketplace. publishPlugin depends on signPlugin/buildPlugin,
+      # so it produces the signed distribution as a side effect.
+      - name: Publish plugin
+        env:
+          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        run: .github/scripts/gradle-retry.sh publishPlugin
+
+      # Attach the built distribution to the GitHub release.
+      - name: Attach distribution to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            ./build/distributions/*.zip \
+            --repo "$GITHUB_REPOSITORY" --clobber

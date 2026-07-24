@@ -1,77 +1,71 @@
 # Release Process
 
-This document describes how to publish a new version of the Phel IntelliJ Plugin.
+Publishing is automated. A **draft GitHub Release** is kept up to date for the current version on
+every green push to `main`; **publishing that release** signs the plugin and uploads it to the
+JetBrains Marketplace. You never build or upload the zip by hand.
 
-## Prerequisites
+## One-time setup
 
-- Push access to the `main` branch
-- Access to the [JetBrains Marketplace](https://plugins.jetbrains.com/) plugin upload UI
+The signing/publish workflow ([`release.yml`](.github/workflows/release.yml)) needs four repository
+secrets (Settings → Secrets and variables → Actions). They are already configured; this is only for
+reference or rotation:
 
-## Release Checklist
+| Secret | Source |
+|---|---|
+| `PUBLISH_TOKEN` | [Marketplace](https://plugins.jetbrains.com/) → your profile → **Tokens** → Generate |
+| `CERTIFICATE_CHAIN`, `PRIVATE_KEY`, `PRIVATE_KEY_PASSWORD` | a [plugin signing certificate](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html) (`openssl`) |
 
-### 1. Update the function registry
+The signing certificate expires (365 days by default) — regenerate and update the two cert secrets
+before then.
 
-If Phel has a new release, update the built-in function registry first.
+## Cutting a release
 
-In IntelliJ, run the **Update Registry Repository** task (or from terminal):
+### 1. Update the function registry (if Phel released)
 
 ```bash
-./gradlew updatePhelRegistry
+./gradlew updatePhelRegistry     # Phel stdlib
+./gradlew updatePhpRegistry      # native PHP docs (php/doc-en), if refreshing those
 ```
 
-### 2. Smoke-test the plugin
+### 2. Smoke-test
 
-Run the **Run Plugin** task in IntelliJ (or `./gradlew runIde`). This opens a sandboxed IDE instance with the plugin loaded. Verify everything works as expected.
+`./gradlew runIde` opens a sandbox IDE with the plugin loaded. Verify the change set works.
 
-### 3. Bump the version and update the changelog
+### 3. Bump the version and promote the changelog
 
-Update `version` in `build.gradle.kts`:
+Set the new `version` in `build.gradle.kts`:
 
 ```kotlin
 version = "X.Y.Z"
 ```
 
 Then promote the `## [Unreleased]` entries in `CHANGELOG.md` into a new `## [X.Y.Z] - YYYY-MM-DD`
-section (or run `./gradlew patchChangelog`, which does this for you). The Marketplace "What's new"
-notes are generated from this section: `patchPluginXml` renders the entry matching `version` into
-`<change-notes>`, so releasing with an empty changelog ships empty release notes.
+section (or run `./gradlew patchChangelog`). This section is the single source of the release notes:
+the draft release and the Marketplace **What's new** (`patchPluginXml` renders it into
+`<change-notes>`) both come from it — so releasing with an empty section ships empty notes.
 
 ### 4. Update IDE compatibility (if needed)
 
-Update `sinceBuild` / `untilBuild` in `build.gradle.kts` if targeting new IDE versions.
+Adjust `sinceBuild` / `untilBuild` in `build.gradle.kts` if targeting new IDE versions.
 
-### 5. Build the distribution
+### 5. Merge to `main`
 
-Run the **Build Distribution** task in IntelliJ (or from terminal):
+Open a PR with the version/changelog bump and merge it. On the resulting green push to `main`, the
+`releaseDraft` job in [`build.yml`](.github/workflows/build.yml) creates or refreshes a **draft**
+GitHub Release `vX.Y.Z` with the changelog notes. A draft publishes nothing.
 
-```bash
-./gradlew buildPlugin
-```
+### 6. Publish the release
 
-This generates the plugin zip at:
+On the repo's **Releases** page, review the draft `vX.Y.Z` (notes and version), then **Publish**.
+That triggers [`release.yml`](.github/workflows/release.yml), which runs `publishPlugin` to sign and
+upload to the Marketplace and attaches the distribution zip to the release. Track the run under
+**Actions**; the Marketplace listing updates after JetBrains' review.
 
-```
-build/distributions/phelplugin-X.Y.Z.zip
-```
+## Manual fallback
 
-### 6. Publish to JetBrains Marketplace
-
-1. Open the [Marketplace plugin page](https://plugins.jetbrains.com/plugin/28459-phel-lang) in your browser.
-2. Go to the plugin upload modal.
-3. Drag and drop the `phelplugin-X.Y.Z.zip` file from `build/distributions/`.
-4. Submit and wait for approval.
-
-Alternatively, with the `PUBLISH_TOKEN` (and `CERTIFICATE_CHAIN`, `PRIVATE_KEY`,
-`PRIVATE_KEY_PASSWORD` for signing) environment variables set, publish from the terminal:
+If the automation is unavailable, publish from a terminal with the four secrets exported as
+environment variables:
 
 ```bash
 ./gradlew publishPlugin
-```
-
-### 7. Commit and push
-
-```bash
-git add build.gradle.kts CHANGELOG.md src/main/kotlin/org/phellang/registry/data
-git commit -m "chore: bump plugin to X.Y.Z and update registry"
-git push origin main
 ```
