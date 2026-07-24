@@ -2,92 +2,77 @@ package org.phellang.annotator.validators
 
 import com.intellij.openapi.project.Project
 import org.phellang.annotator.quickfixes.PhelImportNamespaceQuickFix
-import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelRequireClauseAnalyzer
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.PhelPsiUtils
 
+/** Checks that the namespace qualifying a `ns/name` symbol is both imported and real. */
 object PhelNamespaceValidator {
+
+    /** `php/` is interop and `core/` needs no import, so neither is ever missing. */
+    private val EXEMPT_QUALIFIERS = setOf("php", "core")
+
     fun validateNamespace(symbol: PhelSymbol): List<PhelValidationProblem> {
         val text = symbol.text ?: return emptyList()
-
-        if (!text.contains("/")) {
-            return emptyList()
-        }
+        if (!text.contains("/")) return emptyList()
 
         val qualifier = PhelPsiUtils.getQualifier(symbol) ?: return emptyList()
+        if (qualifier in EXEMPT_QUALIFIERS) return emptyList()
 
-        // Skip php/ interop - always valid
-        if (qualifier == "php") {
-            return emptyList()
+        val file = symbol.containingFile as? PhelFile ?: return emptyList()
+        if (isPhpClassInterop(text, file)) return emptyList()
+
+        return when (importStatus(file, qualifier)) {
+            ImportStatus.VALID -> emptyList()
+            ImportStatus.IMPORTED_BUT_NOT_EXISTS -> reportMissingImportTarget(symbol, qualifier)
+            ImportStatus.NOT_IMPORTED -> reportNotImported(symbol, qualifier)
         }
+    }
 
-        // Skip core/ - core functions don't need import
-        if (qualifier == "core") {
-            return emptyList()
-        }
+    /**
+     * `DateTime/createFromFormat` and `\Foo\Bar/CONST` look namespaced, but the qualifier is a PHP
+     * class rather than a Phel namespace, so the import lookup would always fail.
+     */
+    private fun isPhpClassInterop(text: String, file: PhelFile): Boolean =
+        PhelInteropShorthands.isInteropShorthand(text, PhelNamespaceUtils.extractUsedClasses(file))
 
-        val containingFile = symbol.containingFile as? PhelFile ?: return emptyList()
+    /**
+     * The namespace is imported but nothing resolves it. A fix is only offered when a project file
+     * with a matching short namespace exists — otherwise there is nothing to point the import at.
+     */
+    private fun reportMissingImportTarget(symbol: PhelSymbol, qualifier: String): List<PhelValidationProblem> {
+        val suggestion = PhelProjectNamespaceFinder.findByShortName(symbol.project, qualifier)
+            ?: return listOf(PhelValidationProblem("Imported namespace does not exist"))
 
-        // Skip PHP-class interop shorthands like `DateTime/createFromFormat` or
-        // `\Foo\Bar/CONST`. These look namespaced but the qualifier is a PHP class,
-        // not a Phel namespace, so the regular import lookup would always fail.
-        val usedClasses = PhelNamespaceUtils.extractUsedClasses(containingFile)
-        if (PhelInteropShorthands.isInteropShorthand(text, usedClasses)) {
-            return emptyList()
-        }
+        return listOf(
+            PhelValidationProblem(
+                message = "Imported namespace does not exist. Did you mean '$suggestion'?",
+                quickFix = PhelImportNamespaceQuickFix(suggestion),
+            )
+        )
+    }
 
-        val importStatus = checkImportStatus(containingFile, qualifier)
-
-        when (importStatus) {
-            ImportStatus.VALID -> return emptyList()  // Imported and exists
-            ImportStatus.IMPORTED_BUT_NOT_EXISTS -> {
-                // The namespace is imported but the actual namespace file doesn't exist.
-                // Only offer a fix when a project file with a matching short namespace exists.
-                val suggestion = PhelProjectNamespaceFinder.findByShortName(symbol.project, qualifier)
-                return listOf(
-                    if (suggestion != null) {
-                        PhelValidationProblem(
-                            message = "Imported namespace does not exist. Did you mean '$suggestion'?",
-                            quickFix = PhelImportNamespaceQuickFix(suggestion),
-                        )
-                    } else {
-                        PhelValidationProblem("Imported namespace does not exist")
-                    }
-                )
-            }
-
-            ImportStatus.NOT_IMPORTED -> {
-            }
-        }
-
-        // Not imported, but the namespace does resolve: offer to import it.
+    /** Not imported. If the namespace resolves anyway, offer to add the import; otherwise it is a typo. */
+    private fun reportNotImported(symbol: PhelSymbol, qualifier: String): List<PhelValidationProblem> {
         val importable = PhelProjectNamespaceFinder.getStandardLibraryFullNamespace(qualifier)
             ?: PhelProjectNamespaceFinder.findByShortName(symbol.project, qualifier)
+            ?: return listOf(PhelValidationProblem("Namespace '$qualifier' does not exist"))
 
-        if (importable != null) {
-            return listOf(
-                PhelValidationProblem(
-                    message = "Namespace '$qualifier' is not imported",
-                    quickFix = PhelImportNamespaceQuickFix(importable),
-                )
+        return listOf(
+            PhelValidationProblem(
+                message = "Namespace '$qualifier' is not imported",
+                quickFix = PhelImportNamespaceQuickFix(importable),
             )
-        }
-
-        // Namespace doesn't exist at all — nothing to import, so no fix.
-        return listOf(PhelValidationProblem("Namespace '$qualifier' does not exist"))
+        )
     }
 
-    private enum class ImportStatus {
-        VALID,                   // Imported and namespace exists
-        IMPORTED_BUT_NOT_EXISTS, // Imported but namespace file doesn't exist
-        NOT_IMPORTED             // Not imported at all
-    }
+    private enum class ImportStatus { VALID, IMPORTED_BUT_NOT_EXISTS, NOT_IMPORTED }
 
-    private fun checkImportStatus(file: PhelFile, qualifier: String): ImportStatus {
+    private fun importStatus(file: PhelFile, qualifier: String): ImportStatus {
         val imports = PhelRequireClauseAnalyzer.imports(file)
 
         // An `:as` alias takes priority; otherwise match the import's short namespace.
@@ -95,18 +80,14 @@ object PhelNamespaceValidator {
             ?: imports.firstOrNull { it.shortNamespace == qualifier }
             ?: return ImportStatus.NOT_IMPORTED
 
-        return if (namespaceExistsWithStdLib(file.project, import.fullNamespace)) {
+        return if (namespaceExists(file.project, import.fullNamespace)) {
             ImportStatus.VALID
         } else {
             ImportStatus.IMPORTED_BUT_NOT_EXISTS
         }
     }
 
-    private fun namespaceExistsWithStdLib(project: Project, fullNamespace: String): Boolean {
-        if (PhelProjectNamespaceFinder.isStandardLibrary(fullNamespace)) {
-            return true
-        }
-
-        return PhelProjectNamespaceFinder.namespaceExists(project, fullNamespace)
-    }
+    private fun namespaceExists(project: Project, fullNamespace: String): Boolean =
+        PhelProjectNamespaceFinder.isStandardLibrary(fullNamespace) ||
+                PhelProjectNamespaceFinder.namespaceExists(project, fullNamespace)
 }

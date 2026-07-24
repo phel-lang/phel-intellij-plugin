@@ -19,6 +19,20 @@ class PhelFileChangeListener(private val project: Project) : BulkFileListener {
         if (project.isDisposed) return
 
         val index = PhelProjectSymbolIndex.getInstance(project)
+        val update = collectUpdates(events, index)
+
+        when {
+            // Refreshing calls PhelProjectSymbolScanner.scanFile, which forces a full PSI parse.
+            // after() runs inside the VFS write action on the EDT, so parsing here would freeze the
+            // UI for the whole changeset — e.g. a git checkout touching many .phel files. Move it
+            // off the write action onto a pooled thread.
+            update.toRefresh.isNotEmpty() -> scheduleBackgroundRefresh(index, update.toRefresh)
+            update.changed -> triggerRehighlight()
+        }
+    }
+
+    /** What a batch of VFS events means for the index. Removals are applied as they are found. */
+    private fun collectUpdates(events: List<VFileEvent>, index: PhelProjectSymbolIndex): IndexUpdate {
         // A set: one batch can carry several events for the same file (e.g. content + property
         // change), and re-scanning it once is enough.
         val toRefresh = LinkedHashSet<VirtualFile>()
@@ -27,43 +41,41 @@ class PhelFileChangeListener(private val project: Project) : BulkFileListener {
         for (event in events) {
             val file = event.file ?: continue
 
-            when (event) {
-                is VFileDeleteEvent -> {
-                    // Removal is cheap (no parse) and idempotent: dropping a path that was never
-                    // indexed — e.g. a foreign file filtered out below — is a harmless no-op, so
-                    // there is no need to scope-check a file that is already gone.
-                    if (isPhelFile(file)) {
-                        index.removeFile(file)
-                        changed = true
-                    }
+            when (actionFor(event)) {
+                // Removal is cheap (no parse) and idempotent: dropping a path that was never
+                // indexed — e.g. a foreign file filtered out by shouldIndex — is a harmless no-op,
+                // so there is no need to scope-check a file that is already gone.
+                Action.REMOVE -> if (isPhelFile(file)) {
+                    index.removeFile(file)
+                    changed = true
                 }
 
-                is VFileContentChangeEvent, is VFileCreateEvent, is VFileMoveEvent -> {
-                    if (shouldIndex(file)) {
-                        toRefresh += file
-                        changed = true
-                    }
+                Action.REINDEX -> if (shouldIndex(file)) {
+                    toRefresh += file
+                    changed = true
                 }
 
-                is VFilePropertyChangeEvent -> {
-                    if (event.propertyName == VirtualFile.PROP_NAME && shouldIndex(file)) {
-                        toRefresh += file
-                        changed = true
-                    }
-                }
+                Action.IGNORE -> Unit
             }
         }
 
-        if (toRefresh.isNotEmpty()) {
-            // Refreshing calls PhelProjectSymbolScanner.scanFile, which forces a full PSI parse.
-            // after() runs inside the VFS write action on the EDT, so parsing here would freeze the
-            // UI for the whole changeset — e.g. a git checkout touching many .phel files. Move it
-            // off the write action onto a pooled thread.
-            scheduleBackgroundRefresh(index, toRefresh)
-        } else if (changed) {
-            triggerRehighlight()
-        }
+        return IndexUpdate(toRefresh, changed)
     }
+
+    /** What [event] asks of the index, before any scope filtering. */
+    private fun actionFor(event: VFileEvent): Action = when (event) {
+        is VFileDeleteEvent -> Action.REMOVE
+        is VFileContentChangeEvent, is VFileCreateEvent, is VFileMoveEvent -> Action.REINDEX
+        // A rename changes the path the index is keyed on; other property changes do not.
+        is VFilePropertyChangeEvent ->
+            if (event.propertyName == VirtualFile.PROP_NAME) Action.REINDEX else Action.IGNORE
+
+        else -> Action.IGNORE
+    }
+
+    private enum class Action { REMOVE, REINDEX, IGNORE }
+
+    private class IndexUpdate(val toRefresh: Set<VirtualFile>, val changed: Boolean)
 
     /**
      * A file this project should index: associated with [PhelFileType] and inside project content.

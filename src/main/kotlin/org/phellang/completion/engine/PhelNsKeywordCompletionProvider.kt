@@ -45,46 +45,51 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
             }
         }
 
+        /**
+         * Which set of `ns` keywords, if any, belongs at the caret.
+         *
+         * Two shapes reach here: the caret inside an import form that sits directly under `ns`
+         * (`(ns n (:require <caret>))`), and the caret one level deeper inside that form's own
+         * option (`(ns n (:require m :refer [<caret>]))`).
+         */
         fun detectNsContext(element: PsiElement): NsContext? {
             val containingList = PsiTreeUtil.getParentOfType(element, PhelList::class.java) ?: return null
-            val firstFormText = getFirstFormText(containingList, element)
+            val parentList = PsiTreeUtil.getParentOfType(containingList, PhelList::class.java) ?: return null
 
-            // Case 1: Directly inside (ns ...) — not useful (ns name is second position)
-            // Case 2: Inside a sub-list of ns — this is where import forms go
-            // Case 3: Inside a sub-list of a sub-list of ns — :as/:refer options
+            return if (getFirstFormText(parentList, element) == NS_FORM) {
+                detectInImportForm(containingList, element)
+            } else {
+                detectInNestedOption(parentList, element)
+            }
+        }
 
-            // Check if the containing list is a direct child of the ns form
-            val parentList = PsiTreeUtil.getParentOfType(containingList, PhelList::class.java)
+        /** The caret is inside an import form sitting directly under `ns`. */
+        private fun detectInImportForm(importList: PhelList, element: PsiElement): NsContext? {
+            val firstFormText = getFirstFormText(importList, element)
 
-            if (parentList != null && getFirstFormText(parentList, element) == "ns") {
-                // We're in a sub-list of ns, e.g., (ns name (|)) or (ns name (:require |))
-                // At first position of this sub-list → suggest :require, :require-file, :use
-                if (firstFormText == null || isElementAtFirstFormPosition(containingList, element)) {
-                    return NsContext.NS_BODY_KEYWORD
-                }
-
-                // After the form keyword (:require/:use), check position for :as/:refer
-                if (firstFormText == ":require" || firstFormText == ":use") {
-                    return detectOptionContext(containingList, element, firstFormText)
-                }
-
-                // Inside :require-file — no keyword suggestions (file path position)
-                return null
+            // The head slot of the form, so the import keywords themselves belong here.
+            if (firstFormText == null || isElementAtFirstFormPosition(importList, element)) {
+                return NsContext.NS_BODY_KEYWORD
             }
 
-            // Check if we're two levels deep: sub-list → sub-list of ns
-            // This handles (:require ns :refer [|]) where element is inside a vector
-            if (parentList != null) {
-                val grandparentList = PsiTreeUtil.getParentOfType(parentList, PhelList::class.java)
-                if (grandparentList != null && getFirstFormText(grandparentList, element) == "ns") {
-                    val parentFirstForm = getFirstFormText(parentList, element)
-                    if (parentFirstForm == ":require" || parentFirstForm == ":use") {
-                        return detectOptionContext(parentList, element, parentFirstForm)
-                    }
-                }
+            // Past the head of a :require / :use, so the per-import options belong here.
+            if (firstFormText in IMPORT_FORMS_WITH_OPTIONS) {
+                return detectOptionContext(importList, element, firstFormText)
             }
 
+            // Inside :require-file, where the position holds a file path and has no keywords.
             return null
+        }
+
+        /** The caret is nested below an import form, e.g. inside its `:refer` vector. */
+        private fun detectInNestedOption(importList: PhelList, element: PsiElement): NsContext? {
+            val grandparent = PsiTreeUtil.getParentOfType(importList, PhelList::class.java) ?: return null
+            if (getFirstFormText(grandparent, element) != NS_FORM) return null
+
+            val firstFormText = getFirstFormText(importList, element) ?: return null
+            if (firstFormText !in IMPORT_FORMS_WITH_OPTIONS) return null
+
+            return detectOptionContext(importList, element, firstFormText)
         }
 
         private fun detectOptionContext(
@@ -169,6 +174,11 @@ class PhelNsKeywordCompletionProvider : CompletionProvider<CompletionParameters?
 
             return PhelPsiUtils.asKeyword(firstForm)?.text
         }
+
+        private const val NS_FORM = "ns"
+
+        /** `:require-file` takes a path rather than options, so it is deliberately absent. */
+        private val IMPORT_FORMS_WITH_OPTIONS = setOf(":require", ":use")
 
         private val NS_TOP_LEVEL_KEYWORDS = listOf(
             NsKeyword(":require", "(:require namespace)", "Import Phel module"),
