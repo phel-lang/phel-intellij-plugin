@@ -2,15 +2,13 @@ package org.phellang.core.psi
 
 import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.utils.cachedPerPsi
 
 /** Everything about function parameters: locating the parameter vector, and naming what it binds. */
 internal object PhelParameterAnalyzer {
@@ -55,12 +53,7 @@ internal object PhelParameterAnalyzer {
 
     /** Names bound by every arity of [functionList]. Cached: highlighting asks once per symbol. */
     private fun parameterNamesOf(functionList: PhelList): Set<String> =
-        CachedValuesManager.getCachedValue(functionList, FUNCTION_PARAMS_KEY) {
-            CachedValueProvider.Result.create(
-                computeParameterNames(functionList),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
+        cachedPerPsi(functionList, FUNCTION_PARAMS_KEY) { computeParameterNames(functionList) }
 
     private fun computeParameterNames(functionList: PhelList): Set<String> {
         val names = mutableSetOf<String>()

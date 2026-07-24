@@ -2,13 +2,11 @@ package org.phellang.language.psi
 
 import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
-import com.intellij.psi.util.CachedValueProvider
-import com.intellij.psi.util.CachedValuesManager
-import com.intellij.psi.util.PsiModificationTracker
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
 import java.util.Optional
 import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.language.psi.utils.cachedPerPsi
 
 object PhelNamespaceUtils {
     private val USED_CLASSES_KEY: Key<CachedValue<Set<String>>> = Key.create("phel.namespace.usedClasses")
@@ -21,11 +19,8 @@ object PhelNamespaceUtils {
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
         // Resolved once per file: highlighting and reference resolution look up the (ns …)
         // form repeatedly (per qualified symbol), and each lookup otherwise scans the tree.
-        return CachedValuesManager.getCachedValue(file, NS_DECLARATION_KEY) {
-            CachedValueProvider.Result.create(
-                Optional.ofNullable(computeNamespaceDeclaration(file)),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
+        return cachedPerPsi(file, NS_DECLARATION_KEY) {
+            Optional.ofNullable(computeNamespaceDeclaration(file))
         }.orElse(null)
     }
 
@@ -53,11 +48,8 @@ object PhelNamespaceUtils {
     fun findRequireForms(nsDeclaration: PhelList): List<PhelList> {
         // Cached on the (cached, per-file) ns element: the validators look these up once per
         // qualified symbol, each otherwise re-walking the ns form's child lists.
-        return CachedValuesManager.getCachedValue(nsDeclaration, REQUIRE_FORMS_KEY) {
-            CachedValueProvider.Result.create(
-                findNsClauseForms(nsDeclaration, ":require"),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
+        return cachedPerPsi(nsDeclaration, REQUIRE_FORMS_KEY) {
+            findNsClauseForms(nsDeclaration, ":require")
         }
     }
 
@@ -68,11 +60,8 @@ object PhelNamespaceUtils {
      * `DateTime/createFromFormat`, `(DateTime. ...)`, etc.
      */
     fun findUseForms(nsDeclaration: PhelList): List<PhelList> {
-        return CachedValuesManager.getCachedValue(nsDeclaration, USE_FORMS_KEY) {
-            CachedValueProvider.Result.create(
-                findNsClauseForms(nsDeclaration, ":use"),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
+        return cachedPerPsi(nsDeclaration, USE_FORMS_KEY) {
+            findNsClauseForms(nsDeclaration, ":use")
         }
     }
 
@@ -95,12 +84,7 @@ object PhelNamespaceUtils {
     fun extractUsedClasses(file: PhelFile): Set<String> {
         // Highlighting probes this once per symbol; cache the per-file result and let
         // the PSI modification tracker invalidate it whenever the file is edited.
-        return CachedValuesManager.getCachedValue(file, USED_CLASSES_KEY) {
-            CachedValueProvider.Result.create(
-                computeUsedClasses(file),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
+        return cachedPerPsi(file, USED_CLASSES_KEY) { computeUsedClasses(file) }
     }
 
     private fun computeUsedClasses(file: PhelFile): Set<String> = PhelUseClauseAnalyzer.computeUsedClasses(file)
@@ -112,12 +96,7 @@ object PhelNamespaceUtils {
     fun buildUseFqnIndex(file: PhelFile): Map<String, String> = PhelUseClauseAnalyzer.buildUseFqnIndex(file)
 
     fun extractAliasMap(file: PhelFile): Map<String, String> {
-        return CachedValuesManager.getCachedValue(file, ALIAS_MAP_KEY) {
-            CachedValueProvider.Result.create(
-                PhelRequireClauseAnalyzer.computeAliasMap(file),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
+        return cachedPerPsi(file, ALIAS_MAP_KEY) { PhelRequireClauseAnalyzer.computeAliasMap(file) }
     }
 
     /**
@@ -193,12 +172,7 @@ object PhelNamespaceUtils {
     }
 
     fun extractReferredSymbols(file: PhelFile): Set<String> {
-        return CachedValuesManager.getCachedValue(file, REFERRED_SYMBOLS_KEY) {
-            CachedValueProvider.Result.create(
-                PhelRequireClauseAnalyzer.computeReferredSymbols(file),
-                PsiModificationTracker.MODIFICATION_COUNT,
-            )
-        }
+        return cachedPerPsi(file, REFERRED_SYMBOLS_KEY) { PhelRequireClauseAnalyzer.computeReferredSymbols(file) }
     }
 
     fun isReferredSymbol(file: PhelFile, symbolName: String): Boolean =
