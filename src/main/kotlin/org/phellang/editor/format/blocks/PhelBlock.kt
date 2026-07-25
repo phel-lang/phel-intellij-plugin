@@ -6,6 +6,7 @@ import com.intellij.formatting.Indent
 import com.intellij.formatting.Spacing
 import com.intellij.formatting.Wrap
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiFile
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock
 import org.phellang.language.psi.PhelTypes
@@ -28,6 +29,7 @@ class PhelBlock(
     wrap: Wrap?,
     alignment: Alignment?,
     private val indent: Indent,
+    private val rules: PhelFormattingRules,
 ) : AbstractBlock(node, wrap, alignment) {
 
     override fun buildChildren(): List<Block> {
@@ -41,7 +43,7 @@ class PhelBlock(
                 // Brackets sit at the enclosing level; applying the body indent to the closing one
                 // would push it off the end of the body it closes.
                 val indentForChild = if (child.elementType in BRACKETS) Indent.getNoneIndent() else childIndent
-                children += PhelBlock(child, null, null, indentForChild)
+                children += PhelBlock(child, null, null, indentForChild, rules)
             }
             child = child.treeNext
         }
@@ -60,10 +62,17 @@ class PhelBlock(
     override fun getSpacing(child1: Block?, child2: Block): Spacing? {
         if (child1 == null) return null
 
+        // Top-level forms each start their own line, with however many blank lines between them the
+        // Code Style page asks for. Zero, the default, leaves the author's spacing untouched.
+        if (myNode.psi is PsiFile) {
+            val lineFeeds = rules.blankLinesBetweenTopLevelForms + 1
+            return Spacing.createSpacing(0, 0, lineFeeds, true, rules.keepBlankLines)
+        }
+
         val hugsBracket = child1.isBracket() || child2.isBracket()
         val spaces = if (hugsBracket) 0 else 1
 
-        return Spacing.createSpacing(spaces, spaces, 0, true, KEEP_BLANK_LINES)
+        return Spacing.createSpacing(spaces, spaces, 0, true, rules.keepBlankLines)
     }
 
     override fun isLeaf(): Boolean = myNode.firstChildNode == null
@@ -83,8 +92,6 @@ class PhelBlock(
         elementType == TokenType.WHITE_SPACE || textRange.isEmpty
 
     private companion object {
-        const val KEEP_BLANK_LINES = 1
-
         /** The bracketed containers. Matched on element type: `getSpacing` runs per sibling pair. */
         val CONTAINERS = setOf(PhelTypes.LIST, PhelTypes.VEC, PhelTypes.MAP, PhelTypes.SET)
 

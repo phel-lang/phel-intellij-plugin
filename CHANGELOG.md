@@ -56,8 +56,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
   reindent-selection now work before `composer install`, in a scratch file, or where the binary is not on one of the
   searched paths. `phel format` stays the preferred path and still wins whenever it is available; the built-in one
   indents two spaces per level, matching what pressing Enter already does (#265).
-- A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), so indentation is configurable and persists
-  per project (#265).
+- A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), covering indentation and blank lines:
+  how many consecutive blank lines to keep, and how many to force between top-level forms. Only options the
+  formatter actually honours are shown (#265).
 - A **REPL** run configuration, launching `phel repl` in the Run console, which accepts typed input and forwards it
   to the process (#263).
 - A **test** run configuration, running `phel test` over the whole suite or over named paths. Output goes to the

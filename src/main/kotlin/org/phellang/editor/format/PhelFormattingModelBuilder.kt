@@ -6,6 +6,7 @@ import com.intellij.formatting.FormattingModelBuilder
 import com.intellij.formatting.FormattingModelProvider
 import com.intellij.formatting.Indent
 import org.phellang.editor.format.blocks.PhelBlock
+import org.phellang.editor.format.blocks.PhelFormattingRules
 
 /**
  * The built-in formatter, used when `phel format` is unavailable.
@@ -26,6 +27,7 @@ class PhelFormattingModelBuilder : FormattingModelBuilder {
             wrap = null,
             alignment = null,
             indent = Indent.getNoneIndent(),
+            rules = PhelFormattingRules.from(settings),
         )
 
         return FormattingModelProvider.createFormattingModelForPsiFile(file, root, settings)

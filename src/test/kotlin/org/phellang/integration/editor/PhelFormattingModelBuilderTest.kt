@@ -1,8 +1,10 @@
 package org.phellang.integration.editor
 
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.application.options.CodeStyle
 import com.intellij.psi.codeStyle.CodeStyleManager
 import org.phellang.integration.PhelIntegrationTestCase
+import org.phellang.language.infrastructure.PhelLanguage
 
 /**
  * The built-in formatter, used when the project has no `phel` binary.
@@ -69,5 +71,64 @@ class PhelFormattingModelBuilderTest : PhelIntegrationTestCase() {
         val source = "(ns app\\core)\n\n(defn greet [name]\n  (let [a 1]\n    (println name a)))\n"
 
         assertEquals(source, reformatted(source))
+    }
+
+    // ---- Code Style options the formatter honours ----
+
+    private fun reformattedWith(text: String, configure: (com.intellij.psi.codeStyle.CommonCodeStyleSettings) -> Unit): String {
+        val file = myFixture.configureByText("core.phel", text)
+        val settings = CodeStyle.getSettings(project).getCommonSettings(PhelLanguage)
+        val keepBlankLines = settings.KEEP_BLANK_LINES_IN_CODE
+        val aroundTopLevel = settings.BLANK_LINES_AROUND_METHOD
+        try {
+            configure(settings)
+            WriteCommandAction.runWriteCommandAction(project) {
+                CodeStyleManager.getInstance(project).reformat(file)
+            }
+            return file.text
+        } finally {
+            settings.KEEP_BLANK_LINES_IN_CODE = keepBlankLines
+            settings.BLANK_LINES_AROUND_METHOD = aroundTopLevel
+        }
+    }
+
+    /** The formatter used to hard-code this to 1, silently overriding whatever the page showed. */
+    fun testHonoursKeepMaximumBlankLines() {
+        val source = "(def a 1)\n\n\n\n(def b 2)\n"
+
+        val collapsedToOne = reformattedWith(source) { it.KEEP_BLANK_LINES_IN_CODE = 1 }
+
+        assertEquals("(def a 1)\n\n(def b 2)\n", collapsedToOne)
+    }
+
+    fun testKeepsMoreBlankLinesWhenTheSettingAllowsIt() {
+        val source = "(def a 1)\n\n\n\n(def b 2)\n"
+
+        val keptTwo = reformattedWith(source) { it.KEEP_BLANK_LINES_IN_CODE = 2 }
+
+        assertEquals("(def a 1)\n\n\n(def b 2)\n", keptTwo)
+    }
+
+    fun testForcesBlankLinesBetweenTopLevelFormsWhenAsked() {
+        val source = "(def a 1)\n(def b 2)\n"
+
+        val spaced = reformattedWith(source) { it.BLANK_LINES_AROUND_METHOD = 1 }
+
+        assertEquals("(def a 1)\n\n(def b 2)\n", spaced)
+    }
+
+    /** Zero, the default, must leave the author's spacing alone rather than reflow every file. */
+    fun testLeavesTopLevelSpacingAloneByDefault() {
+        val source = "(def a 1)\n(def b 2)\n"
+
+        val untouched = reformattedWith(source) { it.BLANK_LINES_AROUND_METHOD = 0 }
+
+        assertEquals(source, untouched)
+    }
+
+    fun testPutsTopLevelFormsOnSeparateLines() {
+        val joined = reformattedWith("(def a 1) (def b 2)\n") { it.BLANK_LINES_AROUND_METHOD = 0 }
+
+        assertEquals("(def a 1)\n(def b 2)\n", joined)
     }
 }
