@@ -40,11 +40,14 @@ object PhelRunCommandLine {
         val options = if (reportFile == null) {
             emptyList()
         } else {
-            listOf("--reporter=default", "--reporter=junit-xml", "--output=${reportFile.absolutePath}")
+            listOf("--reporter=default", "--reporter=junit-xml", "$OUTPUT_OPTION${reportFile.absolutePath}")
         }
 
         return command(binary, "test", options + paths, workingDirectory)
     }
+
+    /** Where `junit-xml` writes. Read back off the command line rather than passed around beside it. */
+    const val OUTPUT_OPTION = "--output="
 
     private fun command(
         binary: File,

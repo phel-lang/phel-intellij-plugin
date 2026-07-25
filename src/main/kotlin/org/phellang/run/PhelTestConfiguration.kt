@@ -1,14 +1,10 @@
 package org.phellang.run
 
 import com.intellij.execution.Executor
-import com.intellij.execution.configurations.CommandLineState
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.configurations.RunConfiguration
-import com.intellij.execution.configurations.RunProfileState
 import com.intellij.execution.process.ProcessHandler
-import com.intellij.execution.process.ProcessTerminatedListener
-import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.util.io.FileUtil
@@ -42,28 +38,24 @@ class PhelTestConfiguration(
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> = PhelTestConfigurationEditor(project)
 
-    /** Only used when a report file is not in play; [getState] supplies one. */
+    /**
+     * A fresh report file per launch. The command line is the single place its location is decided;
+     * the process handler reads it back off the command line it is given.
+     */
     override fun commandLine(binary: File): GeneralCommandLine =
-        PhelRunCommandLine.test(binary, paths(), effectiveWorkingDirectory())
+        PhelRunCommandLine.test(
+            binary,
+            paths(),
+            effectiveWorkingDirectory(),
+            FileUtil.createTempFile("phel-test-", ".xml", true),
+        )
 
-    override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
-        val reportFile = FileUtil.createTempFile("phel-test-", ".xml", true)
+    override fun createProcessHandler(commandLine: GeneralCommandLine): ProcessHandler =
+        PhelTestProcessHandler(commandLine)
 
-        return object : CommandLineState(environment) {
-
-            override fun startProcess(): ProcessHandler {
-                val commandLine =
-                    PhelRunCommandLine.test(requireBinary(), paths(), effectiveWorkingDirectory(), reportFile)
-                val handler = PhelTestProcessHandler(commandLine, reportFile)
-                ProcessTerminatedListener.attach(handler)
-                return handler
-            }
-
-            override fun createConsole(executor: Executor): ConsoleView {
-                val properties = PhelTestConsoleProperties(this@PhelTestConfiguration, executor)
-                return SMTestRunnerConnectionUtil.createConsole(properties.testFrameworkName, properties)
-            }
-        }
+    override fun createConsoleView(executor: Executor): ConsoleView {
+        val properties = PhelTestConsoleProperties(this, executor)
+        return SMTestRunnerConnectionUtil.createConsole(properties.testFrameworkName, properties)
     }
 
     fun paths(): List<String> = testPaths.split(' ', '\n').map(String::trim).filter(String::isNotEmpty)

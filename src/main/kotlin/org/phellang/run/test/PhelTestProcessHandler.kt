@@ -3,6 +3,7 @@ package org.phellang.run.test
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.KillableColoredProcessHandler
 import com.intellij.execution.process.ProcessOutputTypes
+import org.phellang.run.execution.PhelRunCommandLine
 import java.io.File
 
 /**
@@ -15,8 +16,16 @@ import java.io.File
  */
 class PhelTestProcessHandler(
     commandLine: GeneralCommandLine,
-    private val reportFile: File,
 ) : KillableColoredProcessHandler(commandLine) {
+
+    /**
+     * Taken from the command line rather than passed alongside it, so the command stays the single
+     * place the report's location is decided.
+     */
+    private val reportFile: File? = commandLine.parametersList.parameters
+        .firstOrNull { it.startsWith(PhelRunCommandLine.OUTPUT_OPTION) }
+        ?.removePrefix(PhelRunCommandLine.OUTPUT_OPTION)
+        ?.let(::File)
 
     override fun notifyProcessTerminated(exitCode: Int) {
         for (line in PhelTestServiceMessages.render(readReport())) {
@@ -32,14 +41,15 @@ class PhelTestProcessHandler(
      * shows what happened.
      */
     private fun readReport(): PhelTestReport {
-        if (!reportFile.isFile) return PhelTestReport.EMPTY
+        val report = reportFile ?: return PhelTestReport.EMPTY
+        if (!report.isFile) return PhelTestReport.EMPTY
 
         return try {
-            PhelJUnitXmlParser.parse(reportFile.readText())
+            PhelJUnitXmlParser.parse(report.readText())
         } catch (e: Exception) {
             PhelTestReport.EMPTY
         } finally {
-            reportFile.delete()
+            report.delete()
         }
     }
 }
