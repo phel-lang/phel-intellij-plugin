@@ -4,6 +4,7 @@ import com.intellij.formatting.service.AsyncDocumentFormattingService
 import com.intellij.formatting.service.AsyncFormattingRequest
 import com.intellij.formatting.service.FormattingService
 import com.intellij.psi.PsiFile
+import org.phellang.core.cli.PhelCliLocator
 import org.phellang.language.psi.files.PhelFile
 import java.io.File
 import java.util.EnumSet
@@ -27,12 +28,9 @@ class PhelExternalFormatter : AsyncDocumentFormattingService() {
             return null
         }
 
-        val binary = PhelFormatterBinaryLocator.locate(basePath)
+        val binary = PhelCliLocator.locate(basePath)
         if (binary == null) {
-            request.onError(
-                NOTIFICATION_TITLE,
-                "Phel binary not found. Looked for ./bin/phel and ./vendor/bin/phel relative to project root."
-            )
+            request.onError(NOTIFICATION_TITLE, PhelCliLocator.NOT_FOUND_MESSAGE)
             return null
         }
 
