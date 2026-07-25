@@ -10,6 +10,37 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Fixed
+
+- Completion no longer goes silent in ordinary expression positions: the body of a `do`, `try`, `catch`, `finally` or
+  `quote`, the exception slot of a `throw`, `recur` arguments, and the value half of a binding — `(let [x …] …)`,
+  `(loop [acc …] …)` — all offer completions again (#254).
+- Completion no longer offers existing names while you are naming a new definition. `(defn …)`, `(defmacro …)`,
+  `(defonce …)` and the rest of the `def…` family suggested the whole standard library, where accepting a suggestion
+  silently redefined it (#254).
+- Names discarded by `#_` are no longer offered: `(defn #_old new-name [x] x)` completed `old`, a name that does not
+  exist at runtime (#254).
+- Go-to-definition no longer lands on an arbitrary usage. A bare symbol passed to `do`, `try`, `throw`, `recur`, `when`,
+  `cond`, `and`, `or` or `->` registered as a definition of itself, so navigation jumped to whichever such form came
+  first (#254).
+- `defonce` definitions now resolve; they previously resolved nowhere (#254).
+- `if-some` and `when-some` are recognised as binding forms, so their bindings resolve, appear in completion, and are
+  covered by the unused-binding and shadowed-binding inspections and by parameter hints. `if-let`, `when-let`,
+  `foreach`, `dofor` and `binding` bindings are now offered in completion too (#254).
+- `defonce`, `defenum`, `defprotocol`, `defrecord`, `deftype` and `defmulti` are indexed like the other definition
+  forms: they appear in cross-file completion and navigation, fold with a proper placeholder, and are named in the
+  structure view and Find Usages instead of showing as an anonymous "symbol" (#254).
+- Completion is suppressed where only a binding or parameter vector can follow — `(let …)`, `(fn …)` — rather than
+  offering the whole standard library (#254).
+
+### Changed
+
+- Code-quality pass over the hand-written Kotlin sources: the largest classes (symbol highlighting, the project symbol
+  scanner, local-symbol completion, the completion context, both let-binding inspections) were split into focused
+  collaborators, and the longest function dropped from 100 lines to 43. The definition-form vocabulary that navigation,
+  folding, indexing, the structure view and Find Usages had each copied is now a single set, pinned by a coverage test
+  so the copies cannot drift apart again (#254).
+
 ## [1.0.0] - 2026-07-24
 
 ### Added
