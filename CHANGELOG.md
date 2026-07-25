@@ -38,6 +38,15 @@ refreshed, since completion, hover and arity checking are all driven by it.
   those parameters were not highlighted as parameters, did not resolve, could not be renamed, and were invisible to
   inlay hints. The reverse case is fixed too — a vector in the body, as in `(defn f [p] [x])`, was being treated as a
   second parameter list (#255).
+- `doseq` is recognised as a binding form. As with the `if-some` / `when-some` omission before it, its names did not
+  resolve, were absent from local completion, were never reported as unused or shadowed, and were not treated as
+  locals by the parameter hints (#256).
+
+### Added
+
+- An **Unresolved symbol** inspection, reporting a bare symbol that names nothing in scope. Phel's analyzer raises
+  `PHEL001 Cannot resolve symbol` for these, so the code does not compile. Disabled by default for one release while
+  its behaviour is confirmed against real projects — enable it under Settings → Editor → Inspections → Phel (#256).
 
 ### Changed
 
