@@ -75,4 +75,32 @@ class PhelRunCommandLineTest : PhelIntegrationTestCase() {
             assertTrue("shell environment must reach ${commandLine.commandLineString}: ${missing.keys}", missing.isEmpty())
         }
     }
+
+    fun testTestRequestsBothReportersWhenGivenAReportFile() {
+        val report = java.io.File("/tmp/phel-report.xml")
+
+        val command = PhelRunCommandLine.test(binary, emptyList(), workingDir, report).getCommandLineList(null)
+
+        assertEquals(
+            listOf(
+                binary.absolutePath,
+                "test",
+                "--reporter=default",
+                "--reporter=junit-xml",
+                "--output=${report.absolutePath}",
+            ),
+            command,
+        )
+    }
+
+    /** Options come before paths: the CLI usage is `test [options] [--] [<paths>...]`. */
+    fun testTestPutsReporterOptionsBeforePaths() {
+        val report = java.io.File("/tmp/phel-report.xml")
+
+        val command = PhelRunCommandLine.test(binary, listOf("tests/a.phel"), workingDir, report)
+            .getCommandLineList(null)
+
+        assertEquals("tests/a.phel", command.last())
+        assertTrue(command.indexOf("--reporter=junit-xml") < command.indexOf("tests/a.phel"))
+    }
 }

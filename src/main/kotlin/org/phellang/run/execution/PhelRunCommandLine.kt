@@ -24,9 +24,27 @@ object PhelRunCommandLine {
     fun repl(binary: File, workingDirectory: String): GeneralCommandLine =
         command(binary, "repl", emptyList(), workingDirectory)
 
-    /** With no paths, `phel test` runs the whole suite as configured by `phel-config.php`. */
-    fun test(binary: File, paths: List<String>, workingDirectory: String): GeneralCommandLine =
-        command(binary, "test", paths, workingDirectory)
+    /**
+     * With no paths, `phel test` runs the whole suite as configured by `phel-config.php`.
+     *
+     * Both reporters are requested when [reportFile] is given: `default` keeps the console output
+     * the user watches during the run, and `junit-xml` writes the machine-readable report the test
+     * tree is built from once the process exits. `--reporter` is documented as repeatable.
+     */
+    fun test(
+        binary: File,
+        paths: List<String>,
+        workingDirectory: String,
+        reportFile: File? = null,
+    ): GeneralCommandLine {
+        val options = if (reportFile == null) {
+            emptyList()
+        } else {
+            listOf("--reporter=default", "--reporter=junit-xml", "--output=${reportFile.absolutePath}")
+        }
+
+        return command(binary, "test", options + paths, workingDirectory)
+    }
 
     private fun command(
         binary: File,

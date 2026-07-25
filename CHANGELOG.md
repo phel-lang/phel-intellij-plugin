@@ -61,9 +61,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
   formatter actually honours are shown (#265).
 - A **REPL** run configuration, launching `phel repl` in the Run console, which accepts typed input and forwards it
   to the process (#263).
-- A **test** run configuration, running `phel test` over the whole suite or over named paths. Output goes to the
-  plain console: `phel test` takes a `--reporter`, which is what an IDE test tree would need, but mapping a
-  reporter's output onto the platform's test model means pinning a format the plugin cannot verify from here (#263).
+- A **test** run configuration, running `phel test` over the whole suite or over named paths, into a real test tree
+  with pass/fail status, durations and failure details. Built from the `junit-xml` reporter, which is written
+  alongside the normal console output and read when the run finishes (#263).
 - A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
   `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
   it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf

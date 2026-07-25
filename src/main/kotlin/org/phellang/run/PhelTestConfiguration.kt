@@ -1,23 +1,35 @@
 package org.phellang.run
 
+import com.intellij.execution.Executor
+import com.intellij.execution.configurations.CommandLineState
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.configurations.RunConfiguration
+import com.intellij.execution.configurations.RunProfileState
+import com.intellij.execution.process.ProcessHandler
+import com.intellij.execution.process.ProcessTerminatedListener
+import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil
+import com.intellij.execution.ui.ConsoleView
+import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizerUtil
 import org.jdom.Element
 import org.phellang.run.execution.PhelRunCommandLine
 import org.phellang.run.settings.PhelTestConfigurationEditor
+import org.phellang.run.test.PhelTestConsoleProperties
+import org.phellang.run.test.PhelTestProcessHandler
 import java.io.File
 
 /**
- * Runs `phel test`, over the whole suite or over named paths.
+ * Runs `phel test`, over the whole suite or over named paths, into a test tree.
  *
- * Output goes to the plain console rather than a test tree. `phel test` takes a `--reporter`, which
- * is the hook an SM tree would need, but mapping a reporter's output onto
- * `SMTRunnerConsoleProperties` means pinning a format this plugin cannot verify from here. Running
- * the suite without leaving the IDE is the part worth having first.
+ * The tree is built from the `junit-xml` reporter, written to a temporary file and read when the
+ * process exits. That reporter rather than `tap` because JUnit XML is a de-facto standard whose
+ * parser can be pinned down by tests without a `phel` binary to run; the cost is that the tree
+ * appears at the end of the run rather than filling in live, while the console shows the default
+ * reporter's output throughout.
  */
 class PhelTestConfiguration(
     project: Project,
@@ -30,8 +42,29 @@ class PhelTestConfiguration(
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> = PhelTestConfigurationEditor(project)
 
+    /** Only used when a report file is not in play; [getState] supplies one. */
     override fun commandLine(binary: File): GeneralCommandLine =
         PhelRunCommandLine.test(binary, paths(), effectiveWorkingDirectory())
+
+    override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
+        val reportFile = FileUtil.createTempFile("phel-test-", ".xml", true)
+
+        return object : CommandLineState(environment) {
+
+            override fun startProcess(): ProcessHandler {
+                val commandLine =
+                    PhelRunCommandLine.test(requireBinary(), paths(), effectiveWorkingDirectory(), reportFile)
+                val handler = PhelTestProcessHandler(commandLine, reportFile)
+                ProcessTerminatedListener.attach(handler)
+                return handler
+            }
+
+            override fun createConsole(executor: Executor): ConsoleView {
+                val properties = PhelTestConsoleProperties(this@PhelTestConfiguration, executor)
+                return SMTestRunnerConnectionUtil.createConsole(properties.testFrameworkName, properties)
+            }
+        }
+    }
 
     fun paths(): List<String> = testPaths.split(' ', '\n').map(String::trim).filter(String::isNotEmpty)
 
