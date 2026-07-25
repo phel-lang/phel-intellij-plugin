@@ -34,6 +34,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
+- **Live templates** for eleven forms: `defn-`, `defmacro`, `ns`, `deftest`, `when`, `when-let`, `loop`, `cond`,
+  `case`, `try` and `foreach`. They appear under Settings > Editor > Live Templates > Phel, expand with Tab, and can
+  be edited or extended. The six abbreviations completion already offers (`()`, `defn`, `def`, `let`, `if`, `fn`) are
+  deliberately not redefined, so no name produces two differently-behaving entries (#268).
+- **Spellchecking** of string literals, including docstrings, and line comments. Symbols are not checked: in a Lisp
+  nearly every token is one, and checking them would underline most of a file (#268).
 - **Default keyboard shortcuts for the nine paredit actions**, which previously shipped reachable only through the
   menu. All are two-stroke, under a shared `Ctrl+Alt+Shift+P` prefix: `S` / `B` slurp and barf forward, `Shift+S` /
   `Shift+B` backward, `W` / `V` / `M` wrap in `( )` / `[ ]` / `{ }`, `U` splice, `R` raise (#267).
