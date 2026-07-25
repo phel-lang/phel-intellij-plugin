@@ -30,11 +30,8 @@ class PhelSurroundDescriptor : SurroundDescriptor {
         val end = file.findElementAt(endOffset - 1) ?: return PsiElement.EMPTY_ARRAY
 
         val common = PsiTreeUtil.findCommonParent(start, end) ?: return PsiElement.EMPTY_ARRAY
-        val container = if (PhelPareditContainers.isContainer(common) || common is PsiFile) {
-            common
-        } else {
-            PsiTreeUtil.getParentOfType(common, PhelForm::class.java)?.parent ?: return PsiElement.EMPTY_ARRAY
-        }
+        // Falls back to the file so a selection spanning top-level forms still surrounds.
+        val container = PhelPareditContainers.enclosingContainerOf(common) ?: file
 
         val covered = PsiTreeUtil.getChildrenOfType(container, PhelForm::class.java)
             ?.filter { it.textRange.startOffset >= startOffset && it.textRange.endOffset <= endOffset }
