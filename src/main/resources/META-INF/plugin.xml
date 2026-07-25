@@ -142,6 +142,13 @@
                 level="WARNING"
                 implementationClass="org.phellang.inspection.PhelShadowedLetBindingInspection"/>
         <formattingService implementation="org.phellang.editor.format.PhelExternalFormatter"/>
+        <configurationType
+                implementation="org.phellang.run.PhelRunConfigurationType"/>
+        <runConfigurationProducer
+                implementation="org.phellang.run.PhelRunConfigurationProducer"/>
+        <runLineMarkerContributor
+                language="Phel"
+                implementationClass="org.phellang.run.PhelRunLineMarkerContributor"/>
         <lang.refactoringSupport
                 language="Phel"
                 implementationClass="org.phellang.refactoring.PhelRefactoringSupportProvider"/>

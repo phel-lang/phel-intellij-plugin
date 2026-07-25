@@ -34,6 +34,10 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
+- A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
+  `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
+  it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
+  or mise `php` is on its `PATH` even when the IDE was started from Dock or Spotlight (#263).
 - An **Unresolved symbol** inspection, reporting a name that exists nowhere in scope. Phel raises
   `PHEL001 Cannot resolve symbol` for these, so the code does not compile (#256, #259).
 - A **Create function** quick fix on that inspection. Where the missing name is being called, it writes a `defn` above
