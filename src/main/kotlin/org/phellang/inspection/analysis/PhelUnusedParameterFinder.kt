@@ -1,7 +1,5 @@
 package org.phellang.inspection.analysis
 
-import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
@@ -34,7 +32,7 @@ internal object PhelUnusedParameterFinder {
         // A declaration with no body reads nothing, so every parameter would look unused.
         if (body.isEmpty()) return emptyList()
 
-        val used = symbolTextsOf(body)
+        val used = PhelSymbolTexts.of(body)
 
         return PhelPsiUtils.activeForms(parameters)
             .mapNotNull { PhelPsiUtils.asSymbol(it) }
@@ -51,18 +49,5 @@ internal object PhelUnusedParameterFinder {
         if (name == null) return true
 
         return name.startsWith("_") || name.startsWith("&")
-    }
-
-    private fun symbolTextsOf(forms: List<PhelForm>): Set<String> {
-        val result = HashSet<String>()
-
-        for (form in forms) {
-            if (form is PhelSymbol) result.add(form.text)
-            for (symbol in PsiTreeUtil.findChildrenOfType(form, PhelSymbol::class.java)) {
-                result.add(symbol.text)
-            }
-        }
-
-        return result
     }
 }

@@ -1,6 +1,5 @@
 package org.phellang.inspection.analysis
 
-import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
@@ -28,7 +27,7 @@ internal object PhelUnusedBindingFinder {
         val body = forms.drop(2)
         if (body.isEmpty()) return emptyList()
 
-        return findUnused(PhelPsiUtils.activeForms(bindingVector), symbolTextsOf(body))
+        return findUnused(PhelPsiUtils.activeForms(bindingVector), PhelSymbolTexts.of(body))
     }
 
     /**
@@ -42,7 +41,7 @@ internal object PhelUnusedBindingFinder {
 
         for (i in bindings.indices.reversed()) {
             if (i % 2 == 1) {
-                collectInto(bindings[i], laterValues)
+                laterValues += PhelSymbolTexts.of(listOf(bindings[i]))
                 continue
             }
 
@@ -60,20 +59,4 @@ internal object PhelUnusedBindingFinder {
     /** A leading `_` marks a deliberate throwaway, and `&` introduces a rest parameter. */
     private fun isIntentionallyUnused(name: String): Boolean =
         name.startsWith("_") || name.startsWith("&")
-
-    private fun symbolTextsOf(forms: List<PhelForm>): Set<String> {
-        val result = HashSet<String>()
-        for (form in forms) collectInto(form, result)
-
-        return result
-    }
-
-    /** Adds the text of [element] (when it is a symbol) plus every descendant symbol. */
-    private fun collectInto(element: PhelForm, into: MutableSet<String>) {
-        if (element is PhelSymbol) into.add(element.text)
-
-        for (symbol in PsiTreeUtil.findChildrenOfType(element, PhelSymbol::class.java)) {
-            into.add(symbol.text)
-        }
-    }
 }
