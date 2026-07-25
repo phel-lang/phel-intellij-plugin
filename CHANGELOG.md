@@ -10,6 +10,22 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+### Performance
+
+## [1.1.0] - 2026-07-25
+
 ### Fixed
 
 - Reformat Code no longer fails with `env: php: No such file or directory` on macOS. The formatter now runs with the
@@ -19,7 +35,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 - Completion works again in `do`, `try`, `throw` and `recur` bodies, and on the value half of a `let` or `loop`
   binding (#254).
 - Completion no longer suggests existing names while you are naming a new `def`, `defn` or `defmacro` (#254).
-- Completion no longer offers names discarded by `#_` (#254).
+- Completion no longer offers names discarded by `#_`, in a definition name, a `let` binding vector or a parameter
+  vector. `(let [alpha 1 #_[beta 2] gamma 3] …)` offers `gamma` again, and `(defn f [iota #_kappa lambda] …)` no
+  longer offers `kappa` (#253, #254).
+- Completing a `php/` name no longer inserts `(:require phel.php)`, which the namespace validator then flagged as
+  "Namespace 'phel.php' does not exist". `php/` is the interop prefix, not a namespace, so nothing is imported for it
+  (#253).
 - Completion is suppressed where only a binding or parameter vector can follow, as in `(let …)` and `(fn …)` (#254).
 - Go to Definition no longer jumps to an arbitrary usage inside `do`, `try`, `when` or a threading macro (#254).
 - `defonce` definitions now resolve (#254).
@@ -31,6 +52,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
   recognised again: they are highlighted, resolve, and can be renamed (#255).
 - Hovering a recursive call, or a call to a function defined earlier in the same file, shows that function's signature
   and docstring instead of "Function Argument" (#261).
+- Requiring the `edn`, `reflect`, `trace` or `transit` namespaces no longer reports them as unknown. The short-name map
+  the import validator reads was hand-maintained and had drifted from the generated registry (#253).
+- Parameter hints are no longer rendered inside `(use …)`, where `(use \DateTimeImmutable :as Date)` labelled its
+  arguments `ClassName:` and `options:` (#253).
+- Character literals with one or two octal digits, such as `\o7` and `\o77`, now lex as characters instead of symbols.
+  The lexer required exactly three digits, while Phel's reader has accepted one to three since v0.32.0 (#252).
 
 ### Added
 
@@ -321,3 +348,37 @@ The first public release. Core language support for `.phel` files:
 - Reference resolution and symbol navigation.
 - `;` line comments and `#_` form-comment tokens.
 - Auto-closing brackets and a comment shortcut.
+
+[Unreleased]: https://github.com/phel-lang/phel-intellij-plugin/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.5.3...v1.0.0
+[0.5.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.5.2...v0.5.3
+[0.5.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.5.1...v0.5.2
+[0.5.1]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.5...v0.5.0
+[0.4.5]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.4...v0.4.5
+[0.4.4]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.3...v0.4.4
+[0.4.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.2...v0.4.3
+[0.4.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.6...v0.4.0
+[0.3.6]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.5...v0.3.6
+[0.3.5]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.4...v0.3.5
+[0.3.4]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.3...v0.3.4
+[0.3.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.2...v0.3.3
+[0.3.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.0...v0.3.2
+[0.3.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.4...v0.3.0
+[0.2.4]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.10...v0.2.0
+[0.1.10]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.9...v0.1.10
+[0.1.9]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.8...v0.1.9
+[0.1.8]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.6...v0.1.8
+[0.1.6]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.5...v0.1.6
+[0.1.5]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.4...v0.1.5
+[0.1.4]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.3...v0.1.4
+[0.1.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.2...v0.1.3
+[0.1.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.0...v0.1.2
+[0.1.0]: https://github.com/phel-lang/phel-intellij-plugin/commits/v0.1.0
