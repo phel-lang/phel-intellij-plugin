@@ -1,0 +1,33 @@
+<html>
+<body>
+<p>Reports a bare symbol that names nothing in scope.</p>
+
+<p>Phel's analyzer resolves a symbol against local bindings, then the current namespace's globals,
+    then <code>use</code> aliases, then <code>phel.core</code>. When none of them has the name it
+    raises <code>PHEL001 Cannot resolve symbol</code> and compilation fails, so this reports a build
+    error rather than a style problem. The most common cause is a missing
+    <code>(:require ...)</code>.</p>
+
+<h3>Example:</h3>
+<pre><code>
+(defn my-function [a b]
+  (+ a b inexistent-param))  ;; 'inexistent-param' is reported
+</code></pre>
+
+<p>Qualified symbols such as <code>str/join</code> are reported separately, as an unresolved
+    namespace or an unresolved function within a known namespace.</p>
+
+<h3>What is never reported</h3>
+<p>The inspection is deliberately conservative — it stays quiet wherever it cannot be certain,
+    because a false report on working code is worse than a missed one:</p>
+<ul>
+    <li>Quoted and syntax-quoted forms (<code>'foo</code>, <code>`foo</code>), which are data rather
+        than references.</li>
+    <li>Anything inside a call to a macro defined in the project. A macro's expansion can bind names
+        that appear nowhere in the source, and the plugin does not expand macros.</li>
+    <li>PHP interop: <code>php/...</code>, <code>(.method obj)</code>, <code>(Class. ...)</code> and
+        classes brought in through <code>(:use ...)</code>.</li>
+    <li>The names a definition or binding introduces, which declare rather than reference.</li>
+</ul>
+</body>
+</html>

@@ -30,8 +30,6 @@
   <li>REPL support</li>
   <li>Good error reporting</li>
 </ul>
-<br/>
-<p>Learn more at <a href="https://phel-lang.org/">phel-lang.org</a></p>
   ]]></description>
     <depends>com.intellij.modules.platform</depends>
 
@@ -127,6 +125,18 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="org.phellang.inspection.PhelUnusedLetBindingInspection"/>
+        <!--
+            Prototype: off by default until the false-positive rate has been measured on a real
+            project. It reports a compile error (PHEL001), so it earns WARNING once it is trusted.
+        -->
+        <localInspection
+                language="Phel"
+                shortName="PhelUnresolvedSymbol"
+                displayName="Unresolved symbol"
+                groupName="Phel"
+                enabledByDefault="false"
+                level="WARNING"
+                implementationClass="org.phellang.inspection.PhelUnresolvedSymbolInspection"/>
         <localInspection
                 language="Phel"
                 shortName="PhelShadowedLetBinding"
