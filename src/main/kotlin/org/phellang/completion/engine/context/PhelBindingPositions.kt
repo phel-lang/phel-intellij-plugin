@@ -17,6 +17,33 @@ internal object PhelBindingPositions {
 
     private val MULTI_ARITY_FORMS = setOf("defn", "defn-", "defmacro", "defmacro-")
 
+    /**
+     * Forms whose second element must be a vector, per their registry signatures —
+     * `(fn [params*] expr*)`, `(let [bindings*] expr*)`, `(foreach [value valueExpr] expr*)`.
+     *
+     * The `defn` family is absent: it names itself first, and slot 1 also accepts a docstring or a
+     * metadata map, so no single continuation is required there.
+     */
+    private val VECTOR_HEADED_FORMS = PhelSpecialForms.LET_LIKE + "fn"
+
+    /**
+     * `(let <caret>)` — the slot a binding or parameter vector belongs in, before one is typed.
+     *
+     * The only valid continuation is `[`, so every candidate would be wrong. Once the vector exists
+     * the slot holds a collection and this declines, leaving [isBindingName] and [isParameterVector]
+     * to judge the positions inside it.
+     */
+    fun isAwaitingVector(element: PsiElement): Boolean {
+        val list = PsiTreeUtil.getParentOfType(element, PhelList::class.java) ?: return false
+        val children = list.children
+        if (children.size < 2) return false
+
+        val head = PhelFormHead.symbolTextOf(children[0]) ?: return false
+        if (head !in VECTOR_HEADED_FORMS) return false
+
+        return PhelFormHead.occupiesSlot(element, children[1])
+    }
+
     /** `(fn [<caret>] ...)` and the `defn` family's parameter vectors. */
     fun isParameterVector(element: PsiElement): Boolean {
         val vector = PsiTreeUtil.getParentOfType(element, PhelVec::class.java) ?: return false

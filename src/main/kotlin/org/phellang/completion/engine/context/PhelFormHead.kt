@@ -36,4 +36,18 @@ internal object PhelFormHead {
 
         return false
     }
+
+    /**
+     * Whether [element] occupies [slot] as a single argument position.
+     *
+     * Declining on a collection is what keeps a slot-based predicate honest. A form that holds a
+     * vector, list or map in the slot is not using it the way the predicate assumes — `let`'s second
+     * form is a binding vector, not a name — and claiming it would suppress completion at every
+     * position inside, values included.
+     */
+    fun occupiesSlot(element: PsiElement, slot: PsiElement): Boolean {
+        if (slot is PhelVec || slot is PhelList || slot is PhelMap) return false
+
+        return isPartOf(element, slot)
+    }
 }

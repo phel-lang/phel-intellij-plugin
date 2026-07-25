@@ -70,6 +70,24 @@ class PhelCompletionSuppressionTest : PhelIntegrationTestCase() {
 
     fun testSuppressedInsideAnFnParameterVector() = assertSuppressed("(fn [<caret>] 1)")
 
+    /**
+     * The slot before the vector has been typed. Every one of these requires a `[` next, per its
+     * registry signature, so any candidate offered there would be wrong.
+     */
+    fun testSuppressedWhereOnlyAVectorCanFollow() {
+        for (form in listOf("fn", "let", "loop", "if-let", "when-let", "for", "foreach", "binding", "dofor")) {
+            assertSuppressed("(defn f [] ($form <caret>))")
+        }
+    }
+
+    /** The `defn` family is exempt: slot 1 is its name, and slot 2 also accepts a docstring or metadata. */
+    fun testOffersCompletionsWhereADocstringOrMetadataMayFollowInstead() =
+        assertOffersCompletions("(defn f <caret>)")
+
+    /** Once the vector exists, the slot is a collection and the body positions stay live. */
+    fun testOffersCompletionsInABodyAfterTheVector() =
+        assertOffersCompletions("(defn f [] (let [a 1] <caret>))")
+
     fun testSuppressedInsideADefnParameterVector() = assertSuppressed("(defn f [<caret>] 1)")
 
     fun testSuppressedOnTheNameHalfOfALetBinding() = assertSuppressed("(defn f [] (let [<caret> 1] 1))")

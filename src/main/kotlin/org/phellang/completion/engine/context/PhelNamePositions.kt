@@ -29,7 +29,7 @@ internal object PhelNamePositions {
         if (head !in PhelSpecialForms.NAME_DECLARING) return false
         if (forms.size < 2) return false
 
-        return claimsNameSlot(element, forms[1])
+        return PhelFormHead.occupiesSlot(element, forms[1])
     }
 
     /** The same slot read through the list's raw children, which is what catches a partial parse. */
@@ -41,19 +41,6 @@ internal object PhelNamePositions {
         val head = PhelFormHead.symbolTextOf(children[0]) ?: return false
         if (head !in PhelSpecialForms.NAME_DECLARING) return false
 
-        return claimsNameSlot(element, children[1])
-    }
-
-    /**
-     * Whether [element] sits in [nameSlot], given that a name is always a symbol.
-     *
-     * The collection check is defensive rather than load-bearing: no name-declaring form puts a
-     * collection in that slot in valid code. It matters while a form is half-typed — `(def [<caret>`
-     * — where claiming the slot would suppress completion across the whole collection.
-     */
-    private fun claimsNameSlot(element: PsiElement, nameSlot: PsiElement): Boolean {
-        if (nameSlot is PhelVec || nameSlot is PhelList || nameSlot is PhelMap) return false
-
-        return PhelFormHead.isPartOf(element, nameSlot)
+        return PhelFormHead.occupiesSlot(element, children[1])
     }
 }

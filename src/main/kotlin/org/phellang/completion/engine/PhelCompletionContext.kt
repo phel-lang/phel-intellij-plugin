@@ -20,11 +20,15 @@ class PhelCompletionContext(parameters: CompletionParameters) {
 
     fun shouldSuggestNewForm(): Boolean = isAtFileLevel()
 
-    /** A position that introduces a name has nothing to complete against. */
+    /**
+     * A position that introduces a name, or that can only be followed by `[`, has nothing to
+     * complete against.
+     */
     fun shouldSuppressCompletions(): Boolean =
         PhelNamePositions.isFunctionName(element) ||
                 PhelBindingPositions.isParameterVector(element) ||
                 PhelBindingPositions.isBindingName(element) ||
+                PhelBindingPositions.isAwaitingVector(element) ||
                 PhelNamePositions.isDefinitionName(element)
 
     fun isInsideReferVector(): Boolean = PhelReferUtils.isInsideReferVector(element)
