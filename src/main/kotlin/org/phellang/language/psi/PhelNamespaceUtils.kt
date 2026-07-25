@@ -124,6 +124,13 @@ object PhelNamespaceUtils {
         return namespace.replace('\\', '.')
     }
 
+    /**
+     * Whether [text] is shaped like a namespace: dot-separated (Phel 0.35+ canonical) or the legacy
+     * backslash form. Both the import validator and the unused-import inspection screen candidate
+     * symbols with this before treating them as imports.
+     */
+    fun looksLikeNamespace(text: String): Boolean = text.contains('\\') || text.contains('.')
+
     fun extractNamespaceFromDeclaration(nsDeclaration: PhelList): String? {
         val forms = nsDeclaration.forms
         if (forms.size < 2) return null

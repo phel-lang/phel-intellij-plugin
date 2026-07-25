@@ -14,13 +14,18 @@ import org.phellang.language.psi.PhelVec
 
 internal object PhelPareditContainers {
 
-    fun findEnclosingContainer(file: PsiFile, offset: Int): PsiElement? {
-        for (candidate in candidatesAt(file, offset)) {
-            var current: PsiElement? = candidate
-            while (current != null && current !is PsiFile) {
-                if (isContainer(current)) return current
-                current = current.parent
-            }
+    fun findEnclosingContainer(file: PsiFile, offset: Int): PsiElement? =
+        candidatesAt(file, offset).firstNotNullOfOrNull { enclosingContainerOf(it) }
+
+    /**
+     * The nearest bracketed container at or above [element], or null if there is none below the
+     * file. [element] itself counts, so a container passed in is returned unchanged.
+     */
+    fun enclosingContainerOf(element: PsiElement): PsiElement? {
+        var current: PsiElement? = element
+        while (current != null && current !is PsiFile) {
+            if (isContainer(current)) return current
+            current = current.parent
         }
         return null
     }

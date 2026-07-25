@@ -1,0 +1,46 @@
+package org.phellang.integration.run
+
+import com.intellij.util.EnvironmentUtil
+import org.phellang.integration.PhelIntegrationTestCase
+import org.phellang.run.execution.PhelRunCommandLine
+import java.io.File
+import java.nio.charset.StandardCharsets
+
+/**
+ * The `phel run` invocation, asserted without a run configuration.
+ *
+ * The environment case is the one that regressed for the formatter in #257: `vendor/bin/phel` starts
+ * `#!/usr/bin/env php`, and an IDE launched from Dock or Spotlight hands its children a `PATH` with
+ * no Homebrew, Herd, asdf or mise `php` on it. Running has exactly the same exposure.
+ */
+class PhelRunCommandLineTest : PhelIntegrationTestCase() {
+
+    private val binary = File("/project/vendor/bin/phel")
+    private val script = "/project/src/main.phel"
+    private val workingDir = "/project"
+
+    fun testInvokesRunWithTheScriptPath() {
+        val command = PhelRunCommandLine.build(binary, script, workingDir).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "run", script), command)
+    }
+
+    fun testRunsInTheGivenWorkingDirectory() {
+        val commandLine = PhelRunCommandLine.build(binary, script, workingDir)
+
+        assertEquals(File(workingDir), commandLine.workDirectory)
+    }
+
+    fun testCarriesTheShellEnvironment() {
+        val environment = PhelRunCommandLine.build(binary, script, workingDir).environment
+
+        val shell = EnvironmentUtil.getEnvironmentMap()
+        val missing = shell.filter { (key, value) -> environment[key] != value }
+
+        assertTrue("the shell environment must reach the child process, missing: ${missing.keys}", missing.isEmpty())
+    }
+
+    fun testDecodesOutputAsUtf8() {
+        assertEquals(StandardCharsets.UTF_8, PhelRunCommandLine.build(binary, script, workingDir).charset)
+    }
+}

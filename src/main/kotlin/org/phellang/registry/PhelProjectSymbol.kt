@@ -12,6 +12,14 @@ data class PhelProjectSymbol(
     val file: VirtualFile,
     val docstring: String? = null,
     val arities: List<PhelArity> = PhelArity.parseAll(signature),
+    /**
+     * Offset of the defined name within [file], for navigating straight to the definition.
+     *
+     * Kept current by the same PSI listener that rebuilds the rest of the entry, so it does not
+     * drift as the file is edited. A stale value would still open the right file, only at the wrong
+     * line, which is why nothing downstream treats it as authoritative.
+     */
+    val nameOffset: Int = 0,
 )
 
 /**

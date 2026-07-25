@@ -81,6 +81,10 @@
         <lang.findUsagesProvider
                 language="Phel"
                 implementationClass="org.phellang.language.psi.navigation.PhelFindUsagesProvider"/>
+        <gotoSymbolContributor
+                implementation="org.phellang.navigation.PhelGotoSymbolContributor"/>
+        <breadcrumbsInfoProvider
+                implementation="org.phellang.editor.breadcrumbs.PhelBreadcrumbsProvider"/>
         <psi.referenceContributor
                 language="Phel"
                 implementation="org.phellang.language.psi.references.PhelFilePathReferenceContributor"/>
@@ -92,7 +96,20 @@
                 implementationClass="org.phellang.editor.structure.PhelStructureViewFactory"/>
         <enterHandlerDelegate
                 implementation="org.phellang.editor.enter.PhelEnterHandlerDelegate"/>
+        <moveLeftRightHandler
+                language="Phel"
+                implementationClass="org.phellang.editor.paredit.PhelMoveElementLeftRightHandler"/>
+        <lang.surroundDescriptor
+                language="Phel"
+                implementationClass="org.phellang.editor.paredit.PhelSurroundDescriptor"/>
         <internalFileTemplate name="Phel File.phel"/>
+        <defaultLiveTemplates file="/liveTemplates/Phel.xml"/>
+        <liveTemplateContext
+                contextId="Phel"
+                implementation="org.phellang.editor.templates.PhelTemplateContextType"/>
+        <spellchecker.support
+                language="Phel"
+                implementationClass="org.phellang.editor.spellchecking.PhelSpellcheckingStrategy"/>
         <localInspection
                 language="Phel"
                 shortName="PhelDeprecatedFunction"
@@ -135,6 +152,30 @@
                 implementationClass="org.phellang.inspection.PhelUnresolvedSymbolInspection"/>
         <localInspection
                 language="Phel"
+                shortName="PhelUnusedImport"
+                displayName="Unused import"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WEAK WARNING"
+                implementationClass="org.phellang.inspection.PhelUnusedImportInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelUnusedPrivateDefinition"
+                displayName="Unused private definition"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WEAK WARNING"
+                implementationClass="org.phellang.inspection.PhelUnusedPrivateDefinitionInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelUnusedParameter"
+                displayName="Unused function parameter"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WEAK WARNING"
+                implementationClass="org.phellang.inspection.PhelUnusedParameterInspection"/>
+        <localInspection
+                language="Phel"
                 shortName="PhelShadowedLetBinding"
                 displayName="Shadowed let binding"
                 groupName="Phel"
@@ -142,6 +183,18 @@
                 level="WARNING"
                 implementationClass="org.phellang.inspection.PhelShadowedLetBindingInspection"/>
         <formattingService implementation="org.phellang.editor.format.PhelExternalFormatter"/>
+        <lang.formatter
+                language="Phel"
+                implementationClass="org.phellang.editor.format.PhelFormattingModelBuilder"/>
+        <langCodeStyleSettingsProvider
+                implementation="org.phellang.editor.format.PhelLanguageCodeStyleSettingsProvider"/>
+        <configurationType
+                implementation="org.phellang.run.PhelRunConfigurationType"/>
+        <runConfigurationProducer
+                implementation="org.phellang.run.PhelRunConfigurationProducer"/>
+        <runLineMarkerContributor
+                language="Phel"
+                implementationClass="org.phellang.run.PhelRunLineMarkerContributor"/>
         <lang.refactoringSupport
                 language="Phel"
                 implementationClass="org.phellang.refactoring.PhelRefactoringSupportProvider"/>
@@ -170,39 +223,57 @@
             <action id="Phel.Paredit.SlurpForward"
                     class="org.phellang.editor.paredit.PhelSlurpForwardAction"
                     text="Slurp Forward"
-                    description="Extend the current form to include the next sibling"/>
+                    description="Extend the current form to include the next sibling">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="S"/>
+            </action>
             <action id="Phel.Paredit.BarfForward"
                     class="org.phellang.editor.paredit.PhelBarfForwardAction"
                     text="Barf Forward"
-                    description="Eject the last child of the current form"/>
+                    description="Eject the last child of the current form">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="B"/>
+            </action>
             <action id="Phel.Paredit.SlurpBackward"
                     class="org.phellang.editor.paredit.PhelSlurpBackwardAction"
                     text="Slurp Backward"
-                    description="Extend the current form to include the previous sibling"/>
+                    description="Extend the current form to include the previous sibling">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="shift S"/>
+            </action>
             <action id="Phel.Paredit.BarfBackward"
                     class="org.phellang.editor.paredit.PhelBarfBackwardAction"
                     text="Barf Backward"
-                    description="Eject the first child of the current form"/>
+                    description="Eject the first child of the current form">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="shift B"/>
+            </action>
             <action id="Phel.Paredit.WrapParen"
                     class="org.phellang.editor.paredit.PhelWrapParenAction"
                     text="Wrap with ( )"
-                    description="Wrap the form at caret in a list"/>
+                    description="Wrap the form at caret in a list">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="W"/>
+            </action>
             <action id="Phel.Paredit.WrapBracket"
                     class="org.phellang.editor.paredit.PhelWrapBracketAction"
                     text="Wrap with [ ]"
-                    description="Wrap the form at caret in a vector"/>
+                    description="Wrap the form at caret in a vector">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="V"/>
+            </action>
             <action id="Phel.Paredit.WrapBrace"
                     class="org.phellang.editor.paredit.PhelWrapBraceAction"
                     text="Wrap with { }"
-                    description="Wrap the form at caret in a map"/>
+                    description="Wrap the form at caret in a map">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="M"/>
+            </action>
             <action id="Phel.Paredit.Splice"
                     class="org.phellang.editor.paredit.PhelSpliceAction"
                     text="Splice"
-                    description="Unwrap the enclosing form, leaving its children in place"/>
+                    description="Unwrap the enclosing form, leaving its children in place">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="U"/>
+            </action>
             <action id="Phel.Paredit.Raise"
                     class="org.phellang.editor.paredit.PhelRaiseAction"
                     text="Raise"
-                    description="Replace the enclosing form with the form at caret"/>
+                    description="Replace the enclosing form with the form at caret">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift P" second-keystroke="R"/>
+            </action>
         </group>
     </actions>
 </idea-plugin>

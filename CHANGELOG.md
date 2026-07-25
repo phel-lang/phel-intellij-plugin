@@ -61,6 +61,40 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
+- **Live templates** for eleven forms: `defn-`, `defmacro`, `ns`, `deftest`, `when`, `when-let`, `loop`, `cond`,
+  `case`, `try` and `foreach`. They appear under Settings > Editor > Live Templates > Phel, expand with Tab, and can
+  be edited or extended. The six abbreviations completion already offers (`()`, `defn`, `def`, `let`, `if`, `fn`) are
+  deliberately not redefined, so no name produces two differently-behaving entries (#268).
+- **Spellchecking** of string literals, including docstrings, and line comments. Symbols are not checked: in a Lisp
+  nearly every token is one, and checking them would underline most of a file (#268).
+- **Default keyboard shortcuts for the nine paredit actions**, which previously shipped reachable only through the
+  menu. All are two-stroke, under a shared `Ctrl+Alt+Shift+P` prefix: `S` / `B` slurp and barf forward, `Shift+S` /
+  `Shift+B` backward, `W` / `V` / `M` wrap in `( )` / `[ ]` / `{ }`, `U` splice, `R` raise (#267).
+- **Move Element Left/Right** (`Ctrl+Alt+Shift+Left/Right`) over the forms inside a list, vector, map or set, for
+  reordering arguments and map entries (#267).
+- **Surround With** (`Ctrl+Alt+T`) for wrapping a selection of whole forms in `( )`, `[ ]` or `{ }`. Unlike the
+  paredit wrap actions, which take the single form at the caret, this works across a multi-form selection (#267).
+- An **Unused private definition** inspection, reporting a `defn-` / `def-` / `^:private` definition that nothing in
+  its own file references. Only private definitions are reported: a public one may be called from any namespace, so
+  its own file cannot tell (#266).
+- An **Unused function parameter** inspection, covering `defn`, `defn-`, `fn`, `defmacro` and `defmacro-`. Names
+  starting with `_` or `&` are never reported (#266).
+- A **built-in formatter**, used when the project has no `phel` binary. Reformat Code, format-on-paste and
+  reindent-selection now work before `composer install`, in a scratch file, or where the binary is not on one of the
+  searched paths. `phel format` stays the preferred path and still wins whenever it is available; the built-in one
+  indents two spaces per level, matching what pressing Enter already does (#265).
+- A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), so indentation is configurable and persists
+  per project (#265).
+- A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
+  `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
+  it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
+  or mise `php` is on its `PATH` even when the IDE was started from Dock or Spotlight (#263).
+- **Go to Symbol** (Navigate > Symbol) now finds Phel definitions. The project symbol index that already backed
+  completion and arity resolution simply had no route into the platform's name popups; definitions are listed with
+  their namespace, so two functions sharing a name can be told apart, and choosing one jumps to the name itself
+  rather than the top of the file (#264).
+- **Breadcrumbs** above the editor, showing the trail of enclosing forms — `defn greet > let > when`. Only forms that
+  establish context are shown, so the trail does not simply mirror parenthesis depth (#264).
 - An **Unresolved symbol** inspection, reporting a name that exists nowhere in scope. Phel raises
   `PHEL001 Cannot resolve symbol` for these, so the code does not compile (#256, #259).
 - A **Create function** quick fix on that inspection. Where the missing name is being called, it writes a `defn` above
@@ -69,6 +103,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Changed
 
+- The **unused-import** warning is now a switchable inspection (Settings > Editor > Inspections > Phel > Unused
+  import) instead of a fixed annotation, so it can be disabled or re-levelled. What it reports is unchanged, including
+  its silence on `:refer` imports and on the duplicated copy of an import already reported as a duplicate (#266).
+- The `phel` binary is now also looked up on the login shell's `PATH`, after `./bin/phel` and `./vendor/bin/phel`. A
+  project-local binary still wins, so a version pinned through Composer is never overridden by a global install
+  (#265).
 - Completion now offers only what a position can hold. Macros and special forms are no longer suggested as arguments,
   where they cannot appear; functions still are, and threading macros are exempt. In head position, definition forms
   no longer outrank every function (#260).
