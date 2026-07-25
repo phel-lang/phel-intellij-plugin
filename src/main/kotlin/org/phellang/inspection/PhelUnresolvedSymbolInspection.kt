@@ -5,6 +5,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import org.phellang.inspection.analysis.PhelUnresolvedSymbolFinder
+import org.phellang.inspection.quickfixes.PhelCreateFunctionQuickFix
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVisitor
 
@@ -22,7 +23,15 @@ class PhelUnresolvedSymbolInspection : LocalInspectionTool() {
             override fun visitSymbol(o: PhelSymbol) {
                 val name = PhelUnresolvedSymbolFinder.unresolvedName(o) ?: return
 
-                holder.registerProblem(o, "Cannot resolve symbol '$name'", ProblemHighlightType.WARNING)
+                // Offer to create it only where it is being called: elsewhere the name could just
+                // as well want a `def`, and the fix would generate the wrong kind of definition.
+                val fixes = if (PhelUnresolvedSymbolFinder.isCalled(o)) {
+                    arrayOf(PhelCreateFunctionQuickFix(name))
+                } else {
+                    emptyArray()
+                }
+
+                holder.registerProblem(o, "Cannot resolve symbol '$name'", ProblemHighlightType.WARNING, *fixes)
             }
         }
     }
