@@ -19,7 +19,18 @@ class PhelExternalFormatter : AsyncDocumentFormattingService() {
     override fun getFeatures(): MutableSet<FormattingService.Feature> =
         EnumSet.noneOf(FormattingService.Feature::class.java)
 
-    override fun canFormat(file: PsiFile): Boolean = file is PhelFile
+    /**
+     * Only when the project actually has a `phel` binary.
+     *
+     * Claiming a file this service cannot format would shadow [PhelFormattingModelBuilder]: the
+     * platform stops at the first formatting service that accepts the file, so Reformat Code would
+     * report an error instead of falling back to the built-in formatter.
+     */
+    override fun canFormat(file: PsiFile): Boolean {
+        if (file !is PhelFile) return false
+        val basePath = file.project.basePath ?: return false
+        return PhelCliLocator.locate(basePath) != null
+    }
 
     override fun createFormattingTask(request: AsyncFormattingRequest): FormattingTask? {
         val basePath = request.context.project.basePath

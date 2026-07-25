@@ -146,6 +146,11 @@
                 level="WARNING"
                 implementationClass="org.phellang.inspection.PhelShadowedLetBindingInspection"/>
         <formattingService implementation="org.phellang.editor.format.PhelExternalFormatter"/>
+        <lang.formatter
+                language="Phel"
+                implementationClass="org.phellang.editor.format.PhelFormattingModelBuilder"/>
+        <langCodeStyleSettingsProvider
+                implementation="org.phellang.editor.format.PhelLanguageCodeStyleSettingsProvider"/>
         <configurationType
                 implementation="org.phellang.run.PhelRunConfigurationType"/>
         <runConfigurationProducer

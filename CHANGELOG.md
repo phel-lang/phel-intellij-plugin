@@ -34,6 +34,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
+- A **built-in formatter**, used when the project has no `phel` binary. Reformat Code, format-on-paste and
+  reindent-selection now work before `composer install`, in a scratch file, or where the binary is not on one of the
+  searched paths. `phel format` stays the preferred path and still wins whenever it is available; the built-in one
+  indents two spaces per level, matching what pressing Enter already does (#265).
+- A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), so indentation is configurable and persists
+  per project (#265).
 - A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
   `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
   it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
@@ -52,6 +58,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Changed
 
+- The `phel` binary is now also looked up on the login shell's `PATH`, after `./bin/phel` and `./vendor/bin/phel`. A
+  project-local binary still wins, so a version pinned through Composer is never overridden by a global install
+  (#265).
 - Completion now offers only what a position can hold. Macros and special forms are no longer suggested as arguments,
   where they cannot appear; functions still are, and threading macros are exempt. In head position, definition forms
   no longer outrank every function (#260).
