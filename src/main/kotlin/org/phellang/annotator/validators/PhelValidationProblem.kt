@@ -10,9 +10,9 @@ import com.intellij.codeInsight.intention.IntentionAction
  * Deliberately one type rather than a per-validator hierarchy. Nothing dispatches on *which*
  * validator produced a problem: each validator is called from a site that already knows what it
  * asked for, so a sealed supertype would only add a `when` that never runs. A list rather than a
- * single nullable value because one symbol can warrant two annotations (an import that neither
- * exists nor is used), and because it lets a validator express precedence — a duplicate import
- * suppresses the unused-import warning — without leaking a flag for the caller to branch on.
+ * single nullable value because one symbol can warrant more than one annotation, and because it
+ * lets a validator express precedence — a duplicate import is reported alone, suppressing the
+ * does-not-exist check on the same symbol — without leaking a flag for the caller to branch on.
  */
 data class PhelValidationProblem(
     val message: String,

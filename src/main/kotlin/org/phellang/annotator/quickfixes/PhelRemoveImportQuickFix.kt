@@ -8,9 +8,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.SmartPointerManager
 import com.intellij.psi.SmartPsiElementPointer
-import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.utils.PhelImportRemoval
 
 class PhelRemoveImportQuickFix(
     symbolToRemove: PhelSymbol, private val actionText: String = "Remove import"
@@ -30,12 +29,7 @@ class PhelRemoveImportQuickFix(
     override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
         val symbolToRemove = symbolPointer.element ?: return
         WriteCommandAction.runWriteCommandAction(project) {
-            val requireList = PsiTreeUtil.getParentOfType(symbolToRemove, PhelList::class.java) ?: return@runWriteCommandAction
-            val prevSibling = requireList.prevSibling
-            if (prevSibling != null && prevSibling.text.isBlank()) {
-                prevSibling.delete()
-            }
-            requireList.delete()
+            PhelImportRemoval.removeEnclosingImport(symbolToRemove)
         }
     }
 

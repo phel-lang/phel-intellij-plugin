@@ -34,6 +34,11 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
+- An **Unused private definition** inspection, reporting a `defn-` / `def-` / `^:private` definition that nothing in
+  its own file references. Only private definitions are reported: a public one may be called from any namespace, so
+  its own file cannot tell (#266).
+- An **Unused function parameter** inspection, covering `defn`, `defn-`, `fn`, `defmacro` and `defmacro-`. Names
+  starting with `_` or `&` are never reported (#266).
 - A **built-in formatter**, used when the project has no `phel` binary. Reformat Code, format-on-paste and
   reindent-selection now work before `composer install`, in a scratch file, or where the binary is not on one of the
   searched paths. `phel format` stays the preferred path and still wins whenever it is available; the built-in one
@@ -58,6 +63,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Changed
 
+- The **unused-import** warning is now a switchable inspection (Settings > Editor > Inspections > Phel > Unused
+  import) instead of a fixed annotation, so it can be disabled or re-levelled. What it reports is unchanged, including
+  its silence on `:refer` imports and on the duplicated copy of an import already reported as a duplicate (#266).
 - The `phel` binary is now also looked up on the login shell's `PATH`, after `./bin/phel` and `./vendor/bin/phel`. A
   project-local binary still wins, so a version pinned through Composer is never overridden by a global install
   (#265).

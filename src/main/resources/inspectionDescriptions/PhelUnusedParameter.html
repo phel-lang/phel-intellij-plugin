@@ -1,0 +1,21 @@
+<html>
+<body>
+<p>Reports a function parameter that the body never reads.</p>
+
+<p>Applies to <code>defn</code>, <code>defn-</code>, <code>fn</code>, <code>defmacro</code> and
+    <code>defmacro-</code>.</p>
+
+<h3>Example:</h3>
+<pre><code>
+(defn greet [name greeting]   ;; 'greeting' is reported: Parameter 'greeting' is never used.
+  (println name))
+</code></pre>
+
+<h3>Ignored names</h3>
+<p>Names conventionally used to discard a value are never reported: <code>_</code>, any name starting
+    with <code>_</code>, and names starting with <code>&amp;</code> (rest markers).</p>
+
+<p>No quick-fix is offered: removing a parameter changes the function's arity, so every call site
+    would have to change with it.</p>
+</body>
+</html>

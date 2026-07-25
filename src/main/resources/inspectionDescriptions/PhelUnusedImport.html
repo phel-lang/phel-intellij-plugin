@@ -1,0 +1,27 @@
+<html>
+<body>
+<p>Reports a namespace brought in by <code>(:require ...)</code> that the file never uses.</p>
+
+<p>An import is flagged when no namespace-qualified symbol outside the <code>(ns ...)</code>
+    declaration uses its qualifier. Under <code>:as</code> the alias is the qualifier that counts, so
+    <code>(:require phel\str :as s)</code> is used by <code>(s/join ...)</code> and not by
+    <code>(str/join ...)</code>.</p>
+
+<h3>Example:</h3>
+<pre><code>
+(ns app\core
+  (:require phel\str))   ;; reported: Unused import
+
+(println "hi")
+</code></pre>
+
+<h3>Not reported</h3>
+<p>An import carrying <code>:refer</code> is never reported: it brings names in unqualified, so no
+    qualifier will ever appear for it and judging it this way would flag every such import.</p>
+
+<p>A duplicate or unresolvable import is reported separately, as a warning rather than through this
+    inspection.</p>
+
+<p>A quick-fix removes the require entry.</p>
+</body>
+</html>
