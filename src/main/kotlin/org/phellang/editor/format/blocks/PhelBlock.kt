@@ -6,8 +6,8 @@ import com.intellij.formatting.Indent
 import com.intellij.formatting.Spacing
 import com.intellij.formatting.Wrap
 import com.intellij.lang.ASTNode
-import com.intellij.psi.PsiFile
 import com.intellij.psi.TokenType
+import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.formatter.common.AbstractBlock
 import org.phellang.language.psi.PhelTypes
 
@@ -31,6 +31,12 @@ class PhelBlock(
     private val indent: Indent,
     private val rules: PhelFormattingRules,
 ) : AbstractBlock(node, wrap, alignment) {
+
+    /**
+     * Resolved once per block rather than per sibling pair. [getSpacing] runs for every pair, and
+     * reaching through `ASTNode.psi` there is what the element-type matching below already avoids.
+     */
+    private val isFileRoot: Boolean = node.elementType is IFileElementType
 
     override fun buildChildren(): List<Block> {
         val childIndent = if (myNode.isBracketed()) Indent.getNormalIndent() else Indent.getNoneIndent()
@@ -64,7 +70,7 @@ class PhelBlock(
 
         // Top-level forms each start their own line, with however many blank lines between them the
         // Code Style page asks for. Zero, the default, leaves the author's spacing untouched.
-        if (myNode.psi is PsiFile) {
+        if (isFileRoot) {
             val lineFeeds = rules.blankLinesBetweenTopLevelForms + 1
             return Spacing.createSpacing(0, 0, lineFeeds, true, rules.keepBlankLines)
         }
