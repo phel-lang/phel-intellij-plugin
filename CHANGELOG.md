@@ -55,11 +55,17 @@ refreshed, since completion, hover and arity checking are all driven by it.
 ### Added
 
 - An **Unresolved symbol** inspection, reporting a bare symbol that names nothing in scope. Phel's analyzer raises
-  `PHEL001 Cannot resolve symbol` for these, so the code does not compile. Disabled by default for one release while
-  its behaviour is confirmed against real projects — enable it under Settings → Editor → Inspections → Phel (#256).
+  `PHEL001 Cannot resolve symbol` for these, so the code does not compile (#256).
+- A **Create function** quick fix on that inspection. Where the missing name is being called, it writes a `defn` taking
+  its parameter names from the call's own arguments — `(greet user count)` gives `(defn greet [user count] )` — and
+  places it above the form that calls it, since Phel resolves a symbol against the definitions that precede it and a
+  function written after its caller does not compile (#259).
 
 ### Changed
 
+- The **Unresolved symbol** inspection is now enabled by default. It was introduced switched off pending real-world
+  exposure; over the 62 files of the Phel standard library it reports 42 times, all of them cross-file references to
+  private helpers inside `phel\core`'s multi-file namespace (#259).
 - Code-quality pass over the hand-written Kotlin sources: the largest classes (symbol highlighting, the project symbol
   scanner, local-symbol completion, the completion context, both let-binding inspections) were split into focused
   collaborators, and the longest function dropped from 100 lines to 43. The definition-form vocabulary that navigation,
