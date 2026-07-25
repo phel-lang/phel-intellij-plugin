@@ -147,6 +147,19 @@ internal object PhelUnresolvedSymbolFinder {
             }
     }
 
+    /**
+     * True when [symbol] is what its enclosing form calls.
+     *
+     * Only there is the name unambiguously a function: in an argument slot it could just as well be
+     * a `def`, and guessing wrong would generate the wrong kind of definition.
+     */
+    fun isCalled(symbol: PhelSymbol): Boolean {
+        val list = PsiTreeUtil.getParentOfType(symbol, PhelList::class.java) ?: return false
+        val head = PhelPsiUtils.activeForms(list).firstOrNull() ?: return false
+
+        return PsiTreeUtil.isAncestor(head, symbol, false)
+    }
+
     /** The heads of every list enclosing [symbol], innermost first. */
     private fun enclosingHeads(symbol: PhelSymbol): Sequence<String> =
         PhelFormWalker.enclosingLists(symbol).mapNotNull { PhelFormWalker.headText(it) }
