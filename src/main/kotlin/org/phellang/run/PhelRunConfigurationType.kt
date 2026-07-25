@@ -10,9 +10,21 @@ import javax.swing.Icon
 
 class PhelRunConfigurationType : ConfigurationType {
 
-    private val fileFactory = PhelRunConfigurationFactory(this)
-    private val replFactory = PhelReplConfigurationFactory(this)
-    private val testFactory = PhelTestConfigurationFactory(this)
+    /**
+     * Factory ids are persisted alongside the type id. `Phel` is the original and keeps its name so
+     * configurations saved before the REPL and test factories existed still load.
+     */
+    private val fileFactory = factory("Phel", "Phel file") { project, factory ->
+        PhelRunConfiguration(project, factory, "Phel")
+    }
+
+    private val replFactory = factory("PhelRepl", "Phel REPL") { project, factory ->
+        PhelReplConfiguration(project, factory, "Phel REPL")
+    }
+
+    private val testFactory = factory("PhelTest", "Phel tests") { project, factory ->
+        PhelTestConfiguration(project, factory, "Phel tests")
+    }
 
     override fun getDisplayName(): String = "Phel"
 
@@ -25,6 +37,19 @@ class PhelRunConfigurationType : ConfigurationType {
     override fun getConfigurationFactories(): Array<ConfigurationFactory> =
         arrayOf(fileFactory, replFactory, testFactory)
 
+    private fun factory(
+        id: String,
+        displayName: String,
+        create: (Project, ConfigurationFactory) -> RunConfiguration,
+    ): ConfigurationFactory = object : ConfigurationFactory(this) {
+
+        override fun getId(): String = id
+
+        override fun getName(): String = displayName
+
+        override fun createTemplateConfiguration(project: Project): RunConfiguration = create(project, this)
+    }
+
     companion object {
         /** Persisted in workspace.xml against every saved configuration; renaming it orphans them. */
         const val ID = "PhelRunConfiguration"
@@ -32,41 +57,7 @@ class PhelRunConfigurationType : ConfigurationType {
         fun getInstance(): PhelRunConfigurationType =
             ConfigurationTypeUtil.findConfigurationType(PhelRunConfigurationType::class.java)
 
-        /** The factory the file-running configuration uses, which the context producer creates. */
+        /** The factory the context producer creates a file-running configuration from. */
         fun fileFactory(): ConfigurationFactory = getInstance().fileFactory
     }
-}
-
-/**
- * Factory ids are persisted alongside the type id. `Phel` is the original and keeps its name so
- * configurations saved before the REPL and test factories existed still load.
- */
-class PhelRunConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
-
-    override fun getId(): String = "Phel"
-
-    override fun getName(): String = "Phel file"
-
-    override fun createTemplateConfiguration(project: Project): RunConfiguration =
-        PhelRunConfiguration(project, this, "Phel")
-}
-
-class PhelReplConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
-
-    override fun getId(): String = "PhelRepl"
-
-    override fun getName(): String = "Phel REPL"
-
-    override fun createTemplateConfiguration(project: Project): RunConfiguration =
-        PhelReplConfiguration(project, this, "Phel REPL")
-}
-
-class PhelTestConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
-
-    override fun getId(): String = "PhelTest"
-
-    override fun getName(): String = "Phel tests"
-
-    override fun createTemplateConfiguration(project: Project): RunConfiguration =
-        PhelTestConfiguration(project, this, "Phel tests")
 }
