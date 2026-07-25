@@ -42,7 +42,17 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         PsiManager.getInstance(project).addPsiTreeChangeListener(PhelPsiChangeListener(project), this)
     }
 
-    override fun dispose() {
+    override fun dispose() = clear()
+
+    /**
+     * Drops everything indexed.
+     *
+     * [indexBuilt] is deliberately left alone. Resetting it would have the very next read rebuild
+     * from the project, so "cleared" would last exactly one call — which defeats the isolation this
+     * exists to provide, and makes the emptiness unobservable. The flag only gates the lazy
+     * full-project scan; an explicit [refreshFileFromPsi] repopulates a cleared index either way.
+     */
+    fun clear() {
         symbolsByNamespace.clear()
         symbolsByName.clear()
         symbolsByFile.clear()
