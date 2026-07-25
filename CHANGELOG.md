@@ -32,6 +32,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
   structure view and Find Usages instead of showing as an anonymous "symbol" (#254).
 - Completion is suppressed where only a binding or parameter vector can follow — `(let …)`, `(fn …)` — rather than
   offering the whole standard library (#254).
+- Parameters of a `defn` documented with a metadata map containing a vector — `{:see-also ["assoc"]}`, the convention
+  used throughout the Phel standard library — are recognised again. The parameter vector was searched for by scanning
+  the forms after the name for the first vector *anywhere* below them, so the one inside `:see-also` ended the search:
+  those parameters were not highlighted as parameters, did not resolve, could not be renamed, and were invisible to
+  inlay hints. The reverse case is fixed too — a vector in the body, as in `(defn f [p] [x])`, was being treated as a
+  second parameter list (#255).
 
 ### Changed
 

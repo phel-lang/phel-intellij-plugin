@@ -3,6 +3,9 @@ package org.phellang.language.psi.analysis
 import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.PsiElement
+import org.phellang.language.psi.PhelLiteral
+import org.phellang.language.psi.PhelMap
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
@@ -45,11 +48,20 @@ internal object PhelParameterAnalyzer {
         return when (functionType) {
             "fn" -> children.getOrNull(1)?.let(PhelFormWalker::vectorOf)
             "defn", "defn-", "defmacro", "defmacro-" ->
-                children.drop(2).firstNotNullOfOrNull(PhelFormWalker::vectorOf)
+                children.drop(2).firstOrNull { !isSignaturePrelude(it) }?.let(PhelFormWalker::vectorOf)
 
             else -> null
         }
     }
+
+    /**
+     * A docstring or a metadata map may sit between the name and the parameter vector; nothing else
+     * may. Skipping them explicitly is what keeps a vector *inside* the metadata — Phel's standard
+     * library writes `{:see-also ["update-in" "assoc"]}` on most of its definitions — from being
+     * taken for the parameter vector, or from ending the search before the real one is reached.
+     */
+    private fun isSignaturePrelude(form: PsiElement): Boolean =
+        PhelFormWalker.isOrDirectlyWraps<PhelLiteral>(form) || PhelFormWalker.isOrDirectlyWraps<PhelMap>(form)
 
     /** Names bound by every arity of [functionList]. Cached: highlighting asks once per symbol. */
     private fun parameterNamesOf(functionList: PhelList): Set<String> =
@@ -110,16 +122,22 @@ internal object PhelParameterAnalyzer {
     }
 
     /**
-     * The parameter vector of a `defn` is the *first* vector after the name. Meeting a different
-     * vector first means [targetVec] lives in the body, not the signature.
+     * The parameter vector of a `defn` is the first form after the name that is not a docstring or a
+     * metadata map. Anything else standing there means [targetVec] lives in the body.
+     *
+     * This used to bail on meeting *any* vector among the descendants of an earlier form, so the
+     * `["update-in" "assoc"]` inside a `{:see-also ...}` map ended the search and the parameters of
+     * every documented `defn` in the standard library went unrecognised — unhighlighted, unresolved
+     * and unrenameable.
      */
     private fun isDefnParameterVector(forms: Array<PhelForm>, targetVec: PhelVec): Boolean {
         for (form in forms.drop(2)) {
             if (PhelFormWalker.isSameOrWrapperOf(form, targetVec)) return true
+            if (isSignaturePrelude(form)) continue
 
-            val other = PsiTreeUtil.findChildOfType(form, PhelVec::class.java)
-            if (other != null && other !== targetVec) return false
+            return false
         }
+
         return false
     }
 }
