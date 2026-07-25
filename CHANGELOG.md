@@ -12,6 +12,11 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Fixed
 
+- Pressing Enter after a closed form no longer keeps the old indentation. With the caret at the end of
+  `(print "hello"))` the new line now starts at column zero, since the function is over; closing several forms at once
+  dedents by all of them, and closing one of two dedents by one level. The handler computed only the *extra*
+  indentation to add to what the platform had already copied from the line above, so it could indent further but never
+  less (#258).
 - Completion no longer goes silent in ordinary expression positions: the body of a `do`, `try`, `catch`, `finally` or
   `quote`, the exception slot of a `throw`, `recur` arguments, and the value half of a binding — `(let [x …] …)`,
   `(loop [acc …] …)` — all offer completions again (#254).

@@ -30,8 +30,8 @@ class PhelEnterHandlerDelegate : EnterHandlerDelegate {
 
         val lineInfo = documentProcessor.extractLineInformation(document, caretOffset)
         
-        val indentationSpaces = indentationCalculator.calculateIndentation(
-            document, lineInfo.currentLineNumber, lineInfo.textBeforeCaret, lineInfo.currentLineText
+        val targetIndentation = indentationCalculator.targetIndentation(
+            document, lineInfo.currentLineNumber, lineInfo.textBeforeCaret
         )
 
         originalHandler?.execute(editor, editor.caretModel.currentCaret, dataContext)
@@ -45,7 +45,7 @@ class PhelEnterHandlerDelegate : EnterHandlerDelegate {
         val closingParenthesisText = parenthesisManager.createClosingParenthesisText(currentIndentationSpaces)
 
         documentProcessor.applyIndentationAndParenthesis(
-            document, editor, caretPosition, indentationSpaces, shouldAddClosingParen, closingParenthesisText
+            document, editor, caretPosition, targetIndentation, shouldAddClosingParen, closingParenthesisText
         )
 
         return EnterHandlerDelegate.Result.Stop
