@@ -58,6 +58,11 @@ refreshed, since completion, hover and arity checking are all driven by it.
   indents two spaces per level, matching what pressing Enter already does (#265).
 - A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), so indentation is configurable and persists
   per project (#265).
+- A **REPL** run configuration, launching `phel repl` in the Run console, which accepts typed input and forwards it
+  to the process (#263).
+- A **test** run configuration, running `phel test` over the whole suite or over named paths. Output goes to the
+  plain console: `phel test` takes a `--reporter`, which is what an IDE test tree would need, but mapping a
+  reporter's output onto the platform's test model means pinning a format the plugin cannot verify from here (#263).
 - A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
   `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
   it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
