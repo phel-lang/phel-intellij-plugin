@@ -1,0 +1,103 @@
+<templateSet group="Phel">
+  <!--
+    Deliberately does not redefine (), defn, def, let, if or fn. Those six are already offered by
+    PhelMainCompletionProvider's FORM_TEMPLATES, and a live template sharing an abbreviation would
+    put two differently-behaving entries under one name in the completion popup.
+  -->
+  <template name="defn-" value="(defn- $NAME$ [$ARGS$]&#10;  $END$)" description="Private function"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true"/>
+    <variable name="ARGS" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="defmacro" value="(defmacro $NAME$ [$ARGS$]&#10;  $END$)" description="Macro"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true"/>
+    <variable name="ARGS" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="ns" value="(ns $NAME$)&#10;$END$" description="Namespace declaration"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="NAME" expression="" defaultValue="&quot;namespace&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="deftest" value="(deftest $NAME$&#10;  $END$)" description="Test"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="NAME" expression="" defaultValue="&quot;test-name&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="when" value="(when $COND$&#10;  $END$)" description="when"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="COND" expression="" defaultValue="&quot;condition&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="when-let" value="(when-let [$BINDING$ $VALUE$]&#10;  $END$)" description="when-let"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="BINDING" expression="" defaultValue="&quot;binding&quot;" alwaysStopAt="true"/>
+    <variable name="VALUE" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="loop" value="(loop [$BINDING$ $VALUE$]&#10;  $END$)" description="loop"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="BINDING" expression="" defaultValue="&quot;binding&quot;" alwaysStopAt="true"/>
+    <variable name="VALUE" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="cond" value="(cond&#10;  $COND$ $RESULT$&#10;  $END$)" description="cond"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="COND" expression="" defaultValue="&quot;condition&quot;" alwaysStopAt="true"/>
+    <variable name="RESULT" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="case" value="(case $EXPR$&#10;  $VALUE$ $RESULT$&#10;  $END$)" description="case"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="EXPR" expression="" defaultValue="&quot;expr&quot;" alwaysStopAt="true"/>
+    <variable name="VALUE" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="RESULT" expression="" defaultValue="" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="try" value="(try&#10;  $BODY$&#10;  (catch $EXCEPTION$ e&#10;    $END$))" description="try/catch"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="BODY" expression="" defaultValue="" alwaysStopAt="true"/>
+    <variable name="EXCEPTION" expression="" defaultValue="&quot;\\Exception&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+
+  <template name="foreach" value="(foreach [$BINDING$ $COLL$]&#10;  $END$)" description="foreach"
+            toReformat="false" toShortenFQNames="false">
+    <variable name="BINDING" expression="" defaultValue="&quot;item&quot;" alwaysStopAt="true"/>
+    <variable name="COLL" expression="" defaultValue="&quot;coll&quot;" alwaysStopAt="true"/>
+    <context>
+      <option name="Phel" value="true"/>
+    </context>
+  </template>
+</templateSet>

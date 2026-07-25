@@ -103,6 +103,13 @@
                 language="Phel"
                 implementationClass="org.phellang.editor.paredit.PhelSurroundDescriptor"/>
         <internalFileTemplate name="Phel File.phel"/>
+        <defaultLiveTemplates file="/liveTemplates/Phel.xml"/>
+        <liveTemplateContext
+                contextId="Phel"
+                implementation="org.phellang.editor.templates.PhelTemplateContextType"/>
+        <spellchecker.support
+                language="Phel"
+                implementationClass="org.phellang.editor.spellchecking.PhelSpellcheckingStrategy"/>
         <localInspection
                 language="Phel"
                 shortName="PhelDeprecatedFunction"
