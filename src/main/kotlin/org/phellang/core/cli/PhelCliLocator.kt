@@ -16,6 +16,9 @@ object PhelCliLocator {
     /** What [locate] looks for, phrased for an error message shown to the user. */
     const val SEARCHED_PATHS = "./bin/phel and ./vendor/bin/phel relative to project root"
 
+    /** Kept here so the formatter and the runner report a missing binary identically. */
+    const val NOT_FOUND_MESSAGE = "Phel binary not found. Looked for $SEARCHED_PATHS."
+
     fun locate(basePath: String): File? {
         for (candidate in CANDIDATES) {
             val file = File(basePath, candidate)

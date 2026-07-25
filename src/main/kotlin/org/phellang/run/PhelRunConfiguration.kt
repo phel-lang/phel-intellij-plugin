@@ -2,6 +2,7 @@ package org.phellang.run
 
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.Executor
+import com.intellij.execution.configurations.CommandLineState
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.execution.configurations.LocatableConfigurationBase
 import com.intellij.execution.configurations.RunConfiguration
@@ -11,7 +12,6 @@ import com.intellij.execution.process.KillableColoredProcessHandler
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
-import com.intellij.execution.configurations.CommandLineState
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizerUtil
@@ -41,8 +41,17 @@ class PhelRunConfiguration(
         }
         val basePath = project.basePath ?: throw RuntimeConfigurationError("No project base path available")
         if (PhelCliLocator.locate(basePath) == null) {
-            throw RuntimeConfigurationError("Phel binary not found. Looked for ${PhelCliLocator.SEARCHED_PATHS}.")
+            throw RuntimeConfigurationError(PhelCliLocator.NOT_FOUND_MESSAGE)
         }
+    }
+
+    /**
+     * Resolved again at launch rather than carried over from [checkConfiguration]: a `composer
+     * install` between validating the dialog and pressing Run is exactly when this changes.
+     */
+    private fun requireBinary(): File {
+        val basePath = project.basePath ?: throw ExecutionException("No project base path available")
+        return PhelCliLocator.locate(basePath) ?: throw ExecutionException(PhelCliLocator.NOT_FOUND_MESSAGE)
     }
 
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState =
@@ -68,11 +77,7 @@ class PhelRunConfiguration(
     private inner class PhelRunState(environment: ExecutionEnvironment) : CommandLineState(environment) {
 
         override fun startProcess(): ProcessHandler {
-            val basePath = project.basePath ?: throw ExecutionException("No project base path available")
-            val binary = PhelCliLocator.locate(basePath)
-                ?: throw ExecutionException("Phel binary not found. Looked for ${PhelCliLocator.SEARCHED_PATHS}.")
-
-            val commandLine = PhelRunCommandLine.build(binary, scriptPath, effectiveWorkingDirectory())
+            val commandLine = PhelRunCommandLine.build(requireBinary(), scriptPath, effectiveWorkingDirectory())
 
             // Killable so Stop actually terminates a long-running script rather than detaching from it.
             val handler = KillableColoredProcessHandler(commandLine)

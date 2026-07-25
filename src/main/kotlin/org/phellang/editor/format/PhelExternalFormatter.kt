@@ -30,10 +30,7 @@ class PhelExternalFormatter : AsyncDocumentFormattingService() {
 
         val binary = PhelCliLocator.locate(basePath)
         if (binary == null) {
-            request.onError(
-                NOTIFICATION_TITLE,
-                "Phel binary not found. Looked for ${PhelCliLocator.SEARCHED_PATHS}."
-            )
+            request.onError(NOTIFICATION_TITLE, PhelCliLocator.NOT_FOUND_MESSAGE)
             return null
         }
 

@@ -6,7 +6,6 @@ import com.intellij.icons.AllIcons
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelNamespaceUtils
-import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 
@@ -26,7 +25,9 @@ class PhelRunLineMarkerContributor : RunLineMarkerContributor() {
         val file = element.containingFile as? PhelFile ?: return null
         val declaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return null
         val head = PhelPsiUtils.asSymbol(declaration.forms.firstOrNull()) ?: return null
-        if (!isLeafOf(element, head)) return null
+        // The `ns` text sits on a leaf beneath the symbol; `strict = false` also accepts the symbol
+        // itself, so this covers both shapes without a separate identity check.
+        if (!PsiTreeUtil.isAncestor(head, element, false)) return null
 
         return Info(
             AllIcons.RunConfigurations.TestState.Run,
@@ -34,10 +35,6 @@ class PhelRunLineMarkerContributor : RunLineMarkerContributor() {
             *ExecutorAction.getActions(0),
         )
     }
-
-    /** The `ns` text lives on a leaf beneath the symbol, not on the symbol element itself. */
-    private fun isLeafOf(element: PsiElement, symbol: PhelSymbol): Boolean =
-        element === symbol || PsiTreeUtil.isAncestor(symbol, element, false)
 
     private companion object {
         const val NS_KEYWORD = "ns"
