@@ -14,23 +14,37 @@ class PhelEnterHandlerDocumentProcessor {
         return LineInformation(currentLineNumber, textBeforeCaret, currentLineText)
     }
 
+    /**
+     * Replaces the new line's leading whitespace with [indentation], rather than adding to it.
+     *
+     * The platform's enter handler has already run and copied the previous line's indentation, so
+     * inserting could only ever indent further. Setting it is what allows a line to be *less*
+     * indented than the one above — which is the normal case the moment a form closes.
+     */
     fun applyIndentationAndParenthesis(
         document: Document,
         editor: Editor,
         caretPosition: Int,
-        indentationSpaces: String,
+        indentation: String,
         shouldAddClosingParen: Boolean,
         closingParenthesisText: String
     ) {
-        if (indentationSpaces.isNotEmpty()) {
-            document.insertString(caretPosition, indentationSpaces)
-            val newCaretPosition = caretPosition + indentationSpaces.length
+        val lineNumber = document.getLineNumber(caretPosition)
+        val lineStart = document.getLineStartOffset(lineNumber)
+        val lineEnd = document.getLineEndOffset(lineNumber)
 
-            if (shouldAddClosingParen) {
-                document.insertString(newCaretPosition, closingParenthesisText)
-            }
+        // Only the leading run: text already on the line (enter pressed mid-line) must survive.
+        val existing = document.text.substring(lineStart, lineEnd).takeWhile { it == ' ' || it == '\t' }.length
 
-            editor.caretModel.moveToOffset(newCaretPosition)
+        if (document.text.substring(lineStart, lineStart + existing) != indentation) {
+            document.replaceString(lineStart, lineStart + existing, indentation)
         }
+
+        val newCaretPosition = lineStart + indentation.length
+        if (shouldAddClosingParen) {
+            document.insertString(newCaretPosition, closingParenthesisText)
+        }
+
+        editor.caretModel.moveToOffset(newCaretPosition)
     }
 }
