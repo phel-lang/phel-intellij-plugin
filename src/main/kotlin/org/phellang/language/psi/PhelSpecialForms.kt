@@ -20,7 +20,7 @@ object PhelSpecialForms {
      */
     val LET_LIKE: Set<String> = setOf(
         "let", "if-let", "when-let", "if-some", "when-some",
-        "loop", "for", "foreach", "binding", "dofor",
+        "loop", "for", "foreach", "binding", "dofor", "doseq",
     )
 
     /** Forms that introduce a parameter vector — the `fn` / `defn` family. */

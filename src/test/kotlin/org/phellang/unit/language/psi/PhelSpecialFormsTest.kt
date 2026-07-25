@@ -102,7 +102,7 @@ class PhelSpecialFormsTest {
         fun `contains the forms whose second element is a binding vector`() {
             val expected = setOf(
                 "let", "if-let", "when-let", "if-some", "when-some",
-                "loop", "for", "foreach", "binding", "dofor",
+                "loop", "for", "foreach", "binding", "dofor", "doseq",
             )
 
             assertTrue(
