@@ -20,9 +20,11 @@ class PhelSymbolNavigationItem(
     private val symbol: PhelProjectSymbol,
 ) : NavigationItem {
 
+    private val presentation = Presentation(symbol)
+
     override fun getName(): String = symbol.name
 
-    override fun getPresentation(): ItemPresentation = Presentation(symbol)
+    override fun getPresentation(): ItemPresentation = presentation
 
     override fun navigate(requestFocus: Boolean) {
         if (!canNavigate()) return

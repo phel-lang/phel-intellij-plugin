@@ -34,12 +34,16 @@ class PhelGotoSymbolContributorTest : PhelIntegrationTestCase() {
     }
 
     /**
-     * The light fixture's project outlives this class, and the index's lazy full-project scan will
-     * find anything left behind. Without this, every definition named here turns up in the next
-     * class's `getAllSymbols()`.
+     * The light fixture's project, and its symbol index, outlive this class.
+     *
+     * The index is dropped from the index explicitly rather than left to `super.tearDown()`: that
+     * disposes the service, and `Disposer` will not run `dispose()` a second time on an instance it
+     * has already disposed, so from the second test method onward the maps are never cleared. Every
+     * definition named here would otherwise turn up in the next class's `getAllSymbols()`.
      */
     override fun tearDown() {
         try {
+            created.forEach { index().removeFile(it) }
             WriteAction.runAndWait<Throwable> {
                 created.filter { it.isValid }.forEach { it.delete(this) }
             }
@@ -116,6 +120,14 @@ class PhelGotoSymbolContributorTest : PhelIntegrationTestCase() {
         givenIndexed("src/privacy.phel", "(ns app\\privacy)\n(defn- privacy-hidden [] 1)\n(defn privacy-shown [] 2)\n")
 
         assertEquals(listOf("privacy-shown"), names().filter { it.startsWith("privacy-") })
+    }
+
+    /** The name list is a set of names; the two definitions behind a shared one come from the lookup. */
+    fun testListsASharedNameOnlyOnce() {
+        givenIndexed("src/once-a.phel", "(ns app\\oncea)\n(defn once-fn [] 1)\n")
+        givenIndexed("src/once-b.phel", "(ns app\\onceb)\n(defn once-fn [] 2)\n")
+
+        assertEquals(listOf("once-fn"), names().filter { it == "once-fn" })
     }
 
     fun testItemCanNavigate() {

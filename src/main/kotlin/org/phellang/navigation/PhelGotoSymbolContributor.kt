@@ -23,7 +23,12 @@ class PhelGotoSymbolContributor : ChooseByNameContributorEx {
         filter: IdFilter?,
     ) {
         val project = scope.project ?: return
+        // Distinct: two namespaces may define the same name, and the popup's name list would
+        // otherwise carry it twice. Both definitions still surface — processElementsWithName
+        // returns one item each.
+        val seen = HashSet<String>()
         for (symbol in PhelProjectSymbolIndex.getInstance(project).getAllSymbols()) {
+            if (!seen.add(symbol.name)) continue
             if (!processor.process(symbol.name)) return
         }
     }
