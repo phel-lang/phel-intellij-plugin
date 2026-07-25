@@ -12,6 +12,7 @@ import com.intellij.execution.process.KillableColoredProcessHandler
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.execution.ui.ConsoleView
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizerUtil
 import org.jdom.Element
@@ -54,15 +55,26 @@ abstract class PhelCliRunConfiguration(
         return PhelCliLocator.locate(basePath) ?: throw ExecutionException(PhelCliLocator.NOT_FOUND_MESSAGE)
     }
 
+    /**
+     * Killable so Stop terminates a long-running script or a REPL waiting on input, rather than
+     * detaching from it. Subclasses that need to watch the process override this.
+     */
+    protected open fun createProcessHandler(commandLine: GeneralCommandLine): ProcessHandler =
+        KillableColoredProcessHandler(commandLine)
+
+    /** Null keeps the platform's default console. */
+    protected open fun createConsoleView(executor: Executor): ConsoleView? = null
+
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState =
         object : CommandLineState(environment) {
             override fun startProcess(): ProcessHandler {
-                // Killable so Stop terminates a long-running script or a REPL waiting on input,
-                // rather than detaching from it.
-                val handler = KillableColoredProcessHandler(commandLine(requireBinary()))
+                val handler = createProcessHandler(commandLine(requireBinary()))
                 ProcessTerminatedListener.attach(handler)
                 return handler
             }
+
+            override fun createConsole(executor: Executor): ConsoleView? =
+                createConsoleView(executor) ?: super.createConsole(executor)
         }
 
     override fun writeExternal(element: Element) {
