@@ -14,6 +14,11 @@
   (+ a b inexistent-param))  ;; 'inexistent-param' is reported
 </code></pre>
 
+<p>Where the name is being <em>called</em>, a quick fix offers to create it. The new
+    <code>defn</code> takes its parameter names from the call's own arguments, and is inserted above
+    the form that calls it — Phel resolves a symbol against the definitions that precede it, so a
+    function placed after its caller would not compile.</p>
+
 <p>Qualified symbols such as <code>str/join</code> are reported separately, as an unresolved
     namespace or an unresolved function within a known namespace.</p>
 

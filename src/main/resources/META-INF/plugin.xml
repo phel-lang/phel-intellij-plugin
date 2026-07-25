@@ -125,16 +125,12 @@
                 enabledByDefault="true"
                 level="WARNING"
                 implementationClass="org.phellang.inspection.PhelUnusedLetBindingInspection"/>
-        <!--
-            Prototype: off by default until the false-positive rate has been measured on a real
-            project. It reports a compile error (PHEL001), so it earns WARNING once it is trusted.
-        -->
         <localInspection
                 language="Phel"
                 shortName="PhelUnresolvedSymbol"
                 displayName="Unresolved symbol"
                 groupName="Phel"
-                enabledByDefault="false"
+                enabledByDefault="true"
                 level="WARNING"
                 implementationClass="org.phellang.inspection.PhelUnresolvedSymbolInspection"/>
         <localInspection

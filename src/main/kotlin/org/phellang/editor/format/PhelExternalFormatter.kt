@@ -7,6 +7,7 @@ import com.intellij.psi.PsiFile
 import org.phellang.language.psi.files.PhelFile
 import java.io.File
 import java.util.EnumSet
+import java.util.concurrent.TimeUnit
 
 class PhelExternalFormatter : AsyncDocumentFormattingService() {
 
@@ -49,22 +50,24 @@ class PhelExternalFormatter : AsyncDocumentFormattingService() {
 
         override fun run() {
             val workFile = File.createTempFile("phel-fmt-", ".phel")
+            val outputFile = File.createTempFile("phel-fmt-out-", ".log")
             try {
                 workFile.writeText(request.documentText)
 
-                val started = ProcessBuilder(binary.absolutePath, "fmt", workFile.absolutePath)
-                    .directory(workingDir)
-                    .redirectErrorStream(true)
-                    .start()
+                val started = PhelFormatterProcess.command(binary, workFile, workingDir, outputFile).start()
                 process = started
 
-                val output = started.inputStream.bufferedReader().use { it.readText() }
-                val exitCode = started.waitFor()
+                if (!started.waitFor(TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                    started.destroyForcibly()
+                    request.onError(NOTIFICATION_TITLE, "phel fmt did not finish within $TIMEOUT_SECONDS seconds")
+                    return
+                }
 
-                if (exitCode != 0) {
+                val output = outputFile.readText().trim()
+                if (started.exitValue() != 0) {
                     request.onError(
                         NOTIFICATION_TITLE,
-                        output.ifBlank { "phel fmt exited with code $exitCode" }
+                        output.ifBlank { "phel fmt exited with code ${started.exitValue()}" }
                     )
                     return
                 }
@@ -74,6 +77,7 @@ class PhelExternalFormatter : AsyncDocumentFormattingService() {
                 request.onError(NOTIFICATION_TITLE, e.message ?: e.javaClass.simpleName)
             } finally {
                 workFile.delete()
+                outputFile.delete()
             }
         }
 
@@ -88,5 +92,8 @@ class PhelExternalFormatter : AsyncDocumentFormattingService() {
     private companion object {
         const val NOTIFICATION_GROUP_ID = "Phel"
         const val NOTIFICATION_TITLE = "Phel formatter"
+
+        /** Generous for a formatter, but bounded: a hung process must not block the editor forever. */
+        const val TIMEOUT_SECONDS = 30L
     }
 }

@@ -12,6 +12,16 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Fixed
 
+- Pressing Enter after a closed form no longer keeps the old indentation. With the caret at the end of
+  `(print "hello"))` the new line now starts at column zero, since the function is over; closing several forms at once
+  dedents by all of them, and closing one of two dedents by one level. The handler computed only the *extra*
+  indentation to add to what the platform had already copied from the line above, so it could indent further but never
+  less (#258).
+- Reformat Code no longer fails with `env: php: No such file or directory`. `vendor/bin/phel` starts
+  `#!/usr/bin/env php`, and an IDE launched from Dock, Spotlight or Finder on macOS hands its child processes
+  `PATH=/usr/bin:/bin:/usr/sbin:/sbin` — where a PHP installed by Homebrew, Herd, asdf or mise does not appear. The
+  formatter now runs with the login shell's environment. Formatting also gains a 30-second timeout, so a hung `phel`
+  can no longer block the editor (#257).
 - Completion no longer goes silent in ordinary expression positions: the body of a `do`, `try`, `catch`, `finally` or
   `quote`, the exception slot of a `throw`, `recur` arguments, and the value half of a binding — `(let [x …] …)`,
   `(loop [acc …] …)` — all offer completions again (#254).
@@ -49,11 +59,23 @@ refreshed, since completion, hover and arity checking are all driven by it.
 ### Added
 
 - An **Unresolved symbol** inspection, reporting a bare symbol that names nothing in scope. Phel's analyzer raises
-  `PHEL001 Cannot resolve symbol` for these, so the code does not compile. Disabled by default for one release while
-  its behaviour is confirmed against real projects — enable it under Settings → Editor → Inspections → Phel (#256).
+  `PHEL001 Cannot resolve symbol` for these, so the code does not compile (#256).
+- A **Create function** quick fix on that inspection. Where the missing name is being called, it writes a `defn` taking
+  its parameter names from the call's own arguments — `(greet user count)` gives `(defn greet [user count] )` — and
+  places it above the form that calls it, since Phel resolves a symbol against the definitions that precede it and a
+  function written after its caller does not compile (#259).
 
 ### Changed
 
+- Completion now offers only what a position can hold. In Lisp the head of a form is what gets called and the rest are
+  values, but both offered the same 979 entries: typing `w` as an argument led with `when`, `when-let`, `when-not`,
+  `when-some`, `while` and `with-open`, none of which is expressible there. Macros and special forms are no longer
+  offered in argument positions — functions still are, since `(map inc xs)` is the point of the language, and threading
+  macros and `doto` are exempt because their arguments become heads on expansion. In head position, definition forms no
+  longer outrank every function, so `map` and `println` are no longer buried under `defstruct` inside a body (#260).
+- The **Unresolved symbol** inspection is now enabled by default. It was introduced switched off pending real-world
+  exposure; over the 62 files of the Phel standard library it reports 42 times, all of them cross-file references to
+  private helpers inside `phel\core`'s multi-file namespace (#259).
 - Code-quality pass over the hand-written Kotlin sources: the largest classes (symbol highlighting, the project symbol
   scanner, local-symbol completion, the completion context, both let-binding inspections) were split into focused
   collaborators, and the longest function dropped from 100 lines to 43. The definition-form vocabulary that navigation,

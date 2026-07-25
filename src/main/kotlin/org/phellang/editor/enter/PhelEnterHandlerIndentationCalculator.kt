@@ -7,19 +7,26 @@ class PhelEnterHandlerIndentationCalculator {
 
     private val indentationCalculator = PhelIndentationCalculator()
 
-    fun calculateIndentation(document: Document, currentLineNumber: Int, textBeforeCaret: String, currentLineText: String): String {
-        val indentationLevel = indentationCalculator.calculateIndentationLevel(
-            document, currentLineNumber, textBeforeCaret
-        )
+    /**
+     * The indentation the new line should end up with: one level per still-open parenthesis.
+     *
+     * Absolute, not relative. This used to return only the *extra* indentation to add on top of what
+     * the platform's enter handler had already copied from the previous line, clamped at zero — so it
+     * could indent further but never less. Closing a form therefore left the new line at the old
+     * depth: enter after `(print "hello"))` gave two spaces where the form was over and the answer
+     * was none, and after `(print 1)))` gave four.
+     */
+    fun targetIndentation(document: Document, currentLineNumber: Int, textBeforeCaret: String): String {
+        val level = indentationCalculator.calculateIndentationLevel(document, currentLineNumber, textBeforeCaret)
 
-        val currentIndentationSpaces = currentLineText.takeWhile { it.isWhitespace() }.length
-        val currentIndentationLevel = currentIndentationSpaces / 2 // Assuming 2 spaces per level
-
-        val additionalIndentationLevel = indentationLevel - currentIndentationLevel
-        return " ".repeat(maxOf(0, additionalIndentationLevel) * 2) // 2 spaces per level
+        return " ".repeat(level * SPACES_PER_LEVEL)
     }
 
     fun getCurrentIndentationSpaces(currentLineText: String): Int {
         return currentLineText.takeWhile { it.isWhitespace() }.length
+    }
+
+    private companion object {
+        const val SPACES_PER_LEVEL = 2
     }
 }
