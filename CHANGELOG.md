@@ -12,6 +12,11 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Fixed
 
+- Pressing Enter after a closed form no longer keeps the old indentation. With the caret at the end of
+  `(print "hello"))` the new line now starts at column zero, since the function is over; closing several forms at once
+  dedents by all of them, and closing one of two dedents by one level. The handler computed only the *extra*
+  indentation to add to what the platform had already copied from the line above, so it could indent further but never
+  less (#258).
 - Reformat Code no longer fails with `env: php: No such file or directory`. `vendor/bin/phel` starts
   `#!/usr/bin/env php`, and an IDE launched from Dock, Spotlight or Finder on macOS hands its child processes
   `PATH=/usr/bin:/bin:/usr/sbin:/sbin` — where a PHP installed by Homebrew, Herd, asdf or mise does not appear. The
