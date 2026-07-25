@@ -4,15 +4,18 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelMap
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelVec
-import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
-import org.phellang.language.psi.utils.SymbolCategory
 
 /**
  * The caret sitting on the *name* a definition introduces, e.g. `(defn <caret> [x] ...)`.
  *
  * The user is naming something new there, so offering existing names is noise at best and, when one
  * is accepted, a redefinition the user did not intend.
+ *
+ * Which heads declare a name is a per-form fact, held in [PhelSpecialForms.NAME_DECLARING]. Asking
+ * the completion-priority bucket instead — as this used to — answered a different question and got
+ * it close to backwards: `(throw <caret>)` and `(do <caret>)` suppressed, `(defn <caret>)` did not.
  */
 internal object PhelNamePositions {
 
@@ -22,18 +25,11 @@ internal object PhelNamePositions {
         val forms = list.forms
         if (forms.isEmpty()) return false
 
-        // A special form one level out means this list is an argument of it, not a definition of
-        // its own — `(let [x (defn ...)])` must not suppress inside the binding's value.
-        if (isInsideSpecialForm(list)) return false
-
         val head = PhelFormHead.symbolTextOf(forms[0]) ?: return false
-        if (!isSpecialForm(head)) return false
+        if (head !in PhelSpecialForms.NAME_DECLARING) return false
         if (forms.size < 2) return false
 
-        val nameSlot = forms[1]
-        if (!declaresANameHere(nameSlot)) return false
-
-        return PhelFormHead.isPartOf(element, nameSlot)
+        return claimsNameSlot(element, forms[1])
     }
 
     /** The same slot read through the list's raw children, which is what catches a partial parse. */
@@ -43,33 +39,21 @@ internal object PhelNamePositions {
         if (children.size < 2) return false
 
         val head = PhelFormHead.symbolTextOf(children[0]) ?: return false
-        if (!isSpecialForm(head)) return false
+        if (head !in PhelSpecialForms.NAME_DECLARING) return false
 
-        val nameSlot = children[1]
-        if (!declaresANameHere(nameSlot)) return false
-
-        return PhelFormHead.isPartOf(element, nameSlot)
+        return claimsNameSlot(element, children[1])
     }
 
     /**
-     * A name is always a symbol, so a collection in the slot means the form declares no name there.
+     * Whether [element] sits in [nameSlot], given that a name is always a symbol.
      *
-     * `let` and `loop` are special forms whose second form is a *binding vector*. Without this
-     * guard the name predicate claims the entire vector, which suppressed completion at every
-     * position inside it — including the value half of each pair, where an ordinary expression
-     * belongs. Declining here hands those vectors to [PhelBindingPositions], which knows that only
-     * the even-indexed entries name anything.
+     * The collection check is defensive rather than load-bearing: no name-declaring form puts a
+     * collection in that slot in valid code. It matters while a form is half-typed — `(def [<caret>`
+     * — where claiming the slot would suppress completion across the whole collection.
      */
-    private fun declaresANameHere(nameSlot: PsiElement): Boolean =
-        nameSlot !is PhelVec && nameSlot !is PhelList && nameSlot !is PhelMap
+    private fun claimsNameSlot(element: PsiElement, nameSlot: PsiElement): Boolean {
+        if (nameSlot is PhelVec || nameSlot is PhelList || nameSlot is PhelMap) return false
 
-    private fun isInsideSpecialForm(list: PhelList): Boolean {
-        val parent = PsiTreeUtil.getParentOfType(list, PhelList::class.java) ?: return false
-        val head = PhelFormHead.symbolTextOf(parent.forms.firstOrNull()) ?: return false
-
-        return isSpecialForm(head)
+        return PhelFormHead.isPartOf(element, nameSlot)
     }
-
-    private fun isSpecialForm(head: String) =
-        PhelSymbolAnalyzer.isSymbolType(head, SymbolCategory.SPECIAL_FORMS)
 }

@@ -35,16 +35,38 @@ class PhelCompletionSuppressionTest : PhelIntegrationTestCase() {
 
     fun testSuppressedWhileNamingADef() = assertSuppressed("(def <caret>)")
 
+    fun testSuppressedWhileNamingAnyDefinitionForm() {
+        for (form in listOf(
+            "def", "def-", "defn", "defn-", "defmacro", "defmacro-",
+            "defstruct", "definterface", "defexception", "defonce", "defenum",
+            "declare", "defprotocol", "defrecord", "deftype", "defmulti", "ns",
+        )) {
+            assertSuppressed("($form <caret>)")
+        }
+    }
+
+    fun testSuppressedWhileNamingADefinitionNestedInAFunction() =
+        assertSuppressed("(defn outer [] (def <caret>))")
+
     /**
-     * Known gap, asserted so a change is noticed rather than assumed.
-     *
-     * Both name predicates gate on the SPECIAL_FORMS registry priority, which holds `def`,
-     * `defstruct`, `definterface` and `defexception` but not `defn` / `defmacro`. Naming a `defn`
-     * therefore still offers the whole standard library. Closing it means keying the predicates on
-     * an explicit definition-keyword set instead of the completion-priority bucket.
+     * `(defmethod multi-name dispatch-val ...)` names an *existing* multimethod, so this is the one
+     * `def`-prefixed head where completing the second slot is exactly what the user wants.
      */
-    fun testNamingADefnIsNotYetSuppressed() =
-        assertOffersCompletions("(defn <caret>)")
+    fun testOffersCompletionsOnADefmethodTarget() =
+        assertOffersCompletions("(defmethod area <caret>)")
+
+    /**
+     * The second element of these is an ordinary expression, not a name.
+     *
+     * All of them were suppressed while the predicates gated on the SPECIAL_FORMS completion
+     * priority, a ranking bucket that happens to contain them — so completion was dead in a `do`
+     * block, in the exception slot of a `throw`, and in the arguments of a `recur`.
+     */
+    fun testOffersCompletionsInTheBodyOfANonDeclaringSpecialForm() {
+        for (form in listOf("do", "try", "throw", "recur", "quote", "catch", "finally")) {
+            assertOffersCompletions("(defn f [] ($form <caret>))")
+        }
+    }
 
     fun testSuppressedInsideAnFnParameterVector() = assertSuppressed("(fn [<caret>] 1)")
 

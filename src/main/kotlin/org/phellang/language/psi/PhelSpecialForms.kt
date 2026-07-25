@@ -22,6 +22,29 @@ object PhelSpecialForms {
     )
 
     /**
+     * Forms whose *second* element is a name being introduced: `(defn name ...)`, `(ns name ...)`.
+     *
+     * Completion has nothing to offer at such a slot — every candidate is a name that already
+     * exists, and accepting one silently redefines it.
+     *
+     * Membership is per-form, verified against each form's registry signature, because there is no
+     * completion-priority bucket that means this. Consumers previously asked
+     * `isSymbolType(head, SPECIAL_FORMS)`, which is a *ranking* bucket: it holds `do`, `try`,
+     * `throw`, `recur`, `catch` and `quote` — whose second element is an ordinary expression — while
+     * omitting `defn`, `defmacro` and the private and starred variants. The answer it gave was
+     * close to inverted.
+     *
+     * `defmethod` is deliberately absent: `(defmethod multi-name dispatch-val ...)` names an
+     * existing multimethod, so completing it there is exactly what the user wants.
+     */
+    val NAME_DECLARING: Set<String> = setOf(
+        "def", "def-", "defn", "defn-", "defmacro", "defmacro-",
+        "defstruct", "defstruct*", "definterface", "definterface*",
+        "defexception", "defexception*", "defonce", "defenum",
+        "declare", "defprotocol", "defrecord", "deftype", "defmulti", "ns",
+    )
+
+    /**
      * Heads whose textual argument list is not a plain positional call: special forms, variadic
      * macros, threading macros, and the interop punctuation forms.
      *
