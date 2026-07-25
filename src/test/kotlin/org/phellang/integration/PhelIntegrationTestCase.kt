@@ -16,13 +16,20 @@ import org.phellang.indexing.PhelProjectSymbolIndex
  *
  * Disposing the service in tearDown drops its listeners so each class starts from a clean
  * project; the service is recreated lazily the next time it is needed.
+ *
+ * The index is also cleared explicitly. `Disposer` will not run `dispose()` a second time on an
+ * instance it has already disposed, and `getServiceIfCreated` keeps handing back that same instance,
+ * so from the second test method onward disposal alone cleared nothing and one class's definitions
+ * turned up in the next class's `getAllSymbols()` (#271).
  */
 abstract class PhelIntegrationTestCase : BasePlatformTestCase() {
 
     override fun tearDown() {
         try {
-            project.getServiceIfCreated(PhelProjectSymbolIndex::class.java)
-                ?.let { Disposer.dispose(it) }
+            project.getServiceIfCreated(PhelProjectSymbolIndex::class.java)?.let { index ->
+                index.clear()
+                Disposer.dispose(index)
+            }
         } finally {
             super.tearDown()
         }
