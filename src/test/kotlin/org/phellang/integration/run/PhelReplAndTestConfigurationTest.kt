@@ -1,0 +1,117 @@
+package org.phellang.integration.run
+
+import com.intellij.execution.configurations.ConfigurationFactory
+import org.jdom.Element
+import org.phellang.integration.PhelIntegrationTestCase
+import org.phellang.run.PhelReplConfiguration
+import org.phellang.run.PhelRunConfigurationType
+import org.phellang.run.PhelTestConfiguration
+
+class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
+
+    private fun factories(): Array<ConfigurationFactory> = PhelRunConfigurationType().configurationFactories
+
+    private fun replConfiguration() = PhelReplConfiguration(project, factories()[1], "Phel REPL")
+
+    private fun testConfiguration() = PhelTestConfiguration(project, factories()[2], "Phel tests")
+
+    fun testTypeOffersFileReplAndTestFactories() {
+        assertEquals(listOf("Phel file", "Phel REPL", "Phel tests"), factories().map { it.name })
+    }
+
+    /**
+     * The original factory keeps its id: it is persisted alongside the type id, so renaming it
+     * would orphan every configuration saved before the REPL and test factories existed.
+     */
+    fun testOriginalFactoryIdIsUnchanged() {
+        assertEquals("Phel", factories()[0].id)
+    }
+
+    fun testReplAndTestFactoryIdsAreDistinct() {
+        assertEquals(listOf("Phel", "PhelRepl", "PhelTest"), factories().map { it.id })
+    }
+
+    // ---- REPL ----
+
+    fun testReplNamesItself() {
+        assertEquals("Phel REPL", replConfiguration().suggestedName())
+    }
+
+    fun testReplDefaultsToTheProjectRoot() {
+        assertEquals(project.basePath.orEmpty(), replConfiguration().effectiveWorkingDirectory())
+    }
+
+    fun testReplKeepsAnExplicitWorkingDirectory() {
+        val configuration = replConfiguration().apply { workingDirectory = "/elsewhere" }
+
+        assertEquals("/elsewhere", configuration.effectiveWorkingDirectory())
+    }
+
+    fun testReplRoundTripsThroughXml() {
+        val saved = replConfiguration().apply { workingDirectory = "/project" }
+        val element = Element("configuration")
+        saved.writeExternal(element)
+
+        val loaded = replConfiguration()
+        loaded.readExternal(element)
+
+        assertEquals("/project", loaded.workingDirectory)
+    }
+
+    // ---- tests ----
+
+    fun testTestConfigurationRunsEverythingByDefault() {
+        val configuration = testConfiguration()
+
+        assertEmpty(configuration.paths())
+        assertEquals("All tests", configuration.suggestedName())
+    }
+
+    fun testTestConfigurationSplitsPathsOnWhitespace() {
+        val configuration = testConfiguration().apply { testPaths = "tests/a.phel   tests/b.phel" }
+
+        assertEquals(listOf("tests/a.phel", "tests/b.phel"), configuration.paths())
+    }
+
+    fun testTestConfigurationIgnoresStrayWhitespace() {
+        val configuration = testConfiguration().apply { testPaths = "  \n tests/a.phel \n " }
+
+        assertEquals(listOf("tests/a.phel"), configuration.paths())
+    }
+
+    fun testTestConfigurationNamesItselfAfterItsPaths() {
+        val configuration = testConfiguration().apply { testPaths = "tests/a.phel" }
+
+        assertEquals("Tests: tests/a.phel", configuration.suggestedName())
+    }
+
+    fun testTestConfigurationRoundTripsThroughXml() {
+        val saved = testConfiguration().apply {
+            testPaths = "tests/a.phel"
+            workingDirectory = "/project"
+        }
+        val element = Element("configuration")
+        saved.writeExternal(element)
+
+        val loaded = testConfiguration()
+        loaded.readExternal(element)
+
+        assertEquals("tests/a.phel", loaded.testPaths)
+        assertEquals("/project", loaded.workingDirectory)
+    }
+
+    /** Neither can run without a binary, and both must say so before launching. */
+    fun testBothRejectAProjectWithNoPhelBinary() {
+        for (configuration in listOf(replConfiguration(), testConfiguration())) {
+            val message = try {
+                configuration.checkConfiguration()
+                null
+            } catch (e: com.intellij.execution.configurations.RuntimeConfigurationError) {
+                e.message
+            }
+
+            assertNotNull("expected ${configuration.javaClass.simpleName} to reject a binary-less project", message)
+            assertTrue(message!!, message.startsWith("Phel binary not found"))
+        }
+    }
+}
