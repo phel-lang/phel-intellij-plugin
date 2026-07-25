@@ -38,8 +38,10 @@ class PhelDefinitionKindTest {
 
         assertEquals(
             setOf(
-                "def", "def-", "defn", "defn-", "defmacro", "defmacro-",
-                "defstruct", "definterface", "defexception", "declare",
+                "def", "def-", "defonce", "defn", "defn-", "defmacro", "defmacro-",
+                "defstruct", "defstruct*", "definterface", "definterface*",
+                "defexception", "defexception*", "defenum", "defprotocol",
+                "defrecord", "deftype", "defmulti", "deftest", "declare",
             ),
             declared,
         )
@@ -67,7 +69,9 @@ class PhelDefinitionKindTest {
         assertNull(PhelDefinitionKind.fromKeyword(null))
         assertNull(PhelDefinitionKind.fromKeyword(""))
         assertNull(PhelDefinitionKind.fromKeyword("let"))
-        assertNull(PhelDefinitionKind.fromKeyword("deftest"))
+        assertNull(PhelDefinitionKind.fromKeyword("fn"))
+
+        // `ns` declares a name but not a program symbol, so it has no noun here.
         assertNull(PhelDefinitionKind.fromKeyword("ns"))
     }
 }

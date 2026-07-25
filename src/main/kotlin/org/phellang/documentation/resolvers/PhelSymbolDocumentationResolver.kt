@@ -70,45 +70,48 @@ class PhelSymbolDocumentationResolver {
         val qualifier = PhelPsiUtils.getQualifier(symbol)
         val functionName = PhelPsiUtils.getName(symbol)
 
-        // For qualified symbols (e.g., "str/replace", "s/replace", "math/is-positive")
-        if (qualifier != null && functionName != null) {
-            val file = symbol.containingFile as? PhelFile ?: return generateBasicDocumentation(symbol, symbolName)
-            val aliasMap = PhelNamespaceUtils.extractAliasMap(file)
-
-            // Check if qualifier is an alias (e.g., "s" -> "str")
-            val resolvedNamespace = aliasMap[qualifier] ?: qualifier
-
-            val canonicalName = "$resolvedNamespace/$functionName"
-            val apiDoc = PhelApiDocumentation.getDocumentation(canonicalName)
-            if (apiDoc != null) return apiDoc
-
-            val directDoc = PhelApiDocumentation.getDocumentation(symbolName)
-            if (directDoc != null) return directDoc
-
-            // Try project symbols - use the resolved namespace (alias -> actual) or qualifier directly
-            val projectDoc = resolveProjectSymbolDocumentation(symbol, resolvedNamespace, functionName)
-            if (projectDoc != null) return projectDoc
+        val doc = if (qualifier != null && functionName != null) {
+            qualifiedDocumentation(symbol, symbolName, qualifier, functionName)
         } else {
-            // Unqualified symbol (e.g., "map") - direct API lookup first
-            val directDoc = PhelApiDocumentation.getDocumentation(symbolName)
-            if (directDoc != null) return directDoc
-
-            // Then try resolving via a `:refer` clause: if the file imports this name
-            // from another namespace, look it up by (sourceNamespace, name).
-            val file = symbol.containingFile as? PhelFile
-            if (file != null) {
-                val sourceNamespace = PhelNamespaceUtils.findReferSource(file, symbolName)
-                if (sourceNamespace != null) {
-                    val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(sourceNamespace)
-                    val canonicalName = "$shortNamespace/$symbolName"
-                    PhelApiDocumentation.getDocumentation(canonicalName)?.let { return it }
-                    val projectDoc = resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
-                    if (projectDoc != null) return projectDoc
-                }
-            }
+            unqualifiedDocumentation(symbol, symbolName)
         }
 
-        return generateBasicDocumentation(symbol, symbolName)
+        return doc ?: generateBasicDocumentation(symbol, symbolName)
+    }
+
+    /**
+     * A qualified symbol such as `str/replace` or `s/replace`.
+     *
+     * The qualifier may be an `:as` alias, so it is resolved through the file's alias map before the
+     * canonical lookup; the symbol's literal text is tried next in case it is already canonical.
+     */
+    private fun qualifiedDocumentation(
+        symbol: PhelSymbol,
+        symbolName: String,
+        qualifier: String,
+        functionName: String,
+    ): String? {
+        val file = symbol.containingFile as? PhelFile ?: return null
+        val resolvedNamespace = PhelNamespaceUtils.extractAliasMap(file)[qualifier] ?: qualifier
+
+        return PhelApiDocumentation.getDocumentation("$resolvedNamespace/$functionName")
+            ?: PhelApiDocumentation.getDocumentation(symbolName)
+            ?: resolveProjectSymbolDocumentation(symbol, resolvedNamespace, functionName)
+    }
+
+    /**
+     * A bare symbol such as `map`: the standard library first, then the namespace a `:refer` clause
+     * brought the name in from.
+     */
+    private fun unqualifiedDocumentation(symbol: PhelSymbol, symbolName: String): String? {
+        PhelApiDocumentation.getDocumentation(symbolName)?.let { return it }
+
+        val file = symbol.containingFile as? PhelFile ?: return null
+        val sourceNamespace = PhelNamespaceUtils.findReferSource(file, symbolName) ?: return null
+        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(sourceNamespace)
+
+        return PhelApiDocumentation.getDocumentation("$shortNamespace/$symbolName")
+            ?: resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
     }
 
     private fun resolveProjectSymbolDocumentation(

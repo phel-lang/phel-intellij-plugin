@@ -18,12 +18,18 @@ package org.phellang.language.psi
  * noun here.
  */
 enum class PhelDefinitionKind(val noun: String, val keywords: Set<String>) {
-    VARIABLE("variable", setOf("def", "def-")),
+    VARIABLE("variable", setOf("def", "def-", "defonce")),
     FUNCTION("function", setOf("defn", "defn-")),
     MACRO("macro", setOf("defmacro", "defmacro-")),
-    STRUCT("struct", setOf("defstruct")),
-    INTERFACE("interface", setOf("definterface")),
-    EXCEPTION("exception", setOf("defexception")),
+    STRUCT("struct", setOf("defstruct", "defstruct*")),
+    INTERFACE("interface", setOf("definterface", "definterface*")),
+    EXCEPTION("exception", setOf("defexception", "defexception*")),
+    ENUM("enum", setOf("defenum")),
+    PROTOCOL("protocol", setOf("defprotocol")),
+    RECORD("record", setOf("defrecord")),
+    TYPE("type", setOf("deftype")),
+    MULTIMETHOD("multimethod", setOf("defmulti")),
+    TEST("test", setOf("deftest")),
     DECLARATION("declaration", setOf("declare"));
 
     companion object {
@@ -32,5 +38,12 @@ enum class PhelDefinitionKind(val noun: String, val keywords: Set<String>) {
 
         /** The kind [keyword] declares, or null when it declares nothing (or is absent). */
         fun fromKeyword(keyword: String?): PhelDefinitionKind? = keyword?.let { byKeyword[it] }
+
+        /**
+         * Every keyword this enum knows. Pinned against [PhelSpecialForms.DEFINITION_FORMS] by test:
+         * a form added there must gain a noun here, or the structure view and Find Usages fall back
+         * to the anonymous "symbol".
+         */
+        val coveredKeywords: Set<String> = byKeyword.keys
     }
 }

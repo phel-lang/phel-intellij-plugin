@@ -5,6 +5,7 @@ import org.phellang.registry.PhelCompletionPriority
 import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.utils.SymbolCategory
@@ -22,11 +23,13 @@ import org.phellang.language.psi.utils.SymbolCategory
  */
 object PhelSymbolAnalyzer {
 
-    /** Top-level forms that bind a name in their second position (the symbol being defined). */
-    private val DEFINITION_FORMS = setOf(
-        "def", "def-", "defn", "defn-", "defmacro", "defmacro-",
-        "defstruct", "definterface", "defexception", "declare", "deftest",
-    )
+    /**
+     * Top-level forms that bind a name in their second position.
+     *
+     * Derived rather than listed: this copy had drifted to omit `defonce`, `defenum`, `defprotocol`,
+     * `defrecord`, `deftype`, `defmulti` and the starred variants.
+     */
+    private val DEFINITION_FORMS = PhelSpecialForms.DEFINITION_FORMS
 
     /** True when [symbolText] belongs to [category] according to the generated function registry. */
     @JvmStatic

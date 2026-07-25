@@ -30,6 +30,26 @@ class PhelUnusedLetBindingInspectionIntegrationTest : PhelIntegrationTestCase() 
         assertTrue("used binding should not be flagged: $warnings", warnings.isEmpty())
     }
 
+    /**
+     * `if-some` and `when-some` bind a vector exactly as `if-let` and `when-let` do. They were
+     * absent from PhelSpecialForms.LET_LIKE, so the inspection never looked inside them at all.
+     */
+    fun testUnusedBindingInAnIfSomeIsFlagged() {
+        val warnings = inspect("(ns app\\m)\n(defn f []\n  (if-some [unused 1]\n    42\n    43))\n")
+        assertEquals(listOf("Binding 'unused' is never used."), warnings)
+    }
+
+    fun testUsedBindingInAWhenSomeIsNotFlagged() {
+        val warnings = inspect("(ns app\\m)\n(defn f []\n  (when-some [used 1]\n    (println used)))\n")
+        assertTrue("used binding should not be flagged: $warnings", warnings.isEmpty())
+    }
+
+    /** Either branch counts as usage: the binding is in scope for both. */
+    fun testBindingUsedOnlyInTheElseBranchOfAnIfSomeIsNotFlagged() {
+        val warnings = inspect("(ns app\\m)\n(defn f []\n  (if-some [v 1]\n    42\n    (println v)))\n")
+        assertTrue("v is used in the else branch: $warnings", warnings.isEmpty())
+    }
+
     fun testUnderscorePrefixedBindingIsIgnored() {
         val warnings = inspect("(ns app\\m)\n(defn f []\n  (let [_ignored 1]\n    42))\n")
         assertTrue("intentionally-unused _-prefixed binding should be ignored: $warnings", warnings.isEmpty())

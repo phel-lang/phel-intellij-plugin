@@ -1,210 +1,33 @@
 package org.phellang.completion.engine
 
 import com.intellij.codeInsight.completion.CompletionResultSet
-import com.intellij.icons.AllIcons
 import com.intellij.psi.PsiElement
-import org.phellang.registry.PhelCompletionPriority
-import org.phellang.completion.infrastructure.PhelCompletionUtils
-import org.phellang.completion.infrastructure.PhelLocalSymbolKind
-import org.phellang.language.psi.files.PhelFile
-import org.phellang.language.psi.PhelAccess
-import org.phellang.language.psi.PhelList
-import org.phellang.language.psi.PhelSpecialForms
-import org.phellang.language.psi.PhelSymbol
-import org.phellang.language.psi.PhelVec
-import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
-import org.phellang.language.psi.utils.PhelPsiUtils
-import javax.swing.Icon
+import org.phellang.completion.engine.locals.PhelBindingCollector
+import org.phellang.completion.engine.locals.PhelFileDefinitionCollector
+import org.phellang.completion.engine.locals.PhelLocalSymbolSink
+import org.phellang.completion.engine.locals.PhelParameterCollector
 
-private val FUNCTION_INTRO_FORMS = PhelSpecialForms.FUNCTION_DEFINING
-
+/**
+ * Symbols bound in the file being edited: parameters, let/loop bindings, and its own top-level
+ * definitions. All are legal to type unqualified, and all are found by walking PSI the user has
+ * already parsed.
+ *
+ * Symbols from *other* files are deliberately not handled here — `PhelProjectCompletionHelper`
+ * serves those from the symbol index, namespace-qualified and with auto-import, which is the only
+ * spelling that actually compiles.
+ */
 object PhelLocalSymbolCompletions {
-    val PARAMETER_ICON = AllIcons.Nodes.Parameter
-    val VARIABLE_ICON = AllIcons.Nodes.Variable
 
     /**
-     * Symbols bound in the file being edited: parameters, let/loop bindings, and its own
-     * top-level definitions. All of these are legal to type unqualified, and all are found by
-     * walking PSI the user already has parsed.
-     *
-     * Symbols from *other* files are deliberately not handled here — [PhelProjectCompletionHelper]
-     * serves those from the symbol index, namespace-qualified and with auto-import, which is the
-     * only spelling that actually compiles.
+     * Collectors run narrowest scope first. The sink keeps the first offer of each name, so that
+     * order is what makes a parameter shadow a same-named top-level definition.
      */
     @JvmStatic
     fun addLocalSymbols(result: CompletionResultSet, position: PsiElement) {
-        val addedSymbols: MutableSet<String> = HashSet()
+        val sink = PhelLocalSymbolSink(result)
 
-        // First priority: Add function parameters from current scope
-        addCurrentFunctionParameters(result, position, addedSymbols)
-
-        // Second priority: Add let bindings from current scope
-        addCurrentLetBindings(result, position, addedSymbols)
-
-        // Third priority: Add this file's own top-level definitions
-        addLocalDefinitionSymbolsSimple(result, position, addedSymbols)
+        PhelParameterCollector.collect(position, sink)
+        PhelBindingCollector.collect(position, sink)
+        PhelFileDefinitionCollector.collect(position, sink)
     }
-
-    private fun addSymbolCompletion(
-        result: CompletionResultSet,
-        symbolName: String,
-        kind: PhelLocalSymbolKind,
-        icon: Icon?,
-        addedSymbols: MutableSet<String>
-    ) {
-        if (!addedSymbols.contains(symbolName) && symbolName.isNotBlank()) {
-            addedSymbols.add(symbolName)
-
-            PhelCompletionUtils.addLocalSymbolCompletion(result, symbolName, kind, icon)
-        }
-    }
-
-    private fun addCurrentFunctionParameters(
-        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
-    ) {
-        var current = position.parent
-        var depth = 0
-
-        while (current != null && depth < 10) {
-            if (current is PhelList) {
-                val children = current.children
-                if (children.isNotEmpty()) {
-                    val firstChild = children[0]
-                    if (firstChild is PhelSymbol || firstChild is PhelAccess) {
-                        val functionType = firstChild.text
-
-                        if (functionType in FUNCTION_INTRO_FORMS) {
-                            val paramVec = PhelSymbolAnalyzer.findParameterVector(current) ?: break
-                            // activeForms, not children: a `#_`-discarded parameter is still in
-                            // the tree but is not bound, so offering it completes a name that
-                            // does not exist at runtime.
-                            for (paramForm in PhelPsiUtils.activeForms(paramVec)) {
-                                val paramName = PhelPsiUtils.asSymbol(paramForm)?.text
-                                if (paramName.isNullOrEmpty()) continue
-
-                                addSymbolCompletion(
-                                    result,
-                                    paramName,
-                                    PhelLocalSymbolKind.FUNCTION_PARAMETER,
-                                    PARAMETER_ICON,
-                                    addedSymbols
-                                )
-                            }
-                            break // Found the function, stop looking
-                        }
-                    }
-                }
-            }
-            current = current.parent
-            depth++
-        }
-    }
-
-    private fun addCurrentLetBindings(
-        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
-    ) {
-        var current = position.parent
-        var depth = 0
-
-        while (current != null && depth < 10) {
-            if (current is PhelList) {
-                val children = current.children
-                if (children.isNotEmpty()) {
-                    val firstChild = children[0]
-                    if (firstChild is PhelSymbol || firstChild is PhelAccess) {
-                        val bindingType = firstChild.text
-
-                        if (bindingType == "let" || bindingType == "for" || bindingType == "loop" || bindingType == "binding") {
-                            if (children.size > 1) {
-                                val bindingElement = children[1]
-                                if (bindingElement is PhelVec) {
-                                    // Name/value pairs, so every other form is a name. Counted over
-                                    // activeForms rather than children: `#_` leaves the form it
-                                    // discards in the tree, and one discarded entry shifts the
-                                    // parity, which drops every later name from the results.
-                                    val bindingForms = PhelPsiUtils.activeForms(bindingElement)
-                                    for (i in bindingForms.indices step 2) {
-                                        val bindingName = PhelPsiUtils.asSymbol(bindingForms[i])?.text
-                                        if (bindingName.isNullOrEmpty()) continue
-
-                                        val kind = when (bindingType) {
-                                            "let" -> PhelLocalSymbolKind.LET_BINDING
-                                            "loop" -> PhelLocalSymbolKind.LOOP_BINDING
-                                            else -> PhelLocalSymbolKind.LOCAL_VARIABLE
-                                        }
-                                        addSymbolCompletion(
-                                            result, bindingName, kind, VARIABLE_ICON, addedSymbols
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            current = current.parent
-            depth++
-        }
-    }
-
-    private fun addLocalDefinitionSymbolsSimple(
-        result: CompletionResultSet, position: PsiElement, addedSymbols: MutableSet<String>
-    ) {
-        val file = position.containingFile as? PhelFile ?: return
-
-        for (child in file.children) {
-            if (child !is PhelList) continue
-            val children: Array<PsiElement> = child.children
-
-            if (children.size < 2) continue
-
-            val firstElement = children[0]
-
-            if (firstElement !is PhelSymbol && firstElement !is PhelAccess) continue
-
-            val defType = firstElement.text
-            val localDefinitionTypes = arrayOf(
-                "def",
-                "defn",
-                "defn-",
-                "defmacro",
-                "defmacro-",
-                "defexception",
-                "defexception*",
-                "definterface",
-                "definterface*",
-                "defstruct",
-                "defstruct*"
-            )
-
-            if (!localDefinitionTypes.contains(defType)) continue
-
-            val nameElement = children[1]
-            if (nameElement !is PhelSymbol && nameElement !is PhelAccess) continue
-
-            val symbolName = nameElement.text
-            val priority = when (defType) {
-                "defn", "defn-", "defmacro", "defmacro-" -> PhelCompletionPriority.RECENT_DEFINITIONS
-                else -> PhelCompletionPriority.PROJECT_SYMBOLS
-            }
-
-            val displayType = when (defType) {
-                "def" -> "Local Variable"
-                "defn", "defn-" -> "Local Function"
-                "defmacro", "defmacro-" -> "Local Macro"
-                "defexception", "defexception*" -> "Local Exception"
-                "definterface", "definterface*" -> "Local Interface"
-                "defstruct", "defstruct*" -> "Local Struct"
-                else -> "Local Definition"
-            }
-
-            if (addedSymbols.contains(symbolName) || symbolName.trim().isEmpty()) continue
-
-            addedSymbols.add(symbolName)
-            PhelCompletionUtils.addRankedCompletion(
-                result, symbolName, "", displayType, priority
-            )
-        }
-    }
-
 }
