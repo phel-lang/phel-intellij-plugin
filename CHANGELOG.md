@@ -12,71 +12,42 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Fixed
 
-- Pressing Enter after a closed form no longer keeps the old indentation. With the caret at the end of
-  `(print "hello"))` the new line now starts at column zero, since the function is over; closing several forms at once
-  dedents by all of them, and closing one of two dedents by one level. The handler computed only the *extra*
-  indentation to add to what the platform had already copied from the line above, so it could indent further but never
-  less (#258).
-- Reformat Code no longer fails with `env: php: No such file or directory`. `vendor/bin/phel` starts
-  `#!/usr/bin/env php`, and an IDE launched from Dock, Spotlight or Finder on macOS hands its child processes
-  `PATH=/usr/bin:/bin:/usr/sbin:/sbin` — where a PHP installed by Homebrew, Herd, asdf or mise does not appear. The
-  formatter now runs with the login shell's environment. Formatting also gains a 30-second timeout, so a hung `phel`
-  can no longer block the editor (#257).
-- Completion no longer goes silent in ordinary expression positions: the body of a `do`, `try`, `catch`, `finally` or
-  `quote`, the exception slot of a `throw`, `recur` arguments, and the value half of a binding — `(let [x …] …)`,
-  `(loop [acc …] …)` — all offer completions again (#254).
-- Completion no longer offers existing names while you are naming a new definition. `(defn …)`, `(defmacro …)`,
-  `(defonce …)` and the rest of the `def…` family suggested the whole standard library, where accepting a suggestion
-  silently redefined it (#254).
-- Names discarded by `#_` are no longer offered: `(defn #_old new-name [x] x)` completed `old`, a name that does not
-  exist at runtime (#254).
-- Go-to-definition no longer lands on an arbitrary usage. A bare symbol passed to `do`, `try`, `throw`, `recur`, `when`,
-  `cond`, `and`, `or` or `->` registered as a definition of itself, so navigation jumped to whichever such form came
-  first (#254).
-- `defonce` definitions now resolve; they previously resolved nowhere (#254).
-- `if-some` and `when-some` are recognised as binding forms, so their bindings resolve, appear in completion, and are
-  covered by the unused-binding and shadowed-binding inspections and by parameter hints. `if-let`, `when-let`,
-  `foreach`, `dofor` and `binding` bindings are now offered in completion too (#254).
-- `defonce`, `defenum`, `defprotocol`, `defrecord`, `deftype` and `defmulti` are indexed like the other definition
-  forms: they appear in cross-file completion and navigation, fold with a proper placeholder, and are named in the
-  structure view and Find Usages instead of showing as an anonymous "symbol" (#254).
-- Completion is suppressed where only a binding or parameter vector can follow — `(let …)`, `(fn …)` — rather than
-  offering the whole standard library (#254).
-- Parameters of a `defn` documented with a metadata map containing a vector — `{:see-also ["assoc"]}`, the convention
-  used throughout the Phel standard library — are recognised again. The parameter vector was searched for by scanning
-  the forms after the name for the first vector *anywhere* below them, so the one inside `:see-also` ended the search:
-  those parameters were not highlighted as parameters, did not resolve, could not be renamed, and were invisible to
-  inlay hints. The reverse case is fixed too — a vector in the body, as in `(defn f [p] [x])`, was being treated as a
-  second parameter list (#255).
-- `doseq` is recognised as a binding form. As with the `if-some` / `when-some` omission before it, its names did not
-  resolve, were absent from local completion, were never reported as unused or shadowed, and were not treated as
-  locals by the parameter hints (#256).
+- Reformat Code no longer fails with `env: php: No such file or directory` on macOS. The formatter now runs with the
+  login shell's environment, and gains a 30-second timeout so a hung `phel` cannot block the editor (#257).
+- Pressing Enter after a closed form now returns to the right column: `(print "hello"))` starts the next line at
+  column zero, and closing one of two forms dedents by a single level (#258).
+- Completion works again in `do`, `try`, `throw` and `recur` bodies, and on the value half of a `let` or `loop`
+  binding (#254).
+- Completion no longer suggests existing names while you are naming a new `def`, `defn` or `defmacro` (#254).
+- Completion no longer offers names discarded by `#_` (#254).
+- Completion is suppressed where only a binding or parameter vector can follow, as in `(let …)` and `(fn …)` (#254).
+- Go to Definition no longer jumps to an arbitrary usage inside `do`, `try`, `when` or a threading macro (#254).
+- `defonce` definitions now resolve (#254).
+- `if-some`, `when-some`, `if-let`, `when-let`, `foreach`, `dofor` and `doseq` bindings now resolve, appear in
+  completion, and are covered by the binding inspections and parameter hints (#254, #256).
+- `defonce`, `defenum`, `defprotocol`, `defrecord`, `deftype` and `defmulti` now appear in cross-file completion and
+  navigation, fold correctly, and are named in the structure view and Find Usages (#254).
+- Parameters of a `defn` documented with a metadata map containing a vector, such as `{:see-also ["assoc"]}`, are
+  recognised again: they are highlighted, resolve, and can be renamed (#255).
+- Hovering a recursive call, or a call to a function defined earlier in the same file, shows that function's signature
+  and docstring instead of "Function Argument" (#261).
 
 ### Added
 
-- An **Unresolved symbol** inspection, reporting a bare symbol that names nothing in scope. Phel's analyzer raises
-  `PHEL001 Cannot resolve symbol` for these, so the code does not compile (#256).
-- A **Create function** quick fix on that inspection. Where the missing name is being called, it writes a `defn` taking
-  its parameter names from the call's own arguments — `(greet user count)` gives `(defn greet [user count] )` — and
-  places it above the form that calls it, since Phel resolves a symbol against the definitions that precede it and a
-  function written after its caller does not compile (#259).
+- An **Unresolved symbol** inspection, reporting a name that exists nowhere in scope. Phel raises
+  `PHEL001 Cannot resolve symbol` for these, so the code does not compile (#256, #259).
+- A **Create function** quick fix on that inspection. Where the missing name is being called, it writes a `defn` above
+  the calling form, taking its parameter names from the call's arguments — `(greet user count)` gives
+  `(defn greet [user count] )` (#259).
 
 ### Changed
 
-- Completion now offers only what a position can hold. In Lisp the head of a form is what gets called and the rest are
-  values, but both offered the same 979 entries: typing `w` as an argument led with `when`, `when-let`, `when-not`,
-  `when-some`, `while` and `with-open`, none of which is expressible there. Macros and special forms are no longer
-  offered in argument positions — functions still are, since `(map inc xs)` is the point of the language, and threading
-  macros and `doto` are exempt because their arguments become heads on expansion. In head position, definition forms no
-  longer outrank every function, so `map` and `println` are no longer buried under `defstruct` inside a body (#260).
-- The **Unresolved symbol** inspection is now enabled by default. It was introduced switched off pending real-world
-  exposure; over the 62 files of the Phel standard library it reports 42 times, all of them cross-file references to
-  private helpers inside `phel\core`'s multi-file namespace (#259).
-- Code-quality pass over the hand-written Kotlin sources: the largest classes (symbol highlighting, the project symbol
-  scanner, local-symbol completion, the completion context, both let-binding inspections) were split into focused
-  collaborators, and the longest function dropped from 100 lines to 43. The definition-form vocabulary that navigation,
-  folding, indexing, the structure view and Find Usages had each copied is now a single set, pinned by a coverage test
-  so the copies cannot drift apart again (#254).
+- Completion now offers only what a position can hold. Macros and special forms are no longer suggested as arguments,
+  where they cannot appear; functions still are, and threading macros are exempt. In head position, definition forms
+  no longer outrank every function (#260).
+- Large internal refactor: the biggest classes were split into focused collaborators, the longest function dropping
+  from 100 to 43 lines, and the definition-form vocabulary that navigation, folding, indexing and the structure view
+  had each copied is now a single set (#254).
 
 ## [1.0.0] - 2026-07-24
 

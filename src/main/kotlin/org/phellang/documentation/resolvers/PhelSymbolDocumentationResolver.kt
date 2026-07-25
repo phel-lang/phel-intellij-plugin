@@ -60,6 +60,10 @@ class PhelSymbolDocumentationResolver {
     }
 
     private fun isLocalSymbol(symbol: PhelSymbol): Boolean {
+        // A call to a function defined in this file is not a local: it has documentation of its own,
+        // and describing it as a binding hides the very docstring the user hovered for.
+        if (PhelSymbolAnalyzer.isLocalFunctionReference(symbol)) return false
+
         return PhelSymbolAnalyzer.isLocalBindingOrReference(symbol)
     }
 
@@ -107,11 +111,23 @@ class PhelSymbolDocumentationResolver {
         PhelApiDocumentation.getDocumentation(symbolName)?.let { return it }
 
         val file = symbol.containingFile as? PhelFile ?: return null
+
+        // An unqualified name resolves against the current namespace before anything else — that is
+        // how a recursive call, or a call to a sibling definition, finds its own documentation.
+        ownNamespaceDocumentation(symbol, file, symbolName)?.let { return it }
+
         val sourceNamespace = PhelNamespaceUtils.findReferSource(file, symbolName) ?: return null
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(sourceNamespace)
 
         return PhelApiDocumentation.getDocumentation("$shortNamespace/$symbolName")
             ?: resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
+    }
+
+    private fun ownNamespaceDocumentation(symbol: PhelSymbol, file: PhelFile, symbolName: String): String? {
+        val namespace = PhelNamespaceUtils.extractNamespaceFromFile(file) ?: return null
+        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
+
+        return resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
     }
 
     private fun resolveProjectSymbolDocumentation(
