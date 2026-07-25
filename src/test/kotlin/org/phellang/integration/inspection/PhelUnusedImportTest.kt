@@ -1,16 +1,18 @@
 package org.phellang.integration.inspection
 
 import com.intellij.psi.util.PsiTreeUtil
+import org.phellang.inspection.analysis.PhelUnusedImportFinder
 import org.phellang.integration.PhelIntegrationTestCase
-import org.phellang.annotator.validators.PhelImportValidator
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
 /**
- * Behavioural coverage for [PhelImportValidator.isUnusedImport], guarding the cached
+ * Behavioural coverage for [PhelUnusedImportFinder.isUnusedImport], guarding the cached
  * used-qualifier scan: a required namespace is "unused" only when no `ns/...` call in the
  * file body references it.
+ *
+ * The detection moved here from `PhelImportValidator` when it became a switchable inspection.
  */
 class PhelUnusedImportTest : PhelIntegrationTestCase() {
 
@@ -22,13 +24,27 @@ class PhelUnusedImportTest : PhelIntegrationTestCase() {
         assertTrue(isUnused("(ns app\\m\n  (:require phel\\str))\n(println \"hi\")\n", "phel\\str"))
     }
 
+    /** Under `:as` the alias is the qualifier that counts, not the short namespace. */
+    fun testImportUsedThroughItsAliasIsNotUnused() {
+        assertFalse(isUnused("(ns app\\m\n  (:require phel\\str :as s))\n(s/join \", \" [1 2])\n", "phel\\str"))
+    }
+
+    fun testAliasedImportNeverUsedIsUnused() {
+        assertTrue(isUnused("(ns app\\m\n  (:require phel\\str :as s))\n(println \"hi\")\n", "phel\\str"))
+    }
+
+    /** `:refer` brings names in unqualified, so no qualifier will ever appear for it. */
+    fun testReferredImportIsNeverUnused() {
+        assertFalse(isUnused("(ns app\\m\n  (:require phel\\str :refer [join]))\n(println \"hi\")\n", "phel\\str"))
+    }
+
     private fun isUnused(text: String, requiredNamespace: String): Boolean {
         // Unique path per class — the shared test project does not reliably clean files
-        // between classes, so a shared path would risk cross-test interference.
+        // between classes, so a shared path would risk cross-test interference (see #271).
         val vf = myFixture.addFileToProject("src/unused_import_test.phel", text).virtualFile
         val phelFile = com.intellij.psi.PsiManager.getInstance(project).findFile(vf) as PhelFile
         val symbol = PsiTreeUtil.findChildrenOfType(phelFile, PhelSymbol::class.java)
             .first { it.text == requiredNamespace && PsiTreeUtil.getParentOfType(it, PhelList::class.java) != null }
-        return PhelImportValidator.isUnusedImport(symbol)
+        return PhelUnusedImportFinder.isUnusedImport(symbol)
     }
 }

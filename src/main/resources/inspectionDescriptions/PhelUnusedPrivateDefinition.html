@@ -1,0 +1,29 @@
+<html>
+<body>
+<p>Reports a private top-level definition that nothing in its own file references.</p>
+
+<p>Privacy is what makes this answerable: a public definition can be called from any other
+    namespace, so its own file cannot tell whether it is used. A private one is reachable only from
+    where it is declared, so a file-local scan is conclusive.</p>
+
+<p>Recognises all three ways Phel marks a definition private: the <code>defn-</code> /
+    <code>def-</code> / <code>defmacro-</code> family, a <code>^:private</code> flag on the name, and
+    a <code>:private</code> entry in the metadata slot.</p>
+
+<h3>Example:</h3>
+<pre><code>
+(defn- helper [x]   ;; reported: Private definition 'helper' is never used.
+  (* x 2))
+
+(defn public-entry [x]
+  (* x 3))
+</code></pre>
+
+<h3>Not reported</h3>
+<p>A definition that refers to itself stays alive: reporting a recursive helper as unused would be
+    wrong far more often than the reverse.</p>
+
+<p>No quick-fix is offered. Deleting a definition is a larger step than deleting a binding, and a
+    name reached only through a macro would be gone before it was missed.</p>
+</body>
+</html>

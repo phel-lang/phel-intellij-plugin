@@ -139,6 +139,30 @@
                 implementationClass="org.phellang.inspection.PhelUnresolvedSymbolInspection"/>
         <localInspection
                 language="Phel"
+                shortName="PhelUnusedImport"
+                displayName="Unused import"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WEAK WARNING"
+                implementationClass="org.phellang.inspection.PhelUnusedImportInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelUnusedPrivateDefinition"
+                displayName="Unused private definition"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WEAK WARNING"
+                implementationClass="org.phellang.inspection.PhelUnusedPrivateDefinitionInspection"/>
+        <localInspection
+                language="Phel"
+                shortName="PhelUnusedParameter"
+                displayName="Unused function parameter"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WEAK WARNING"
+                implementationClass="org.phellang.inspection.PhelUnusedParameterInspection"/>
+        <localInspection
+                language="Phel"
                 shortName="PhelShadowedLetBinding"
                 displayName="Shadowed let binding"
                 groupName="Phel"
