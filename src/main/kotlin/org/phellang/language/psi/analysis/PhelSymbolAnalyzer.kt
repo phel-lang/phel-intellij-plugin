@@ -85,13 +85,29 @@ object PhelSymbolAnalyzer {
     fun findParameterVector(functionList: PhelList): PhelVec? =
         PhelParameterAnalyzer.findParameterVector(functionList)
 
-    /** True when [symbol] *uses* a local binding — a binding's own declaration is not a reference. */
+    /**
+     * True when [symbol] *uses* a parameter or a `let` binding — a binding's own declaration is not
+     * a reference.
+     *
+     * Deliberately narrower than [isLocalBindingOrReference], which also counts a reference to a
+     * function defined in the same file. That is a call, not an argument: the recursive `factorial`
+     * in `(* n (factorial (dec n)))` was being described as a "Function Argument" on hover.
+     */
     @JvmStatic
     fun isParameterReference(symbol: PhelSymbol): Boolean {
         val symbolText = symbol.text ?: return false
         if (isFunctionParameter(symbol) || isLetBinding(symbol)) return false
 
-        return isLocalReference(symbol, symbolText)
+        return symbolText in PhelParameterAnalyzer.parametersInScopeOf(symbol) ||
+                PhelLetBindingAnalyzer.isReferenceToLetBinding(symbol, symbolText)
+    }
+
+    /** True when [symbol] names a function defined at top level in the same file — a call, not a local. */
+    @JvmStatic
+    fun isLocalFunctionReference(symbol: PhelSymbol): Boolean {
+        val symbolText = symbol.text ?: return false
+
+        return PhelLocalFunctionIndex.isReferenceToLocalFunction(symbol, symbolText, DEFINITION_FORMS)
     }
 
     /**
