@@ -5,11 +5,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVendorUtils
-import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
-import org.phellang.language.psi.utils.SymbolCategory
 
 /**
  * Matches a name against the definitions a Phel file declares — `(def x …)`, `(defn f [..] …)` and
@@ -20,11 +19,6 @@ import org.phellang.language.psi.utils.SymbolCategory
  * answered by `PhelSymbolAnalyzer.findParameterVector`.
  */
 internal object PhelDefinitionFinder {
-    /** Keywords that define new symbols. */
-    private val DEFINING_KEYWORDS = setOf(
-        "def", "defn", "defn-", "defmacro", "defmacro-",
-        "defstruct", "definterface", "def-"
-    )
 
     /** The definitions of [symbolName] declared anywhere in [root]. */
     fun collectDefinitionsIn(root: PsiElement, symbolName: String): List<PsiElement> {
@@ -57,11 +51,18 @@ internal object PhelDefinitionFinder {
         return definedName.takeIf { symbolName == it.text }
     }
 
-    fun isDefiningKeyword(keyword: String?): Boolean {
-        if (keyword == null) return false
-
-        return keyword in DEFINING_KEYWORDS ||
-                PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.SPECIAL_FORMS) ||
-                PhelSymbolAnalyzer.isSymbolType(keyword, SymbolCategory.MACROS)
-    }
+    /**
+     * Whether [keyword] heads a form that declares a name in its second position.
+     *
+     * This used to be a short hand-written list plus a fallback onto the SPECIAL_FORMS and MACROS
+     * completion priorities. Those are *ranking* buckets: they hold `do`, `try`, `throw`, `recur`,
+     * `when`, `cond`, `and`, `or` and `->`, so `(do foo)` registered `foo` as a definition of
+     * itself and go-to-definition landed on whatever usage happened to sit inside such a form.
+     *
+     * The fallback did carry its weight — `defexception`, `declare`, `defrecord` and friends are
+     * MACROS and reached resolution only through it, while the hand-written list omitted them.
+     * [PhelSpecialForms.NAME_DECLARING] covers every one of those by name, and `defonce` besides,
+     * which the registry classifies CORE_FUNCTIONS and so neither route reached.
+     */
+    fun isDefiningKeyword(keyword: String?): Boolean = keyword in PhelSpecialForms.NAME_DECLARING
 }
