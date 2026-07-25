@@ -63,6 +63,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Changed
 
+- Completion now offers only what a position can hold. In Lisp the head of a form is what gets called and the rest are
+  values, but both offered the same 979 entries: typing `w` as an argument led with `when`, `when-let`, `when-not`,
+  `when-some`, `while` and `with-open`, none of which is expressible there. Macros and special forms are no longer
+  offered in argument positions — functions still are, since `(map inc xs)` is the point of the language, and threading
+  macros and `doto` are exempt because their arguments become heads on expansion. In head position, definition forms no
+  longer outrank every function, so `map` and `println` are no longer buried under `defstruct` inside a body (#260).
 - The **Unresolved symbol** inspection is now enabled by default. It was introduced switched off pending real-world
   exposure; over the 62 files of the Phel standard library it reports 42 times, all of them cross-file references to
   private helpers inside `phel\core`'s multi-file namespace (#259).
