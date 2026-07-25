@@ -55,6 +55,39 @@ class PhelLocalSymbolCompletionTest : PhelIntegrationTestCase() {
         assertTrue("expected item in $forForm", forForm.contains("item"))
     }
 
+    /**
+     * The binding forms that neither `PhelSpecialForms.LET_LIKE` nor the collector's own set used to
+     * cover. `if-some` / `when-some` were absent from both; `if-let` / `when-let` / `foreach` /
+     * `dofor` were in the canonical set but missing from the collector's private copy. In every case
+     * the name was offered by nothing at all.
+     *
+     * A unique prefix leaves one candidate, which is inserted rather than offered, so the completed
+     * text is what to assert.
+     */
+    fun testEveryBindingFormOffersItsNames() {
+        val cases = listOf(
+            "if-some" to "(if-some [zebra 1] zeb<caret> 2)",
+            "when-some" to "(when-some [zebra 1] zeb<caret>)",
+            "if-let" to "(if-let [zebra 1] zeb<caret> 2)",
+            "when-let" to "(when-let [zebra 1] zeb<caret>)",
+            "foreach" to "(foreach [zebra [1 2]] zeb<caret>)",
+            "dofor" to "(dofor [zebra :in [1 2]] zeb<caret>)",
+            "binding" to "(binding [zebra 1] zeb<caret>)",
+        )
+
+        // A fresh file per case: reusing one name across configureByText calls leaves a later file
+        // with empty PSI, which reads as "no completion" and would fail for the wrong reason.
+        cases.forEachIndexed { index, (form, source) ->
+            myFixture.configureByText("case$index.phel", "(ns my\\app)\n(defn f [] $source)")
+            myFixture.completeBasic()
+
+            assertTrue(
+                "$form binding was not completed, got: ${myFixture.file.text}",
+                myFixture.file.text.contains("] zebra"),
+            )
+        }
+    }
+
     fun testTopLevelFunctionsOfTheSameFileAreOffered() {
         val completions = completionsFor("(defn helper [x] x)\n(defn g [] <caret>)")
 

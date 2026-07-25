@@ -3,6 +3,7 @@ package org.phellang.completion.engine.locals
 import com.intellij.icons.AllIcons
 import com.intellij.psi.PsiElement
 import org.phellang.completion.infrastructure.PhelLocalSymbolKind
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.utils.PhelPsiUtils
 
@@ -16,20 +17,33 @@ internal object PhelBindingCollector {
 
     val ICON = AllIcons.Nodes.Variable
 
-    private val KINDS = mapOf(
+    /** The two heads with a name of their own; every other binding form falls back below. */
+    private val NAMED_KINDS = mapOf(
         "let" to PhelLocalSymbolKind.LET_BINDING,
         "loop" to PhelLocalSymbolKind.LOOP_BINDING,
-        "for" to PhelLocalSymbolKind.LOCAL_VARIABLE,
-        "binding" to PhelLocalSymbolKind.LOCAL_VARIABLE,
     )
 
     fun collect(position: PsiElement, sink: PhelLocalSymbolSink) {
         for (form in PhelEnclosingForms.from(position)) {
-            val kind = KINDS[form.head] ?: continue
+            val kind = kindFor(form.head) ?: continue
             val vector = form.list.children.getOrNull(1) as? PhelVec ?: continue
 
             collectNames(vector, kind, sink)
         }
+    }
+
+    /**
+     * Derived from [PhelSpecialForms.LET_LIKE] rather than listed here.
+     *
+     * This used to carry its own set — `let`, `for`, `loop`, `binding` — which silently omitted
+     * `if-let`, `when-let`, `if-some`, `when-some`, `foreach` and `dofor`, so those bindings were
+     * offered by nothing at all. Reading the canonical set is what keeps a form added there from
+     * being missed here.
+     */
+    private fun kindFor(head: String): PhelLocalSymbolKind? {
+        if (head !in PhelSpecialForms.LET_LIKE) return null
+
+        return NAMED_KINDS[head] ?: PhelLocalSymbolKind.LOCAL_VARIABLE
     }
 
     /**

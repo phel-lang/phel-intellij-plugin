@@ -11,9 +11,16 @@ object PhelSpecialForms {
     /**
      * Forms whose second element is a binding vector `[name value ...]`, i.e. forms
      * that introduce local names: `(let [x 1] ...)`, `(loop [...] ...)`, etc.
+     *
+     * `if-some` and `when-some` belong here for the same reason `if-let` and `when-let` do — their
+     * registry signatures are identical (`(if-some bindings then & [else])`), and they bind on
+     * non-nil rather than on truthy. They were missing, so their bindings were invisible to every
+     * consumer of this set at once: unresolved on go-to-definition, absent from local completion,
+     * never reported as unused or shadowed, and unrecognised as locals by the parameter hints.
      */
     val LET_LIKE: Set<String> = setOf(
-        "let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor",
+        "let", "if-let", "when-let", "if-some", "when-some",
+        "loop", "for", "foreach", "binding", "dofor",
     )
 
     /** Forms that introduce a parameter vector — the `fn` / `defn` family. */

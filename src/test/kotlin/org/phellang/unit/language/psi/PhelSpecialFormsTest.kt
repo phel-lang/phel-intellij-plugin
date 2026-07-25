@@ -1,5 +1,6 @@
 package org.phellang.unit.language.psi
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -99,11 +100,30 @@ class PhelSpecialFormsTest {
 
         @Test
         fun `contains the forms whose second element is a binding vector`() {
-            val expected = setOf("let", "if-let", "when-let", "loop", "for", "foreach", "binding", "dofor")
+            val expected = setOf(
+                "let", "if-let", "when-let", "if-some", "when-some",
+                "loop", "for", "foreach", "binding", "dofor",
+            )
 
             assertTrue(
                 PhelSpecialForms.LET_LIKE.containsAll(expected),
                 "LET_LIKE should cover every binding-vector form, found ${PhelSpecialForms.LET_LIKE}",
+            )
+        }
+
+        /**
+         * The `-some` pair binds on non-nil where the `-let` pair binds on truthy, but the shape
+         * they bind with is the same, so every consumer of this set must treat them alike.
+         */
+        @Test
+        fun `treats the -some forms exactly like their -let counterparts`() {
+            assertEquals(
+                "if-let" in PhelSpecialForms.LET_LIKE,
+                "if-some" in PhelSpecialForms.LET_LIKE,
+            )
+            assertEquals(
+                "when-let" in PhelSpecialForms.LET_LIKE,
+                "when-some" in PhelSpecialForms.LET_LIKE,
             )
         }
 

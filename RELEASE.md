@@ -1,22 +1,20 @@
 # Release Process
 
-Publishing is automated. A **draft GitHub Release** is kept up to date for the current version on
-every green push to `main`; **publishing that release** signs the plugin and uploads it to the
-JetBrains Marketplace. You never build or upload the zip by hand.
+Publishing is automated. A **draft GitHub Release** is kept up to date for the current version on every green push to
+`main`; **publishing that release** signs the plugin and uploads it to the JetBrains Marketplace. You never build or
+upload the zip by hand.
 
 ## One-time setup
 
-The signing/publish workflow ([`release.yml`](.github/workflows/release.yml)) needs four repository
-secrets (Settings → Secrets and variables → Actions). They are already configured; this is only for
-reference or rotation:
+The signing/publish workflow ([`release.yml`](.github/workflows/release.yml)) needs four repository secrets (Settings →
+Secrets and variables → Actions). They are already configured; this is only for reference or rotation:
 
-| Secret | Source |
-|---|---|
-| `PUBLISH_TOKEN` | [Marketplace](https://plugins.jetbrains.com/) → your profile → **Tokens** → Generate |
+| Secret                                                     | Source                                                                                                      |
+|------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `PUBLISH_TOKEN`                                            | [Marketplace](https://plugins.jetbrains.com/) → your profile → **Tokens** → Generate                        |
 | `CERTIFICATE_CHAIN`, `PRIVATE_KEY`, `PRIVATE_KEY_PASSWORD` | a [plugin signing certificate](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html) (`openssl`) |
 
-The signing certificate expires (365 days by default) — regenerate and update the two cert secrets
-before then.
+The signing certificate expires (365 days by default) — regenerate and update the two cert secrets before then.
 
 ## Cutting a release
 
@@ -56,15 +54,14 @@ GitHub Release `vX.Y.Z` with the changelog notes. A draft publishes nothing.
 
 ### 6. Publish the release
 
-On the repo's **Releases** page, review the draft `vX.Y.Z` (notes and version), then **Publish**.
-That triggers [`release.yml`](.github/workflows/release.yml), which runs `publishPlugin` to sign and
-upload to the Marketplace and attaches the distribution zip to the release. Track the run under
-**Actions**; the Marketplace listing updates after JetBrains' review.
+On the repo's **Releases** page, review the draft `vX.Y.Z` (notes and version), then **Publish**. That triggers
+[`release.yml`](.github/workflows/release.yml), which runs `publishPlugin` to sign and upload to the Marketplace and
+attaches the distribution zip to the release. Track the run under **Actions**; the Marketplace listing updates after
+JetBrains' review.
 
 ## Manual fallback
 
-If the automation is unavailable, publish from a terminal with the four secrets exported as
-environment variables:
+If the automation is unavailable, publish from a terminal with the four secrets exported as environment variables:
 
 ```bash
 ./gradlew publishPlugin

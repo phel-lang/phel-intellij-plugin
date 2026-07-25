@@ -25,6 +25,7 @@ enum class PhelLocalSymbolKind(
     LET_BINDING("Let Binding", PhelCompletionPriority.CURRENT_SCOPE_LOCALS),
     LOOP_BINDING("Loop Binding", PhelCompletionPriority.CURRENT_SCOPE_LOCALS),
 
-    /** A `for` or `binding` entry: still a current-scope local, just without a nicer name. */
+    /** Any other binding form — `for`, `binding`, `if-let`, `when-some`, … — still a current-scope
+     * local, just without a nicer name. */
     LOCAL_VARIABLE("Local Variable", PhelCompletionPriority.CURRENT_SCOPE_LOCALS),
 }

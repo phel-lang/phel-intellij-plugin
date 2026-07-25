@@ -75,7 +75,10 @@ class PhelCompletionSuppressionTest : PhelIntegrationTestCase() {
      * registry signature, so any candidate offered there would be wrong.
      */
     fun testSuppressedWhereOnlyAVectorCanFollow() {
-        for (form in listOf("fn", "let", "loop", "if-let", "when-let", "for", "foreach", "binding", "dofor")) {
+        for (form in listOf(
+            "fn", "let", "loop", "if-let", "when-let", "if-some", "when-some",
+            "for", "foreach", "binding", "dofor",
+        )) {
             assertSuppressed("(defn f [] ($form <caret>))")
         }
     }
@@ -110,6 +113,12 @@ class PhelCompletionSuppressionTest : PhelIntegrationTestCase() {
 
     fun testSuppressedOnTheNameHalfOfAnIfLetBinding() =
         assertSuppressed("(defn f [] (if-let [<caret> 1] 1 2))")
+
+    fun testSuppressedOnTheNameHalfOfAnIfSomeBinding() =
+        assertSuppressed("(defn f [] (if-some [<caret> 1] 1 2))")
+
+    fun testOffersCompletionsOnTheValueHalfOfAWhenSomeBinding() =
+        assertOffersCompletions("(defn f [] (when-some [v <caret>] v))")
 
     /**
      * `#_` discards the form after it without removing it from the tree, so counting raw children
