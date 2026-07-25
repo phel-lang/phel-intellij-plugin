@@ -16,6 +16,18 @@ class PhelLiveTemplatesTest : PhelIntegrationTestCase() {
 
     private val contextType = PhelTemplateContextType()
 
+    /** The raw `<template …>` declarations from the shipped XML, one string each. */
+    private fun declarations(): List<String> {
+        val xml = javaClass.getResourceAsStream(TEMPLATE_RESOURCE)
+            ?.bufferedReader()?.readText()
+            ?: fail("$TEMPLATE_RESOURCE must be on the classpath")
+
+        return xml.toString().split("<template ").drop(1)
+    }
+
+    private fun declaredAbbreviations(): List<String> =
+        declarations().map { it.substringAfter("name=\"").substringBefore("\"") }
+
     private fun bundledAbbreviations(): List<String> =
         TemplateSettings.getInstance().templates
             .filter { it.groupName == "Phel" }
@@ -63,11 +75,7 @@ class PhelLiveTemplatesTest : PhelIntegrationTestCase() {
      * and a locally constructed instance lacks, and the platform asserts on its absence.
      */
     fun testEveryBundledTemplateDeclaresThePhelContext() {
-        val xml = javaClass.getResourceAsStream("/liveTemplates/Phel.xml")
-            ?.bufferedReader()?.readText()
-            ?: fail("the bundled live template set must be on the classpath")
-
-        val declarations = xml.toString().split("<template ").drop(1)
+        val declarations = declarations()
         assertTrue("expected bundled templates, found none", declarations.isNotEmpty())
 
         for (declaration in declarations) {
@@ -79,11 +87,12 @@ class PhelLiveTemplatesTest : PhelIntegrationTestCase() {
         }
     }
 
+    /** Guards the registration itself: a template in the XML that the IDE never loaded. */
     fun testBundlesEveryTemplateFromTheXml() {
-        val xml = javaClass.getResourceAsStream("/liveTemplates/Phel.xml")!!.bufferedReader().readText()
-        val declared = xml.split("<template ").drop(1)
-            .map { it.substringAfter("name=\"").substringBefore("\"") }
+        assertEquals(declaredAbbreviations().sorted(), bundledAbbreviations().sorted())
+    }
 
-        assertEquals(declared.sorted(), bundledAbbreviations().sorted())
+    private companion object {
+        const val TEMPLATE_RESOURCE = "/liveTemplates/Phel.xml"
     }
 }
