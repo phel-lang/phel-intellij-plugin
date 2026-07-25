@@ -39,6 +39,16 @@ internal object PhelFormWalker {
         else -> PsiTreeUtil.findChildOfType(element, PhelVec::class.java)
     }
 
+    /**
+     * True when [element] is a [T] or is the form wrapper directly around one.
+     *
+     * Direct children only, unlike [vectorOf]. Searching descendants makes a metadata map look like
+     * whatever it happens to contain: `{:see-also ["a" "b"]}` reads as a vector, which is how the
+     * parameter vector of a documented `defn` came to be misidentified.
+     */
+    inline fun <reified T : PsiElement> isOrDirectlyWraps(element: PsiElement): Boolean =
+        element is T || element.children.any { it is T }
+
     /** True when [candidate] either IS [target] or is the form wrapper around it. */
     fun isSameOrWrapperOf(candidate: PsiElement?, target: PhelVec): Boolean =
         candidate === target || candidate === target.parent
