@@ -37,7 +37,7 @@ refreshed, since completion, hover and arity checking are all driven by it.
   the forms after the name for the first vector *anywhere* below them, so the one inside `:see-also` ended the search:
   those parameters were not highlighted as parameters, did not resolve, could not be renamed, and were invisible to
   inlay hints. The reverse case is fixed too — a vector in the body, as in `(defn f [p] [x])`, was being treated as a
-  second parameter list (#254).
+  second parameter list (#255).
 
 ### Changed
 
