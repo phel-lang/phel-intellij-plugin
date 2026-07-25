@@ -22,8 +22,8 @@ class PhelUnusedDefinitionInspectionsTest : PhelIntegrationTestCase() {
     private var fileIndex = 0
 
     private fun inspect(tool: LocalInspectionTool, source: String): List<String> {
-        // Deliberately does not prime the project index: doing so leaks this file's definitions into
-        // the shared light project (see #271). Everything here resolves from the file's own PSI.
+        // Does not prime the project index: everything here resolves from the file's own PSI. Since
+        // #271 the index is cleared between classes, so this is no longer load-bearing for isolation.
         val file = myFixture.configureByText("u${fileIndex++}.phel", source) as PhelFile
 
         val holder = ProblemsHolder(InspectionManager.getInstance(project), file, true)
