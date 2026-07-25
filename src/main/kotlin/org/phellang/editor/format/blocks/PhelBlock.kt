@@ -8,11 +8,7 @@ import com.intellij.formatting.Wrap
 import com.intellij.lang.ASTNode
 import com.intellij.psi.TokenType
 import com.intellij.psi.formatter.common.AbstractBlock
-import org.phellang.language.psi.PhelList
-import org.phellang.language.psi.PhelMap
-import org.phellang.language.psi.PhelSet
 import org.phellang.language.psi.PhelTypes
-import org.phellang.language.psi.PhelVec
 
 /**
  * One node in the formatting tree.
@@ -81,14 +77,16 @@ class PhelBlock(
      * — which are structural, not visual. Indenting inside those too gave three levels of
      * indentation for two levels of parentheses.
      */
-    private fun ASTNode.isBracketed(): Boolean =
-        psi is PhelList || psi is PhelVec || psi is PhelMap || psi is PhelSet
+    private fun ASTNode.isBracketed(): Boolean = elementType in CONTAINERS
 
     private fun ASTNode.isWhitespaceOrEmpty(): Boolean =
         elementType == TokenType.WHITE_SPACE || textRange.isEmpty
 
     private companion object {
         const val KEEP_BLANK_LINES = 1
+
+        /** The bracketed containers. Matched on element type: `getSpacing` runs per sibling pair. */
+        val CONTAINERS = setOf(PhelTypes.LIST, PhelTypes.VEC, PhelTypes.MAP, PhelTypes.SET)
 
         val BRACKETS = setOf(
             PhelTypes.PAREN1, PhelTypes.PAREN2,
