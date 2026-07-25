@@ -1,8 +1,6 @@
 package org.phellang.integration.navigation
 
 import com.intellij.navigation.NavigationItem
-import com.intellij.openapi.application.WriteAction
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.CommonProcessors
 import com.intellij.util.indexing.FindSymbolParameters
@@ -24,33 +22,10 @@ class PhelGotoSymbolContributorTest : PhelIntegrationTestCase() {
 
     private fun index() = PhelProjectSymbolIndex.getInstance(project)
 
-    private val created = mutableListOf<VirtualFile>()
-
     private fun givenIndexed(path: String, text: String): PhelFile {
         val file = myFixture.addFileToProject(path, text) as PhelFile
-        file.virtualFile?.let { created += it }
         index().refreshFileFromPsi(file)
         return file
-    }
-
-    /**
-     * The light fixture's project, and its symbol index, outlive this class.
-     *
-     * The index is dropped from the index explicitly rather than left to `super.tearDown()`: that
-     * disposes the service, and `Disposer` will not run `dispose()` a second time on an instance it
-     * has already disposed, so from the second test method onward the maps are never cleared. Every
-     * definition named here would otherwise turn up in the next class's `getAllSymbols()`.
-     */
-    override fun tearDown() {
-        try {
-            created.forEach { index().removeFile(it) }
-            WriteAction.runAndWait<Throwable> {
-                created.filter { it.isValid }.forEach { it.delete(this) }
-            }
-            created.clear()
-        } finally {
-            super.tearDown()
-        }
     }
 
     private fun names(): List<String> {

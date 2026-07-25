@@ -11,7 +11,7 @@ import org.phellang.language.psi.files.PhelFile
 class PhelRunConfigurationProducer : LazyRunConfigurationProducer<PhelRunConfiguration>() {
 
     override fun getConfigurationFactory(): ConfigurationFactory =
-        PhelRunConfigurationType.getInstance().configurationFactories.first()
+        PhelRunConfigurationType.fileFactory()
 
     override fun setupConfigurationFromContext(
         configuration: PhelRunConfiguration,

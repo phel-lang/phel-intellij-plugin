@@ -39,8 +39,8 @@ class PhelUnusedImportTest : PhelIntegrationTestCase() {
     }
 
     private fun isUnused(text: String, requiredNamespace: String): Boolean {
-        // Unique path per class — the shared test project does not reliably clean files
-        // between classes, so a shared path would risk cross-test interference (see #271).
+        // Unique path per class. The index leak of #271 is fixed, but the shared light project
+        // still keeps the *files* a class adds, so a shared path would collide across classes.
         val vf = myFixture.addFileToProject("src/unused_import_test.phel", text).virtualFile
         val phelFile = com.intellij.psi.PsiManager.getInstance(project).findFile(vf) as PhelFile
         val symbol = PsiTreeUtil.findChildrenOfType(phelFile, PhelSymbol::class.java)

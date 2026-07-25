@@ -19,9 +19,9 @@ class PhelUnresolvedSymbolInspectionTest : PhelIntegrationTestCase() {
     private var fileIndex = 0
 
     private fun inspect(source: String): List<String> {
-        // Deliberately does not prime the project index. Doing so leaks this file's definitions into
-        // the shared light project, where a later class scanning every .phel file then sees them.
-        // Everything asserted here resolves from the file's own PSI.
+        // Does not prime the project index: everything asserted here resolves from the file's own
+        // PSI, so priming would add nothing. Since #271 the index is cleared between classes, so
+        // this is no longer load-bearing for isolation.
         val file = myFixture.configureByText("i${fileIndex++}.phel", "(ns my\\app)\n$source") as PhelFile
 
         val holder = ProblemsHolder(InspectionManager.getInstance(project), file, true)

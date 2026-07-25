@@ -35,12 +35,7 @@ refreshed, since completion, hover and arity checking are all driven by it.
 - Completion works again in `do`, `try`, `throw` and `recur` bodies, and on the value half of a `let` or `loop`
   binding (#254).
 - Completion no longer suggests existing names while you are naming a new `def`, `defn` or `defmacro` (#254).
-- Completion no longer offers names discarded by `#_`, in a definition name, a `let` binding vector or a parameter
-  vector. `(let [alpha 1 #_[beta 2] gamma 3] …)` offers `gamma` again, and `(defn f [iota #_kappa lambda] …)` no
-  longer offers `kappa` (#253, #254).
-- Completing a `php/` name no longer inserts `(:require phel.php)`, which the namespace validator then flagged as
-  "Namespace 'phel.php' does not exist". `php/` is the interop prefix, not a namespace, so nothing is imported for it
-  (#253).
+- Completion no longer offers names discarded by `#_` (#254).
 - Completion is suppressed where only a binding or parameter vector can follow, as in `(let …)` and `(fn …)` (#254).
 - Go to Definition no longer jumps to an arbitrary usage inside `do`, `try`, `when` or a threading macro (#254).
 - `defonce` definitions now resolve (#254).
@@ -52,12 +47,6 @@ refreshed, since completion, hover and arity checking are all driven by it.
   recognised again: they are highlighted, resolve, and can be renamed (#255).
 - Hovering a recursive call, or a call to a function defined earlier in the same file, shows that function's signature
   and docstring instead of "Function Argument" (#261).
-- Requiring the `edn`, `reflect`, `trace` or `transit` namespaces no longer reports them as unknown. The short-name map
-  the import validator reads was hand-maintained and had drifted from the generated registry (#253).
-- Parameter hints are no longer rendered inside `(use …)`, where `(use \DateTimeImmutable :as Date)` labelled its
-  arguments `ClassName:` and `options:` (#253).
-- Character literals with one or two octal digits, such as `\o7` and `\o77`, now lex as characters instead of symbols.
-  The lexer required exactly three digits, while Phel's reader has accepted one to three since v0.32.0 (#252).
 
 ### Added
 
@@ -65,6 +54,11 @@ refreshed, since completion, hover and arity checking are all driven by it.
   `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
   it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
   or mise `php` is on its `PATH` even when the IDE was started from Dock or Spotlight (#263).
+- A **REPL** run configuration, launching `phel repl` in the Run console, which accepts typed input and forwards it
+  to the process (#263).
+- A **test** run configuration, running `phel test` over the whole suite or over named paths, into a real test tree
+  with pass/fail status, durations and failure details. Built from the `junit-xml` reporter, which is written
+  alongside the normal console output and read when the run finishes (#263).
 - **Go to Symbol** (Navigate > Symbol) now finds Phel definitions. The project symbol index that already backed
   completion and arity resolution simply had no route into the platform's name popups; definitions are listed with
   their namespace, so two functions sharing a name can be told apart, and choosing one jumps to the name itself
@@ -75,8 +69,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
   reindent-selection now work before `composer install`, in a scratch file, or where the binary is not on one of the
   searched paths. `phel format` stays the preferred path and still wins whenever it is available; the built-in one
   indents two spaces per level, matching what pressing Enter already does (#265).
-- A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), so indentation is configurable and persists
-  per project (#265).
+- A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), covering indentation and blank lines:
+  how many consecutive blank lines to keep, and how many to force between top-level forms. Only options the
+  formatter actually honours are shown (#265).
 - An **Unresolved symbol** inspection, reporting a name that exists nowhere in scope. Phel raises
   `PHEL001 Cannot resolve symbol` for these, so the code does not compile (#256, #259).
 - A **Create function** quick fix on that inspection. Where the missing name is being called, it writes a `defn` above
