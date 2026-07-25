@@ -4,9 +4,13 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
 
 object PhelPlaceholderGenerator {
-    private val DEFINING_FORMS = setOf(
-        "defn", "defn-", "defmacro", "defmacro-", "def", "def-", "defstruct", "definterface", "defexception", "declare"
-    )
+    /**
+     * Derived rather than listed: this copy had drifted to omit `defonce`, `defenum`, `defprotocol`,
+     * `defrecord`, `deftype`, `defmulti` and the starred variants, which folded as bare `(head...`.
+     *
+     * `ns` is excluded by construction and matched first below, since it renders its own placeholder.
+     */
+    private val DEFINING_FORMS = PhelSpecialForms.DEFINITION_FORMS
 
     fun generateListPlaceholder(list: PhelList): String {
         val forms = PsiTreeUtil.getChildrenOfType(list, PhelForm::class.java) ?: return "(...)"
@@ -16,12 +20,12 @@ object PhelPlaceholderGenerator {
         val firstText = firstSymbol?.text ?: return "(...)"
 
         return when {
-            firstText in DEFINING_FORMS && forms.size >= 2 -> {
-                generateDefiningFormPlaceholder(firstText, forms[1])
-            }
-
             firstText == "ns" && forms.size >= 2 -> {
                 generateNamespacePlaceholder(forms[1])
+            }
+
+            firstText in DEFINING_FORMS && forms.size >= 2 -> {
+                generateDefiningFormPlaceholder(firstText, forms[1])
             }
 
             // Generic forms - show first symbol

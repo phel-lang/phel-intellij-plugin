@@ -37,10 +37,10 @@ Set the new `version` in `build.gradle.kts`:
 version = "X.Y.Z"
 ```
 
-Then promote the `## [Unreleased]` entries in `CHANGELOG.md` into a new `## [X.Y.Z] - YYYY-MM-DD`
-section (or run `./gradlew patchChangelog`). This section is the single source of the release notes:
-the draft release and the Marketplace **What's new** (`patchPluginXml` renders it into
-`<change-notes>`) both come from it — so releasing with an empty section ships empty notes.
+Then promote the `## [Unreleased]` entries in `CHANGELOG.md` into a new `## [X.Y.Z] - YYYY-MM-DD` section (or run
+`./gradlew patchChangelog`). This section is the single source of the release notes: the draft release and the
+Marketplace **What's new** (`patchPluginXml` renders it into `<change-notes>`) both come from it — so releasing with an
+empty section ships empty notes.
 
 ### 4. Update IDE compatibility (if needed)
 
@@ -48,9 +48,9 @@ Adjust `sinceBuild` / `untilBuild` in `build.gradle.kts` if targeting new IDE ve
 
 ### 5. Merge to `main`
 
-Open a PR with the version/changelog bump and merge it. On the resulting green push to `main`, the
-`releaseDraft` job in [`build.yml`](.github/workflows/build.yml) creates or refreshes a **draft**
-GitHub Release `vX.Y.Z` with the changelog notes. A draft publishes nothing.
+Open a PR with the version/changelog bump and merge it. On the resulting green push to `main`, the `releaseDraft` job in
+[`build.yml`](.github/workflows/build.yml) creates or refreshes a **draft** GitHub Release `vX.Y.Z` with the changelog
+notes. A draft publishes nothing.
 
 ### 6. Publish the release
 

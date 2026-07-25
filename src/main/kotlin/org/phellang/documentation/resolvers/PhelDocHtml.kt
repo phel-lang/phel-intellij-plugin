@@ -31,6 +31,6 @@ internal object PhelDocHtml {
             append("<br />")
         }
 
-        append("<br /><i>${symbol.type.keyword} in ${symbol.namespace}</i><br /><br />")
+        append("<br /><i>${symbol.type.primaryKeyword} in ${symbol.namespace}</i><br /><br />")
     }
 }

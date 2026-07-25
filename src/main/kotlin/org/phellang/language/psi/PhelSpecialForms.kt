@@ -48,8 +48,17 @@ object PhelSpecialForms {
         "def", "def-", "defn", "defn-", "defmacro", "defmacro-",
         "defstruct", "defstruct*", "definterface", "definterface*",
         "defexception", "defexception*", "defonce", "defenum",
-        "declare", "defprotocol", "defrecord", "deftype", "defmulti", "ns",
+        "declare", "defprotocol", "defrecord", "deftype", "defmulti", "deftest", "ns",
     )
+
+    /**
+     * [NAME_DECLARING] minus `ns`: the forms that declare a *program symbol*.
+     *
+     * `ns` names a namespace, which the consumers of this set either render specially (the folding
+     * placeholder) or must not treat as a definition at all — marking a namespace name as one would
+     * have the annotator paint it like a local binding.
+     */
+    val DEFINITION_FORMS: Set<String> = NAME_DECLARING - "ns"
 
     /**
      * Heads whose textual argument list is not a plain positional call: special forms, variadic

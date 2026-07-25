@@ -57,7 +57,8 @@ class PhelProjectSymbolTest {
             assertTrue(keywords.contains("defstruct"))
             assertTrue(keywords.contains("definterface"))
             assertTrue(keywords.contains("defexception"))
-            assertEquals(6, keywords.size)
+            assertTrue(keywords.contains("defonce"))
+            assertTrue(keywords.contains("defrecord"))
         }
 
         @Test
@@ -76,18 +77,24 @@ class PhelProjectSymbolTest {
 
         @Test
         fun `all symbol types have correct keywords`() {
-            assertEquals("defn", SymbolType.FUNCTION.keyword)
-            assertEquals("def", SymbolType.VALUE.keyword)
-            assertEquals("defmacro", SymbolType.MACRO.keyword)
-            assertEquals("defstruct", SymbolType.STRUCT.keyword)
-            assertEquals("definterface", SymbolType.INTERFACE.keyword)
-            assertEquals("defexception", SymbolType.EXCEPTION.keyword)
+            assertEquals("defn", SymbolType.FUNCTION.primaryKeyword)
+            assertEquals("def", SymbolType.VALUE.primaryKeyword)
+            assertEquals("defmacro", SymbolType.MACRO.primaryKeyword)
+            assertEquals("defstruct", SymbolType.STRUCT.primaryKeyword)
+            assertEquals("definterface", SymbolType.INTERFACE.primaryKeyword)
+            assertEquals("defexception", SymbolType.EXCEPTION.primaryKeyword)
+
+            // Private and starred spellings resolve to the same type as their public form.
+            assertEquals(SymbolType.FUNCTION, SymbolType.fromKeyword("defn-"))
+            assertEquals(SymbolType.VALUE, SymbolType.fromKeyword("defonce"))
+            assertEquals(SymbolType.STRUCT, SymbolType.fromKeyword("defstruct*"))
         }
 
         @Test
         fun `all entries are accessible`() {
-            val entries = SymbolType.entries
-            assertEquals(6, entries.size)
+            // Membership is pinned against PhelSpecialForms.DEFINITION_FORMS by
+            // PhelDefinitionFormCoverageTest; this only guards the enum being reachable at all.
+            assertTrue(SymbolType.entries.isNotEmpty())
         }
     }
 }

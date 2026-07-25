@@ -109,5 +109,10 @@ object PhelProjectCompletionHelper {
             SymbolType.STRUCT -> "struct"
             SymbolType.INTERFACE -> "interface"
             SymbolType.EXCEPTION -> "exception"
+            SymbolType.ENUM -> "enum"
+            SymbolType.PROTOCOL -> "protocol"
+            SymbolType.RECORD -> "record"
+            SymbolType.TYPE -> "type"
+            SymbolType.MULTIMETHOD -> "multimethod"
         }
 }
