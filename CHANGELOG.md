@@ -38,6 +38,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
   `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
   it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
   or mise `php` is on its `PATH` even when the IDE was started from Dock or Spotlight (#263).
+- **Go to Symbol** (Navigate > Symbol) now finds Phel definitions. The project symbol index that already backed
+  completion and arity resolution simply had no route into the platform's name popups; definitions are listed with
+  their namespace, so two functions sharing a name can be told apart, and choosing one jumps to the name itself
+  rather than the top of the file (#264).
+- **Breadcrumbs** above the editor, showing the trail of enclosing forms — `defn greet > let > when`. Only forms that
+  establish context are shown, so the trail does not simply mirror parenthesis depth (#264).
 - An **Unresolved symbol** inspection, reporting a name that exists nowhere in scope. Phel raises
   `PHEL001 Cannot resolve symbol` for these, so the code does not compile (#256, #259).
 - A **Create function** quick fix on that inspection. Where the missing name is being called, it writes a `defn` above
