@@ -17,6 +17,11 @@ refreshed, since completion, hover and arity checking are all driven by it.
   dedents by all of them, and closing one of two dedents by one level. The handler computed only the *extra*
   indentation to add to what the platform had already copied from the line above, so it could indent further but never
   less (#258).
+- Reformat Code no longer fails with `env: php: No such file or directory`. `vendor/bin/phel` starts
+  `#!/usr/bin/env php`, and an IDE launched from Dock, Spotlight or Finder on macOS hands its child processes
+  `PATH=/usr/bin:/bin:/usr/sbin:/sbin` — where a PHP installed by Homebrew, Herd, asdf or mise does not appear. The
+  formatter now runs with the login shell's environment. Formatting also gains a 30-second timeout, so a hung `phel`
+  can no longer block the editor (#257).
 - Completion no longer goes silent in ordinary expression positions: the body of a `do`, `try`, `catch`, `finally` or
   `quote`, the exception slot of a `throw`, `recur` arguments, and the value half of a binding — `(let [x …] …)`,
   `(loop [acc …] …)` — all offer completions again (#254).
