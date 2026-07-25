@@ -34,6 +34,13 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
+- **Default keyboard shortcuts for the nine paredit actions**, which previously shipped reachable only through the
+  menu. All are two-stroke, under a shared `Ctrl+Alt+Shift+P` prefix: `S` / `B` slurp and barf forward, `Shift+S` /
+  `Shift+B` backward, `W` / `V` / `M` wrap in `( )` / `[ ]` / `{ }`, `U` splice, `R` raise (#267).
+- **Move Element Left/Right** (`Ctrl+Alt+Shift+Left/Right`) over the forms inside a list, vector, map or set, for
+  reordering arguments and map entries (#267).
+- **Surround With** (`Ctrl+Alt+T`) for wrapping a selection of whole forms in `( )`, `[ ]` or `{ }`. Unlike the
+  paredit wrap actions, which take the single form at the caret, this works across a multi-form selection (#267).
 - An **Unused private definition** inspection, reporting a `defn-` / `def-` / `^:private` definition that nothing in
   its own file references. Only private definitions are reported: a public one may be called from any namespace, so
   its own file cannot tell (#266).
