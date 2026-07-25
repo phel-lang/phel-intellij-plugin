@@ -7,6 +7,7 @@ import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import com.intellij.util.ProcessingContext
+import org.phellang.completion.engine.context.PhelCallPosition
 import org.phellang.completion.handlers.PhelTemplateInsertHandler
 import org.phellang.completion.infrastructure.PhelProjectCompletionHelper
 import org.phellang.completion.infrastructure.PhelReferCompletionHelper
@@ -98,8 +99,12 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
         val psiFile = element.containingFile as? PhelFile
         val aliasMap = psiFile?.let { PhelNamespaceUtils.extractAliasMap(it) } ?: emptyMap()
 
+        // In Lisp the head of a form is what gets called and the rest are values, so the two
+        // positions accept different things — see PhelCallPosition.
+        val position = PhelCallPosition.of(element)
+
         PhelLocalSymbolCompletions.addLocalSymbols(result, element)
-        PhelRegistryCompletionHelper.addStandardLibraryFunctions(result, aliasMap)
+        PhelRegistryCompletionHelper.addStandardLibraryFunctions(result, aliasMap, position)
 
         if (psiFile != null) {
             PhelProjectCompletionHelper.addProjectCompletions(result, psiFile, aliasMap)

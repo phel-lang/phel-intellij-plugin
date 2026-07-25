@@ -88,5 +88,36 @@ data class PhelFunction(
     val isDeprecated: Boolean
         get() = documentation.deprecation != null
 
+    /**
+     * True when this can only ever *head* a form — a macro or a special form, never a value.
+     *
+     * `(map inc xs)` is fine because `inc` is a function, but `(map if xs)` and `(println let)` are
+     * not expressible: macros are expanded at compile time and special forms are not first-class.
+     *
+     * Read off the completion priority, which is sound here only because of how the generator
+     * assigns it. `meta.macro` from `api.json` — Phel's own flag — is consulted before any name
+     * list, so [PhelCompletionPriority.MACROS] holds exactly the macros;
+     * [PhelCompletionPriority.SPECIAL_FORMS] is a curated list of genuine special forms.
+     * `CONTROL_FLOW` is deliberately *not* included: it is a ranking bucket holding `if`, `foreach`
+     * and `not`, and `not` is an ordinary function that `(map not xs)` may legitimately pass.
+     */
+    val isCallOnly: Boolean
+        get() {
+            val shortName = name.substringAfter("/")
+            if (shortName in ALWAYS_A_VALUE) return false
+
+            return completion.priority == PhelCompletionPriority.MACROS ||
+                    completion.priority == PhelCompletionPriority.SPECIAL_FORMS ||
+                    shortName in CALL_ONLY_CONTROL_FLOW
+        }
+
     fun toHtmlDocumentation(): String = documentation.toHtml(signature)
+
+    private companion object {
+        /** The two CONTROL_FLOW members that are real special forms rather than functions. */
+        val CALL_ONLY_CONTROL_FLOW = setOf("if", "foreach")
+
+        /** Ordinary functions that a name list routed into an otherwise call-only bucket. */
+        val ALWAYS_A_VALUE = setOf("not")
+    }
 }
