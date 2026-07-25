@@ -46,7 +46,8 @@ object PhelProjectSymbolScanner {
         if (PhelDefinitionPrivacy.isPrivateKeyword(keyword)) return null
 
         val symbolType = SymbolType.fromKeyword(keyword) ?: return null
-        val name = PhelPsiUtils.asSymbol(forms[1])?.text ?: return null
+        val nameSymbol = PhelPsiUtils.asSymbol(forms[1]) ?: return null
+        val name = nameSymbol.text ?: return null
 
         if (PhelDefinitionPrivacy.isPrivate(forms)) return null
 
@@ -59,6 +60,7 @@ object PhelProjectSymbolScanner {
             type = symbolType,
             file = virtualFile,
             docstring = PhelDocstringReader.docstringOf(forms),
+            nameOffset = PhelPsiUtils.getNameTextOffset(nameSymbol),
         )
     }
 }

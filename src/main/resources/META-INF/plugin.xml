@@ -81,6 +81,10 @@
         <lang.findUsagesProvider
                 language="Phel"
                 implementationClass="org.phellang.language.psi.navigation.PhelFindUsagesProvider"/>
+        <gotoSymbolContributor
+                implementation="org.phellang.navigation.PhelGotoSymbolContributor"/>
+        <breadcrumbsInfoProvider
+                implementation="org.phellang.editor.breadcrumbs.PhelBreadcrumbsProvider"/>
         <psi.referenceContributor
                 language="Phel"
                 implementation="org.phellang.language.psi.references.PhelFilePathReferenceContributor"/>
