@@ -162,4 +162,45 @@ class PhelTestServiceMessagesTest {
             messages.count { it.startsWith("##teamcity[testFinished") },
         )
     }
+
+    // ---- real reporter output ----
+    //
+    // Both documents below are verbatim `phel test --reporter=junit-xml` output, captured from a
+    // real project. They are the end-to-end check that the tree gets one node per `deftest`: the
+    // reporter emits one entry per `is` form, and every one of them carries the test's name.
+
+    @Test
+    fun `four passing assertions become one passing node`() {
+        val messages = renderXml(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <testsuites tests="4" failures="0" errors="0" time="0.0"><testsuite name="tests.html" tests="4" failures="0" errors="0" time="0.0"><testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase><testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase><testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase><testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase></testsuite></testsuites>
+            """.trimIndent()
+        )
+
+        assertEquals(1, messages.count { it.startsWith("##teamcity[testStarted") })
+        assertEquals(1, messages.count { it.startsWith("##teamcity[testFinished") })
+        assertTrue(messages.none { it.startsWith("##teamcity[testFailed") }, messages.toString())
+        assertTrue(messages.any { it.contains("name='void-tags'") }, messages.toString())
+    }
+
+    @Test
+    fun `three failing assertions become one failing node listing every form`() {
+        val messages = renderXml(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <testsuites tests="3" failures="3" errors="0" time="0.0"><testsuite name="tests.html" tests="3" failures="3" errors="0" time="0.0"><testcase name="void-tags-ignore-content" classname="" file="/p/tests/html.phel" line="28"><failure message="" type="AssertionFailed">(= &quot;&lt;br /&gt;&quot; (html [:br &quot;ignored&quot;]))</failure></testcase><testcase name="void-tags-ignore-content" classname="" file="/p/tests/html.phel" line="28"><failure message="" type="AssertionFailed">(= &quot;&lt;img src=\&quot;x\&quot; /&gt;&quot; (html [:img {:src &quot;x&quot;} &quot;alt&quot;]))</failure></testcase><testcase name="void-tags-ignore-content" classname="" file="/p/tests/html.phel" line="28"><failure message="" type="AssertionFailed">(= &quot;&lt;input type=\&quot;text\&quot; /&gt;&quot; (html [:input {:type &quot;text&quot;} &quot;x&quot;]))</failure></testcase></testsuite></testsuites>
+            """.trimIndent()
+        )
+
+        assertEquals(1, messages.count { it.startsWith("##teamcity[testStarted") })
+        assertEquals(1, messages.count { it.startsWith("##teamcity[testFinished") })
+
+        val failure = messages.single { it.startsWith("##teamcity[testFailed") }
+        assertTrue(failure.contains("message='3 of 3 assertions failed'"), failure)
+        // Every failing form survives into the detail pane, `[` and `]` service-message escaped.
+        for (tag in listOf(":br", ":img", ":input")) {
+            assertTrue(failure.contains(tag), "expected $tag in: $failure")
+        }
+    }
 }
