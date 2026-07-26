@@ -18,8 +18,24 @@ import java.nio.charset.StandardCharsets
  */
 object PhelRunCommandLine {
 
-    fun run(binary: File, scriptPath: String, workingDirectory: String): GeneralCommandLine =
-        command(binary, "run", listOf(scriptPath), workingDirectory)
+    /**
+     * `phel run [options] [--] <path> [<argv>...]`, so [arguments] follow the script.
+     *
+     * The `--` is emitted only when there are arguments, and it is what makes them safe: an argument
+     * of `-v` would otherwise be read as an option to `phel` itself rather than passed through to the
+     * script. With no arguments there is nothing to guard, and the command stays as short as the one
+     * a user already reads in the console.
+     */
+    fun run(
+        binary: File,
+        scriptPath: String,
+        workingDirectory: String,
+        arguments: List<String> = emptyList(),
+    ): GeneralCommandLine {
+        val positional = if (arguments.isEmpty()) listOf(scriptPath) else listOf(END_OF_OPTIONS, scriptPath) + arguments
+
+        return command(binary, "run", positional, workingDirectory)
+    }
 
     fun repl(binary: File, workingDirectory: String): GeneralCommandLine =
         command(binary, "repl", emptyList(), workingDirectory)
@@ -84,6 +100,9 @@ object PhelRunCommandLine {
     const val OUTPUT_OPTION = "--output="
 
     private const val FILTER_OPTION = "--filter="
+
+    /** Everything after this is positional, whatever it starts with. */
+    private const val END_OF_OPTIONS = "--"
 
     private fun command(
         binary: File,
