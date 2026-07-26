@@ -2,6 +2,7 @@ package org.phellang.inspection
 
 import com.intellij.psi.PsiElement
 import org.phellang.language.psi.PhelForm
+import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
@@ -20,7 +21,7 @@ internal object PhelArityCallSite {
     /** True when the arity check must not run for [list] with head [name]. */
     fun shouldSkip(list: PhelList, head: PhelSymbol, name: String, forms: List<PhelForm>): Boolean {
         if (name in PhelSpecialForms.VARIADIC_HEADS) return true
-        if (name.startsWith("php/") || name.startsWith(".") || name.startsWith("php-")) return true
+        if (PhelInteropShorthands.isInteropCall(name)) return true
         // The dummy identifier the platform injects at the caret mid-completion.
         if (name.contains("IntelliJIdeaRulezzz")) return true
 

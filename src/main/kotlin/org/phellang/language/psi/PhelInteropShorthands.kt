@@ -27,6 +27,26 @@ object PhelInteropShorthands {
     /** `new` is the long-form constructor keyword (sister to `Class.`). */
     private const val NEW_KEYWORD = "new"
 
+    /** The qualifier on every explicit interop form: `php/new`, `php/->`, `php/aget`, `php/strlen`. */
+    const val PHP_QUALIFIER = "php/"
+
+    /** True when [text] is explicitly `php/`-qualified. */
+    fun isPhpQualified(text: String): Boolean = text.startsWith(PHP_QUALIFIER)
+
+    /**
+     * True when a call to [name] reaches PHP rather than Phel, by any spelling.
+     *
+     * `php/foo`, the `.method` / `.-field` accessors, and the `php-` helper family. Anything reading a
+     * call's arguments must skip these: PHP is where the callee lives, so the registry has neither its
+     * arity nor its parameter names.
+     *
+     * Four callers asked this with their own copy of the prefixes, two of them character for
+     * character — the same drift `PhelSpecialForms` exists to prevent, in the set next door.
+     */
+    fun isInteropCall(name: String): Boolean = INTEROP_CALL_PREFIXES.any { name.startsWith(it) }
+
+    private val INTEROP_CALL_PREFIXES = listOf(PHP_QUALIFIER, ".", "php-")
+
     fun isInteropClassName(text: String): Boolean {
         if (text.isEmpty()) return false
         if (text.startsWith("\\")) return true

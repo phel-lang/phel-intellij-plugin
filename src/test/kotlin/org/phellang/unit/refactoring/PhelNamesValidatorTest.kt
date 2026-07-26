@@ -57,11 +57,50 @@ class PhelNamesValidatorTest {
         assertFalse(validator.isIdentifier("(foo)", null))
     }
 
+    /** `%` and `%1` are the anonymous-function parameters; the old character list rejected them. */
+    @Test
+    fun `accepts the anonymous-function parameters`() {
+        assertTrue(validator.isIdentifier("%", null))
+        assertTrue(validator.isIdentifier("%1", null))
+    }
+
+    @Test
+    fun `accepts interop shorthands and PHP class references`() {
+        assertTrue(validator.isIdentifier(".method", null))
+        assertTrue(validator.isIdentifier(".-field", null))
+        assertTrue(validator.isIdentifier("\\DateTimeImmutable", null))
+    }
+
     @Test
     fun `marks reserved words as keywords`() {
         assertTrue(validator.isKeyword("def", null))
         assertTrue(validator.isKeyword("defn", null))
         assertTrue(validator.isKeyword("ns", null))
         assertFalse(validator.isKeyword("foo", null))
+    }
+
+    /**
+     * The forms the hand-written reserved list had drifted away from. It carried `defstruct` but not
+     * `defstruct*`, and none of the binding or dispatch forms at all, so renaming a symbol to any of
+     * these was accepted in silence.
+     */
+    @Test
+    fun `marks the forms the old hand-written list was missing`() {
+        val previouslyMissing = listOf(
+            "defstruct*", "definterface*", "defexception*",
+            "defonce", "defenum", "defprotocol", "defrecord", "deftype", "defmulti", "deftest",
+            "if-let", "when-let", "case", "cond", "for", "foreach", "binding",
+        )
+
+        previouslyMissing.forEach { name ->
+            assertTrue(validator.isKeyword(name, null), "'$name' is a Phel form and must read as a keyword")
+        }
+    }
+
+    @Test
+    fun `still marks the literals as keywords`() {
+        listOf("true", "false", "nil").forEach { name ->
+            assertTrue(validator.isKeyword(name, null), "'$name' is a literal, not a free name")
+        }
     }
 }
