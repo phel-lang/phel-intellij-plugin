@@ -21,10 +21,10 @@ class PhelIndentationCalculator {
 
         for (lineNumber in 0 until upToLine) {
             val lineText = lineAnalyzer.getLineText(lineNumber)
-            nestingLevel += lineAnalyzer.getParenthesesBalance(lineText)
+            nestingLevel += lineAnalyzer.bracketBalance(lineText)
         }
 
-        nestingLevel += lineAnalyzer.getParenthesesBalance(textBeforeCaret)
+        nestingLevel += lineAnalyzer.bracketBalance(textBeforeCaret)
 
         return nestingLevel
     }
