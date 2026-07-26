@@ -131,45 +131,6 @@ class PhelTokenClassifierTest {
     }
 
     @Test
-    fun `individual classification methods should work correctly`() {
-        // Test comment classification
-        assertTrue(PhelTokenClassifier.isComment(PhelTypes.LINE_COMMENT))
-        assertTrue(PhelTokenClassifier.isComment(PhelTypes.FORM_COMMENT))
-        assertFalse(PhelTokenClassifier.isComment(PhelTypes.STRING))
-
-        // Test string classification
-        assertTrue(PhelTokenClassifier.isString(PhelTypes.STRING))
-        assertFalse(PhelTokenClassifier.isString(PhelTypes.NUMBER))
-
-        // Test number classification
-        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.NUMBER))
-        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.HEXNUM))
-        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.BINNUM))
-        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.OCTNUM))
-        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.RADIXNUM))
-        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.SYMBOLIC_NUM))
-        assertTrue(PhelTokenClassifier.isNumber(PhelTypes.RATIO))
-        assertFalse(PhelTokenClassifier.isNumber(PhelTypes.STRING))
-
-        // Test boolean classification
-        assertTrue(PhelTokenClassifier.isBoolean(PhelTypes.BOOL))
-        assertFalse(PhelTokenClassifier.isBoolean(PhelTypes.NIL))
-
-        // Test delimiter classification
-        assertTrue(PhelTokenClassifier.isParentheses(PhelTypes.PAREN1))
-        assertTrue(PhelTokenClassifier.isParentheses(PhelTypes.PAREN2))
-        assertFalse(PhelTokenClassifier.isParentheses(PhelTypes.BRACKET1))
-
-        assertTrue(PhelTokenClassifier.isBrackets(PhelTypes.BRACKET1))
-        assertTrue(PhelTokenClassifier.isBrackets(PhelTypes.BRACKET2))
-        assertFalse(PhelTokenClassifier.isBrackets(PhelTypes.PAREN1))
-
-        assertTrue(PhelTokenClassifier.isBraces(PhelTypes.BRACE1))
-        assertTrue(PhelTokenClassifier.isBraces(PhelTypes.BRACE2))
-        assertFalse(PhelTokenClassifier.isBraces(PhelTypes.BRACKET1))
-    }
-
-    @Test
     fun `classification should be consistent across multiple calls`() {
         val testTokens = listOf(
             PhelTypes.LINE_COMMENT,
@@ -203,41 +164,36 @@ class PhelTokenClassifierTest {
         }
     }
 
+    /** Each token type belongs to exactly one category, which is what makes the map lookup valid. */
     @Test
-    fun `classification methods should be mutually exclusive for different token types`() {
-        val testToken = PhelTypes.STRING
+    fun `a token classifies into exactly one category`() {
+        val sampled = listOf(
+            PhelTypes.STRING, PhelTypes.LINE_COMMENT, PhelTypes.NUMBER, PhelTypes.BOOL,
+            PhelTypes.PAREN1, PhelTypes.BRACKET1, PhelTypes.BRACE1, PhelTypes.HASH_BRACE,
+            PhelTypes.KEYWORD, PhelTypes.SYM, PhelTypes.HAT, PhelTypes.DOT,
+        )
 
-        // A string token should only be classified as string, not as other types
-        assertTrue(PhelTokenClassifier.isString(testToken))
-        assertFalse(PhelTokenClassifier.isComment(testToken))
-        assertFalse(PhelTokenClassifier.isNumber(testToken))
-        assertFalse(PhelTokenClassifier.isBoolean(testToken))
-        assertFalse(PhelTokenClassifier.isNil(testToken))
-        assertFalse(PhelTokenClassifier.isNan(testToken))
-        assertFalse(PhelTokenClassifier.isCharacter(testToken))
-        assertFalse(PhelTokenClassifier.isParentheses(testToken))
-        assertFalse(PhelTokenClassifier.isBrackets(testToken))
-        assertFalse(PhelTokenClassifier.isBraces(testToken))
-        assertFalse(PhelTokenClassifier.isQuote(testToken))
-        assertFalse(PhelTokenClassifier.isSyntaxQuote(testToken))
-        assertFalse(PhelTokenClassifier.isUnquote(testToken))
-        assertFalse(PhelTokenClassifier.isUnquoteSplicing(testToken))
-        assertFalse(PhelTokenClassifier.isKeyword(testToken))
-        assertFalse(PhelTokenClassifier.isMetadata(testToken))
-        assertFalse(PhelTokenClassifier.isDotOperator(testToken))
-        assertFalse(PhelTokenClassifier.isSymbol(testToken))
-        assertFalse(PhelTokenClassifier.isBadCharacter(testToken))
+        sampled.forEach { token ->
+            val matches = TokenCategory.entries.filter { PhelTokenClassifier.classifyToken(token) == it }
+            assertEquals(1, matches.size, "$token should land in exactly one category, got $matches")
+        }
     }
 
+    /**
+     * `#{` opens a set, but for styling it is a brace like any other.
+     *
+     * There used to be a dedicated `isSetOpener` predicate alongside an `isBraces` that excluded
+     * `HASH_BRACE` — a second, disagreeing encoding of the category map. The map is the only answer
+     * now, and this pins the one it gives.
+     */
     @Test
-    fun `set opener has a dedicated check method`() {
-        // Compound tokens have semantic check methods
-        assertTrue(PhelTokenClassifier.isSetOpener(PhelTypes.HASH_BRACE), "isSetOpener should recognize #{")
-
-        // But it classifies as its visual equivalent for styling
+    fun `the set opener is styled as a brace`() {
         assertEquals(TokenCategory.BRACES, PhelTokenClassifier.classifyToken(PhelTypes.HASH_BRACE))
+    }
 
-        // And it's NOT a regular brace
-        assertFalse(PhelTokenClassifier.isBraces(PhelTypes.HASH_BRACE), "#{ is a set opener, not a regular brace")
+    /** An unmapped token falls through to UNKNOWN rather than to a wrong category. */
+    @Test
+    fun `an unmapped token is unknown`() {
+        assertEquals(TokenCategory.UNKNOWN, PhelTokenClassifier.classifyToken(TokenType.WHITE_SPACE))
     }
 }

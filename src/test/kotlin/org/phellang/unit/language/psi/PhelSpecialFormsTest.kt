@@ -81,6 +81,58 @@ class PhelSpecialFormsTest {
             }
         }
 
+        /**
+         * Regression: `doseq` sat in [PhelSpecialForms.LET_LIKE] but not here, so `(doseq [x coll] …)`
+         * was hinted `seq-exprs:` / `body:` positionally.
+         *
+         * A form that binds a vector can never be read positionally, so the containment is now
+         * structural rather than two lists that happen to agree.
+         */
+        @Test
+        fun `every binding form is also a variadic head`() {
+            PhelSpecialForms.LET_LIKE.forEach { head ->
+                assertTrue(
+                    head in PhelSpecialForms.VARIADIC_HEADS,
+                    "'$head' introduces a binding vector, so it can never be read positionally",
+                )
+            }
+        }
+
+        /**
+         * Regression: `cond->` and `cond->>` were threading heads to the arity inspection's private
+         * copy but absent here, so the `cond->` call itself was arity-checked and hinted.
+         */
+        @Test
+        fun `every threading macro is also a variadic head`() {
+            PhelSpecialForms.THREADING.forEach { head ->
+                assertTrue(
+                    head in PhelSpecialForms.VARIADIC_HEADS,
+                    "'$head' shifts its arguments at expansion, so it can never be read positionally",
+                )
+            }
+        }
+    }
+
+    @Nested
+    inner class Threading {
+
+        @Test
+        fun `covers every threading macro, including the conditional pair`() {
+            val expected = setOf("->", "->>", "as->", "some->", "some->>", "cond->", "cond->>", "doto")
+
+            assertEquals(expected, PhelSpecialForms.THREADING)
+        }
+
+        @Test
+        fun `the conditional threading macros are real registry entries`() {
+            listOf("cond->", "cond->>").forEach { name ->
+                assertNotNull(
+                    PhelFunctionRegistry.getFunction(name),
+                    "'$name' is expected to resolve, which is why omitting it produced hints",
+                )
+            }
+        }
+
         /** Ordinary functions must stay out, or every real call loses its hints and arity check. */
         @Test
         fun `does not swallow ordinary functions`() {
@@ -101,13 +153,33 @@ class PhelSpecialFormsTest {
         @Test
         fun `contains the forms whose second element is a binding vector`() {
             val expected = setOf(
-                "let", "if-let", "when-let", "if-some", "when-some",
+                "let", "if-let", "when-let", "if-some", "when-some", "when-first",
                 "loop", "for", "foreach", "binding", "dofor", "doseq",
             )
 
             assertTrue(
                 PhelSpecialForms.LET_LIKE.containsAll(expected),
                 "LET_LIKE should cover every binding-vector form, found ${PhelSpecialForms.LET_LIKE}",
+            )
+        }
+
+        /**
+         * Regression: `when-first` was missing, so its binding was unresolved on go-to-definition,
+         * absent from local completion, never reported as unused or shadowed, and unrecognised by the
+         * parameter hints — all at once, the same way `if-some` and `when-some` once were.
+         *
+         * Its registry signature is the shape that decides membership, so pin that too: a future
+         * upstream change from `bindings` to something positional would make the entry wrong.
+         */
+        @Test
+        fun `treats when-first like when-let, whose signature it shares`() {
+            val whenFirst = PhelFunctionRegistry.getFunction("when-first")
+            assertNotNull(whenFirst, "`when-first` is expected to be a registry entry")
+            assertEquals("(when-first bindings & body)", whenFirst!!.signature)
+
+            assertEquals(
+                "when-let" in PhelSpecialForms.LET_LIKE,
+                "when-first" in PhelSpecialForms.LET_LIKE,
             )
         }
 

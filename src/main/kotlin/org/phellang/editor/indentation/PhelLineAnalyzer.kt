@@ -13,20 +13,18 @@ class PhelLineAnalyzer(private val document: Document) {
         return document.text.substring(lineStart, lineEnd)
     }
 
-    fun countOpenParentheses(text: String): Int {
-        return countParentheses(text, '(')
-    }
-
-    fun countCloseParentheses(text: String): Int {
-        return countParentheses(text, ')')
-    }
-
-    fun getParenthesesBalance(text: String): Int {
-        return countOpenParentheses(text) - countCloseParentheses(text)
-    }
-
-    private fun countParentheses(text: String, targetChar: Char): Int {
-        var count = 0
+    /**
+     * How many levels [text] opens, minus how many it closes.
+     *
+     * Every bracket counts, not only parentheses. Counting `(` alone left the Enter handler blind to
+     * binding vectors and map literals, so `(let [x 1` put the next line at the `let`'s level rather
+     * than inside its bindings, and a top-level `[` or `{` indented nothing at all. It also disagreed
+     * with the formatter, which has always treated VEC, MAP and SET as indenting containers.
+     *
+     * `#(` and `#{` need no special case: each contains a counted opener and the `#` is inert.
+     */
+    fun bracketBalance(text: String): Int {
+        var balance = 0
         var inString = false
         var inComment = false
         var i = 0
@@ -35,39 +33,33 @@ class PhelLineAnalyzer(private val document: Document) {
             val char = text[i]
 
             when {
-                char == ';' && !inString -> {
-                    inComment = true
-                }
+                inComment -> Unit
 
-                char == '"' && !inComment -> {
-                    if (!inString) {
-                        inString = true
-                    } else {
-                        // Check if it's escaped
-                        val backslashCount = countPrecedingBackslashes(text, i)
-                        if (backslashCount % 2 == 0) {
-                            inString = false
-                        }
-                    }
-                }
+                // Outside a string `\(` is a character literal, not an opening paren: the lexer's
+                // CHARACTER rule ends in a catch-all `.`, so whatever follows the backslash is part
+                // of the literal. Inside a string the same backslash escapes the next character. Both
+                // cases consume the pair, which is also what keeps `"\""` from ending the string.
+                char == '\\' -> i++
 
-                char == targetChar && !inString && !inComment -> {
-                    count++
-                }
+                char == '"' -> inString = !inString
+
+                inString -> Unit
+
+                char == ';' -> inComment = true
+
+                char in OPENERS -> balance++
+
+                char in CLOSERS -> balance--
             }
+
             i++
         }
 
-        return count
+        return balance
     }
 
-    private fun countPrecedingBackslashes(text: String, position: Int): Int {
-        var count = 0
-        var i = position - 1
-        while (i >= 0 && text[i] == '\\') {
-            count++
-            i--
-        }
-        return count
+    private companion object {
+        val OPENERS = setOf('(', '[', '{')
+        val CLOSERS = setOf(')', ']', '}')
     }
 }

@@ -73,6 +73,25 @@ class PhelFormattingModelBuilderTest : PhelIntegrationTestCase() {
         assertEquals(source, reformatted(source))
     }
 
+    // ---- Every bracketed container indents, not only the four obvious ones ----
+
+    /**
+     * `#(...)` is a container like any other. `CONTAINERS` listed only LIST/VEC/MAP/SET, so an
+     * anonymous function's body stayed flush left while the Enter handler indented it — the two
+     * disagreeing about the same line.
+     */
+    fun testIndentsAnAnonymousFunctionBody() {
+        assertEquals("#(* %\n  2)\n", reformatted("#(* %\n2)\n"))
+    }
+
+    fun testIndentsAReaderConditionalBody() {
+        assertEquals("#?(:a 1\n  :b 2)\n", reformatted("#?(:a 1\n:b 2)\n"))
+    }
+
+    fun testIndentsASplicingReaderConditionalBody() {
+        assertEquals("#?@(:a 1\n  :b 2)\n", reformatted("#?@(:a 1\n:b 2)\n"))
+    }
+
     // ---- Code Style options the formatter honours ----
 
     private fun reformattedWith(text: String, configure: (com.intellij.psi.codeStyle.CommonCodeStyleSettings) -> Unit): String {

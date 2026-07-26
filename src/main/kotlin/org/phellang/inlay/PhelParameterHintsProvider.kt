@@ -13,6 +13,7 @@ import org.phellang.registry.PhelArity
 import org.phellang.indexing.PhelArityResolver
 import org.phellang.registry.selectFor
 import org.phellang.language.psi.PhelForm
+import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
@@ -46,7 +47,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
         private fun takesPositionalParameters(headSymbol: PhelSymbol, headName: String): Boolean {
             if (headName in PhelSpecialForms.VARIADIC_HEADS) return false
             // Interop resolves to PHP, whose parameter names the registry does not carry.
-            if (INTEROP_PREFIXES.any { headName.startsWith(it) }) return false
+            if (PhelInteropShorthands.isInteropCall(headName)) return false
 
             // A local binding shadowing a known name is a different function entirely.
             return !PhelLocalBindingScope.resolvesToLocalBinding(headSymbol, headName)
@@ -76,11 +77,6 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             } else {
                 arity.params.getOrNull(argIndex)
             }
-        }
-
-        private companion object {
-            /** `php/foo`, `.method` / `.-field`, and the `php-` helper family. */
-            val INTEROP_PREFIXES = listOf("php/", ".", "php-")
         }
     }
 }

@@ -84,7 +84,8 @@ the test deliberately, not by working around it.
   generator's output package is pinned in `tools/generator/KotlinCodeGenerator.kt` and
   `RegistryWiringGenerator.kt` — relocating the registry means updating those too, or the next
   regeneration silently recreates the old layout.
-- Completion logic: use `PhelTypes.SYMBOL` (not `SYM`); use `PlainPrefixMatcher` for
-  `namespace/function` matching.
+- Completion logic: the `psiElement(...)` pattern matches the **leaf at the caret**, which is the
+  lexer token `PhelTypes.SYM` — not `PhelTypes.SYMBOL`, the parser element type wrapping it. Use
+  `PlainPrefixMatcher` for `namespace/function` matching.
 - Form-comment detection is hybrid PSI + text-based.
 - Follow IntelliJ Platform SDK conventions.

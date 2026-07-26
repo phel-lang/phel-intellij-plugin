@@ -10,10 +10,8 @@ import org.phellang.language.psi.PhelInteropShorthands
  * Kept ahead of [InteropShorthandRule] so the common case never triggers the `(:use ...)` scan.
  */
 object PhpQualifiedRule : PhelHighlightRule {
-    private const val PHP_PREFIX = "php/"
-
     override fun decide(context: PhelSymbolContext): PhelHighlightDecision? {
-        if (!context.text.startsWith(PHP_PREFIX)) return null
+        if (!PhelInteropShorthands.isPhpQualified(context.text)) return null
 
         return PhelHighlightDecision.Paint(PHP_INTEROP)
     }

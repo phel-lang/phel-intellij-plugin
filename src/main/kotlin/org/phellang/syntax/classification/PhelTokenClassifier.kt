@@ -61,88 +61,11 @@ object PhelTokenClassifier {
         return if (isBadCharacter(tokenType)) TokenCategory.BAD_CHARACTER else TokenCategory.UNKNOWN
     }
 
-    fun isComment(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.LINE_COMMENT || tokenType == PhelTypes.FORM_COMMENT
-    }
-
-    fun isString(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.STRING
-    }
-
-    fun isNumber(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.NUMBER || tokenType == PhelTypes.BINNUM
-                || tokenType == PhelTypes.OCTNUM || tokenType == PhelTypes.HEXNUM
-                || tokenType == PhelTypes.RADIXNUM || tokenType == PhelTypes.SYMBOLIC_NUM
-                || tokenType == PhelTypes.RATIO
-    }
-
-    fun isBoolean(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.BOOL
-    }
-
-    fun isNil(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.NIL
-    }
-
-    fun isNan(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.NAN
-    }
-
-    fun isCharacter(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.CHAR
-    }
-
-    fun isParentheses(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.PAREN1 || tokenType == PhelTypes.PAREN2 || tokenType == PhelTypes.HASH_PAREN
-                || tokenType == PhelTypes.READER_COND || tokenType == PhelTypes.READER_COND_SPLICE
-    }
-
-    fun isBrackets(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.BRACKET1 || tokenType == PhelTypes.BRACKET2
-    }
-
-    fun isBraces(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.BRACE1 || tokenType == PhelTypes.BRACE2
-    }
-
-    fun isSetOpener(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.HASH_BRACE
-    }
-
-    fun isQuote(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.QUOTE || tokenType == PhelTypes.VAR_QUOTE
-    }
-
-    fun isSyntaxQuote(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.SYNTAX_QUOTE
-    }
-
-    fun isUnquote(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.TILDE
-    }
-
-    fun isUnquoteSplicing(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.TILDE_AT
-    }
-
-    fun isKeyword(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.KEYWORD || tokenType == PhelTypes.KEYWORD_TOKEN
-                || tokenType == PhelTypes.COLON || tokenType == PhelTypes.COLONCOLON
-    }
-
-    fun isMetadata(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.HAT
-    }
-
-    fun isDotOperator(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.DOT || tokenType == PhelTypes.DOTDASH
-    }
-
-    fun isSymbol(tokenType: IElementType): Boolean {
-        return tokenType == PhelTypes.SYM
-    }
-
-    fun isBadCharacter(tokenType: IElementType): Boolean {
+    /**
+     * Matched by name as well as by identity: the lexer's own bad-character token is not always the
+     * platform's, so comparing against [TokenType.BAD_CHARACTER] alone misses it.
+     */
+    private fun isBadCharacter(tokenType: IElementType): Boolean {
         val tokenName = tokenType.toString()
         return "BAD_CHARACTER" == tokenName || tokenType == TokenType.BAD_CHARACTER
     }

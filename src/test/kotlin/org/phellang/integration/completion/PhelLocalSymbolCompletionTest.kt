@@ -73,6 +73,7 @@ class PhelLocalSymbolCompletionTest : PhelIntegrationTestCase() {
             "foreach" to "(foreach [zebra [1 2]] zeb<caret>)",
             "dofor" to "(dofor [zebra :in [1 2]] zeb<caret>)",
             "binding" to "(binding [zebra 1] zeb<caret>)",
+            "when-first" to "(when-first [zebra [1 2]] zeb<caret>)",
         )
 
         // A fresh file per case: reusing one name across configureByText calls leaves a later file
