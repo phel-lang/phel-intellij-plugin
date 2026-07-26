@@ -4,13 +4,13 @@
 
 <p>An import is flagged when no namespace-qualified symbol outside the <code>(ns ...)</code>
     declaration uses its qualifier. Under <code>:as</code> the alias is the qualifier that counts, so
-    <code>(:require phel\str :as s)</code> is used by <code>(s/join ...)</code> and not by
-    <code>(str/join ...)</code>.</p>
+    <code>(:require phel.string :as s)</code> is used by <code>(s/join ...)</code> and not by
+    <code>(string/join ...)</code>.</p>
 
 <h3>Example:</h3>
 <pre><code>
-(ns app\core
-  (:require phel\str))   ;; reported: Unused import
+(ns app.example
+  (:require phel.string))   ;; reported: Unused import
 
 (println "hi")
 </code></pre>
