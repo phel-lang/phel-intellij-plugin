@@ -39,7 +39,7 @@ Plugin sources live under `src/main/kotlin/org/phellang/`:
 ## Conventions
 
 - Every plugin feature must be registered in `src/main/resources/META-INF/plugin.xml`.
-- In completion logic use `PhelTypes.SYMBOL` (not `SYM`); use `PlainPrefixMatcher` for `namespace/function` matching.
+- In completion logic match on `PhelTypes.SYM` (the lexer token at the caret), not `PhelTypes.SYMBOL` (the parser element type); use `PlainPrefixMatcher` for `namespace/function` matching.
 - Registry: `NamespaceConfig.kt` is the single source of truth — add one entry and run `./gradlew updatePhelRegistry`; generated files, the `Namespace` enum, and registry wiring are produced automatically. Hand-edit only the curated `ALIASES` map.
 - New unit tests go in `unit/`, integration tests in `integration/`. Test Phel features against the official docs.
 
