@@ -67,8 +67,8 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
         assertEquals("All tests", configuration.suggestedName())
     }
 
-    fun testTestConfigurationSplitsPathsOnWhitespace() {
-        val configuration = testConfiguration().apply { testPaths = "tests/a.phel   tests/b.phel" }
+    fun testTestConfigurationSplitsSeveralPaths() {
+        val configuration = testConfiguration().apply { setPaths(listOf("tests/a.phel", "tests/b.phel")) }
 
         assertEquals(listOf("tests/a.phel", "tests/b.phel"), configuration.paths())
     }
@@ -77,6 +77,28 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
         val configuration = testConfiguration().apply { testPaths = "  \n tests/a.phel \n " }
 
         assertEquals(listOf("tests/a.phel"), configuration.paths())
+    }
+
+    /**
+     * The bug: a path is one path however many spaces are in it.
+     *
+     * The producer stores an absolute path, so on a project under `/Users/me/My Projects` the
+     * space-separated split handed `phel test` two paths that do not exist.
+     */
+    fun testTestConfigurationKeepsAPathContainingSpacesIntact() {
+        val spaced = "/Users/me/My Projects/app/tests/html.phel"
+        val configuration = testConfiguration().apply { setPaths(listOf(spaced)) }
+
+        assertEquals(listOf(spaced), configuration.paths())
+        assertEquals("Tests: html.phel", configuration.suggestedName())
+    }
+
+    fun testTestConfigurationNamesItselfAfterSeveralSpacedPaths() {
+        val configuration = testConfiguration().apply {
+            setPaths(listOf("/My Projects/app/tests/a.phel", "/My Projects/app/tests/b.phel"))
+        }
+
+        assertEquals("Tests: a.phel b.phel", configuration.suggestedName())
     }
 
     /** File names, not whole paths: the producer stores absolute ones and the run widget is narrow. */
@@ -138,6 +160,34 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
 
         assertEquals("tests/a.phel", loaded.testPaths)
         assertEquals("", loaded.testName)
+    }
+
+    /**
+     * A value saved before the quoting existed still means what it meant.
+     *
+     * `parse` reads an unquoted run of paths exactly as the old space split did, which is what let
+     * the persistence key stay the same across the change.
+     */
+    fun testTestConfigurationStillReadsUnquotedLegacyPaths() {
+        val element = Element("configuration")
+        com.intellij.openapi.util.JDOMExternalizerUtil.writeField(
+            element, "TEST_PATHS", "tests/a.phel tests/b.phel"
+        )
+
+        val loaded = testConfiguration()
+        loaded.readExternal(element)
+
+        assertEquals(listOf("tests/a.phel", "tests/b.phel"), loaded.paths())
+    }
+
+    fun testTestConfigurationRoundTripsASpacedPathThroughXml() {
+        val spaced = "/Users/me/My Projects/app/tests/html.phel"
+        val element = Element("configuration")
+        testConfiguration().apply { setPaths(listOf(spaced)) }.writeExternal(element)
+
+        val loaded = testConfiguration().apply { readExternal(element) }
+
+        assertEquals(listOf(spaced), loaded.paths())
     }
 
     /** Neither can run without a binary, and both must say so before launching. */

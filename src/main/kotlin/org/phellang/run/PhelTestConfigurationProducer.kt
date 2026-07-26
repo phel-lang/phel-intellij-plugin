@@ -34,7 +34,9 @@ class PhelTestConfigurationProducer : LazyRunConfigurationProducer<PhelCliRunCon
         val testConfiguration = configuration as? PhelTestConfiguration ?: return false
         val location = locate(context) ?: return false
 
-        testConfiguration.testPaths = location.path
+        // Encoded, not assigned raw: an absolute path under a directory with a space in its name is
+        // ordinary, and the field holds a parameter list.
+        testConfiguration.setPaths(listOf(location.path))
         testConfiguration.testName = location.testName
         testConfiguration.workingDirectory = context.project.basePath.orEmpty()
         testConfiguration.setName(testConfiguration.suggestedName())
@@ -53,7 +55,9 @@ class PhelTestConfigurationProducer : LazyRunConfigurationProducer<PhelCliRunCon
         val testConfiguration = configuration as? PhelTestConfiguration ?: return false
         val location = locate(context) ?: return false
 
-        return testConfiguration.testPaths == location.path && testConfiguration.testName == location.testName
+        // Compared decoded, so a configuration saved before the quoting still matches its context.
+        return testConfiguration.paths() == listOf(location.path) &&
+                testConfiguration.testName == location.testName
     }
 
     private fun locate(context: ConfigurationContext): TestLocation? {
