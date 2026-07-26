@@ -129,11 +129,22 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         }
     }
 
+    /**
+     * Drops a deleted file's entries.
+     *
+     * Under [refreshLock] for the same reason [refreshFileFromPsi] is, and against the same two
+     * threads: this used to mutate the three maps unsynchronised, so a delete racing a refresh of the
+     * same path could interleave into `symbolsByFile` losing the path while `symbolsByNamespace` and
+     * `symbolsByName` kept the symbols. Nothing would ever evict them after that, because eviction
+     * reads the entry that had just been removed.
+     */
     fun removeFile(file: VirtualFile) {
-        val oldSymbols = symbolsByFile.remove(file.path) ?: return
-        for (symbol in oldSymbols) {
-            removeFromMap(symbolsByNamespace, symbol.shortNamespace, file.path)
-            removeFromMap(symbolsByName, symbol.name, file.path)
+        synchronized(refreshLock) {
+            val oldSymbols = symbolsByFile.remove(file.path) ?: return
+            for (symbol in oldSymbols) {
+                removeFromMap(symbolsByNamespace, symbol.shortNamespace, file.path)
+                removeFromMap(symbolsByName, symbol.name, file.path)
+            }
         }
     }
 
