@@ -4,7 +4,9 @@ import com.intellij.lang.ASTNode
 import com.intellij.navigation.ItemPresentation
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNameIdentifierOwner
+import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiReference
+import com.intellij.psi.util.CachedValue
 import com.intellij.util.IncorrectOperationException
 import org.jetbrains.annotations.NonNls
 import org.phellang.language.psi.PhelPsiFactory
@@ -13,6 +15,7 @@ import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.navigation.PhelItemPresentation
 import org.phellang.language.psi.references.PhelReference
 import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.language.psi.utils.cachedPerPsi
 
 /**
  * Base implementation for named Phel elements that can be referenced and renamed.
@@ -31,12 +34,20 @@ abstract class PhelNamedElementImpl(node: ASTNode) : PhelSFormImpl(node), PsiNam
 
     override fun getNameIdentifier(): PsiElement? = this
 
+    /**
+     * One reference instance per element, until the PSI changes.
+     *
+     * This built a fresh [PhelReference] on every call, which is a problem twice over:
+     * [PhelSymbolAnalyzer.isDefinition] was recomputed each time, and `ResolveCache` keys on the
+     * reference, so a new instance meant the resolve cache could never hit. Caching the reference is
+     * what makes caching the resolution possible at all.
+     */
     override fun getReference(): PsiReference? {
-        if (this is PhelSymbol) {
-            val isDefinition = PhelSymbolAnalyzer.isDefinition(this)
-            return PhelReference(this, findUsages = isDefinition)
+        if (this !is PhelSymbol) return null
+
+        return cachedPerPsi(this, REFERENCE_KEY) {
+            PhelReference(this, findUsages = PhelSymbolAnalyzer.isDefinition(this))
         }
-        return null
     }
 
     override fun getTextOffset(): Int =
@@ -44,4 +55,8 @@ abstract class PhelNamedElementImpl(node: ASTNode) : PhelSFormImpl(node), PsiNam
 
     override fun getPresentation(): ItemPresentation? =
         if (this is PhelSymbol) PhelItemPresentation(this) else super.getPresentation()
+
+    private companion object {
+        val REFERENCE_KEY = Key.create<CachedValue<PhelReference>>("phel.symbol.reference")
+    }
 }
