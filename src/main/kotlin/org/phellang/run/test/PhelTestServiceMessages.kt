@@ -12,14 +12,21 @@ object PhelTestServiceMessages {
 
     fun render(report: PhelTestReport): List<String> = buildList {
         for (suite in report.suites) {
-            add(message("testSuiteStarted", "name" to suite.name))
-            for (case in suite.cases) addAll(render(case))
+            add(message("testSuiteStarted", "name" to suite.name, "locationHint" to locationOf(suite.name)))
+            for (case in suite.cases) addAll(render(suite, case))
             add(message("testSuiteFinished", "name" to suite.name))
         }
     }
 
-    private fun render(case: PhelTestCase): List<String> = buildList {
-        add(message("testStarted", "name" to case.name))
+    /**
+     * The suite name is the Phel namespace, which is what makes a location resolvable at all: the
+     * report carries no file or line, so [PhelTestLocator] resolves the pair back to the `deftest`.
+     */
+    private fun locationOf(suiteName: String, testName: String? = null): String =
+        if (testName == null) "${PhelTestLocator.PROTOCOL}://$suiteName" else "${PhelTestLocator.PROTOCOL}://$suiteName/$testName"
+
+    private fun render(suite: PhelTestSuite, case: PhelTestCase): List<String> = buildList {
+        add(message("testStarted", "name" to case.name, "locationHint" to locationOf(suite.name, case.name)))
 
         when (val outcome = case.outcome) {
             is PhelTestCase.Outcome.Passed -> Unit
