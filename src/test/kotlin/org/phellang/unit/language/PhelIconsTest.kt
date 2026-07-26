@@ -154,15 +154,24 @@ class PhelIconsTest {
     }
 
     /**
-     * SVG at the platform's standard file-icon size. The PNG this replaced was a fixed 16x16 raster
-     * that upscaled and blurred on a HiDPI display; a vector renders sharp at any scale factor.
+     * The icon resource is present, and is the SVG rather than the raster it replaced.
+     *
+     * Asserted on the resource, not on `iconWidth`. Rasterization needs a graphics environment, and
+     * in a headless run `IconLoader` reports 1x1 for *any* icon — PNG and SVG alike — so a size
+     * assertion passes locally and fails on CI while saying nothing about the file. This is what
+     * actually catches a missing or misnamed icon, since `IconLoader` hands back a placeholder
+     * rather than throwing.
      */
     @Test
-    fun `FILE icon is square at the standard file-icon size`() {
-        val fileIcon = PhelIcons.FILE
-
-        assertEquals(16, fileIcon.iconWidth)
-        assertEquals(16, fileIcon.iconHeight)
+    fun `FILE icon is loaded from an SVG resource`() {
+        assertNotNull(
+            PhelIcons::class.java.getResource("/icons/phel.svg"),
+            "the file icon must ship as SVG so it stays sharp on a HiDPI display",
+        )
+        assertNull(
+            PhelIcons::class.java.getResource("/icons/phel.png"),
+            "the raster icon it replaced should be gone, not shadowing the SVG",
+        )
     }
 
     @Test
