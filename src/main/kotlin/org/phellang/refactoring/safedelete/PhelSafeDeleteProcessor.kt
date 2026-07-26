@@ -73,6 +73,19 @@ class PhelSafeDeleteProcessor : SafeDeleteProcessorDelegate {
         return mutableListOf(form)
     }
 
+    /**
+     * No conflicts of its own: a name that is still referenced is reported through [findUsages], and
+     * a Phel definition has no members or overrides that could conflict separately.
+     *
+     * Implemented explicitly even though newer platforms give it a default. It is still *abstract* on
+     * 2024.3, the oldest release this plugin supports, so omitting it compiles against 2025.2 and
+     * throws `AbstractMethodError` there — which is what the plugin verifier caught.
+     */
+    override fun findConflicts(
+        element: PsiElement,
+        allElementsToDelete: Array<out PsiElement>,
+    ): MutableCollection<String>? = null
+
     override fun preprocessUsages(project: Project, usages: Array<out UsageInfo>): Array<UsageInfo> =
         @Suppress("UNCHECKED_CAST") (usages as Array<UsageInfo>)
 
