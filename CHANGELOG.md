@@ -34,6 +34,13 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
+- **Test files now run into the test tree.** Opening a file whose `ns` requires `phel\test` and using the gutter icon,
+  the context menu or Run Anything runs `phel test` on it, so results arrive as a green or red bar instead of plain
+  console output. Ordinary `.phel` files still run through `phel run` and its console. Detection is based on the
+  `phel\test` require rather than on `phel-config.php`, so it works for a test file kept outside the configured test
+  directories, and both the `phel.test` and `phel\test` spellings are recognised.
+- **Run a single test** from the gutter icon beside any `deftest`. The test is selected with an anchored pattern, so
+  running `void-tags` cannot also pull in `void-tags-ignore-content`, which a plain name filter would.
 - **Live templates** for eleven forms: `defn-`, `defmacro`, `ns`, `deftest`, `when`, `when-let`, `loop`, `cond`,
   `case`, `try` and `foreach`. They appear under Settings > Editor > Live Templates > Phel, expand with Tab, and can
   be edited or extended. The six abbreviations completion already offers (`()`, `defn`, `def`, `let`, `if`, `fn`) are

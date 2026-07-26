@@ -103,4 +103,96 @@ class PhelRunCommandLineTest : PhelIntegrationTestCase() {
         assertEquals("tests/a.phel", command.last())
         assertTrue(command.indexOf("--reporter=junit-xml") < command.indexOf("tests/a.phel"))
     }
+
+    fun testTestOmitsSelectorsWhenNoneAreGiven() {
+        val command = PhelRunCommandLine.test(binary, listOf("tests/a.phel"), workingDir).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "test", "tests/a.phel"), command)
+    }
+
+    fun testTestNarrowsToASingleTestWithAFilter() {
+        val command = PhelRunCommandLine.test(
+            binary,
+            listOf("tests/html.phel"),
+            workingDir,
+            filter = PhelRunCommandLine.exactNameFilter("basic-tags"),
+        ).getCommandLineList(null)
+
+        assertEquals(
+            listOf(binary.absolutePath, "test", "--filter=/^basic\\-tags$/", "tests/html.phel"),
+            command,
+        )
+    }
+
+    /**
+     * No `--ns` companion. `phel` derives the namespace it matches from the file's location, not
+     * from its `(ns …)` form, so a pin built from the declared name selects nothing at all:
+     * `tests/html.phel` declaring `(ns test.html …)` is matched as `tests.html`.
+     */
+    fun testTestNeverPinsTheNamespace() {
+        val command = PhelRunCommandLine.test(
+            binary,
+            listOf("tests/html.phel"),
+            workingDir,
+            filter = PhelRunCommandLine.exactNameFilter("basic-tags"),
+        ).getCommandLineList(null)
+
+        assertFalse(command.toString(), command.any { it.startsWith("--ns") })
+    }
+
+    fun testTestPutsSelectorsBeforePaths() {
+        val command = PhelRunCommandLine.test(
+            binary,
+            listOf("tests/html.phel"),
+            workingDir,
+            java.io.File("/tmp/phel-report.xml"),
+            filter = PhelRunCommandLine.exactNameFilter("basic-tags"),
+        ).getCommandLineList(null)
+
+        assertEquals("tests/html.phel", command.last())
+        assertTrue(command.indexOf("--filter=/^basic\\-tags$/") < command.indexOf("tests/html.phel"))
+    }
+
+    fun testABlankFilterIsNotPassedAsAnEmptyOption() {
+        val command = PhelRunCommandLine.test(binary, listOf("tests/a.phel"), workingDir, filter = "")
+            .getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "test", "tests/a.phel"), command)
+    }
+
+    /**
+     * The pattern must survive `compile-filter-regex` in `phel/test/selector.phel` unchanged, which
+     * only happens when it is longer than one character and both opens and closes with `/`.
+     * Anything else is `preg_quote`d into an unanchored substring match.
+     */
+    fun testAnExactFilterIsHandedToPhelAsRawPcre() {
+        for (name in listOf("basic-tags", "empty?", "parse*", "a/b", "ok")) {
+            val pattern = PhelRunCommandLine.exactNameFilter(name)
+
+            assertTrue(pattern, pattern.length > 1)
+            assertTrue(pattern, pattern.startsWith("/") && pattern.endsWith("/"))
+        }
+    }
+
+    /** Anchored, so `basic-tags` cannot also select `basic-tags-extended`. */
+    fun testAnExactFilterAnchorsBothEnds() {
+        assertEquals("/^basic\\-tags$/", PhelRunCommandLine.exactNameFilter("basic-tags"))
+    }
+
+    /** Metacharacters that are idiomatic in Phel names must match literally, not as regex syntax. */
+    fun testAnExactFilterEscapesRegexMetacharacters() {
+        assertEquals("/^empty\\?$/", PhelRunCommandLine.exactNameFilter("empty?"))
+        assertEquals("/^parse\\*$/", PhelRunCommandLine.exactNameFilter("parse*"))
+        assertEquals("/^a\\.b$/", PhelRunCommandLine.exactNameFilter("a.b"))
+        assertEquals("/^x\\+y$/", PhelRunCommandLine.exactNameFilter("x+y"))
+    }
+
+    /** The delimiter itself, which `\Q...\E` would not have protected. */
+    fun testAnExactFilterEscapesTheDelimiter() {
+        assertEquals("/^a\\/b$/", PhelRunCommandLine.exactNameFilter("a/b"))
+    }
+
+    fun testAnExactFilterLeavesLettersDigitsAndUnderscoreAlone() {
+        assertEquals("/^abc_123$/", PhelRunCommandLine.exactNameFilter("abc_123"))
+    }
 }
