@@ -104,6 +104,15 @@ class PhelRunCommandLineTest : PhelIntegrationTestCase() {
         assertTrue(command.indexOf("--reporter=junit-xml") < command.indexOf("tests/a.phel"))
     }
 
+    /** A path with a space in it is still one argument, not two. */
+    fun testTestPassesASpacedPathAsASingleArgument() {
+        val spaced = "/Users/me/My Projects/app/tests/html.phel"
+
+        val command = PhelRunCommandLine.test(binary, listOf(spaced), workingDir).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "test", spaced), command)
+    }
+
     fun testTestOmitsSelectorsWhenNoneAreGiven() {
         val command = PhelRunCommandLine.test(binary, listOf("tests/a.phel"), workingDir).getCommandLineList(null)
 
