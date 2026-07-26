@@ -211,6 +211,8 @@
         <lang.refactoringSupport
                 language="Phel"
                 implementationClass="org.phellang.refactoring.PhelRefactoringSupportProvider"/>
+        <refactoring.safeDeleteProcessor
+                implementation="org.phellang.refactoring.safedelete.PhelSafeDeleteProcessor"/>
         <lang.namesValidator
                 language="Phel"
                 implementationClass="org.phellang.refactoring.PhelNamesValidator"/>
