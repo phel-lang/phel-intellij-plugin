@@ -52,13 +52,13 @@ class PhelLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvider(
         const val DEFAULT_KEEP_BLANK_LINES = 2
 
         val CODE_SAMPLE = """
-            (ns app\example
-              (:require phel\str :as str))
+            (ns app.example
+              (:require phel.string))
 
             (defn greet
               "Returns a greeting for the given name."
               [name]
-              (let [trimmed (str/trim name)]
+              (let [trimmed (string/trim name)]
                 (when (pos? (php/strlen trimmed))
                   (str "Hello, " trimmed))))
         """.trimIndent()
