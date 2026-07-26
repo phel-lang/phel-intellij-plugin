@@ -98,6 +98,9 @@
                 implementationClass="org.phellang.editor.structure.PhelStructureViewFactory"/>
         <enterHandlerDelegate
                 implementation="org.phellang.editor.enter.PhelEnterHandlerDelegate"/>
+        <lang.smartEnterProcessor
+                language="Phel"
+                implementationClass="org.phellang.editor.smartenter.PhelSmartEnterProcessor"/>
         <moveLeftRightHandler
                 language="Phel"
                 implementationClass="org.phellang.editor.paredit.PhelMoveElementLeftRightHandler"/>
