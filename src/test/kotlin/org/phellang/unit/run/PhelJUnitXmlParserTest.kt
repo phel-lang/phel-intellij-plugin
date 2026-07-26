@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.phellang.run.test.PhelJUnitXmlParser
 import org.phellang.run.test.PhelTestCase
+import org.phellang.run.test.PhelTestSuite
 
 /**
  * The JUnit XML `phel test --reporter=junit-xml` writes.
@@ -123,14 +124,14 @@ class PhelJUnitXmlParserTest {
     /** A run that crashed before writing anything must not surface as a parse error. */
     @Test
     fun `empty input yields an empty report`() {
-        assertTrue(parse("").isEmpty)
-        assertTrue(parse("   ").isEmpty)
+        assertEquals(emptyList<PhelTestSuite>(), parse("").suites)
+        assertEquals(emptyList<PhelTestSuite>(), parse("   ").suites)
     }
 
     /** Half-written XML from a killed process is likelier than a malformed reporter. */
     @Test
     fun `malformed xml yields an empty report rather than throwing`() {
-        assertTrue(parse("<testsuite name=\"s\"><testcase ").isEmpty)
+        assertEquals(emptyList<PhelTestSuite>(), parse("<testsuite name=\"s\"><testcase ").suites)
     }
 
     @Test
@@ -138,7 +139,7 @@ class PhelJUnitXmlParserTest {
         val report = parse("""<testsuite name="empty-suite"></testsuite>""")
 
         assertEquals(listOf("empty-suite"), report.suites.map { it.name })
-        assertTrue(report.isEmpty)
+        assertEquals(emptyList<PhelTestCase>(), report.suites.single().cases)
     }
 
     @Test

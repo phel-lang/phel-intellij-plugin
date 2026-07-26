@@ -55,15 +55,4 @@ object PhelCharacterPairing {
         return charAtOffset == closingChar
     }
 
-    fun getAllPairableCharacters(): Set<Char> {
-        return getOpeningCharacters() + getClosingCharacters()
-    }
-
-    private fun getOpeningCharacters(): Set<Char> {
-        return OPENING_TO_CLOSING.keys.toSet()
-    }
-
-    private fun getClosingCharacters(): Set<Char> {
-        return CLOSING_CHARS.toSet()
-    }
 }

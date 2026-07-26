@@ -3,8 +3,6 @@ package org.phellang.run.test
 /** A parsed `phel test --reporter=junit-xml` report. */
 data class PhelTestReport(val suites: List<PhelTestSuite>) {
 
-    val isEmpty: Boolean get() = suites.all { it.cases.isEmpty() }
-
     companion object {
         val EMPTY = PhelTestReport(emptyList())
     }
