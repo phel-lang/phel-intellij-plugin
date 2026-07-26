@@ -1,0 +1,14 @@
+<!--
+  The file-type icon, drawn from the same paths as META-INF/pluginIcon.svg so the file badge and the
+  marketplace icon are the same mark. Nothing here is redrawn: the three `d` attributes are copied
+  verbatim.
+
+  The only change is the viewBox. The artwork is 132 wide by 144 tall; rendering that into a square
+  16x16 slot would squash it, so the box is widened to 144 and shifted by -6 to centre the mark
+  horizontally. Stroke width 3 at this scale leaves the 1.5 margin the box already allows for.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="-6 0 144 144">
+    <path d="M72.50001049041748,88.50000101327896 l58,-3 l-12,-58 l-32,-26 h-34 l-16,13 l-23,9 l-12,22 l46,52 z" stroke="white" fill="#512da8" stroke-width="3"/>
+    <path d="M130.50001049041748,85.50000101327896 l-12,57 h-13 l-2,-56 m2,56 l-13,-11 h12" stroke="white" fill="#512da8" stroke-width="3"/>
+    <path d="M36.507620823454374,16.04821917329511 L71.5330010254421,88.63705060640012" stroke="white" fill="#512da8" stroke-width="3"/>
+</svg>

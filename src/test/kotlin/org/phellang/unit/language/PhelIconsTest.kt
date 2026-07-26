@@ -144,12 +144,34 @@ class PhelIconsTest {
 
     @Test
     fun `should load icon from correct resource path`() {
-        // This test verifies that the icon loading doesn't fail
-        // The actual path "/icons/phel.png" should exist in resources
+        // Loading must not fail: "/icons/phel.svg" has to exist in resources. IconLoader hands back a
+        // placeholder rather than throwing when it does not, so the size assertions below are what
+        // actually catch a missing or misnamed file.
         assertDoesNotThrow {
             val icon = PhelIcons.FILE
             assertNotNull(icon)
         }
+    }
+
+    /**
+     * The icon resource is present, and is the SVG rather than the raster it replaced.
+     *
+     * Asserted on the resource, not on `iconWidth`. Rasterization needs a graphics environment, and
+     * in a headless run `IconLoader` reports 1x1 for *any* icon — PNG and SVG alike — so a size
+     * assertion passes locally and fails on CI while saying nothing about the file. This is what
+     * actually catches a missing or misnamed icon, since `IconLoader` hands back a placeholder
+     * rather than throwing.
+     */
+    @Test
+    fun `FILE icon is loaded from an SVG resource`() {
+        assertNotNull(
+            PhelIcons::class.java.getResource("/icons/phel.svg"),
+            "the file icon must ship as SVG so it stays sharp on a HiDPI display",
+        )
+        assertNull(
+            PhelIcons::class.java.getResource("/icons/phel.png"),
+            "the raster icon it replaced should be gone, not shadowing the SVG",
+        )
     }
 
     @Test
