@@ -5,7 +5,7 @@ import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.inspection.analysis.PhelUnusedImportFinder
+import org.phellang.language.psi.analysis.PhelUnusedImportFinder
 import org.phellang.inspection.quickfixes.PhelRemoveUnusedImportQuickFix
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol

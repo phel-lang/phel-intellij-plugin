@@ -72,6 +72,9 @@
                 implementationClass="org.phellang.editor.commenting.PhelCommenter"/>
         <indexPatternBuilder
                 implementation="org.phellang.language.todo.PhelTodoIndexPatternBuilder"/>
+        <lang.importOptimizer
+                language="Phel"
+                implementationClass="org.phellang.editor.imports.PhelImportOptimizer"/>
         <lang.braceMatcher
                 language="Phel"
                 implementationClass="org.phellang.editor.matching.PhelBraceMatcher"/>

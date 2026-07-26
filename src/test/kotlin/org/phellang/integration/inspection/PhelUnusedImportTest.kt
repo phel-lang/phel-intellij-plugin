@@ -1,7 +1,7 @@
 package org.phellang.integration.inspection
 
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.inspection.analysis.PhelUnusedImportFinder
+import org.phellang.language.psi.analysis.PhelUnusedImportFinder
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
