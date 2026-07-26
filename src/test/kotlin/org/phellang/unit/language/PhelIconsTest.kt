@@ -144,12 +144,25 @@ class PhelIconsTest {
 
     @Test
     fun `should load icon from correct resource path`() {
-        // This test verifies that the icon loading doesn't fail
-        // The actual path "/icons/phel.png" should exist in resources
+        // Loading must not fail: "/icons/phel.svg" has to exist in resources. IconLoader hands back a
+        // placeholder rather than throwing when it does not, so the size assertions below are what
+        // actually catch a missing or misnamed file.
         assertDoesNotThrow {
             val icon = PhelIcons.FILE
             assertNotNull(icon)
         }
+    }
+
+    /**
+     * SVG at the platform's standard file-icon size. The PNG this replaced was a fixed 16x16 raster
+     * that upscaled and blurred on a HiDPI display; a vector renders sharp at any scale factor.
+     */
+    @Test
+    fun `FILE icon is square at the standard file-icon size`() {
+        val fileIcon = PhelIcons.FILE
+
+        assertEquals(16, fileIcon.iconWidth)
+        assertEquals(16, fileIcon.iconHeight)
     }
 
     @Test
