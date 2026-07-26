@@ -3,11 +3,14 @@ package org.phellang.integration.refactoring
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.BaseRefactoringProcessor
 import com.intellij.refactoring.safeDelete.SafeDeleteProcessor
+import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceSimpleDeleteUsageInfo
+import com.intellij.usageView.UsageInfo
 import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.refactoring.PhelRefactoringSupportProvider
+import org.phellang.refactoring.safedelete.PhelSafeDeleteProcessor
 
 /**
  * Safe Delete over a Phel definition.
@@ -97,6 +100,44 @@ class PhelSafeDeleteTest : PhelIntegrationTestCase() {
         safeDelete(file, "countdown")
 
         assertEquals("(ns app\\m)\n", file.text)
+    }
+
+    /**
+     * The recursive call must be reported as *safe*, not merely survive the deletion.
+     *
+     * Asserting the resulting text is not enough: the test harness confirms the "usages found"
+     * dialog automatically, so a call wrongly marked unsafe still deleted here while the IDE stopped
+     * and asked. That is exactly what shipped — the condition tested the name's range rather than
+     * the enclosing form's, and a name can never contain a call to itself.
+     */
+    fun testARecursiveCallIsReportedAsSafeToDelete() {
+        val file = configure("(ns app\\m)\n(defn countdown [n] (if (= n 0) 0 (countdown (- n 1))))\n")
+        val name = definitionNamed(file, "countdown")
+
+        val usages = mutableListOf<UsageInfo>()
+        PhelSafeDeleteProcessor().findUsages(name, arrayOf(name), usages)
+
+        assertEquals("the recursive call should be the only usage found", 1, usages.size)
+        val recursive = usages.single() as SafeDeleteReferenceSimpleDeleteUsageInfo
+        assertTrue(
+            "a call inside the form being deleted must not prompt the user",
+            recursive.isSafeDelete,
+        )
+    }
+
+    /** A call from elsewhere is genuinely unsafe, and must still be reported that way. */
+    fun testACallFromAnotherFormIsReportedAsUnsafe() {
+        val file = configure("(ns app\\m)\n(defn helper [] 1)\n(defn caller [] (helper))\n")
+        val name = definitionNamed(file, "helper")
+
+        val usages = mutableListOf<UsageInfo>()
+        PhelSafeDeleteProcessor().findUsages(name, arrayOf(name), usages)
+
+        assertEquals(1, usages.size)
+        assertFalse(
+            "a usage outside the deleted form must still stop the refactoring",
+            (usages.single() as SafeDeleteReferenceSimpleDeleteUsageInfo).isSafeDelete,
+        )
     }
 
     // ---- safety ----
