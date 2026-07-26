@@ -40,8 +40,16 @@ class PhelSafeDeleteProcessor : SafeDeleteProcessorDelegate {
         allElementsToDelete: Array<out PsiElement>,
         result: MutableList<in UsageInfo>,
     ): NonCodeUsageSearchInfo {
+        // Against the *forms* being removed, not the names selected. At this point
+        // allElementsToDelete holds the name symbol alone — the enclosing form is contributed later,
+        // by getAdditionalElementsToDelete — so a range test against it can never contain anything,
+        // and a recursive call was reported as a usage blocking its own definition's deletion.
+        val deletedRanges = allElementsToDelete
+            .filter { it.isValid }
+            .map { (PhelSafeDeleteTarget.enclosingFormOf(it) ?: it).textRange }
+
         val insideDeleted = Condition<PsiElement> { candidate ->
-            allElementsToDelete.any { it.isValid && it.textRange.contains(candidate.textRange) }
+            deletedRanges.any { it.contains(candidate.textRange) }
         }
 
         ReferencesSearch.search(element).forEach { reference ->
