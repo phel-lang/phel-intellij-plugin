@@ -67,7 +67,7 @@ internal object PhelArityCallSite {
         val parentList = enclosingList(list) ?: return false
         val parentForms = parentList.forms
         val head = PhelPsiUtils.asSymbol(parentForms.firstOrNull())?.text ?: return false
-        if (head !in THREADING_HEADS) return false
+        if (head !in PhelSpecialForms.THREADING) return false
 
         val headRange = parentForms.firstOrNull()?.textRange ?: return false
         // [list] is an argument (not the head form) of the threading macro.
@@ -76,8 +76,4 @@ internal object PhelArityCallSite {
 
     private fun enclosingList(list: PhelList): PhelList? =
         generateSequence(list.parent) { it.parent }.filterIsInstance<PhelList>().firstOrNull()
-
-    private val THREADING_HEADS = setOf(
-        "->", "->>", "as->", "some->", "some->>", "cond->", "cond->>", "doto",
-    )
 }

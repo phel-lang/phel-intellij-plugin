@@ -44,6 +44,20 @@ class PhelUnusedLetBindingInspectionIntegrationTest : PhelIntegrationTestCase() 
         assertTrue("used binding should not be flagged: $warnings", warnings.isEmpty())
     }
 
+    /**
+     * `when-first` binds the head of a collection with `when-let`'s shape, and was the same omission
+     * a second time: absent from LET_LIKE, so nothing looked inside it either.
+     */
+    fun testUnusedBindingInAWhenFirstIsFlagged() {
+        val warnings = inspect("(ns app\\m)\n(defn f []\n  (when-first [unused [1 2]]\n    42))\n")
+        assertEquals(listOf("Binding 'unused' is never used."), warnings)
+    }
+
+    fun testUsedBindingInAWhenFirstIsNotFlagged() {
+        val warnings = inspect("(ns app\\m)\n(defn f []\n  (when-first [used [1 2]]\n    (println used)))\n")
+        assertTrue("used binding should not be flagged: $warnings", warnings.isEmpty())
+    }
+
     /** Either branch counts as usage: the binding is in scope for both. */
     fun testBindingUsedOnlyInTheElseBranchOfAnIfSomeIsNotFlagged() {
         val warnings = inspect("(ns app\\m)\n(defn f []\n  (if-some [v 1]\n    42\n    (println v)))\n")
