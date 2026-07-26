@@ -67,8 +67,8 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
         assertEquals("All tests", configuration.suggestedName())
     }
 
-    fun testTestConfigurationSplitsPathsOnLineBreaks() {
-        val configuration = testConfiguration().apply { testPaths = "tests/a.phel\ntests/b.phel" }
+    fun testTestConfigurationSplitsSeveralPaths() {
+        val configuration = testConfiguration().apply { setPaths(listOf("tests/a.phel", "tests/b.phel")) }
 
         assertEquals(listOf("tests/a.phel", "tests/b.phel"), configuration.paths())
     }
@@ -87,7 +87,7 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
      */
     fun testTestConfigurationKeepsAPathContainingSpacesIntact() {
         val spaced = "/Users/me/My Projects/app/tests/html.phel"
-        val configuration = testConfiguration().apply { testPaths = spaced }
+        val configuration = testConfiguration().apply { setPaths(listOf(spaced)) }
 
         assertEquals(listOf(spaced), configuration.paths())
         assertEquals("Tests: html.phel", configuration.suggestedName())
@@ -95,7 +95,7 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
 
     fun testTestConfigurationNamesItselfAfterSeveralSpacedPaths() {
         val configuration = testConfiguration().apply {
-            testPaths = "/My Projects/app/tests/a.phel\n/My Projects/app/tests/b.phel"
+            setPaths(listOf("/My Projects/app/tests/a.phel", "/My Projects/app/tests/b.phel"))
         }
 
         assertEquals("Tests: a.phel b.phel", configuration.suggestedName())
@@ -163,13 +163,12 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
     }
 
     /**
-     * A configuration saved under the old space-separated key keeps meaning what it meant.
+     * A value saved before the quoting existed still means what it meant.
      *
-     * Splitting on spaces is what this change removes, so the legacy key is read with the legacy
-     * rule rather than reinterpreted: two paths typed into the old single-line field must not
-     * silently become one path with a space in it.
+     * `parse` reads an unquoted run of paths exactly as the old space split did, which is what let
+     * the persistence key stay the same across the change.
      */
-    fun testTestConfigurationMigratesLegacySpaceSeparatedPaths() {
+    fun testTestConfigurationStillReadsUnquotedLegacyPaths() {
         val element = Element("configuration")
         com.intellij.openapi.util.JDOMExternalizerUtil.writeField(
             element, "TEST_PATHS", "tests/a.phel tests/b.phel"
@@ -181,25 +180,10 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
         assertEquals(listOf("tests/a.phel", "tests/b.phel"), loaded.paths())
     }
 
-    /** Once migrated, it is written back in the unambiguous form and never space-split again. */
-    fun testTestConfigurationRewritesLegacyPathsInTheNewForm() {
-        val legacy = Element("configuration")
-        com.intellij.openapi.util.JDOMExternalizerUtil.writeField(
-            legacy, "TEST_PATHS", "tests/a.phel tests/b.phel"
-        )
-        val migrated = testConfiguration().apply { readExternal(legacy) }
-
-        val resaved = Element("configuration")
-        migrated.writeExternal(resaved)
-
-        val reloaded = testConfiguration().apply { readExternal(resaved) }
-        assertEquals(listOf("tests/a.phel", "tests/b.phel"), reloaded.paths())
-    }
-
     fun testTestConfigurationRoundTripsASpacedPathThroughXml() {
         val spaced = "/Users/me/My Projects/app/tests/html.phel"
         val element = Element("configuration")
-        testConfiguration().apply { testPaths = spaced }.writeExternal(element)
+        testConfiguration().apply { setPaths(listOf(spaced)) }.writeExternal(element)
 
         val loaded = testConfiguration().apply { readExternal(element) }
 

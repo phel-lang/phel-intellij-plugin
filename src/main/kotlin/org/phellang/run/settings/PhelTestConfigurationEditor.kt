@@ -1,10 +1,10 @@
 package org.phellang.run.settings
 
 import com.intellij.ui.components.JBLabel
-import com.intellij.ui.components.JBScrollPane
-import com.intellij.ui.components.JBTextArea
 import com.intellij.ui.components.JBTextField
+import com.intellij.ui.components.fields.ExpandableTextField
 import com.intellij.openapi.project.Project
+import com.intellij.util.execution.ParametersListUtil
 import com.intellij.util.ui.FormBuilder
 import org.phellang.run.PhelTestConfiguration
 import javax.swing.JPanel
@@ -13,11 +13,13 @@ class PhelTestConfigurationEditor(project: Project) :
     PhelWorkingDirectoryEditor<PhelTestConfiguration>(project, "Directory tests run in; defaults to the project root") {
 
     /**
-     * A text area rather than a single-line field: paths are separated by line breaks, so the user
-     * has to be able to type one. They used to be space-separated, which broke every path with a
-     * space in it.
+     * Expandable, and encoded as a parameter list.
+     *
+     * Collapsed it is one line with quoting; expanded it is one path per line, which is how a path
+     * containing a space can be typed at all. The same pairing the platform's own program-argument
+     * fields use, so the quoting the configuration stores and the quoting shown here cannot diverge.
      */
-    private val pathsField = JBTextArea(PATH_FIELD_ROWS, 0)
+    private val pathsField = ExpandableTextField(ParametersListUtil::parse, ParametersListUtil::join)
 
     /** Editable so a configuration created from a `deftest` gutter icon survives a trip through the dialog. */
     private val testNameField = JBTextField()
@@ -35,12 +37,8 @@ class PhelTestConfigurationEditor(project: Project) :
     }
 
     override fun buildPanel(): JPanel = FormBuilder.createFormBuilder()
-        .addLabeledComponent(JBLabel("Paths, one per line (blank runs everything):"), JBScrollPane(pathsField), true)
+        .addLabeledComponent(JBLabel("Paths (blank runs everything):"), pathsField, true)
         .addLabeledComponent(JBLabel("Test name (blank runs every test in scope):"), testNameField, true)
         .addLabeledComponent(JBLabel("Working directory:"), workingDirectoryField, true)
         .panel
-
-    private companion object {
-        const val PATH_FIELD_ROWS = 3
-    }
 }

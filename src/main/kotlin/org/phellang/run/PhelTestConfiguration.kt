@@ -11,6 +11,7 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.JDOMExternalizerUtil
+import com.intellij.util.execution.ParametersListUtil
 import org.jdom.Element
 import org.phellang.run.execution.PhelRunCommandLine
 import org.phellang.run.settings.PhelTestConfigurationEditor
@@ -34,12 +35,15 @@ class PhelTestConfiguration(
 ) : PhelCliRunConfiguration(project, factory, name) {
 
     /**
-     * Newline-separated paths, empty meaning the whole suite.
+     * The paths to run, empty meaning the whole suite, encoded as a parameter list.
      *
-     * One path per line rather than space-separated. The producer stores an *absolute* path, and on
-     * a project under `/Users/me/My Projects` splitting on spaces handed `phel test` two paths that
-     * do not exist. A path cannot contain a newline on any platform this targets, so a line break is
-     * the one separator that is always safe here.
+     * [ParametersListUtil] rather than a plain space-separated string: the producer stores an
+     * *absolute* path, and on a project under `/Users/me/My Projects` a bare space split handed
+     * `phel test` two paths that do not exist. `join` quotes what needs quoting and `parse` reads it
+     * back, which is the same encoding the platform's own program-arguments fields use.
+     *
+     * Values saved before the quoting existed still read correctly: `parse` treats an unquoted run
+     * of paths exactly as the old split did.
      */
     var testPaths: String = ""
 
@@ -76,7 +80,12 @@ class PhelTestConfiguration(
         return SMTestRunnerConnectionUtil.createConsole(properties.testFrameworkName, properties)
     }
 
-    fun paths(): List<String> = splitPaths(testPaths, '\n')
+    fun paths(): List<String> = ParametersListUtil.parse(testPaths)
+
+    /** Encodes [paths] into [testPaths], quoting any that need it. */
+    fun setPaths(paths: List<String>) {
+        testPaths = ParametersListUtil.join(paths)
+    }
 
     /** File names rather than whole paths: the producer stores absolute ones, and the run widget is narrow. */
     override fun suggestedName(): String {
@@ -90,42 +99,21 @@ class PhelTestConfiguration(
 
     override fun writeExternal(element: Element) {
         super.writeExternal(element)
-        JDOMExternalizerUtil.writeField(element, TEST_PATH_LINES_FIELD, testPaths)
+        JDOMExternalizerUtil.writeField(element, TEST_PATHS_FIELD, testPaths)
         JDOMExternalizerUtil.writeField(element, TEST_NAME_FIELD, testName)
     }
 
-    /**
-     * The separator changed, so the key did too.
-     *
-     * A value under the old key was written when paths were space-separated, and is read with that
-     * rule: two paths typed into the old single-line field must keep meaning two paths rather than
-     * silently becoming one path with a space in it. Guessing from the value alone is not possible —
-     * `a.phel b.phel` and `/My Projects/a.phel` are the same shape — which is why this is a second
-     * key rather than a heuristic. Saving rewrites it in the new form.
-     */
     override fun readExternal(element: Element) {
         super.readExternal(element)
-
-        val lines = JDOMExternalizerUtil.readField(element, TEST_PATH_LINES_FIELD)
-        val legacy = JDOMExternalizerUtil.readField(element, LEGACY_SPACE_SEPARATED_PATHS_FIELD)
-
-        testPaths = when {
-            lines != null -> lines
-            legacy != null -> splitPaths(legacy, ' ', '\n').joinToString("\n")
-            else -> ""
-        }
-
+        testPaths = JDOMExternalizerUtil.readField(element, TEST_PATHS_FIELD).orEmpty()
         testName = JDOMExternalizerUtil.readField(element, TEST_NAME_FIELD).orEmpty()
     }
 
     private companion object {
         // Persisted in workspace.xml; append-only, so a configuration saved before TEST_NAME existed
-        // still reads back as the whole-suite or whole-file run it was.
-        const val TEST_PATH_LINES_FIELD = "TEST_PATH_LINES"
-        const val LEGACY_SPACE_SEPARATED_PATHS_FIELD = "TEST_PATHS"
+        // still reads back as the whole-suite or whole-file run it was. The key survived the move to
+        // a quoted parameter list because `parse` reads the old unquoted values unchanged.
+        const val TEST_PATHS_FIELD = "TEST_PATHS"
         const val TEST_NAME_FIELD = "TEST_NAME"
     }
 }
-
-private fun splitPaths(value: String, vararg separators: Char): List<String> =
-    value.split(*separators).map(String::trim).filter(String::isNotEmpty)

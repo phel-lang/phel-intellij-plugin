@@ -47,7 +47,10 @@ class PhelTestConfigurationProducerTest : PhelIntegrationTestCase() {
     fun testATestFileProducesATestConfiguration() {
         val configuration = testConfigurationAt(testFile, "(ns")
 
-        assertTrue(configuration.testPaths.endsWith("html.phel"))
+        // Decoded: the field holds a parameter list, and the fixture's path may contain a space.
+        val paths = configuration.paths()
+        assertEquals(1, paths.size)
+        assertTrue("expected a single path ending in html.phel, got $paths", paths.single().endsWith("html.phel"))
     }
 
     /** Outside any `deftest`, the whole file runs, so no filter is set. */
