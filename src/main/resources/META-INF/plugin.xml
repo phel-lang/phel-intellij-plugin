@@ -219,7 +219,11 @@
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewScratchFile"/>
         </action>
 
-        <group id="Phel.Paredit" text="Phel Paredit" popup="true">
+        <!-- The group hides itself outside Phel files; see PhelPareditActionGroup. Without the
+             add-to-group these actions had no menu at all and were reachable only by chord. -->
+        <group id="Phel.Paredit" text="Phel Paredit" popup="true"
+               class="org.phellang.editor.paredit.PhelPareditActionGroup">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <action id="Phel.Paredit.SlurpForward"
                     class="org.phellang.editor.paredit.PhelSlurpForwardAction"
                     text="Slurp Forward"
