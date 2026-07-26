@@ -142,3 +142,6 @@ CLAUDE.md
 # Plugin signing artifacts — the certificate and private key live in CI secrets, never in git.
 *.pem
 *.crt
+
+# Local sandbox scratch project for ./gradlew runIde. Internal testing only; never shipped.
+manual-test/
