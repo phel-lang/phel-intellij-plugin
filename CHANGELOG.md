@@ -70,7 +70,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
   to the process (#263).
 - A **test** run configuration, running `phel test` over the whole suite or over named paths, into a real test tree
   with pass/fail status, durations and failure details. Built from the `junit-xml` reporter, which is written
-  alongside the normal console output and read when the run finishes (#263).
+  alongside the normal console output and read when the run finishes (#263). The tree shows one node per `deftest`:
+  that reporter emits an entry per `is` form, so the entries of a test are folded into a single node that fails when
+  any of its assertions does and lists every failing form in its details.
 - A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
   `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
   it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
