@@ -150,8 +150,11 @@ class PhelReference @JvmOverloads constructor(
         return myElement.setName(newText)
     }
 
-    @Throws(IncorrectOperationException::class)
-    override fun bindToElement(element: PsiElement): PsiElement = myElement
+    // No bindToElement override on purpose. Re-pointing a Phel symbol at a moved target is not
+    // implemented, and PsiReferenceBase already answers that by throwing IncorrectOperationException
+    // — the platform's contract for "not supported", and what PhelLoadReference next door does.
+    // Returning myElement unchanged instead reported success and re-pointed nothing, so a Move left
+    // references aimed at the old target with no error anywhere.
 
     companion object {
         /** Project-wide variants are only collected while the list is still short enough to be useful. */
