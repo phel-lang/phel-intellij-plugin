@@ -38,6 +38,55 @@ class PhelRunConfigurationTest : PhelIntegrationTestCase() {
 
         assertEquals("", loaded.scriptPath)
         assertEquals("", loaded.workingDirectory)
+        assertEmpty(loaded.arguments())
+    }
+
+    // ---- program arguments ----
+
+    fun testPassesNoArgumentsByDefault() {
+        assertEmpty(newConfiguration().arguments())
+    }
+
+    fun testSplitsProgramArguments() {
+        val configuration = newConfiguration().apply { programArguments = "alpha beta" }
+
+        assertEquals(listOf("alpha", "beta"), configuration.arguments())
+    }
+
+    /** Quoted, so an argument is one argument however many spaces are in it. */
+    fun testKeepsAQuotedArgumentWhole() {
+        val configuration = newConfiguration().apply { programArguments = "\"two words\" beta" }
+
+        assertEquals(listOf("two words", "beta"), configuration.arguments())
+    }
+
+    fun testRoundTripsProgramArgumentsThroughXml() {
+        val saved = newConfiguration().apply {
+            scriptPath = "/project/src/main.phel"
+            programArguments = "\"two words\" -v"
+        }
+        val element = Element("configuration")
+        saved.writeExternal(element)
+
+        val loaded = newConfiguration()
+        loaded.readExternal(element)
+
+        assertEquals(listOf("two words", "-v"), loaded.arguments())
+    }
+
+    /**
+     * The key is append-only: a configuration saved before program arguments existed must load as
+     * the plain script run it was, rather than failing to read.
+     */
+    fun testLoadsAnElementSavedBeforeProgramArgumentsExisted() {
+        val element = Element("configuration")
+        com.intellij.openapi.util.JDOMExternalizerUtil.writeField(element, "SCRIPT_PATH", "/project/src/main.phel")
+
+        val loaded = newConfiguration()
+        loaded.readExternal(element)
+
+        assertEquals("/project/src/main.phel", loaded.scriptPath)
+        assertEmpty(loaded.arguments())
     }
 
     fun testRejectsAnUnsetScript() {

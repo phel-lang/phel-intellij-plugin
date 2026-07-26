@@ -25,6 +25,31 @@ class PhelRunCommandLineTest : PhelIntegrationTestCase() {
         assertEquals(listOf(binary.absolutePath, "run", script), command)
     }
 
+    /**
+     * `phel run [options] [--] <path> [<argv>...]`, so arguments follow the script.
+     *
+     * The `--` guards them: an argument of `-v` would otherwise be read as an option to `phel`
+     * itself rather than passed through to the script.
+     */
+    fun testInvokesRunWithProgramArguments() {
+        val command = PhelRunCommandLine.run(binary, script, workingDir, listOf("alpha", "-v")).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "run", "--", script, "alpha", "-v"), command)
+    }
+
+    /** No arguments, no separator: the command a user reads in the console stays as short as it was. */
+    fun testInvokesRunWithoutASeparatorWhenThereAreNoArguments() {
+        val command = PhelRunCommandLine.run(binary, script, workingDir, emptyList()).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "run", script), command)
+    }
+
+    fun testProgramArgumentsKeepSpacesInsideOneArgument() {
+        val command = PhelRunCommandLine.run(binary, script, workingDir, listOf("two words")).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "run", "--", script, "two words"), command)
+    }
+
     fun testRunsInTheGivenWorkingDirectory() {
         val commandLine = PhelRunCommandLine.run(binary, script, workingDir)
 
