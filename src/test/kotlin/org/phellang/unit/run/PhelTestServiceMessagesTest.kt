@@ -31,12 +31,37 @@ class PhelTestServiceMessagesTest {
 
         assertEquals(
             listOf(
-                "##teamcity[testSuiteStarted name='core']",
-                "##teamcity[testStarted name='adds']",
+                "##teamcity[testSuiteStarted name='core' locationHint='phel://core']",
+                "##teamcity[testStarted name='adds' locationHint='phel://core/adds']",
                 "##teamcity[testFinished name='adds']",
                 "##teamcity[testSuiteFinished name='core']",
             ),
             messages,
+        )
+    }
+
+    /**
+     * The location hint is what makes a tree node navigable. The report carries no file or line, so
+     * the namespace and test name it does carry are handed to `PhelTestLocator` to resolve.
+     */
+    @Test
+    fun `a test carries a location hint naming its namespace and itself`() {
+        val messages = render(PhelTestReport(listOf(PhelTestSuite("app\\core-test", listOf(passing("adds"))))))
+
+        assertTrue(
+            messages.any { it.contains("locationHint='phel://app\\core-test/adds'") },
+            messages.toString(),
+        )
+    }
+
+    /** A suite locates its file, so the namespace node navigates too. */
+    @Test
+    fun `a suite carries a location hint naming its namespace`() {
+        val messages = render(PhelTestReport(listOf(PhelTestSuite("app\\core-test", emptyList()))))
+
+        assertTrue(
+            messages.first().contains("locationHint='phel://app\\core-test'"),
+            messages.toString(),
         )
     }
 
@@ -88,7 +113,10 @@ class PhelTestServiceMessagesTest {
     fun `escapes a namespace name`() {
         val messages = render(PhelTestReport(listOf(PhelTestSuite("app\\core-test", emptyList()))))
 
-        assertEquals("##teamcity[testSuiteStarted name='app\\core-test']", messages.first())
+        assertEquals(
+            "##teamcity[testSuiteStarted name='app\\core-test' locationHint='phel://app\\core-test']",
+            messages.first(),
+        )
     }
 
     @Test
@@ -124,7 +152,10 @@ class PhelTestServiceMessagesTest {
         val messages = render(PhelTestReport(listOf(PhelTestSuite("empty", emptyList()))))
 
         assertEquals(
-            listOf("##teamcity[testSuiteStarted name='empty']", "##teamcity[testSuiteFinished name='empty']"),
+            listOf(
+                "##teamcity[testSuiteStarted name='empty' locationHint='phel://empty']",
+                "##teamcity[testSuiteFinished name='empty']",
+            ),
             messages,
         )
     }

@@ -12,14 +12,24 @@ object PhelTestServiceMessages {
 
     fun render(report: PhelTestReport): List<String> = buildList {
         for (suite in report.suites) {
-            add(message("testSuiteStarted", "name" to suite.name))
-            for (case in suite.cases) addAll(render(case))
+            add(message("testSuiteStarted", "name" to suite.name, "locationHint" to locationOf(suite.name)))
+            for (case in suite.cases) addAll(render(suite.name, case))
             add(message("testSuiteFinished", "name" to suite.name))
         }
     }
 
-    private fun render(case: PhelTestCase): List<String> = buildList {
-        add(message("testStarted", "name" to case.name))
+    /**
+     * Where a tree node points, as `phel://<namespace>[/<test>]`.
+     *
+     * The suite name is the Phel namespace, which is what makes a location resolvable at all: the
+     * report carries no file or line, so [PhelTestLocator] resolves these segments back to the
+     * `deftest` rather than reading a position out of the report.
+     */
+    private fun locationOf(vararg segments: String): String =
+        segments.joinToString("/", prefix = "${PhelTestLocator.PROTOCOL}://")
+
+    private fun render(suiteName: String, case: PhelTestCase): List<String> = buildList {
+        add(message("testStarted", "name" to case.name, "locationHint" to locationOf(suiteName, case.name)))
 
         when (val outcome = case.outcome) {
             is PhelTestCase.Outcome.Passed -> Unit
