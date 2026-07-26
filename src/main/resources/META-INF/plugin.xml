@@ -236,6 +236,13 @@
 
         <!-- The group hides itself outside Phel files; see PhelPareditActionGroup. Without the
              add-to-group these actions had no menu at all and were reachable only by chord. -->
+        <action id="Phel.ExtractFunction"
+                class="org.phellang.refactoring.PhelExtractFunctionAction"
+                text="Extract Ph_el Function..."
+                description="Lift the selected expression into a new top-level defn">
+            <add-to-group group-id="RefactoringMenu" anchor="last"/>
+        </action>
+
         <group id="Phel.Paredit" text="Phel Paredit" popup="true"
                class="org.phellang.editor.paredit.PhelPareditActionGroup">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
