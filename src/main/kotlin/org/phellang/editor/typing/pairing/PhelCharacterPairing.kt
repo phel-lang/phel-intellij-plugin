@@ -54,5 +54,4 @@ object PhelCharacterPairing {
         // Skip if the same closing character is already at this position
         return charAtOffset == closingChar
     }
-
 }
