@@ -67,6 +67,9 @@
         <lang.documentationProvider
                 language="Phel"
                 implementationClass="org.phellang.documentation.PhelDocumentationProvider"/>
+        <codeInsight.parameterInfo
+                language="Phel"
+                implementationClass="org.phellang.parameterinfo.PhelParameterInfoHandler"/>
         <lang.commenter
                 language="Phel"
                 implementationClass="org.phellang.editor.commenting.PhelCommenter"/>

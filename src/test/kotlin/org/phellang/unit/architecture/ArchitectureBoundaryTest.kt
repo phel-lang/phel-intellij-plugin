@@ -199,7 +199,7 @@ class ArchitectureBoundaryTest {
 
         private val FEATURE_PACKAGES = listOf(
             "annotator", "completion", "editor", "inspection",
-            "documentation", "actions", "inlay", "navigation", "refactoring", "run", "syntax",
+            "documentation", "actions", "inlay", "navigation", "parameterinfo", "refactoring", "run", "syntax",
         ).map { "$ROOT.$it" }
 
         private val MAIN_ROOT = File("src/main/kotlin")
