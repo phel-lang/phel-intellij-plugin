@@ -39,13 +39,23 @@ class PhelLineAnalyzer(private val document: Document) {
      * the note — and appending at the comment's `;` would leave `(inc 1) )`, a space the author did
      * not write. A `;` inside a string or after a `\` is not a comment and does not count.
      */
-    fun activeCodeLength(text: String): Int {
-        var commentStart = text.length
-        forEachCodeCharacter(text) { index, char ->
-            if (char == ';' && commentStart == text.length) commentStart = index
-        }
+    fun activeCodeLength(text: String): Int = lastCodeCharacterIndex(text) + 1
 
-        return text.substring(0, commentStart).trimEnd().length
+    /**
+     * The last character of [text] that is really code, or null when the line is all comment,
+     * whitespace or empty.
+     *
+     * The Enter handler asks this to decide whether a line ends on an opening bracket. It used to
+     * read the raw text, so a line whose *comment* ended in `(` — `(println 1) ; ((((` — had a stray
+     * closing paren inserted into the code below it, and so did one ending inside a string.
+     */
+    fun lastCodeCharacter(text: String): Char? = lastCodeCharacterIndex(text).takeIf { it >= 0 }?.let(text::get)
+
+    private fun lastCodeCharacterIndex(text: String): Int {
+        var last = -1
+        forEachCodeCharacter(text) { index, char -> if (!char.isWhitespace()) last = index }
+
+        return last
     }
 
     /**
@@ -93,7 +103,14 @@ class PhelLineAnalyzer(private val document: Document) {
                 // CHARACTER rule ends in a catch-all `.`, so whatever follows the backslash is part
                 // of the literal. Inside a string the same backslash escapes the next character. Both
                 // cases consume the pair, which is also what keeps `"\""` from ending the string.
-                char == '\\' -> i++
+                //
+                // Reported once, at the pair's *last* index but carrying the backslash: it is code,
+                // so the code does not end before it, and reporting the escaped character instead
+                // would make `\(` look like an open bracket.
+                char == '\\' -> {
+                    i++
+                    if (!inString) onCode(minOf(i, text.length - 1), char)
+                }
 
                 char == '"' -> {
                     inString = !inString
@@ -102,10 +119,11 @@ class PhelLineAnalyzer(private val document: Document) {
 
                 inString -> Unit
 
-                else -> {
-                    if (char == ';') inComment = true
-                    onCode(i, char)
-                }
+                // The `;` opens the comment and is not itself code, so it is not reported: a line
+                // ending in one must not read as ending on a `;`.
+                char == ';' -> inComment = true
+
+                else -> onCode(i, char)
             }
 
             i++
