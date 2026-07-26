@@ -34,6 +34,13 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
+- **Test files now run into the test tree.** Opening a file whose `ns` requires `phel\test` and using the gutter icon,
+  the context menu or Run Anything runs `phel test` on it, so results arrive as a green or red bar instead of plain
+  console output. Ordinary `.phel` files still run through `phel run` and its console. Detection is based on the
+  `phel\test` require rather than on `phel-config.php`, so it works for a test file kept outside the configured test
+  directories, and both the `phel.test` and `phel\test` spellings are recognised.
+- **Run a single test** from the gutter icon beside any `deftest`. The test is selected with an anchored pattern, so
+  running `void-tags` cannot also pull in `void-tags-ignore-content`, which a plain name filter would.
 - **Live templates** for eleven forms: `defn-`, `defmacro`, `ns`, `deftest`, `when`, `when-let`, `loop`, `cond`,
   `case`, `try` and `foreach`. They appear under Settings > Editor > Live Templates > Phel, expand with Tab, and can
   be edited or extended. The six abbreviations completion already offers (`()`, `defn`, `def`, `let`, `if`, `fn`) are
@@ -63,7 +70,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
   to the process (#263).
 - A **test** run configuration, running `phel test` over the whole suite or over named paths, into a real test tree
   with pass/fail status, durations and failure details. Built from the `junit-xml` reporter, which is written
-  alongside the normal console output and read when the run finishes (#263).
+  alongside the normal console output and read when the run finishes (#263). The tree shows one node per `deftest`:
+  that reporter emits an entry per `is` form, so the entries of a test are folded into a single node that fails when
+  any of its assertions does and lists every failing form in its details.
 - A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
   `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
   it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf

@@ -192,6 +192,8 @@
                 implementation="org.phellang.run.PhelRunConfigurationType"/>
         <runConfigurationProducer
                 implementation="org.phellang.run.PhelRunConfigurationProducer"/>
+        <runConfigurationProducer
+                implementation="org.phellang.run.PhelTestConfigurationProducer"/>
         <runLineMarkerContributor
                 language="Phel"
                 implementationClass="org.phellang.run.PhelRunLineMarkerContributor"/>

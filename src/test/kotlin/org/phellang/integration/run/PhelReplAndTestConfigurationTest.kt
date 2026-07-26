@@ -79,10 +79,20 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
         assertEquals(listOf("tests/a.phel"), configuration.paths())
     }
 
+    /** File names, not whole paths: the producer stores absolute ones and the run widget is narrow. */
     fun testTestConfigurationNamesItselfAfterItsPaths() {
         val configuration = testConfiguration().apply { testPaths = "tests/a.phel" }
 
-        assertEquals("Tests: tests/a.phel", configuration.suggestedName())
+        assertEquals("Tests: a.phel", configuration.suggestedName())
+    }
+
+    fun testTestConfigurationNamesItselfAfterASingleTest() {
+        val configuration = testConfiguration().apply {
+            testPaths = "/project/tests/html.phel"
+            testName = "basic-tags"
+        }
+
+        assertEquals("basic-tags", configuration.suggestedName())
     }
 
     fun testTestConfigurationRoundTripsThroughXml() {
@@ -98,6 +108,36 @@ class PhelReplAndTestConfigurationTest : PhelIntegrationTestCase() {
 
         assertEquals("tests/a.phel", loaded.testPaths)
         assertEquals("/project", loaded.workingDirectory)
+    }
+
+    fun testTestConfigurationRoundTripsASingleTestThroughXml() {
+        val saved = testConfiguration().apply {
+            testPaths = "/project/tests/html.phel"
+            testName = "basic-tags"
+        }
+        val element = Element("configuration")
+        saved.writeExternal(element)
+
+        val loaded = testConfiguration()
+        loaded.readExternal(element)
+
+        assertEquals("/project/tests/html.phel", loaded.testPaths)
+        assertEquals("basic-tags", loaded.testName)
+    }
+
+    /**
+     * The new keys are append-only: a configuration saved before they existed must still load as
+     * the whole-file run it was, rather than silently acquiring a filter.
+     */
+    fun testTestConfigurationLoadsAnElementSavedBeforeTheTestFieldsExisted() {
+        val element = Element("configuration")
+        com.intellij.openapi.util.JDOMExternalizerUtil.writeField(element, "TEST_PATHS", "tests/a.phel")
+
+        val loaded = testConfiguration()
+        loaded.readExternal(element)
+
+        assertEquals("tests/a.phel", loaded.testPaths)
+        assertEquals("", loaded.testName)
     }
 
     /** Neither can run without a binary, and both must say so before launching. */

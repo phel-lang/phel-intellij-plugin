@@ -36,6 +36,16 @@ class PhelTestConfiguration(
     /** Space-separated paths, empty meaning the whole suite. */
     var testPaths: String = ""
 
+    /**
+     * A single test to run, empty meaning every test in scope.
+     *
+     * Held as the plain name rather than as a `--filter` pattern so that what the run dialog shows
+     * is a test name, and so that every run is anchored: `--filter` matches unanchored substrings,
+     * so a hand-typed `basic-tags` would silently also run `basic-tags-extended`. The anchoring is
+     * applied on the way out, in [commandLine].
+     */
+    var testName: String = ""
+
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> = PhelTestConfigurationEditor(project)
 
     /**
@@ -48,6 +58,7 @@ class PhelTestConfiguration(
             paths(),
             effectiveWorkingDirectory(),
             FileUtil.createTempFile("phel-test-", ".xml", true),
+            filter = testName.ifBlank { null }?.let(PhelRunCommandLine::exactNameFilter),
         )
 
     override fun createProcessHandler(commandLine: GeneralCommandLine): ProcessHandler =
@@ -60,19 +71,32 @@ class PhelTestConfiguration(
 
     fun paths(): List<String> = testPaths.split(' ', '\n').map(String::trim).filter(String::isNotEmpty)
 
-    override fun suggestedName(): String = if (testPaths.isBlank()) "All tests" else "Tests: $testPaths"
+    /** File names rather than whole paths: the producer stores absolute ones, and the run widget is narrow. */
+    override fun suggestedName(): String {
+        if (testName.isNotBlank()) return testName
+
+        val paths = paths()
+        if (paths.isEmpty()) return "All tests"
+
+        return "Tests: ${paths.joinToString(" ") { File(it).name }}"
+    }
 
     override fun writeExternal(element: Element) {
         super.writeExternal(element)
         JDOMExternalizerUtil.writeField(element, TEST_PATHS_FIELD, testPaths)
+        JDOMExternalizerUtil.writeField(element, TEST_NAME_FIELD, testName)
     }
 
     override fun readExternal(element: Element) {
         super.readExternal(element)
         testPaths = JDOMExternalizerUtil.readField(element, TEST_PATHS_FIELD).orEmpty()
+        testName = JDOMExternalizerUtil.readField(element, TEST_NAME_FIELD).orEmpty()
     }
 
     private companion object {
+        // Persisted in workspace.xml; append-only, so a configuration saved before TEST_NAME existed
+        // still reads back as the whole-suite or whole-file run it was.
         const val TEST_PATHS_FIELD = "TEST_PATHS"
+        const val TEST_NAME_FIELD = "TEST_NAME"
     }
 }
