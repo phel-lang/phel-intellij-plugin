@@ -31,7 +31,7 @@ class PhelEnterHandlerDelegate : EnterHandlerDelegate {
         val lineInfo = documentProcessor.extractLineInformation(document, caretOffset)
         
         val targetIndentation = indentationCalculator.targetIndentation(
-            document, lineInfo.currentLineNumber, lineInfo.textBeforeCaret
+            file, document, lineInfo.currentLineNumber, lineInfo.textBeforeCaret
         )
 
         originalHandler?.execute(editor, editor.caretModel.currentCaret, dataContext)

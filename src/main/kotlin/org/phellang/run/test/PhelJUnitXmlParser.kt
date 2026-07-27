@@ -53,7 +53,69 @@ object PhelJUnitXmlParser {
                 durationSeconds = case.getAttribute("time").toDoubleOrNull(),
                 outcome = outcomeOf(case),
             )
+        }.let(::foldAssertions)
+
+    /**
+     * Folds the repeated entries `phel` emits per assertion into one case per test.
+     *
+     * `--reporter=junit-xml` writes one `<testcase>` per `is` form, each carrying the *enclosing
+     * test's* name, so a `deftest` with four assertions arrived as four identically named siblings in
+     * the tree. Running a single test from the gutter made that unmistakable.
+     *
+     * Grouping by name is safe because a namespace cannot define the same `deftest` twice, and
+     * `groupBy` keeps first-appearance order so the tree still follows the file.
+     */
+    private fun foldAssertions(cases: List<PhelTestCase>): List<PhelTestCase> =
+        cases.groupBy { it.name }.map { (_, assertions) -> merge(assertions) }
+
+    private fun merge(assertions: List<PhelTestCase>): PhelTestCase {
+        // A test reported as a single case is left exactly as it was parsed.
+        if (assertions.size == 1) return assertions.single()
+
+        val durations = assertions.mapNotNull { it.durationSeconds }
+
+        return PhelTestCase(
+            name = assertions.first().name,
+            durationSeconds = if (durations.isEmpty()) null else durations.sum(),
+            outcome = mergedOutcome(assertions.map { it.outcome }),
+        )
+    }
+
+    /**
+     * The worst outcome in the group wins, since one failed assertion fails the test. Errors outrank
+     * failures because a crash is not a comparison that came out false, and a test counts as skipped
+     * only when nothing in it ran.
+     */
+    private fun mergedOutcome(outcomes: List<PhelTestCase.Outcome>): PhelTestCase.Outcome {
+        val errored = outcomes.filterIsInstance<PhelTestCase.Outcome.Errored>()
+        if (errored.isNotEmpty()) {
+            return PhelTestCase.Outcome.Errored(
+                summarize(errored.map { it.message }, outcomes.size, "errored"),
+                errored.joinToString(DETAIL_SEPARATOR) { it.details },
+            )
         }
+
+        val failed = outcomes.filterIsInstance<PhelTestCase.Outcome.Failed>()
+        if (failed.isNotEmpty()) {
+            return PhelTestCase.Outcome.Failed(
+                summarize(failed.map { it.message }, outcomes.size, "failed"),
+                failed.joinToString(DETAIL_SEPARATOR) { it.details },
+            )
+        }
+
+        val skipped = outcomes.filterIsInstance<PhelTestCase.Outcome.Skipped>()
+        if (skipped.size == outcomes.size) return PhelTestCase.Outcome.Skipped(skipped.first().message)
+
+        return PhelTestCase.Outcome.Passed
+    }
+
+    /**
+     * One bad assertion keeps its own message, which for Phel is the failing form. Several would
+     * otherwise be reduced to whichever came first, so the count is reported instead and every form
+     * stays in the details.
+     */
+    private fun summarize(messages: List<String>, total: Int, verb: String): String =
+        messages.singleOrNull() ?: "${messages.size} of $total assertions $verb"
 
     private fun outcomeOf(case: Element): PhelTestCase.Outcome {
         for (child in case.childElements()) {
@@ -96,4 +158,7 @@ object PhelJUnitXmlParser {
 
     private const val SUITE = "testsuite"
     private const val CASE = "testcase"
+
+    /** A blank line between the folded assertions, so the tree's detail pane stays readable. */
+    private const val DETAIL_SEPARATOR = "\n\n"
 }

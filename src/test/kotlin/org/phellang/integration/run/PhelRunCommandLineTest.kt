@@ -25,6 +25,31 @@ class PhelRunCommandLineTest : PhelIntegrationTestCase() {
         assertEquals(listOf(binary.absolutePath, "run", script), command)
     }
 
+    /**
+     * `phel run [options] [--] <path> [<argv>...]`, so arguments follow the script.
+     *
+     * The `--` guards them: an argument of `-v` would otherwise be read as an option to `phel`
+     * itself rather than passed through to the script.
+     */
+    fun testInvokesRunWithProgramArguments() {
+        val command = PhelRunCommandLine.run(binary, script, workingDir, listOf("alpha", "-v")).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "run", "--", script, "alpha", "-v"), command)
+    }
+
+    /** No arguments, no separator: the command a user reads in the console stays as short as it was. */
+    fun testInvokesRunWithoutASeparatorWhenThereAreNoArguments() {
+        val command = PhelRunCommandLine.run(binary, script, workingDir, emptyList()).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "run", script), command)
+    }
+
+    fun testProgramArgumentsKeepSpacesInsideOneArgument() {
+        val command = PhelRunCommandLine.run(binary, script, workingDir, listOf("two words")).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "run", "--", script, "two words"), command)
+    }
+
     fun testRunsInTheGivenWorkingDirectory() {
         val commandLine = PhelRunCommandLine.run(binary, script, workingDir)
 
@@ -102,5 +127,106 @@ class PhelRunCommandLineTest : PhelIntegrationTestCase() {
 
         assertEquals("tests/a.phel", command.last())
         assertTrue(command.indexOf("--reporter=junit-xml") < command.indexOf("tests/a.phel"))
+    }
+
+    /** A path with a space in it is still one argument, not two. */
+    fun testTestPassesASpacedPathAsASingleArgument() {
+        val spaced = "/Users/me/My Projects/app/tests/html.phel"
+
+        val command = PhelRunCommandLine.test(binary, listOf(spaced), workingDir).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "test", spaced), command)
+    }
+
+    fun testTestOmitsSelectorsWhenNoneAreGiven() {
+        val command = PhelRunCommandLine.test(binary, listOf("tests/a.phel"), workingDir).getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "test", "tests/a.phel"), command)
+    }
+
+    fun testTestNarrowsToASingleTestWithAFilter() {
+        val command = PhelRunCommandLine.test(
+            binary,
+            listOf("tests/html.phel"),
+            workingDir,
+            filter = PhelRunCommandLine.exactNameFilter("basic-tags"),
+        ).getCommandLineList(null)
+
+        assertEquals(
+            listOf(binary.absolutePath, "test", "--filter=/^basic\\-tags$/", "tests/html.phel"),
+            command,
+        )
+    }
+
+    /**
+     * No `--ns` companion. `phel` derives the namespace it matches from the file's location, not
+     * from its `(ns …)` form, so a pin built from the declared name selects nothing at all:
+     * `tests/html.phel` declaring `(ns test.html …)` is matched as `tests.html`.
+     */
+    fun testTestNeverPinsTheNamespace() {
+        val command = PhelRunCommandLine.test(
+            binary,
+            listOf("tests/html.phel"),
+            workingDir,
+            filter = PhelRunCommandLine.exactNameFilter("basic-tags"),
+        ).getCommandLineList(null)
+
+        assertFalse(command.toString(), command.any { it.startsWith("--ns") })
+    }
+
+    fun testTestPutsSelectorsBeforePaths() {
+        val command = PhelRunCommandLine.test(
+            binary,
+            listOf("tests/html.phel"),
+            workingDir,
+            java.io.File("/tmp/phel-report.xml"),
+            filter = PhelRunCommandLine.exactNameFilter("basic-tags"),
+        ).getCommandLineList(null)
+
+        assertEquals("tests/html.phel", command.last())
+        assertTrue(command.indexOf("--filter=/^basic\\-tags$/") < command.indexOf("tests/html.phel"))
+    }
+
+    fun testABlankFilterIsNotPassedAsAnEmptyOption() {
+        val command = PhelRunCommandLine.test(binary, listOf("tests/a.phel"), workingDir, filter = "")
+            .getCommandLineList(null)
+
+        assertEquals(listOf(binary.absolutePath, "test", "tests/a.phel"), command)
+    }
+
+    /**
+     * The pattern must survive `compile-filter-regex` in `phel/test/selector.phel` unchanged, which
+     * only happens when it is longer than one character and both opens and closes with `/`.
+     * Anything else is `preg_quote`d into an unanchored substring match.
+     */
+    fun testAnExactFilterIsHandedToPhelAsRawPcre() {
+        for (name in listOf("basic-tags", "empty?", "parse*", "a/b", "ok")) {
+            val pattern = PhelRunCommandLine.exactNameFilter(name)
+
+            assertTrue(pattern, pattern.length > 1)
+            assertTrue(pattern, pattern.startsWith("/") && pattern.endsWith("/"))
+        }
+    }
+
+    /** Anchored, so `basic-tags` cannot also select `basic-tags-extended`. */
+    fun testAnExactFilterAnchorsBothEnds() {
+        assertEquals("/^basic\\-tags$/", PhelRunCommandLine.exactNameFilter("basic-tags"))
+    }
+
+    /** Metacharacters that are idiomatic in Phel names must match literally, not as regex syntax. */
+    fun testAnExactFilterEscapesRegexMetacharacters() {
+        assertEquals("/^empty\\?$/", PhelRunCommandLine.exactNameFilter("empty?"))
+        assertEquals("/^parse\\*$/", PhelRunCommandLine.exactNameFilter("parse*"))
+        assertEquals("/^a\\.b$/", PhelRunCommandLine.exactNameFilter("a.b"))
+        assertEquals("/^x\\+y$/", PhelRunCommandLine.exactNameFilter("x+y"))
+    }
+
+    /** The delimiter itself, which `\Q...\E` would not have protected. */
+    fun testAnExactFilterEscapesTheDelimiter() {
+        assertEquals("/^a\\/b$/", PhelRunCommandLine.exactNameFilter("a/b"))
+    }
+
+    fun testAnExactFilterLeavesLettersDigitsAndUnderscoreAlone() {
+        assertEquals("/^abc_123$/", PhelRunCommandLine.exactNameFilter("abc_123"))
     }
 }

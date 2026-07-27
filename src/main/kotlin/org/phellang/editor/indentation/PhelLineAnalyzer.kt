@@ -13,20 +13,82 @@ class PhelLineAnalyzer(private val document: Document) {
         return document.text.substring(lineStart, lineEnd)
     }
 
-    fun countOpenParentheses(text: String): Int {
-        return countParentheses(text, '(')
+    /**
+     * How many levels [text] opens, minus how many it closes.
+     *
+     * Every bracket counts, not only parentheses. Counting `(` alone left the Enter handler blind to
+     * binding vectors and map literals, so `(let [x 1` put the next line at the `let`'s level rather
+     * than inside its bindings, and a top-level `[` or `{` indented nothing at all. It also disagreed
+     * with the formatter, which has always treated VEC, MAP and SET as indenting containers.
+     *
+     * `#(` and `#{` need no special case: each contains a counted opener and the `#` is inert.
+     */
+    fun bracketBalance(text: String): Int {
+        var balance = 0
+        forEachBracket(text) { _, char -> if (char in OPENERS) balance++ else balance-- }
+
+        return balance
     }
 
-    fun countCloseParentheses(text: String): Int {
-        return countParentheses(text, ')')
+    /**
+     * Where [text]'s code ends: before any trailing `;` comment, and before the whitespace in front
+     * of it.
+     *
+     * Anything appending to a line has to stop here rather than at the end. `(println (inc 1) ; note`
+     * ends inside a comment, so a closing paren added at the end would be commented out along with
+     * the note — and appending at the comment's `;` would leave `(inc 1) )`, a space the author did
+     * not write. A `;` inside a string or after a `\` is not a comment and does not count.
+     */
+    fun activeCodeLength(text: String): Int = lastCodeCharacterIndex(text) + 1
+
+    /**
+     * The last character of [text] that is really code, or null when the line is all comment,
+     * whitespace or empty.
+     *
+     * The Enter handler asks this to decide whether a line ends on an opening bracket. It used to
+     * read the raw text, so a line whose *comment* ended in `(` — `(println 1) ; ((((` — had a stray
+     * closing paren inserted into the code below it, and so did one ending inside a string.
+     */
+    fun lastCodeCharacter(text: String): Char? = lastCodeCharacterIndex(text).takeIf { it >= 0 }?.let(text::get)
+
+    private fun lastCodeCharacterIndex(text: String): Int {
+        var last = -1
+        forEachCodeCharacter(text) { index, char -> if (!char.isWhitespace()) last = index }
+
+        return last
     }
 
-    fun getParenthesesBalance(text: String): Int {
-        return countOpenParentheses(text) - countCloseParentheses(text)
+    /**
+     * The brackets [text] leaves open, outermost first.
+     *
+     * Where [bracketBalance] answers *how deep*, this answers *which* — `(let [x` leaves `['(', '[']`,
+     * so a caller completing the form knows to close the vector before the list. A closer with no
+     * matching opener is dropped rather than going negative: there is nothing to complete for it.
+     */
+    fun unclosedOpeners(text: String): List<Char> {
+        val open = ArrayDeque<Char>()
+        forEachBracket(text) { _, char -> if (char in OPENERS) open.addLast(char) else open.removeLastOrNull() }
+
+        return open.toList()
     }
 
-    private fun countParentheses(text: String, targetChar: Char): Int {
-        var count = 0
+    private inline fun forEachBracket(text: String, onBracket: (Int, Char) -> Unit) {
+        forEachCodeCharacter(text) { index, char ->
+            if (char in OPENERS || char in CLOSERS) onBracket(index, char)
+        }
+    }
+
+    /**
+     * Walks [text], reporting only the characters that are really code.
+     *
+     * Every public function here runs this rather than carrying its own scan. The skipping is the
+     * part that is easy to get subtly wrong — strings, `;` comments and `\(` character literals —
+     * and a second copy would be a second chance to drift.
+     *
+     * The `;` that opens a comment is reported, since one caller needs to know where that is; the
+     * rest of the comment is not.
+     */
+    private inline fun forEachCodeCharacter(text: String, onCode: (Int, Char) -> Unit) {
         var inString = false
         var inComment = false
         var i = 0
@@ -35,39 +97,41 @@ class PhelLineAnalyzer(private val document: Document) {
             val char = text[i]
 
             when {
-                char == ';' && !inString -> {
-                    inComment = true
+                inComment -> if (char == '\n') inComment = false
+
+                // Outside a string `\(` is a character literal, not an opening paren: the lexer's
+                // CHARACTER rule ends in a catch-all `.`, so whatever follows the backslash is part
+                // of the literal. Inside a string the same backslash escapes the next character. Both
+                // cases consume the pair, which is also what keeps `"\""` from ending the string.
+                //
+                // Reported once, at the pair's *last* index but carrying the backslash: it is code,
+                // so the code does not end before it, and reporting the escaped character instead
+                // would make `\(` look like an open bracket.
+                char == '\\' -> {
+                    i++
+                    if (!inString) onCode(minOf(i, text.length - 1), char)
                 }
 
-                char == '"' && !inComment -> {
-                    if (!inString) {
-                        inString = true
-                    } else {
-                        // Check if it's escaped
-                        val backslashCount = countPrecedingBackslashes(text, i)
-                        if (backslashCount % 2 == 0) {
-                            inString = false
-                        }
-                    }
+                char == '"' -> {
+                    inString = !inString
+                    onCode(i, char)
                 }
 
-                char == targetChar && !inString && !inComment -> {
-                    count++
-                }
+                inString -> Unit
+
+                // The `;` opens the comment and is not itself code, so it is not reported: a line
+                // ending in one must not read as ending on a `;`.
+                char == ';' -> inComment = true
+
+                else -> onCode(i, char)
             }
+
             i++
         }
-
-        return count
     }
 
-    private fun countPrecedingBackslashes(text: String, position: Int): Int {
-        var count = 0
-        var i = position - 1
-        while (i >= 0 && text[i] == '\\') {
-            count++
-            i--
-        }
-        return count
+    private companion object {
+        val OPENERS = setOf('(', '[', '{')
+        val CLOSERS = setOf(')', ']', '}')
     }
 }

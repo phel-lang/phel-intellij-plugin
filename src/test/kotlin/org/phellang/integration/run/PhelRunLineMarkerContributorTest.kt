@@ -51,4 +51,54 @@ class PhelRunLineMarkerContributorTest : PhelIntegrationTestCase() {
 
         assertTrue("expected at least one executor action on the gutter marker", info.actions.isNotEmpty())
     }
+
+    // ---- tests ----
+
+    private val testFile = """
+        (ns test.html
+          (:require phel.test :refer [deftest is]))
+
+        (deftest basic-tags
+          (is (= "<div></div>" (html [:div]))))
+
+        (deftest empty-tags
+          (is (= "<h1></h1>" (html [:h1]))))
+    """.trimIndent()
+
+    fun testMarksTheNamespaceAndEveryTest() {
+        val marked = markedElements(testFile)
+
+        assertEquals(listOf("ns", "deftest", "deftest"), marked.map { it.text })
+    }
+
+    fun testDoesNotMarkAssertionsOrOtherInnerForms() {
+        val marked = markedElements(testFile)
+
+        assertFalse("assertions are not independently runnable", marked.any { it.text == "is" })
+    }
+
+    /** Without the `phel\test` require there is nothing for `phel test` to find, so no icon. */
+    fun testDoesNotMarkTestsInAFileThatDoesNotRequirePhelTest() {
+        val marked = markedElements("(ns app.html)\n\n(deftest basic-tags\n  (is true))\n")
+
+        assertEquals(listOf("ns"), marked.map { it.text })
+    }
+
+    fun testNamesTheTestInItsTooltip() {
+        val file = myFixture.configureByText("html.phel", testFile)
+        val info = PsiTreeUtil.collectElements(file) { it.firstChild == null }
+            .filter { it.text == "deftest" }
+            .mapNotNull { contributor.getInfo(it) }
+
+        assertEquals(listOf("Run basic-tags", "Run empty-tags"), info.map { it.tooltipProvider?.apply(null) })
+    }
+
+    fun testNamesTheFileInTheNamespaceTooltip() {
+        val file = myFixture.configureByText("html.phel", testFile)
+        val info = PsiTreeUtil.collectElements(file) { it.firstChild == null }
+            .single { it.text == "ns" }
+            .let { contributor.getInfo(it) }
+
+        assertEquals("Run html.phel", info?.tooltipProvider?.apply(null))
+    }
 }

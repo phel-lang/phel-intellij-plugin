@@ -98,14 +98,25 @@ class PhelBlock(
         elementType == TokenType.WHITE_SPACE || textRange.isEmpty
 
     private companion object {
-        /** The bracketed containers. Matched on element type: `getSpacing` runs per sibling pair. */
-        val CONTAINERS = setOf(PhelTypes.LIST, PhelTypes.VEC, PhelTypes.MAP, PhelTypes.SET)
+        /**
+         * The bracketed containers. Matched on element type: `getSpacing` runs per sibling pair.
+         *
+         * The same seven `PhelPareditContainers.isContainer` recognises. `HASH_FN` and the two reader
+         * conditionals were missing, so Reformat left the body of a `#(...)` or `#?(...)` flush left
+         * while the Enter handler indented it — the two disagreeing about the same line, which is
+         * exactly what the class doc above says must not happen.
+         */
+        val CONTAINERS = setOf(
+            PhelTypes.LIST, PhelTypes.VEC, PhelTypes.MAP, PhelTypes.SET,
+            PhelTypes.HASH_FN, PhelTypes.READER_CONDITIONAL, PhelTypes.READER_CONDITIONAL_SPLICE,
+        )
 
         val BRACKETS = setOf(
             PhelTypes.PAREN1, PhelTypes.PAREN2,
             PhelTypes.BRACKET1, PhelTypes.BRACKET2,
             PhelTypes.BRACE1, PhelTypes.BRACE2,
             PhelTypes.HASH_BRACE, PhelTypes.HASH_PAREN,
+            PhelTypes.READER_COND, PhelTypes.READER_COND_SPLICE,
         )
     }
 }

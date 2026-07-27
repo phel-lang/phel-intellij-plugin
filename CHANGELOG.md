@@ -10,20 +10,6 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
-### Performance
-
 ## [1.1.0] - 2026-07-25
 
 ### Fixed
@@ -54,11 +40,49 @@ refreshed, since completion, hover and arity checking are all driven by it.
   `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
   it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
   or mise `php` is on its `PATH` even when the IDE was started from Dock or Spotlight (#263).
+- **Test files now run into the test tree.** Opening a file whose `ns` requires `phel\test` and using the gutter icon,
+  the context menu or Run Anything runs `phel test` on it, so results arrive as a green or red bar instead of plain
+  console output. Ordinary `.phel` files still run through `phel run` and its console. Detection is based on the
+  `phel\test` require rather than on `phel-config.php`, so it works for a test file kept outside the configured test
+  directories, and both the `phel.test` and `phel\test` spellings are recognised.
+- **Run a single test** from the gutter icon beside any `deftest`. The test is selected with an anchored pattern, so
+  running `void-tags` cannot also pull in `void-tags-ignore-content`, which a plain name filter would.
+- **Live templates** for eleven forms: `defn-`, `defmacro`, `ns`, `deftest`, `when`, `when-let`, `loop`, `cond`,
+  `case`, `try` and `foreach`. They appear under Settings > Editor > Live Templates > Phel, expand with Tab, and can
+  be edited or extended. The six abbreviations completion already offers (`()`, `defn`, `def`, `let`, `if`, `fn`) are
+  deliberately not redefined, so no name produces two differently-behaving entries (#268).
+- **Spellchecking** of string literals, including docstrings, and line comments. Symbols are not checked: in a Lisp
+  nearly every token is one, and checking them would underline most of a file (#268).
+- **Default keyboard shortcuts for the nine paredit actions**, which previously shipped reachable only through the
+  menu. All are two-stroke, under a shared `Ctrl+Alt+Shift+P` prefix: `S` / `B` slurp and barf forward, `Shift+S` /
+  `Shift+B` backward, `W` / `V` / `M` wrap in `( )` / `[ ]` / `{ }`, `U` splice, `R` raise (#267).
+- **Move Element Left/Right** (`Ctrl+Alt+Shift+Left/Right`) over the forms inside a list, vector, map or set, for
+  reordering arguments and map entries (#267).
+- **Surround With** (`Ctrl+Alt+T`) for wrapping a selection of whole forms in `( )`, `[ ]` or `{ }`. Unlike the
+  paredit wrap actions, which take the single form at the caret, this works across a multi-form selection (#267).
+- An **Unused private definition** inspection, reporting a `defn-` / `def-` / `^:private` definition that nothing in
+  its own file references. Only private definitions are reported: a public one may be called from any namespace, so
+  its own file cannot tell (#266).
+- An **Unused function parameter** inspection, covering `defn`, `defn-`, `fn`, `defmacro` and `defmacro-`. Names
+  starting with `_` or `&` are never reported (#266).
+- A **built-in formatter**, used when the project has no `phel` binary. Reformat Code, format-on-paste and
+  reindent-selection now work before `composer install`, in a scratch file, or where the binary is not on one of the
+  searched paths. `phel format` stays the preferred path and still wins whenever it is available; the built-in one
+  indents two spaces per level, matching what pressing Enter already does (#265).
+- A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), covering indentation and blank lines:
+  how many consecutive blank lines to keep, and how many to force between top-level forms. Only options the
+  formatter actually honours are shown (#265).
 - A **REPL** run configuration, launching `phel repl` in the Run console, which accepts typed input and forwards it
   to the process (#263).
 - A **test** run configuration, running `phel test` over the whole suite or over named paths, into a real test tree
   with pass/fail status, durations and failure details. Built from the `junit-xml` reporter, which is written
-  alongside the normal console output and read when the run finishes (#263).
+  alongside the normal console output and read when the run finishes (#263). The tree shows one node per `deftest`:
+  that reporter emits an entry per `is` form, so the entries of a test are folded into a single node that fails when
+  any of its assertions does and lists every failing form in its details.
+- A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
+  `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
+  it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
+  or mise `php` is on its `PATH` even when the IDE was started from Dock or Spotlight (#263).
 - **Go to Symbol** (Navigate > Symbol) now finds Phel definitions. The project symbol index that already backed
   completion and arity resolution simply had no route into the platform's name popups; definitions are listed with
   their namespace, so two functions sharing a name can be told apart, and choosing one jumps to the name itself
@@ -383,37 +407,3 @@ The first public release. Core language support for `.phel` files:
 - Reference resolution and symbol navigation.
 - `;` line comments and `#_` form-comment tokens.
 - Auto-closing brackets and a comment shortcut.
-
-[Unreleased]: https://github.com/phel-lang/phel-intellij-plugin/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.5.3...v1.0.0
-[0.5.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.5.2...v0.5.3
-[0.5.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.5.1...v0.5.2
-[0.5.1]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.5.0...v0.5.1
-[0.5.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.5...v0.5.0
-[0.4.5]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.4...v0.4.5
-[0.4.4]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.3...v0.4.4
-[0.4.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.2...v0.4.3
-[0.4.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.1...v0.4.2
-[0.4.1]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.6...v0.4.0
-[0.3.6]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.5...v0.3.6
-[0.3.5]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.4...v0.3.5
-[0.3.4]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.3...v0.3.4
-[0.3.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.2...v0.3.3
-[0.3.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.3.0...v0.3.2
-[0.3.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.4...v0.3.0
-[0.2.4]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.3...v0.2.4
-[0.2.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.2...v0.2.3
-[0.2.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.1...v0.2.2
-[0.2.1]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.10...v0.2.0
-[0.1.10]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.9...v0.1.10
-[0.1.9]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.8...v0.1.9
-[0.1.8]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.6...v0.1.8
-[0.1.6]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.5...v0.1.6
-[0.1.5]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.4...v0.1.5
-[0.1.4]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.3...v0.1.4
-[0.1.3]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.2...v0.1.3
-[0.1.2]: https://github.com/phel-lang/phel-intellij-plugin/compare/v0.1.0...v0.1.2
-[0.1.0]: https://github.com/phel-lang/phel-intellij-plugin/commits/v0.1.0

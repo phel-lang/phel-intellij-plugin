@@ -96,7 +96,7 @@ internal object PhelUnresolvedSymbolFinder {
      * method, and its arguments may be PHP constants — none of it is resolvable as a Phel name.
      */
     private fun isInsidePhpInterop(symbol: PhelSymbol): Boolean =
-        enclosingHeads(symbol).any { it.startsWith(PHP_PREFIX) }
+        enclosingHeads(symbol).any(PhelInteropShorthands::isPhpQualified)
 
     /** The `ns` form is import syntax: namespace names and `:refer` lists, not expressions. */
     private fun isInsideNsForm(symbol: PhelSymbol): Boolean =
@@ -163,8 +163,6 @@ internal object PhelUnresolvedSymbolFinder {
     /** The heads of every list enclosing [symbol], innermost first. */
     private fun enclosingHeads(symbol: PhelSymbol): Sequence<String> =
         PhelFormWalker.enclosingLists(symbol).mapNotNull { PhelFormWalker.headText(it) }
-
-    private const val PHP_PREFIX = "php/"
 
     /**
      * A reader macro is a *prefix* of the form it applies to, not an ancestor of it: the grammar

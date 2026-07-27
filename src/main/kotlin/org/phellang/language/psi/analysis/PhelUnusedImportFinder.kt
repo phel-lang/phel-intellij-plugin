@@ -1,4 +1,4 @@
-package org.phellang.inspection.analysis
+package org.phellang.language.psi.analysis
 
 import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
@@ -15,12 +15,16 @@ import org.phellang.language.psi.utils.cachedPerPsi
 /**
  * Decides whether a required namespace is never used in the file that requires it.
  *
- * Moved here from `annotator/validators/PhelImportValidator`, which still owns the two problems
- * that are genuinely annotator concerns (a duplicate import, and one that does not resolve). This
- * one became an inspection so it can be switched off or re-levelled from Settings; the annotator no
- * longer reports it, or every unused import would be flagged twice.
+ * Started in `annotator/validators/PhelImportValidator`, which still owns the two problems that are
+ * genuinely annotator concerns (a duplicate import, and one that does not resolve), then moved to
+ * `inspection/analysis` so it could be switched off or re-levelled from Settings.
+ *
+ * Now in `language` for the reason [org.phellang.language.psi.utils.PhelImportRemoval] is: a second
+ * feature package needs it. `PhelUnusedImportInspection` reports these one at a time and
+ * `editor.imports.PhelImportOptimizer` removes them all at once, and a feature package may not reach
+ * into another's internals. Detection and removal now sit side by side, one layer down.
  */
-internal object PhelUnusedImportFinder {
+object PhelUnusedImportFinder {
 
     private val USED_QUALIFIERS_KEY: Key<CachedValue<Set<String>>> =
         Key.create("phel.usedNamespaceQualifiers")

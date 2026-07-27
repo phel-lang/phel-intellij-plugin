@@ -1,5 +1,6 @@
 package org.phellang.documentation.resolvers
 
+import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.registry.PhelFunctionRegistry
 import java.util.concurrent.ConcurrentHashMap
 
@@ -18,7 +19,7 @@ object PhelApiDocumentation {
                 append(function.toHtmlDocumentation())
                 // Native PHP functions document at php.net (their prose is not in Phel's api.json).
                 // Only php/ entries link out; the dormant links on Phel stdlib entries stay unrendered.
-                if (function.name.startsWith("php/")) {
+                if (PhelInteropShorthands.isPhpQualified(function.name)) {
                     function.documentation.links.docs.takeIf(String::isNotBlank)?.let {
                         append("<a href=\"").append(it).append("\">php.net documentation</a><br />")
                     }

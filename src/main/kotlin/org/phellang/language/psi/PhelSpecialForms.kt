@@ -17,15 +17,34 @@ object PhelSpecialForms {
      * non-nil rather than on truthy. They were missing, so their bindings were invisible to every
      * consumer of this set at once: unresolved on go-to-definition, absent from local completion,
      * never reported as unused or shadowed, and unrecognised as locals by the parameter hints.
+     *
+     * `when-first` was the same omission a second time: `(when-first bindings & body)` binds the head
+     * of a collection with exactly `when-let`'s shape. Membership is decided by the registry
+     * signature, not by the name.
      */
     val LET_LIKE: Set<String> = setOf(
-        "let", "if-let", "when-let", "if-some", "when-some",
+        "let", "if-let", "when-let", "if-some", "when-some", "when-first",
         "loop", "for", "foreach", "binding", "dofor", "doseq",
     )
 
     /** Forms that introduce a parameter vector — the `fn` / `defn` family. */
     val FUNCTION_DEFINING: Set<String> = setOf(
         "fn", "defn", "defn-", "defmacro", "defmacro-",
+    )
+
+    /**
+     * Macros that thread an expression through their remaining forms.
+     *
+     * Their arguments are rewritten at expansion, so neither the count nor the order the reader sees
+     * survives. Two consumers ask this: the arity inspection skips a *threaded argument list*, and
+     * [VARIADIC_HEADS] skips the threading call itself.
+     *
+     * The conditional pair is easy to forget — the arity inspection's own copy had it while
+     * [VARIADIC_HEADS] did not, so `(cond-> 1 true inc)` was arity-checked and rendered `expr:` /
+     * `clauses:` hints while every other threading macro was left alone.
+     */
+    val THREADING: Set<String> = setOf(
+        "->", "->>", "as->", "some->", "some->>", "cond->", "cond->>", "doto",
     )
 
     /**
@@ -73,14 +92,17 @@ object PhelSpecialForms {
      * `use` is the one that bit: it is a real registry entry with the signature
      * `(use ClassName & options)`, so it resolves, and the hints provider rendered `ClassName:` /
      * `options:` inside `(use \DateTimeImmutable :as Date)`.
+     *
+     * [LET_LIKE], [FUNCTION_DEFINING] and [THREADING] are folded in rather than re-listed. Every form
+     * in them is disqualified from positional reading for a reason this set already encodes, and
+     * spelling the names twice is how `doseq` ended up in one and not the other.
      */
     val VARIADIC_HEADS: Set<String> = setOf(
-        "if", "if-not", "when", "when-not", "if-let", "when-let", "if-some", "when-some",
-        "do", "let", "loop", "recur", "fn", "defn", "defn-", "def", "def-", "defmacro", "defmacro-",
+        "if", "if-not", "when", "when-not",
+        "do", "recur", "def", "def-",
         "defstruct", "definterface", "defexception", "declare", "ns", "quote", "var",
         "try", "catch", "finally", "throw", "case", "cond", "condp", "and", "or",
-        "->", "->>", "as->", "some->", "some->>", "doto", "binding", "for", "foreach", "dofor",
         "comment", "deftest", "is", "are", "testing", "with-output-buffer",
         "import", "require", "use", "set!", "..", ".",
-    )
+    ) + LET_LIKE + FUNCTION_DEFINING + THREADING
 }

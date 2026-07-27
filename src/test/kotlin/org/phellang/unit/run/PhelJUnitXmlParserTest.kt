@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.phellang.run.test.PhelJUnitXmlParser
 import org.phellang.run.test.PhelTestCase
+import org.phellang.run.test.PhelTestSuite
 
 /**
  * The JUnit XML `phel test --reporter=junit-xml` writes.
@@ -123,14 +124,14 @@ class PhelJUnitXmlParserTest {
     /** A run that crashed before writing anything must not surface as a parse error. */
     @Test
     fun `empty input yields an empty report`() {
-        assertTrue(parse("").isEmpty)
-        assertTrue(parse("   ").isEmpty)
+        assertEquals(emptyList<PhelTestSuite>(), parse("").suites)
+        assertEquals(emptyList<PhelTestSuite>(), parse("   ").suites)
     }
 
     /** Half-written XML from a killed process is likelier than a malformed reporter. */
     @Test
     fun `malformed xml yields an empty report rather than throwing`() {
-        assertTrue(parse("<testsuite name=\"s\"><testcase ").isEmpty)
+        assertEquals(emptyList<PhelTestSuite>(), parse("<testsuite name=\"s\"><testcase ").suites)
     }
 
     @Test
@@ -138,7 +139,7 @@ class PhelJUnitXmlParserTest {
         val report = parse("""<testsuite name="empty-suite"></testsuite>""")
 
         assertEquals(listOf("empty-suite"), report.suites.map { it.name })
-        assertTrue(report.isEmpty)
+        assertEquals(emptyList<PhelTestCase>(), report.suites.single().cases)
     }
 
     @Test
@@ -149,5 +150,152 @@ class PhelJUnitXmlParserTest {
 
         val outcome = report.suites[0].cases[0].outcome as PhelTestCase.Outcome.Failed
         assertEquals("bare detail", outcome.details)
+    }
+
+    // ---- one node per test, not per assertion ----
+    //
+    // `phel` writes a <testcase> per `is` form, each named after the enclosing test, so these are
+    // the shapes a real report has. Verbatim from `phel test --reporter=junit-xml` on a `deftest`
+    // with four passing assertions and one with three failing ones.
+
+    @Test
+    fun `folds the repeated cases of one test into a single node`() {
+        val report = parse(
+            """
+            <testsuites tests="4">
+              <testsuite name="tests.html" tests="4">
+                <testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase>
+                <testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase>
+                <testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase>
+                <testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase>
+              </testsuite>
+            </testsuites>
+            """.trimIndent()
+        )
+
+        assertEquals(listOf("void-tags"), report.suites[0].cases.map { it.name })
+        assertEquals(PhelTestCase.Outcome.Passed, report.suites[0].cases[0].outcome)
+    }
+
+    @Test
+    fun `a folded test keeps every failing assertion in its details`() {
+        val report = parse(
+            """
+            <testsuite name="tests.html" tests="3">
+              <testcase name="void-tags-ignore-content"><failure type="AssertionFailed">(= "&lt;br /&gt;" a)</failure></testcase>
+              <testcase name="void-tags-ignore-content"><failure type="AssertionFailed">(= "&lt;img /&gt;" b)</failure></testcase>
+              <testcase name="void-tags-ignore-content"><failure type="AssertionFailed">(= "&lt;input /&gt;" c)</failure></testcase>
+            </testsuite>
+            """.trimIndent()
+        )
+
+        val outcome = report.suites[0].cases.single().outcome as PhelTestCase.Outcome.Failed
+        assertEquals("3 of 3 assertions failed", outcome.message)
+        assertEquals("""(= "<br />" a)""" + "\n\n" + """(= "<img />" b)""" + "\n\n" + """(= "<input />" c)""", outcome.details)
+    }
+
+    @Test
+    fun `one bad assertion among many fails the whole test and keeps its own message`() {
+        val report = parse(
+            """
+            <testsuite name="s">
+              <testcase name="mixed"/>
+              <testcase name="mixed"><failure message="boom">detail</failure></testcase>
+              <testcase name="mixed"/>
+            </testsuite>
+            """.trimIndent()
+        )
+
+        val outcome = report.suites[0].cases.single().outcome as PhelTestCase.Outcome.Failed
+        assertEquals("boom", outcome.message)
+        assertEquals("detail", outcome.details)
+    }
+
+    /** A crash is not a comparison that came out false, so it outranks a failed assertion. */
+    @Test
+    fun `an error outranks a failure in the same test`() {
+        val report = parse(
+            """
+            <testsuite name="s">
+              <testcase name="mixed"><failure message="assert">f</failure></testcase>
+              <testcase name="mixed"><error message="PHEL001">trace</error></testcase>
+            </testsuite>
+            """.trimIndent()
+        )
+
+        val outcome = report.suites[0].cases.single().outcome as PhelTestCase.Outcome.Errored
+        assertEquals("PHEL001", outcome.message)
+    }
+
+    @Test
+    fun `a test counts as skipped only when nothing in it ran`() {
+        val allSkipped = parse(
+            """
+            <testsuite name="s">
+              <testcase name="wip"><skipped message="later"/></testcase>
+              <testcase name="wip"><skipped message="later"/></testcase>
+            </testsuite>
+            """.trimIndent()
+        )
+        assertEquals(
+            PhelTestCase.Outcome.Skipped("later"),
+            allSkipped.suites[0].cases.single().outcome,
+        )
+
+        val partlySkipped = parse(
+            """
+            <testsuite name="s">
+              <testcase name="wip"><skipped message="later"/></testcase>
+              <testcase name="wip"/>
+            </testsuite>
+            """.trimIndent()
+        )
+        assertEquals(PhelTestCase.Outcome.Passed, partlySkipped.suites[0].cases.single().outcome)
+    }
+
+    @Test
+    fun `a folded test totals the time of its assertions`() {
+        val report = parse(
+            """
+            <testsuite name="s">
+              <testcase name="t" time="0.01"/>
+              <testcase name="t" time="0.02"/>
+            </testsuite>
+            """.trimIndent()
+        )
+
+        assertEquals(30L, report.suites[0].cases.single().durationMillis)
+    }
+
+    @Test
+    fun `distinct tests in one suite stay distinct`() {
+        val report = parse(
+            """
+            <testsuite name="s">
+              <testcase name="second"/>
+              <testcase name="second"/>
+              <testcase name="first"/>
+            </testsuite>
+            """.trimIndent()
+        )
+
+        // Order follows the report, so the tree still follows the file.
+        assertEquals(listOf("second", "first"), report.suites[0].cases.map { it.name })
+    }
+
+    /** Same name, different suites: two namespaces may each define `basic-tags`. */
+    @Test
+    fun `tests with the same name in different suites are not folded together`() {
+        val report = parse(
+            """
+            <testsuites>
+              <testsuite name="a"><testcase name="shared"/></testsuite>
+              <testsuite name="b"><testcase name="shared"/></testsuite>
+            </testsuites>
+            """.trimIndent()
+        )
+
+        assertEquals(listOf("shared"), report.suites[0].cases.map { it.name })
+        assertEquals(listOf("shared"), report.suites[1].cases.map { it.name })
     }
 }

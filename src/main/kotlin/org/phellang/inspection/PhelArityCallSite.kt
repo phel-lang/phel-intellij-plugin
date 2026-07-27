@@ -2,6 +2,7 @@ package org.phellang.inspection
 
 import com.intellij.psi.PsiElement
 import org.phellang.language.psi.PhelForm
+import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
@@ -20,7 +21,7 @@ internal object PhelArityCallSite {
     /** True when the arity check must not run for [list] with head [name]. */
     fun shouldSkip(list: PhelList, head: PhelSymbol, name: String, forms: List<PhelForm>): Boolean {
         if (name in PhelSpecialForms.VARIADIC_HEADS) return true
-        if (name.startsWith("php/") || name.startsWith(".") || name.startsWith("php-")) return true
+        if (PhelInteropShorthands.isInteropCall(name)) return true
         // The dummy identifier the platform injects at the caret mid-completion.
         if (name.contains("IntelliJIdeaRulezzz")) return true
 
@@ -67,7 +68,7 @@ internal object PhelArityCallSite {
         val parentList = enclosingList(list) ?: return false
         val parentForms = parentList.forms
         val head = PhelPsiUtils.asSymbol(parentForms.firstOrNull())?.text ?: return false
-        if (head !in THREADING_HEADS) return false
+        if (head !in PhelSpecialForms.THREADING) return false
 
         val headRange = parentForms.firstOrNull()?.textRange ?: return false
         // [list] is an argument (not the head form) of the threading macro.
@@ -76,8 +77,4 @@ internal object PhelArityCallSite {
 
     private fun enclosingList(list: PhelList): PhelList? =
         generateSequence(list.parent) { it.parent }.filterIsInstance<PhelList>().firstOrNull()
-
-    private val THREADING_HEADS = setOf(
-        "->", "->>", "as->", "some->", "some->>", "cond->", "cond->>", "doto",
-    )
 }

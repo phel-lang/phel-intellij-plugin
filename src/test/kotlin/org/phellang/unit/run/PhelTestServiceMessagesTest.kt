@@ -31,12 +31,37 @@ class PhelTestServiceMessagesTest {
 
         assertEquals(
             listOf(
-                "##teamcity[testSuiteStarted name='core']",
-                "##teamcity[testStarted name='adds']",
+                "##teamcity[testSuiteStarted name='core' locationHint='phel://core']",
+                "##teamcity[testStarted name='adds' locationHint='phel://core/adds']",
                 "##teamcity[testFinished name='adds']",
                 "##teamcity[testSuiteFinished name='core']",
             ),
             messages,
+        )
+    }
+
+    /**
+     * The location hint is what makes a tree node navigable. The report carries no file or line, so
+     * the namespace and test name it does carry are handed to `PhelTestLocator` to resolve.
+     */
+    @Test
+    fun `a test carries a location hint naming its namespace and itself`() {
+        val messages = render(PhelTestReport(listOf(PhelTestSuite("app\\core-test", listOf(passing("adds"))))))
+
+        assertTrue(
+            messages.any { it.contains("locationHint='phel://app\\core-test/adds'") },
+            messages.toString(),
+        )
+    }
+
+    /** A suite locates its file, so the namespace node navigates too. */
+    @Test
+    fun `a suite carries a location hint naming its namespace`() {
+        val messages = render(PhelTestReport(listOf(PhelTestSuite("app\\core-test", emptyList()))))
+
+        assertTrue(
+            messages.first().contains("locationHint='phel://app\\core-test'"),
+            messages.toString(),
         )
     }
 
@@ -88,7 +113,10 @@ class PhelTestServiceMessagesTest {
     fun `escapes a namespace name`() {
         val messages = render(PhelTestReport(listOf(PhelTestSuite("app\\core-test", emptyList()))))
 
-        assertEquals("##teamcity[testSuiteStarted name='app\\core-test']", messages.first())
+        assertEquals(
+            "##teamcity[testSuiteStarted name='app\\core-test' locationHint='phel://app\\core-test']",
+            messages.first(),
+        )
     }
 
     @Test
@@ -124,7 +152,10 @@ class PhelTestServiceMessagesTest {
         val messages = render(PhelTestReport(listOf(PhelTestSuite("empty", emptyList()))))
 
         assertEquals(
-            listOf("##teamcity[testSuiteStarted name='empty']", "##teamcity[testSuiteFinished name='empty']"),
+            listOf(
+                "##teamcity[testSuiteStarted name='empty' locationHint='phel://empty']",
+                "##teamcity[testSuiteFinished name='empty']",
+            ),
             messages,
         )
     }
@@ -161,5 +192,46 @@ class PhelTestServiceMessagesTest {
             messages.count { it.startsWith("##teamcity[testStarted") },
             messages.count { it.startsWith("##teamcity[testFinished") },
         )
+    }
+
+    // ---- real reporter output ----
+    //
+    // Both documents below are verbatim `phel test --reporter=junit-xml` output, captured from a
+    // real project. They are the end-to-end check that the tree gets one node per `deftest`: the
+    // reporter emits one entry per `is` form, and every one of them carries the test's name.
+
+    @Test
+    fun `four passing assertions become one passing node`() {
+        val messages = renderXml(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <testsuites tests="4" failures="0" errors="0" time="0.0"><testsuite name="tests.html" tests="4" failures="0" errors="0" time="0.0"><testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase><testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase><testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase><testcase name="void-tags" classname="" file="/p/tests/html.phel" line="22"></testcase></testsuite></testsuites>
+            """.trimIndent()
+        )
+
+        assertEquals(1, messages.count { it.startsWith("##teamcity[testStarted") })
+        assertEquals(1, messages.count { it.startsWith("##teamcity[testFinished") })
+        assertTrue(messages.none { it.startsWith("##teamcity[testFailed") }, messages.toString())
+        assertTrue(messages.any { it.contains("name='void-tags'") }, messages.toString())
+    }
+
+    @Test
+    fun `three failing assertions become one failing node listing every form`() {
+        val messages = renderXml(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <testsuites tests="3" failures="3" errors="0" time="0.0"><testsuite name="tests.html" tests="3" failures="3" errors="0" time="0.0"><testcase name="void-tags-ignore-content" classname="" file="/p/tests/html.phel" line="28"><failure message="" type="AssertionFailed">(= &quot;&lt;br /&gt;&quot; (html [:br &quot;ignored&quot;]))</failure></testcase><testcase name="void-tags-ignore-content" classname="" file="/p/tests/html.phel" line="28"><failure message="" type="AssertionFailed">(= &quot;&lt;img src=\&quot;x\&quot; /&gt;&quot; (html [:img {:src &quot;x&quot;} &quot;alt&quot;]))</failure></testcase><testcase name="void-tags-ignore-content" classname="" file="/p/tests/html.phel" line="28"><failure message="" type="AssertionFailed">(= &quot;&lt;input type=\&quot;text\&quot; /&gt;&quot; (html [:input {:type &quot;text&quot;} &quot;x&quot;]))</failure></testcase></testsuite></testsuites>
+            """.trimIndent()
+        )
+
+        assertEquals(1, messages.count { it.startsWith("##teamcity[testStarted") })
+        assertEquals(1, messages.count { it.startsWith("##teamcity[testFinished") })
+
+        val failure = messages.single { it.startsWith("##teamcity[testFailed") }
+        assertTrue(failure.contains("message='3 of 3 assertions failed'"), failure)
+        // Every failing form survives into the detail pane, `[` and `]` service-message escaped.
+        for (tag in listOf(":br", ":img", ":input")) {
+            assertTrue(failure.contains(tag), "expected $tag in: $failure")
+        }
     }
 }

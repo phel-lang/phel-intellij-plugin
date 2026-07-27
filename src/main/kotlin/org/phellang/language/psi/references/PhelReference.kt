@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElementResolveResult
 import com.intellij.psi.PsiPolyVariantReference
 import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.ResolveResult
+import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.util.IncorrectOperationException
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
@@ -36,7 +37,26 @@ class PhelReference @JvmOverloads constructor(
 
     private val symbolName: String? = PhelPsiUtils.getName(element)
 
+    /**
+     * Cached, because the chain below is expensive and asked for constantly.
+     *
+     * Resolving one symbol walks local scope, the current file's definitions, the project index,
+     * vendor `phel/core` and finally the PHP index — measured at ~1.3 ms per symbol, and the
+     * annotator, the inspections and the documentation provider all resolve while highlighting. A
+     * file with 300 symbols cost ~400 ms of that per pass. [isReferenceTo] made it worse again by
+     * calling this once per candidate during Find Usages.
+     *
+     * [ResolveCache] is the platform's answer: it keys on the reference, drops on any PSI change,
+     * and is what a [PsiPolyVariantReference] is expected to route through.
+     */
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+        if (symbolName.isNullOrEmpty()) return ResolveResult.EMPTY_ARRAY
+
+        return ResolveCache.getInstance(myElement.project)
+            .resolveWithCaching(this, RESOLVER, /* needToPreventRecursion = */ true, incompleteCode)
+    }
+
+    private fun resolveUncached(): Array<ResolveResult> {
         val name = symbolName?.takeIf { it.isNotEmpty() } ?: return ResolveResult.EMPTY_ARRAY
 
         val targets = if (findUsages) {
@@ -150,10 +170,21 @@ class PhelReference @JvmOverloads constructor(
         return myElement.setName(newText)
     }
 
-    @Throws(IncorrectOperationException::class)
-    override fun bindToElement(element: PsiElement): PsiElement = myElement
+    // No bindToElement override on purpose. Re-pointing a Phel symbol at a moved target is not
+    // implemented, and PsiReferenceBase already answers that by throwing IncorrectOperationException
+    // — the platform's contract for "not supported", and what PhelLoadReference next door does.
+    // Returning myElement unchanged instead reported success and re-pointed nothing, so a Move left
+    // references aimed at the old target with no error anywhere.
 
     companion object {
+        /**
+         * Stateless and shared: [ResolveCache] keys on the reference, so one resolver instance serves
+         * every [PhelReference] rather than each holding its own.
+         */
+        private val RESOLVER = ResolveCache.PolyVariantResolver<PhelReference> { reference, _ ->
+            reference.resolveUncached()
+        }
+
         /** Project-wide variants are only collected while the list is still short enough to be useful. */
         private const val MAX_PROJECT_VARIANTS = 20
 

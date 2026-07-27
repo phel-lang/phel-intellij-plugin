@@ -59,5 +59,8 @@ class PhelRunConfigurationType : ConfigurationType {
 
         /** The factory the context producer creates a file-running configuration from. */
         fun fileFactory(): ConfigurationFactory = getInstance().fileFactory
+
+        /** The factory the context producer creates a test configuration from. */
+        fun testFactory(): ConfigurationFactory = getInstance().testFactory
     }
 }

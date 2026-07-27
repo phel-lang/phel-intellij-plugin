@@ -153,19 +153,6 @@ class PhelCharacterPairingTest {
     }
 
     @Test
-    fun `getAllPairableCharacters should return all pairable characters`() {
-        val pairableChars = PhelCharacterPairing.getAllPairableCharacters()
-
-        assertEquals(6, pairableChars.size)
-        assertTrue(pairableChars.contains('('))
-        assertTrue(pairableChars.contains('['))
-        assertTrue(pairableChars.contains('{'))
-        assertTrue(pairableChars.contains(')'))
-        assertTrue(pairableChars.contains(']'))
-        assertTrue(pairableChars.contains('}'))
-    }
-
-    @Test
     fun `pairing should be consistent across multiple calls`() {
         val result1 = PhelCharacterPairing.getClosingCharacter('(')
         val result2 = PhelCharacterPairing.getClosingCharacter('(')

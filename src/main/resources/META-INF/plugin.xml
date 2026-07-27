@@ -67,9 +67,17 @@
         <lang.documentationProvider
                 language="Phel"
                 implementationClass="org.phellang.documentation.PhelDocumentationProvider"/>
+        <codeInsight.parameterInfo
+                language="Phel"
+                implementationClass="org.phellang.parameterinfo.PhelParameterInfoHandler"/>
         <lang.commenter
                 language="Phel"
                 implementationClass="org.phellang.editor.commenting.PhelCommenter"/>
+        <indexPatternBuilder
+                implementation="org.phellang.language.todo.PhelTodoIndexPatternBuilder"/>
+        <lang.importOptimizer
+                language="Phel"
+                implementationClass="org.phellang.editor.imports.PhelImportOptimizer"/>
         <lang.braceMatcher
                 language="Phel"
                 implementationClass="org.phellang.editor.matching.PhelBraceMatcher"/>
@@ -96,6 +104,9 @@
                 implementationClass="org.phellang.editor.structure.PhelStructureViewFactory"/>
         <enterHandlerDelegate
                 implementation="org.phellang.editor.enter.PhelEnterHandlerDelegate"/>
+        <lang.smartEnterProcessor
+                language="Phel"
+                implementationClass="org.phellang.editor.smartenter.PhelSmartEnterProcessor"/>
         <moveLeftRightHandler
                 language="Phel"
                 implementationClass="org.phellang.editor.paredit.PhelMoveElementLeftRightHandler"/>
@@ -192,12 +203,16 @@
                 implementation="org.phellang.run.PhelRunConfigurationType"/>
         <runConfigurationProducer
                 implementation="org.phellang.run.PhelRunConfigurationProducer"/>
+        <runConfigurationProducer
+                implementation="org.phellang.run.PhelTestConfigurationProducer"/>
         <runLineMarkerContributor
                 language="Phel"
                 implementationClass="org.phellang.run.PhelRunLineMarkerContributor"/>
         <lang.refactoringSupport
                 language="Phel"
                 implementationClass="org.phellang.refactoring.PhelRefactoringSupportProvider"/>
+        <refactoring.safeDeleteProcessor
+                implementation="org.phellang.refactoring.safedelete.PhelSafeDeleteProcessor"/>
         <lang.namesValidator
                 language="Phel"
                 implementationClass="org.phellang.refactoring.PhelNamesValidator"/>
@@ -219,7 +234,18 @@
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewScratchFile"/>
         </action>
 
-        <group id="Phel.Paredit" text="Phel Paredit" popup="true">
+        <!-- The group hides itself outside Phel files; see PhelPareditActionGroup. Without the
+             add-to-group these actions had no menu at all and were reachable only by chord. -->
+        <action id="Phel.ExtractFunction"
+                class="org.phellang.refactoring.PhelExtractFunctionAction"
+                text="Extract Ph_el Function..."
+                description="Lift the selected expression into a new top-level defn">
+            <add-to-group group-id="RefactoringMenu" anchor="last"/>
+        </action>
+
+        <group id="Phel.Paredit" text="Phel Paredit" popup="true"
+               class="org.phellang.editor.paredit.PhelPareditActionGroup">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <action id="Phel.Paredit.SlurpForward"
                     class="org.phellang.editor.paredit.PhelSlurpForwardAction"
                     text="Slurp Forward"
