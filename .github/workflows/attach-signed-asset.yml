@@ -40,7 +40,7 @@ jobs:
           java-version: 21
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@v6.2.0
 
       # signPlugin depends on buildPlugin, so this builds and signs. No PUBLISH_TOKEN: nothing is
       # uploaded to the Marketplace.

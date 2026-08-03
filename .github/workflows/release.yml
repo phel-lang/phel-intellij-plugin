@@ -37,7 +37,7 @@ jobs:
           java-version: 21
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@v6.2.0
 
       # Build, sign, and upload to the Marketplace. publishPlugin depends on signPlugin/buildPlugin,
       # so it produces the signed distribution as a side effect.
