@@ -15,10 +15,10 @@ class PhelRunConfigurationEditor(private val project: Project) : SettingsEditor<
 
     private val scriptPathField = TextFieldWithBrowseButton().apply {
         addBrowseFolderListener(
-            "Phel File",
-            "Choose the .phel file to run",
             project,
-            FileChooserDescriptorFactory.createSingleFileDescriptor("phel"),
+            FileChooserDescriptorFactory.createSingleFileDescriptor("phel")
+                .withTitle("Phel File")
+                .withDescription("Choose the .phel file to run"),
         )
     }
 
@@ -31,10 +31,10 @@ class PhelRunConfigurationEditor(private val project: Project) : SettingsEditor<
 
     private val workingDirectoryField = TextFieldWithBrowseButton().apply {
         addBrowseFolderListener(
-            "Working Directory",
-            "Directory phel runs in; defaults to the project root",
             project,
-            FileChooserDescriptorFactory.createSingleFolderDescriptor(),
+            FileChooserDescriptorFactory.createSingleFolderDescriptor()
+                .withTitle("Working Directory")
+                .withDescription("Directory phel runs in; defaults to the project root"),
         )
     }
 

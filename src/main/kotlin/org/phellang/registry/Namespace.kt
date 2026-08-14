@@ -5,6 +5,7 @@ enum class Namespace {
     AI,
     ASYNC,
     BASE64,
+    BENCH,
     CLI,
     CORE,
     EDN,

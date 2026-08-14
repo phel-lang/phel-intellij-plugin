@@ -14,12 +14,14 @@ internal fun registerPhpInteropFunctions(): List<PhelFunction> = listOf(
         name = "php/->",
         signature = "(php/-> object call*)\n(php/:: class call*)",
         completion = CompletionInfo(
-            tailText = "Access to an object property or result of chained calls",
+            tailText = "Deprecated",
             priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
         documentation = DocumentationInfo(
-            summary = "Access to an object property or result of chained calls.",
-            example = "(php/-&gt; date (format \"Y-m-d\"))",
+            summary = """
+Deprecated. Reaches an instance member; write <code>(.method obj arg)</code> or <code>(.-field obj)</code> instead.
+""",
+            example = "(.format date \"Y-m-d\")",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/php-interop/#php-set-object-properties",
@@ -31,14 +33,14 @@ internal fun registerPhpInteropFunctions(): List<PhelFunction> = listOf(
         name = "php/::",
         signature = "(php/:: class (method-name expr*))\n(php/:: class call*)",
         completion = CompletionInfo(
-            tailText = "Calls a static method or property from a PHP class",
+            tailText = "Deprecated",
             priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Calls a static method or property from a PHP class. Both method-name and property must be symbols and cannot be an evaluated value.
+Deprecated. Reaches a static member; write <code>(Foo/method arg)</code> or <code>Foo/CONST</code> instead.
 """,
-            example = "(php/:: DateTime (createFromFormat \"Y-m-d\" \"2024-01-01\"))",
+            example = "(DateTime/createFromFormat \"Y-m-d\" \"2024-01-01\")",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/php-interop/#php-static-method-and-property-call",
@@ -219,14 +221,14 @@ Builds a native PHP first-class callable from a function or method, without an f
         name = "php/new",
         signature = "(php/new expr args*)",
         completion = CompletionInfo(
-            tailText = "Evaluates expr and creates a new PHP class using the arguments",
+            tailText = "Deprecated",
             priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Evaluates expr and creates a new PHP class using the arguments. The instance of the class is returned.
+Deprecated. Creates a PHP object; write <code>(new Foo arg)</code> instead.
 """,
-            example = "(php/new DateTime \"2024-01-01\")",
+            example = "(new DateTime \"2024-01-01\")",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/php-interop/#php-class-instantiation",
@@ -236,16 +238,16 @@ Evaluates expr and creates a new PHP class using the arguments. The instance of 
     PhelFunction(
         namespace = "php",
         name = "php/oset",
-        signature = "(php/oset (php/-> object property) value)\n(php/oset (php/:: class property) value)",
+        signature = "(php/oset (.-property object) value)\n(php/oset (php/:: class property) value)",
         completion = CompletionInfo(
-            tailText = "Use php/oset to set a value to a class/object property",
+            tailText = "Sets a class/object property",
             priority = PhelCompletionPriority.SPECIAL_FORMS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Use <code>php/oset</code> to set a value to a class/object property.
+Sets a class/object property. <code>set!</code> is the top-level name for the same thing.
 """,
-            example = "(php/oset (php/-&gt; obj name) \"Alice\")",
+            example = "(php/oset (.-name obj) \"Alice\")",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/php-interop/#php-set-object-properties",
@@ -262,7 +264,7 @@ Use <code>php/oset</code> to set a value to a class/object property.
         ),
         documentation = DocumentationInfo(
             summary = "Passes a local variable by reference into a PHP interop call.",
-            example = "(php/-&gt; stmt (bindColumn 1 (php/ref out)))",
+            example = "(.bindColumn stmt 1 (php/ref out))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/php-interop/",

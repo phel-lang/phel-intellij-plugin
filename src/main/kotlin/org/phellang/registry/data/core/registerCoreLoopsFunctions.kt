@@ -23,7 +23,7 @@ Evaluates body <code>n</code> times with <code>binding</code> bound to integers 
 """,
             example = "(dotimes [i 5] (println i))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/loops.phel#L16",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/loops.phel#L16",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Calls <code>(f x)</code> for each element in <code>coll</code> for side effects.
 """,
             example = "(run! println [1 2 3])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/loops.phel#L8",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/loops.phel#L8",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Repeatedly evaluates <code>body</code> (for side effects) as long as <code>test<
 """,
             example = "(while (pos? @counter) (swap! counter dec))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/loops.phel#L25",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/loops.phel#L25",
                 docs = "",
             ),
         ),

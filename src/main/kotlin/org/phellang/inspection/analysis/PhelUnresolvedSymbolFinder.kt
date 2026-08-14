@@ -61,8 +61,11 @@ internal object PhelUnresolvedSymbolFinder {
      */
     private fun isReferencePosition(symbol: PhelSymbol, text: String): Boolean {
         if (text in ALWAYS_IGNORED) return false
-        // `%`, `%1`, `%2` are the short-fn anaphors; `$` is accepted defensively.
-        if (text.startsWith("%") || text.startsWith("$")) return false
+        // `%`, `%1`, `%2` are the short-fn anaphors. Bare `$` is the return value inside an `fn`
+        // `:post` condition — the one meaning of `$` Phel v0.50.0 kept when it removed the `|(...)`
+        // short fn, whose parameters were `$` and `$1`. A `$`-prefixed *name* is now an ordinary
+        // symbol and is checked like any other.
+        if (text.startsWith("%") || text == "$") return false
         if (text.contains("/") || text.contains("\\")) return false
         if (text.startsWith(".") || PhelInteropShorthands.isInteropClassName(text)) return false
 

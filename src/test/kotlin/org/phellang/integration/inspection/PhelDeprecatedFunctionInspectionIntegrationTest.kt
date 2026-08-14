@@ -1,14 +1,28 @@
 package org.phellang.integration.inspection
 
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.phellang.fixtures.PhelDeprecatedFunctionFixtures
 import org.phellang.registry.DeprecationInfo
 import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.inspection.deprecated.DeprecationMessageBuilder
 import org.phellang.registry.ReplacementParser
 
 class PhelDeprecatedFunctionInspectionIntegrationTest {
+
+    // No stdlib function has been deprecated since Phel v0.50.0; see the fixtures' KDoc.
+    @BeforeEach
+    fun installFixtures() {
+        PhelFunctionRegistry.installTestFunctions(PhelDeprecatedFunctionFixtures.ALL)
+    }
+
+    @AfterEach
+    fun clearFixtures() {
+        PhelFunctionRegistry.clearTestFunctions()
+    }
 
     @Nested
     inner class DeprecationDetectionWorkflow {

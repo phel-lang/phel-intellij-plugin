@@ -21,7 +21,7 @@ internal fun registerCoreMacroexpandFunctions(): List<PhelFunction> = listOf(
             summary = "Recursively expands the given form until it is no longer a macro call.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/macroexpand.phel#L32",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/macroexpand.phel#L34",
                 docs = "",
             ),
         ),
@@ -36,9 +36,9 @@ internal fun registerCoreMacroexpandFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = "Expands the given form once if it is a macro call.",
-            example = null,
+            example = "(macroexpand-1 '(when true 1)) ; =&gt; (if true (do 1))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/macroexpand.phel#L12",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/macroexpand.phel#L12",
                 docs = "",
             ),
         ),

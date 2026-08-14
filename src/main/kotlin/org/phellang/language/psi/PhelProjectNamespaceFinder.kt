@@ -21,6 +21,7 @@ object PhelProjectNamespaceFinder {
         "ai" to "phel.ai",
         "async" to "phel.async",
         "base64" to "phel.base64",
+        "bench" to "phel.bench",
         "cli" to "phel.cli",
         "core" to "phel.core",
         "debug" to "phel.debug",
