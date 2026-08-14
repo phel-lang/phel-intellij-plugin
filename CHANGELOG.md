@@ -36,6 +36,16 @@ refreshed, since completion, hover and arity checking are all driven by it.
   silently skipped (#321).
 - `$`-prefixed names are checked by the unresolved-symbol inspection again. Only bare `$` is still meaningful, as the
   return value inside an `fn` `:post` condition; `$1` was a `|(...)` parameter and is now an ordinary symbol (#321).
+- The two platform APIs scheduled for removal are gone, so the plugin keeps working on IDEs that drop them:
+  `TextFieldWithBrowseButton.addBrowseFolderListener` in the run-configuration editors, and the
+  `RunLineMarkerContributor.Info` constructor behind the run gutter icons. Behaviour is unchanged. Two further
+  Marketplace reports stay for now — the `SafeDeleteProcessorDelegate.findConflicts` override, which is *abstract* on
+  2024.3 and deprecated on 2025.2+, and `DaemonCodeAnalyzer.restart(PsiFile)`, whose replacement does not exist below
+  2026.1. Both clear once the supported floor rises above 2024.3 (#325).
+- The Gradle wrapper upgrade to 9.7.0 is complete. `distributionUrl` had been bumped without the matching
+  `gradle-wrapper.jar`, so the committed bootstrap jar was still the 9.6.1 one. The `Wrapper` task's `gradleVersion`
+  is also back in step with the wrapper — dependabot bumps only the properties file, so it had been left on 9.3.0 and
+  `./gradlew wrapper` would have quietly downgraded the project by six minor versions (#324, #326).
 
 ## [1.1.0] - 2026-07-25
 
