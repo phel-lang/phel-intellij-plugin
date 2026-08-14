@@ -23,7 +23,7 @@ Takes a body of expressions and yields a Delay object that will invoke the body 
 """,
             example = "(def d (delay (println \"computing\") 42))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/lazy.phel#L12",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/lazy.phel#L12",
                 docs = "",
             ),
         ),
@@ -38,9 +38,9 @@ Takes a body of expressions and yields a Delay object that will invoke the body 
         ),
         documentation = DocumentationInfo(
             summary = "Returns true if x is a Delay.",
-            example = null,
+            example = "(delay? (delay 1)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/lazy.phel#L28",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/lazy.phel#L28",
                 docs = "",
             ),
         ),
@@ -57,7 +57,7 @@ Takes a body of expressions and yields a Delay object that will invoke the body 
             summary = "If x is a Delay, forces it and returns its cached value. Otherwise returns x.",
             example = "(force (delay 42)) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/lazy.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/lazy.phel#L19",
                 docs = "",
             ),
         ),
@@ -83,7 +83,7 @@ Options map keys:<br />
 """,
             example = "(iteration fetch-page {:kf :next-token :vf :items :initk nil})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/lazy.phel#L36",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/lazy.phel#L37",
                 docs = "",
             ),
         ),

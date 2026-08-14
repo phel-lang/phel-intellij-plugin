@@ -19,9 +19,9 @@ internal fun registerCoreStringsFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = "Generates a new unique symbol.",
-            example = null,
+            example = "(gensym) ; =&gt; __phel_1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/strings.phel#L74",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/strings.phel#L74",
                 docs = "",
             ),
         ),
@@ -29,7 +29,7 @@ internal fun registerCoreStringsFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
         name = "str",
-        signature = "(str & args)",
+        signature = "(str)\n(str x)\n(str x y)\n(str x y z)\n(str x y z a)\n(str x y z a b)\n(str x y z a b & more)",
         completion = CompletionInfo(
             tailText = "Creates a string by concatenating values together",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -38,9 +38,9 @@ internal fun registerCoreStringsFunctions(): List<PhelFunction> = listOf(
             summary = """
 Creates a string by concatenating values together. If no arguments are provided an empty string is returned. Nil is represented as an empty string. Booleans are represented as "true" or "false" (matching Clojure semantics). Otherwise, it tries to call <code>__toString</code>.
 """,
-            example = null,
+            example = "(str \"a\" \"b\" \"c\") ; =&gt; \"abc\"\n(str 1 2 3) ; =&gt; \"123\"\n(str 1 nil true) ; =&gt; \"1true\"\n(str) ; =&gt; \"\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/strings.phel#L100",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/strings.phel#L105",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Throws <code>InvalidArgumentException</code> for any other input (including func
 """,
             example = "(symbol \"foo\") ; =&gt; foo\n(symbol :abc) ; =&gt; abc\n(symbol nil \"foo\") ; =&gt; foo\n(symbol #'phel.core/+) ; =&gt; phel.core/+",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/strings.phel#L46",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/strings.phel#L46",
                 docs = "",
             ),
         ),

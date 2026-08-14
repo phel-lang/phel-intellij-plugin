@@ -21,7 +21,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Ignores the body of the comment.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L179",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L190",
                 docs = "",
             ),
         ),
@@ -29,7 +29,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
         name = "def-",
-        signature = "",
+        signature = "(def- name value)",
         completion = CompletionInfo(
             tailText = "Define a private value that will not be exported",
             priority = PhelCompletionPriority.MACROS,
@@ -38,7 +38,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a private value that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L104",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L115",
                 docs = "",
             ),
         ),
@@ -64,13 +64,13 @@ Defines a native PHP enum. Each case is named by a keyword followed by an<br />
 (defenum Suit<br />
         :hearts :spades :clubs :diamonds<br />
         Describable<br />
-        (describe [this] (php/-> this name))<br />
+        (describe [this] (.-name this))<br />
         :php<br />
-        (label [this] (php/-> this name)))
+        (label [this] (.-name this)))
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L153",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L164",
                 docs = "",
             ),
         ),
@@ -86,12 +86,13 @@ Defines a native PHP enum. Each case is named by a keyword followed by an<br />
         documentation = DocumentationInfo(
             summary = """
 Define a new exception. Optionally pass a parent class to extend (defaults to<br />
-  <code>\Exception</code>), so frameworks can catch it by type, e.g.<br />
-  <code>(defexception ProductNotFound \RuntimeException)</code>.
+  <code>Exception</code>), so frameworks can catch it by type, e.g.<br />
+  <code>(defexception ProductNotFound RuntimeException)</code>. The parent takes any class<br />
+  spelling: bare, dotted (<code>My.Ns.Error</code>), or an alias brought in with <code>:use</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L137",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L148",
                 docs = "",
             ),
         ),
@@ -99,7 +100,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
     PhelFunction(
         namespace = "core",
         name = "defmacro",
-        signature = "",
+        signature = "(defmacro name & fdecl)",
         completion = CompletionInfo(
             tailText = "Define a macro",
             priority = PhelCompletionPriority.MACROS,
@@ -108,7 +109,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a macro.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L109",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L120",
                 docs = "",
             ),
         ),
@@ -125,7 +126,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a private macro that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L119",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L130",
                 docs = "",
             ),
         ),
@@ -133,7 +134,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
     PhelFunction(
         namespace = "core",
         name = "defn",
-        signature = "",
+        signature = "(defn name & fdecl)",
         completion = CompletionInfo(
             tailText = "Define a new global function",
             priority = PhelCompletionPriority.MACROS,
@@ -142,7 +143,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a new global function.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L99",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L110",
                 docs = "",
             ),
         ),
@@ -159,7 +160,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a private function that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L114",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L125",
                 docs = "",
             ),
         ),
@@ -178,7 +179,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L124",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L135",
                 docs = "",
             ),
         ),
@@ -186,7 +187,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
     PhelFunction(
         namespace = "core",
         name = "to-php-array",
-        signature = "",
+        signature = "(to-php-array coll)",
         completion = CompletionInfo(
             tailText = "Creates a PHP Array from a sequential data structure",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -195,7 +196,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
             summary = "Creates a PHP Array from a sequential data structure.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/defs.phel#L22",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L23",
                 docs = "",
             ),
         ),

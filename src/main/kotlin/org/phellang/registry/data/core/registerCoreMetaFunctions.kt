@@ -12,7 +12,7 @@ internal fun registerCoreMetaFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
         name = "meta",
-        signature = "",
+        signature = "(meta obj)",
         completion = CompletionInfo(
             tailText = "Gets the metadata attached to a value",
             priority = PhelCompletionPriority.MACROS,
@@ -23,25 +23,7 @@ Gets the metadata attached to a value. For a quoted symbol (<code>(meta 'foo)</c
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/meta.phel#L23",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "core",
-        name = "set-meta!",
-        signature = "",
-        completion = CompletionInfo(
-            tailText = "Sets the metadata to a given object",
-            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = "Sets the metadata to a given object.",
-            example = null,
-            deprecation = DeprecationInfo(version = "0.32.0", replacement = "with-meta"),
-            links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/meta.phel#L68",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/meta.phel#L23",
                 docs = "",
             ),
         ),
@@ -49,7 +31,7 @@ Gets the metadata attached to a value. For a quoted symbol (<code>(meta 'foo)</c
     PhelFunction(
         namespace = "core",
         name = "vary-meta",
-        signature = "",
+        signature = "(vary-meta obj f & args)",
         completion = CompletionInfo(
             tailText = "Returns an object with (apply f (meta obj) args) as its new metadata",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -58,7 +40,7 @@ Gets the metadata attached to a value. For a quoted symbol (<code>(meta 'foo)</c
             summary = "Returns an object with (apply f (meta obj) args) as its new metadata.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/meta.phel#L75",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/meta.phel#L70",
                 docs = "",
             ),
         ),
@@ -66,7 +48,7 @@ Gets the metadata attached to a value. For a quoted symbol (<code>(meta 'foo)</c
     PhelFunction(
         namespace = "core",
         name = "with-meta",
-        signature = "",
+        signature = "(with-meta obj meta)",
         completion = CompletionInfo(
             tailText = "Returns obj with the given metadata meta attached",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -77,7 +59,7 @@ Returns <code>obj</code> with the given metadata <code>meta</code> attached.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/meta.phel#L62",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/meta.phel#L64",
                 docs = "",
             ),
         ),

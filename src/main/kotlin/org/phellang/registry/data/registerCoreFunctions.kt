@@ -11,6 +11,7 @@ import org.phellang.registry.data.core.registerCoreDefsFunctions
 import org.phellang.registry.data.core.registerCoreExceptionsFunctions
 import org.phellang.registry.data.core.registerCoreFnsSetsFunctions
 import org.phellang.registry.data.core.registerCoreFuturesFunctions
+import org.phellang.registry.data.core.registerCoreInteropFunctions
 import org.phellang.registry.data.core.registerCoreIoFunctions
 import org.phellang.registry.data.core.registerCoreLazyFunctions
 import org.phellang.registry.data.core.registerCoreLoopsFunctions
@@ -42,6 +43,7 @@ internal fun registerCoreFunctions(): List<PhelFunction> =
         registerCoreExceptionsFunctions() +
         registerCoreFnsSetsFunctions() +
         registerCoreFuturesFunctions() +
+        registerCoreInteropFunctions() +
         registerCoreIoFunctions() +
         registerCoreLazyFunctions() +
         registerCoreLoopsFunctions() +

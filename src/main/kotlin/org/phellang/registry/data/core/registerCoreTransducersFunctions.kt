@@ -12,7 +12,7 @@ internal fun registerCoreTransducersFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
         name = "completing",
-        signature = "(completing f & args)",
+        signature = "(completing f)\n(completing f cf)",
         completion = CompletionInfo(
             tailText = "Takes a reducing function f of 2 args and returns a fn suitable for transduce by adding a 1-arity...",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -21,9 +21,9 @@ internal fun registerCoreTransducersFunctions(): List<PhelFunction> = listOf(
             summary = """
 Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for transduce by adding a 1-arity (completion) that calls <code>cf</code> (default: identity).
 """,
-            example = null,
+            example = "(transduce (filter even?) (completing conj) [] [1 2 3 4]) ; =&gt; [2 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L88",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L101",
                 docs = "",
             ),
         ),
@@ -31,7 +31,7 @@ Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for
     PhelFunction(
         namespace = "core",
         name = "reduce",
-        signature = "(reduce f & args)",
+        signature = "(reduce f coll)\n(reduce f init coll)",
         completion = CompletionInfo(
             tailText = "Reduces collection to a single value by repeatedly applying function to accumulator and elements",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -42,7 +42,7 @@ Reduces collection to a single value by repeatedly applying function to accumula
 """,
             example = "(reduce + [1 2 3 4]) ; =&gt; 10",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L50",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L52",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Reduces an associative collection by applying <code>f</code> to the accumulator,
 """,
             example = "(reduce-kv (fn [m k v] (assoc m v k)) {} {:a 1 :b 2}) ; =&gt; {1 :a, 2 :b}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L73",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L85",
                 docs = "",
             ),
         ),
@@ -78,9 +78,9 @@ Reduces an associative collection by applying <code>f</code> to the accumulator,
             summary = """
 Wraps <code>x</code> in a Reduced, signaling early termination from reduce/transduce.
 """,
-            example = null,
+            example = "(reduce (fn [acc x] (if (= x 3) (reduced acc) (+ acc x))) 0 [1 2 3 4]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L18",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L17",
                 docs = "",
             ),
         ),
@@ -97,9 +97,9 @@ Wraps <code>x</code> in a Reduced, signaling early termination from reduce/trans
             summary = """
 Returns true if <code>x</code> is a Reduced value.
 """,
-            example = null,
+            example = "(reduced? (reduced 1)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L24",
                 docs = "",
             ),
         ),
@@ -107,7 +107,7 @@ Returns true if <code>x</code> is a Reduced value.
     PhelFunction(
         namespace = "core",
         name = "transduce",
-        signature = "(transduce xform f & args)",
+        signature = "(transduce xform f coll)\n(transduce xform f init coll)",
         completion = CompletionInfo(
             tailText = "Reduce with a transformation of f (xf)",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -120,7 +120,7 @@ Reduce with a transformation of <code>f</code> (xf). If init is not supplied,<br
 """,
             example = "(transduce (map inc) + [1 2 3]) ; =&gt; 9",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L99",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L115",
                 docs = "",
             ),
         ),
@@ -137,9 +137,9 @@ Reduce with a transformation of <code>f</code> (xf). If init is not supplied,<br
             summary = """
 If <code>x</code> is Reduced, returns the unwrapped value; otherwise returns <code>x</code>.
 """,
-            example = null,
+            example = "(unreduced (reduced 1)) ; =&gt; 1\n(unreduced 1) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L31",
                 docs = "",
             ),
         ),
@@ -156,9 +156,9 @@ If <code>x</code> is Reduced, returns the unwrapped value; otherwise returns <co
             summary = """
 Creates a volatile mutable reference with initial value <code>val</code>. Use for transducer state that needs fast mutation without watches.
 """,
-            example = null,
+            example = "(let [v (volatile! 0)] (vreset! v 5) @v) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L116",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L131",
                 docs = "",
             ),
         ),
@@ -175,9 +175,9 @@ Creates a volatile mutable reference with initial value <code>val</code>. Use fo
             summary = """
 Returns true if <code>x</code> is a Volatile.
 """,
-            example = null,
+            example = "(volatile? (volatile! 0)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L134",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L152",
                 docs = "",
             ),
         ),
@@ -194,9 +194,9 @@ Returns true if <code>x</code> is a Volatile.
             summary = """
 Sets the value of volatile <code>vol</code> to <code>val</code>. Returns <code>val</code>.
 """,
-            example = null,
+            example = "(let [v (volatile! 0)] (vreset! v 9)) ; =&gt; 9",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L122",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L138",
                 docs = "",
             ),
         ),
@@ -213,9 +213,9 @@ Sets the value of volatile <code>vol</code> to <code>val</code>. Returns <code>v
             summary = """
 Applies <code>f</code> to the current value of volatile <code>vol</code> plus <code>args</code>, and sets the new value. Returns the new value.
 """,
-            example = null,
+            example = "(let [v (volatile! 10)] (vswap! v + 5)) ; =&gt; 15",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/transducers.phel#L128",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/transducers.phel#L145",
                 docs = "",
             ),
         ),
