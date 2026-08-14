@@ -1,19 +1,34 @@
 package org.phellang.unit.completion.data
 
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.phellang.fixtures.PhelDeprecatedFunctionFixtures
 import org.phellang.registry.PhelFunctionRegistry
 
 class PhelFunctionDeprecationTest {
+
+    // Phel v0.50.0 removed every deprecated function from the stdlib, so the deprecation lookups
+    // are exercised against in-memory fixtures rather than whatever api.json ships this release.
+    @BeforeEach
+    fun installFixtures() {
+        PhelFunctionRegistry.installTestFunctions(PhelDeprecatedFunctionFixtures.ALL)
+    }
+
+    @AfterEach
+    fun clearFixtures() {
+        PhelFunctionRegistry.clearTestFunctions()
+    }
 
     @Nested
     inner class IsDeprecatedProperty {
 
         @Test
         fun `should return true for deprecated functions`() {
-            // These are actual deprecated functions from the generated registry
+            // Installed fixtures, mirroring how these were generated while Phel still shipped them
             val deprecatedFunctions = listOf(
                 "put",     // core/put - deprecated in favor of assoc
                 "push",    // core/push - deprecated in favor of conj

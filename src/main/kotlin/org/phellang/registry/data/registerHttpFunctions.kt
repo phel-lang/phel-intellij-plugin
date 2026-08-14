@@ -21,7 +21,7 @@ internal fun registerHttpFunctions(): List<PhelFunction> = listOf(
             summary = "Emits the response by sending headers and outputting the body.",
             example = "(emit-response (response-from-string \"Hello World\")) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L465",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L475",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ Extracts uploaded files from <code>${'$'}_FILES</code> and normalizes them to up
 """,
             example = "(files-from-globals) ; =&gt; {:avatar (uploaded-file \"/tmp/phpYzdqkD\" 1024 0 \"photo.jpg\" \"image/jpeg\")}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L151",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L152",
                 docs = "",
             ),
         ),
@@ -59,7 +59,7 @@ Extracts all HTTP headers from the <code>${'$'}<em>SERVER</code> variable. Strip
 """,
             example = "(headers-from-server) ; =&gt; {:host \"example.com\" :content-type \"application/json\"}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L162",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L163",
                 docs = "",
             ),
         ),
@@ -77,9 +77,9 @@ Extracts all HTTP headers from the <code>${'$'}<em>SERVER</code> variable. Strip
 Creates a response with <code>status</code> and an HTML <code>body</code> and a<br />
   <code>Content-Type: text/html; charset=utf-8</code> header.
 """,
-            example = "(html-response 200 \"&lt;h1&gt;Hi&lt;/h1&gt;\") ; =&gt; (response 200 {:content-type \"text/html; charset=utf-8\"} \"&lt;h1&gt;Hi&lt;/h1&gt;\" \"1.1\" \"OK\")",
+            example = "(html-response 200 \"&lt;h1&gt;Hi&lt;/h1&gt;\") ; =&gt; (phel.http.response 200 {:content-type \"text/html; charset=utf-8\"} \"&lt;h1&gt;Hi&lt;/h1&gt;\" \"1.1\" \"OK\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L416",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L426",
                 docs = "",
             ),
         ),
@@ -97,9 +97,9 @@ Creates a response with <code>status</code> and an HTML <code>body</code> and a<
 Creates a response with <code>status</code> and a JSON-encoded <code>data</code> body and a<br />
   <code>Content-Type: application/json</code> header.
 """,
-            example = "(json-response 200 {:message \"pong\"}) ; =&gt; (response 200 {:content-type \"application/json\"} \"{\\\"message\\\":\\\"pong\\\"}\" \"1.1\" \"OK\")",
+            example = "(json-response 200 {:message \"pong\"}) ; =&gt; (phel.http.response 200 {:content-type \"application/json\"} \"{\\\"message\\\":\\\"pong\\\"}\" \"1.1\" \"OK\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L405",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L415",
                 docs = "",
             ),
         ),
@@ -116,7 +116,7 @@ Creates a response with <code>status</code> and a JSON-encoded <code>data</code>
             summary = "Creates a new request struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L188",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L194",
                 docs = "",
             ),
         ),
@@ -133,9 +133,9 @@ Creates a response with <code>status</code> and a JSON-encoded <code>data</code>
             summary = """
 Extracts a request from <code>${'$'}_SERVER</code>, <code>${'$'}_GET</code>, <code>${'$'}_POST</code>, <code>${'$'}_COOKIE</code>, <code>${'$'}_FILES</code> and, for JSON requests, the raw request body (<code>php://input</code>). Requires a web request context (PHP-FPM, mod_php, or <code>php -S</code>); it cannot be used from the REPL or a CLI script - use <code>request-from-map</code> for testing.
 """,
-            example = "(request-from-globals) ; =&gt; (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
+            example = "(request-from-globals) ; =&gt; (phel.http.request \"GET\" (phel.http.uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L272",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L282",
                 docs = "",
             ),
         ),
@@ -154,9 +154,9 @@ Extracts a request from args. The optional <code>raw-body</code> (the raw reques
   string) is decoded into <code>:parsed-body</code> when the <code>Content-Type</code> is<br />
   <code>application/json</code>; form bodies still come from <code>post-parameter</code>.
 """,
-            example = "(request-from-globals-args php/\$_SERVER php/\$_GET php/\$_POST php/\$_COOKIE php/\$_FILES (php/file_get_contents \"php://input\")) ; =&gt; (request \"GET\" (uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
+            example = "(request-from-globals-args php/\$_SERVER php/\$_GET php/\$_POST php/\$_COOKIE php/\$_FILES (php/file_get_contents \"php://input\")) ; =&gt; (phel.http.request \"GET\" (phel.http.uri ...) {...} nil {...} {...} {...} {...} \"1.1\" {})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L237",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L247",
                 docs = "",
             ),
         ),
@@ -177,9 +177,9 @@ Creates a request struct from a map. Supports the optional keys <code>:method</c
   <code>:server-params</code>, <code>:uploaded-files</code>, <code>:version</code>, and <code>:attributes</code>. Missing<br />
   keys default to nil, <code>{}</code>, <code>[]</code>, or <code>"1.1"</code> as appropriate.
 """,
-            example = "(request-from-map {:method \"POST\" :uri \"https://api.example.com/users\"}) ; =&gt; (request \"POST\" (uri ...) {} nil {} {} {} [] \"1.1\" {})",
+            example = "(request-from-map {:method \"POST\" :uri \"https://api.example.com/users\"}) ; =&gt; (phel.http.request \"POST\" (phel.http.uri \"https\" nil \"api.example.com\" nil \"/users\" nil nil) {} nil {} {} {} [] \"1.1\" {})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L280",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L290",
                 docs = "",
             ),
         ),
@@ -198,7 +198,7 @@ Checks if <code>x</code> is an instance of the request struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L188",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L194",
                 docs = "",
             ),
         ),
@@ -215,7 +215,7 @@ Checks if <code>x</code> is an instance of the request struct.
             summary = "Creates a new response struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L318",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L328",
                 docs = "",
             ),
         ),
@@ -234,9 +234,9 @@ Creates a response struct from a map. Optional keys: <code>:status</code> (defau
   200), <code>:headers</code> (<code>{}</code>), <code>:body</code> (<code>""</code>), <code>:version</code> (<code>"1.1"</code>), and<br />
   <code>:reason</code> (auto-filled from the HTTP status code when omitted).
 """,
-            example = "(response-from-map {:status 200 :body \"Hello World\"}) ; =&gt; (response 200 {} \"Hello World\" \"1.1\" \"OK\")",
+            example = "(response-from-map {:status 200 :body \"Hello World\"}) ; =&gt; (phel.http.response 200 {} \"Hello World\" \"1.1\" \"OK\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L383",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L393",
                 docs = "",
             ),
         ),
@@ -254,9 +254,9 @@ Creates a response struct from a map. Optional keys: <code>:status</code> (defau
 Creates a 200 OK response with the given body string. Shorthand for<br />
   <code>(response-from-map {:body s})</code>.
 """,
-            example = "(response-from-string \"Hello World\") ; =&gt; (response 200 {} \"Hello World\" \"1.1\" \"OK\")",
+            example = "(response-from-string \"Hello World\") ; =&gt; (phel.http.response 200 {} \"Hello World\" \"1.1\" \"OK\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L397",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L407",
                 docs = "",
             ),
         ),
@@ -275,7 +275,7 @@ Checks if <code>x</code> is an instance of the response struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L318",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L328",
                 docs = "",
             ),
         ),
@@ -292,7 +292,7 @@ Checks if <code>x</code> is an instance of the response struct.
             summary = "Creates a new uploaded-file struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L111",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L112",
                 docs = "",
             ),
         ),
@@ -311,7 +311,7 @@ Checks if <code>x</code> is an instance of the uploaded-file struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L111",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L112",
                 docs = "",
             ),
         ),
@@ -328,7 +328,7 @@ Checks if <code>x</code> is an instance of the uploaded-file struct.
             summary = "Creates a new uri struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L10",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L11",
                 docs = "",
             ),
         ),
@@ -348,9 +348,9 @@ Extracts the URI from the <code>${'$'}_SERVER</code> variable. The scheme is rea
   <code>REQUEST_URI</code>; and the host/port via the <code>${'$'}_SERVER</code> host fields. Returns a<br />
   uri struct.
 """,
-            example = "(uri-from-globals) ; =&gt; (uri \"https\" nil \"example.com\" 443 \"/path\" \"foo=bar\" nil)",
+            example = "(uri-from-globals) ; =&gt; (phel.http.uri \"https\" nil \"example.com\" 443 \"/path\" \"foo=bar\" nil)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L54",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L55",
                 docs = "",
             ),
         ),
@@ -367,9 +367,9 @@ Extracts the URI from the <code>${'$'}_SERVER</code> variable. The scheme is rea
             summary = """
 Parses a URI string into a uri struct. Handles UTF-8 URLs and IPv6 addresses in brackets. Throws <code>InvalidArgumentException</code> on a malformed string.
 """,
-            example = "(uri-from-string \"https://example.com/path?foo=bar\") ; =&gt; (uri \"https\" nil \"example.com\" nil \"/path\" \"foo=bar\" nil)",
+            example = "(uri-from-string \"https://example.com/path?foo=bar\") ; =&gt; (phel.http.uri \"https\" nil \"example.com\" nil \"/path\" \"foo=bar\" nil)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L82",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L83",
                 docs = "",
             ),
         ),
@@ -388,7 +388,7 @@ Checks if <code>x</code> is an instance of the uri struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/http.phel#L10",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/http.phel#L11",
                 docs = "",
             ),
         ),

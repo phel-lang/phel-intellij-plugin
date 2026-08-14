@@ -12,7 +12,7 @@ internal fun registerCoreSequencesFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
         name = "assoc",
-        signature = "(assoc ds key value & more)",
+        signature = "(assoc ds key value)\n(assoc ds key value & more)",
         completion = CompletionInfo(
             tailText = "Associates one or more key-value pairs with a collection",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -23,7 +23,7 @@ Associates one or more key-value pairs with a collection. Additional key-value p
 """,
             example = "(assoc {:a 1} :b 2) ; =&gt; {:a 1, :b 2}\n(assoc {:a 1} :b 2 :c 3) ; =&gt; {:a 1, :b 2, :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L278",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/sequences.phel#L343",
                 docs = "",
             ),
         ),
@@ -31,7 +31,7 @@ Associates one or more key-value pairs with a collection. Additional key-value p
     PhelFunction(
         namespace = "core",
         name = "dissoc",
-        signature = "(dissoc ds & ks)",
+        signature = "(dissoc ds)\n(dissoc ds k)\n(dissoc ds k & ks)",
         completion = CompletionInfo(
             tailText = "Returns ds without the given keys",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -42,7 +42,7 @@ Returns <code>ds</code> without the given keys. With no keys returns <code>ds</c
 """,
             example = "(dissoc {:a 1 :b 2} :b) ; =&gt; {:a 1}\n(dissoc {:a 1 :b 2 :c 3} :a :c) ; =&gt; {:b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L318",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/sequences.phel#L393",
                 docs = "",
             ),
         ),
@@ -50,7 +50,7 @@ Returns <code>ds</code> without the given keys. With no keys returns <code>ds</c
     PhelFunction(
         namespace = "core",
         name = "get",
-        signature = "(get ds k & [opt])",
+        signature = "(get ds k)\n(get ds k opt)",
         completion = CompletionInfo(
             tailText = "Gets the value at key in a collection",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -59,7 +59,7 @@ Returns <code>ds</code> without the given keys. With no keys returns <code>ds</c
             summary = "Gets the value at key in a collection. Returns default if not found.",
             example = "(get {:a 1} :a) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L91",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/sequences.phel#L86",
                 docs = "",
             ),
         ),
@@ -81,7 +81,7 @@ Returns the value at <code>index</code> in <code>coll</code>. Throws an<br />
 """,
             example = "(nth [1 2 3] 1) ; =&gt; 2\n(nth [1 2 3] 5 :default) ; =&gt; :default",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L136",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/sequences.phel#L197",
                 docs = "",
             ),
         ),
@@ -100,7 +100,7 @@ Returns the nth next of <code>coll</code>, <code>(seq coll)</code> when <code>n<
 """,
             example = "(nthnext [1 2 3 4 5] 2) ; =&gt; (3 4 5)\n(nthnext [1 2] 5) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L207",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/sequences.phel#L268",
                 docs = "",
             ),
         ),
@@ -119,7 +119,7 @@ Returns the nth rest of <code>coll</code>, <code>coll</code> when <code>n</code>
 """,
             example = "(nthrest [1 2 3 4 5] 2) ; =&gt; [3 4 5]\n(nthrest [1 2] 5) ; =&gt; ()\n(nthrest nil 0) ; =&gt; nil\n(nthrest nil 3) ; =&gt; ()",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L194",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/sequences.phel#L255",
                 docs = "",
             ),
         ),
@@ -138,7 +138,7 @@ Returns the head of a vector / PHP array (the last element) or the head of a lis
 """,
             example = "(peek [1 2 3]) ; =&gt; 3\n(peek '(:a :b :c)) ; =&gt; :a",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L27",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/sequences.phel#L27",
                 docs = "",
             ),
         ),
@@ -153,69 +153,9 @@ Returns the head of a vector / PHP array (the last element) or the head of a lis
         ),
         documentation = DocumentationInfo(
             summary = "Removes the last element of a collection. Returns nil for nil.",
-            example = null,
+            example = "(pop [1 2 3]) ; =&gt; [1 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L66",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "core",
-        name = "push",
-        signature = "(push coll x)",
-        completion = CompletionInfo(
-            tailText = "Inserts x at the end of the sequence coll",
-            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = """
-Inserts <code>x</code> at the end of the sequence <code>coll</code>.
-""",
-            example = null,
-            deprecation = DeprecationInfo(version = "0.25.0", replacement = "conj"),
-            links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L50",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "core",
-        name = "put",
-        signature = "(put ds key value)",
-        completion = CompletionInfo(
-            tailText = "Puts value mapped to key on the datastructure ds",
-            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = """
-Puts <code>value</code> mapped to <code>key</code> on the datastructure <code>ds</code>. Returns <code>ds</code>.
-""",
-            example = null,
-            deprecation = DeprecationInfo(version = "0.25.0", replacement = "assoc"),
-            links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L293",
-                docs = "",
-            ),
-        ),
-    ),
-    PhelFunction(
-        namespace = "core",
-        name = "unset",
-        signature = "(unset ds key)",
-        completion = CompletionInfo(
-            tailText = "Returns ds without key",
-            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
-        ),
-        documentation = DocumentationInfo(
-            summary = """
-Returns <code>ds</code> without <code>key</code>.
-""",
-            example = null,
-            deprecation = DeprecationInfo(version = "0.25.0", replacement = "dissoc"),
-            links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/sequences.phel#L328",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/sequences.phel#L59",
                 docs = "",
             ),
         ),

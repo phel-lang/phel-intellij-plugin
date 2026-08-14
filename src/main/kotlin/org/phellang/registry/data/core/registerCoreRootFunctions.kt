@@ -23,7 +23,7 @@ Vector of user arguments passed to the script (excludes program name). Use <em>p
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core.phel#L192",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core.phel#L240",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical fa
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core.phel#L23",
                 docs = "",
             ),
         ),
@@ -93,7 +93,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical fa
             summary = "The script path or namespace being executed.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core.phel#L187",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core.phel#L235",
                 docs = "",
             ),
         ),
@@ -120,7 +120,7 @@ Calls the function with the given arguments. The last argument must be a list of
     PhelFunction(
         namespace = "core",
         name = "array-map",
-        signature = "",
+        signature = "(array-map)\n(array-map k)\n(array-map k v)\n(array-map k v k2)\n(array-map k v k2 v2)\n(array-map k v k2 v2 & more)",
         completion = CompletionInfo(
             tailText = "Constructs a map from the given key/value pairs",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -129,9 +129,9 @@ Calls the function with the given arguments. The last argument must be a list of
             summary = """
 Constructs a map from the given key/value pairs. If any keys are equal, later values replace earlier ones, as if by repeated <code>assoc</code>. Phel has no distinct array-map type, so the result is the same persistent map as <code>hash-map</code> — <code>array-map</code> exists for <code>.cljc</code> interop with Clojure sources.
 """,
-            example = "(array-map :a 1 :b 2) ; =&gt; {:a 1 :b 2}",
+            example = "(array-map :a 1 :b 2) ; =&gt; {:a 1, :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core.phel#L53",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core.phel#L91",
                 docs = "",
             ),
         ),
@@ -167,7 +167,7 @@ Pauses execution and opens an interactive debugger sub-REPL with access to the l
             summary = """
 Handle exceptions thrown in a <code>try</code> block by matching on the provided exception type. The caught exception is bound to exception-name while evaluating the expressions.
 """,
-            example = "(try (throw (php/new \\Exception \"error\")) (catch \\Exception e (php/-&gt; e (getMessage))))",
+            example = "(try (throw (new Exception \"error\")) (catch Exception e (.getMessage e)))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/control-flow/#try-catch-and-finally",
@@ -196,7 +196,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
     PhelFunction(
         namespace = "core",
         name = "declare",
-        signature = "",
+        signature = "(declare name)",
         completion = CompletionInfo(
             tailText = "Declare a global symbol before it is defined",
             priority = PhelCompletionPriority.MACROS,
@@ -205,7 +205,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             summary = "Declare a global symbol before it is defined.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core.phel#L175",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core.phel#L222",
                 docs = "",
             ),
         ),
@@ -332,7 +332,7 @@ Evaluates the expressions in order and returns the value of the last expression.
             summary = """
 Evaluate expressions after the try body and all matching catches have completed. The finally block runs regardless of whether an exception was thrown.
 """,
-            example = "(defn risky-operation [] (throw (php/new \\Exception \"Error!\")))\n(defn cleanup [] (println \"Cleanup!\"))\n(try (risky-operation) (catch \\Exception e nil) (finally (cleanup)))",
+            example = "(defn risky-operation [] (throw (new Exception \"Error!\")))\n(defn cleanup [] (println \"Cleanup!\"))\n(try (risky-operation) (catch Exception e nil) (finally (cleanup)))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/control-flow/#try-catch-and-finally",
@@ -342,7 +342,7 @@ Evaluate expressions after the try body and all matching catches have completed.
     PhelFunction(
         namespace = "core",
         name = "first",
-        signature = "",
+        signature = "(first xs)",
         completion = CompletionInfo(
             tailText = "Returns the first element of a sequence, or nil if empty",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -350,11 +350,12 @@ Evaluate expressions after the try body and all matching catches have completed.
         documentation = DocumentationInfo(
             summary = """
 Returns the first element of a sequence, or nil if empty.<br /><br />
-Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns a typed <code>MapEntry</code> equal by value to <code>[:a 1]</code>. Strings are treated as sequences of multibyte characters.
+Maps are treated as a sequence of entries: <code>(first {:a 1})</code> returns a typed <code>MapEntry</code> equal by value to <code>[:a 1]</code>. Strings are treated as sequences of multibyte characters.<br /><br />
+A lazily consumed source with no indexed access of its own (an <code>eduction</code> pipeline, a PHP generator, an iterator) is answered by pulling a single element, the same way <code>empty?</code> answers it. <code>count</code> is the one that refuses such a source, because counting means draining it.
 """,
             example = "(first [1 2 3]) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core.phel#L136",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core.phel#L180",
                 docs = "",
             ),
         ),
@@ -400,7 +401,7 @@ The foreach special form can be used to iterate over all kind of PHP datastructu
     PhelFunction(
         namespace = "core",
         name = "hash-map",
-        signature = "(hash-map & xs)",
+        signature = "(hash-map)\n(hash-map k)\n(hash-map k v)\n(hash-map k v k2)\n(hash-map k v k2 v2)\n(hash-map k v k2 v2 & more)",
         completion = CompletionInfo(
             tailText = "Creates a new hash map",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -409,7 +410,7 @@ The foreach special form can be used to iterate over all kind of PHP datastructu
             summary = """
 Creates a new hash map. If no argument is provided, an empty hash map is created. The number of parameters must be even.
 """,
-            example = "(hash-map :name \"Alice\" :age 30) ; =&gt; {:name \"Alice\" :age 30}",
+            example = "(hash-map :name \"Alice\" :age 30) ; =&gt; {:name \"Alice\", :age 30}",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/data-structures/#maps",
@@ -440,12 +441,14 @@ A control flow structure. First evaluates test. If test evaluates to true, only 
         name = "in-ns",
         signature = "(in-ns namespace)",
         completion = CompletionInfo(
-            tailText = "Switches to an existing namespace without creating it (REPL-oriented)",
+            tailText = "Switches to an existing namespace without creating it (REPL, and load-ed files)",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Switches to an existing namespace without creating it (REPL-oriented).",
-            example = "(in-ns my-app\\core)",
+            summary = """
+Switches to an existing namespace without creating it (REPL, and <code>load</code>-ed files).
+""",
+            example = "(in-ns my-app.core)",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/namespaces/",
@@ -474,7 +477,7 @@ Creates a new lexical context with assignments defined in bindings. Afterwards t
     PhelFunction(
         namespace = "core",
         name = "list",
-        signature = "(list & xs)",
+        signature = "(list)\n(list a)\n(list a b)\n(list a b c)\n(list a b c & more)",
         completion = CompletionInfo(
             tailText = "Creates a new list",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -529,7 +532,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
     PhelFunction(
         namespace = "core",
         name = "next",
-        signature = "",
+        signature = "(next xs)",
         completion = CompletionInfo(
             tailText = "Returns the sequence after the first element, or nil if empty",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,
@@ -538,7 +541,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = "Returns the sequence after the first element, or nil if empty.",
             example = "(next [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core.phel#L84",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core.phel#L128",
                 docs = "",
             ),
         ),
@@ -555,7 +558,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = """
 Defines the namespace for the current file and adds imports to the environment. Imports can either be uses or requires. The keyword :use is used to import PHP classes, the keyword :require is used to import Phel modules and the keyword :require-file is used to load php files.
 """,
-            example = "(ns my-app\\core (:require phel\\string :as str))",
+            example = "(ns my-app.core (:require phel.string :as str))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/namespaces/#namespace-ns",
@@ -565,7 +568,7 @@ Defines the namespace for the current file and adds imports to the environment. 
     PhelFunction(
         namespace = "core",
         name = "queue",
-        signature = "",
+        signature = "(queue)\n(queue a)\n(queue a b)\n(queue a b c)\n(queue a b c & more)",
         completion = CompletionInfo(
             tailText = "Creates a persistent FIFO queue",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
@@ -574,9 +577,9 @@ Defines the namespace for the current file and adds imports to the environment. 
             summary = """
 Creates a persistent FIFO queue. With no arguments returns an empty queue; with arguments returns a queue with the values pushed in order so that the first argument is at the front.
 """,
-            example = "(queue 1 2 3) ; =&gt; first 1, then 2, then 3",
+            example = "(queue 1 2 3) ; =&gt; &lt;-(1 2 3)-&lt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core.phel#L41",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core.phel#L64",
                 docs = "",
             ),
         ),
@@ -646,7 +649,7 @@ Variables provide a way to manage mutable state that can be updated with <code>s
         ),
         documentation = DocumentationInfo(
             summary = "Throw an exception.",
-            example = "(throw (php/new \\InvalidArgumentException \"Invalid input\"))",
+            example = "(throw (new InvalidArgumentException \"Invalid input\"))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/control-flow/#try-catch-and-finally",
@@ -665,7 +668,7 @@ Variables provide a way to manage mutable state that can be updated with <code>s
             summary = """
 All expressions are evaluated and if no exception is thrown the value of the last expression is returned. If an exception occurs and a matching catch-clause is provided, its expression is evaluated and the value is returned. If no matching catch-clause can be found the exception is propagated out of the function. Before returning normally or abnormally the optionally finally-clause is evaluated.
 """,
-            example = "(try (/ 1 0) (catch \\Exception e \"error\"))",
+            example = "(try (/ 1 0) (catch Exception e \"error\"))",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/control-flow/#try-catch-and-finally",
@@ -682,9 +685,9 @@ All expressions are evaluated and if no exception is thrown the value of the las
         ),
         documentation = DocumentationInfo(
             summary = """
-Values that should be evaluated in a macro are marked with the unquote function. Shortcut: ,
+Values that should be evaluated in a macro are marked with the unquote function. Shortcut: ~
 """,
-            example = "`(+ 1 ,(+ 2 3)) ; =&gt; (+ 1 5)",
+            example = "`(+ 1 ~(+ 2 3)) ; =&gt; (phel.core/+ 1 5)",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/macros/#quasiquote",
@@ -701,9 +704,9 @@ Values that should be evaluated in a macro are marked with the unquote function.
         ),
         documentation = DocumentationInfo(
             summary = """
-Values that should be evaluated in a macro are marked with the unquote function. Shortcut: ,@
+Values that should be evaluated in a macro are marked with the unquote function. Shortcut: ~@
 """,
-            example = "`(+ ,@[1 2 3]) ; =&gt; (+ 1 2 3)",
+            example = "`(+ ~@[1 2 3]) ; =&gt; (phel.core/+ 1 2 3)",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/macros/#quasiquote",
@@ -720,7 +723,7 @@ Values that should be evaluated in a macro are marked with the unquote function.
         ),
         documentation = DocumentationInfo(
             summary = "Registers PHP class aliases in the current namespace (compile-time only).",
-            example = "(use \\DateTimeImmutable :as Date)",
+            example = "(use DateTimeImmutable :as Date)",
             links = DocumentationLinks(
                 github = "",
                 docs = "/documentation/namespaces/",
@@ -747,7 +750,7 @@ Values that should be evaluated in a macro are marked with the unquote function.
     PhelFunction(
         namespace = "core",
         name = "vector",
-        signature = "(vector & xs)",
+        signature = "(vector)\n(vector a)\n(vector a b)\n(vector a b c)\n(vector a b c & more)",
         completion = CompletionInfo(
             tailText = "Creates a new vector",
             priority = PhelCompletionPriority.COLLECTION_FUNCTIONS,

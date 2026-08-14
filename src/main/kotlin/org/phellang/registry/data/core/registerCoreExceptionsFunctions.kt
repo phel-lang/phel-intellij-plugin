@@ -19,9 +19,9 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = "Returns the cause of an exception, or nil.",
-            example = null,
+            example = "(ex-cause (ex-info \"boom\" {})) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/exceptions.phel#L33",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/exceptions.phel#L35",
                 docs = "",
             ),
         ),
@@ -36,9 +36,9 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = "Returns the data map from an ex-info exception, or nil if not an ExceptionInfo.",
-            example = null,
+            example = "(ex-data (ex-info \"boom\" {:a 1})) ; =&gt; {:a 1}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/exceptions.phel#L20",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/exceptions.phel#L20",
                 docs = "",
             ),
         ),
@@ -55,7 +55,7 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
             summary = "Creates an exception with a message and a data map. Optionally takes a cause.",
             example = "(throw (ex-info \"Invalid input\" {:field :email}))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/exceptions.phel#L11",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/exceptions.phel#L11",
                 docs = "",
             ),
         ),
@@ -70,9 +70,9 @@ internal fun registerCoreExceptionsFunctions(): List<PhelFunction> = listOf(
         ),
         documentation = DocumentationInfo(
             summary = "Returns the message of an exception.",
-            example = null,
+            example = "(ex-message (ex-info \"boom\" {})) ; =&gt; \"boom\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/core/exceptions.phel#L27",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/exceptions.phel#L28",
                 docs = "",
             ),
         ),

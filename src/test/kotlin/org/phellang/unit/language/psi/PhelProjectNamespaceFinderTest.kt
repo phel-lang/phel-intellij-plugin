@@ -65,6 +65,7 @@ class PhelProjectNamespaceFinderTest {
                 "phel.ai",
                 "phel.async",
                 "phel.base64",
+                "phel.bench",
                 "phel.cli",
                 "phel.core",
                 "phel.debug",

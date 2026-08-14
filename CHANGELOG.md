@@ -10,6 +10,33 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Added
+
+- The `bench` namespace (`defbench`, `run-benchmarks`) now completes and hovers. It shipped in Phel 0.50.0 but was
+  missing from the registry's namespace config, so the generator skipped it with a warning on every run (#321).
+- PHP superglobals (`php/$_SERVER`, `php/$_GET`, …) now appear in completion and hover, matching what Phel's own LSP
+  and REPL gained in 0.50.0. They are variables rather than functions, so no generator can derive them from the PHP
+  docs and the list is maintained by hand (#321).
+- A **Superseded interop or var form** inspection flags the source spellings Phel 0.50.0 deprecated: `php/new`,
+  `php/->`, `php/::` and `set-var`, each reported with the Clojure-style spelling to write instead. The rest of the
+  `php/` family is untouched, since each of those reaches a PHP capability Phel has no other word for (#321).
+
+### Changed
+
+- Registry refreshed to **Phel 0.50.0**. Documentation links now point at the 0.50.0 sources and multi-arity
+  signatures are shown one arity per line instead of collapsed into an `& [...]` tail (#321).
+- Phel 0.50.0 removed every deprecated function from the language, so no stdlib symbol is reported as deprecated any
+  more. The deprecated-function inspection, annotator and quick fix are unchanged and will light up again the next
+  time Phel deprecates something (#321).
+
+### Fixed
+
+- Arity checking is no longer suppressed for calls containing a bare `|`. That accommodated the `|(...)` short fn,
+  which Phel 0.50.0 removed; `(some |(> % 10) coll)` is now correctly reported as a wrong-arity call rather than
+  silently skipped (#321).
+- `$`-prefixed names are checked by the unresolved-symbol inspection again. Only bare `$` is still meaningful, as the
+  return value inside an `fn` `:post` condition; `$1` was a `|(...)` parameter and is now an ordinary symbol (#321).
+
 ## [1.1.0] - 2026-07-25
 
 ### Fixed

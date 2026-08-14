@@ -53,7 +53,9 @@ class PhelReferCompletionIntegrationTest {
         @Test
         fun `callable functions should have signature information`() {
             val functions = PhelFunctionRegistry.getFunctions(Namespace.TEST)
-                .filter { !it.name.contains("*") && !it.name.endsWith("-methods") }
+                // `-methods` and `-prefers` are multimethod dispatch/preference tables, not
+                // callables: api.json gives them no signature.
+                .filter { !it.name.contains("*") && !it.name.endsWith("-methods") && !it.name.endsWith("-prefers") }
 
             functions.forEach { function ->
                 assertNotNull(function.signature, "Function should have signature: ${function.name}")
@@ -64,7 +66,9 @@ class PhelReferCompletionIntegrationTest {
         @Test
         fun `callable functions should have documentation summary`() {
             val functions = PhelFunctionRegistry.getFunctions(Namespace.TEST)
-                .filter { !it.name.contains("*") && !it.name.endsWith("-methods") }
+                // `-methods` and `-prefers` are multimethod dispatch/preference tables, not
+                // callables: api.json gives them no signature.
+                .filter { !it.name.contains("*") && !it.name.endsWith("-methods") && !it.name.endsWith("-prefers") }
 
             val functionsWithDocs = functions.filter { it.documentation.summary.isNotBlank() }
             assertTrue(

@@ -139,6 +139,14 @@
                 implementationClass="org.phellang.inspection.deprecated.PhelBackslashNamespaceInspection"/>
         <localInspection
                 language="Phel"
+                shortName="PhelSupersededForm"
+                displayName="Superseded interop or var form"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="org.phellang.inspection.deprecated.PhelSupersededFormInspection"/>
+        <localInspection
+                language="Phel"
                 shortName="PhelArityMismatch"
                 displayName="Function arity mismatch"
                 groupName="Phel"
