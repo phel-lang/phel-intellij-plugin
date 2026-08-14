@@ -46,7 +46,7 @@ class PhelRunLineMarkerContributor : RunLineMarkerContributor() {
     }
 
     private fun info(tooltip: String): Info =
-        Info(AllIcons.RunConfigurations.TestState.Run, { tooltip }, *ExecutorAction.getActions(0))
+        Info(AllIcons.RunConfigurations.TestState.Run, ExecutorAction.getActions(0), { tooltip })
 
     private companion object {
         const val NS_KEYWORD = "ns"
