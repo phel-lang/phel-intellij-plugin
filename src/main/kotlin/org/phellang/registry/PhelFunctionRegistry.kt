@@ -108,9 +108,11 @@ object PhelFunctionRegistry {
         functions[Namespace.WATCH] = registerWatchFunctions()
         // endregion GENERATED INIT — updatePhelRegistry
 
-        // Hand-wired native PHP functions (see PhpNativeFunctions.kt, same package so no import).
+        // Hand-wired native PHP functions (see PhpNativeFunctions.kt, same package so no import),
+        // plus the superglobals, which are variables and so appear in no function synopsis for
+        // updatePhpRegistry to find (see PhpSuperglobals.kt).
         // Kept out of the GENERATED region so updatePhelRegistry does not overwrite it.
-        functions[Namespace.PHP_NATIVE] = phpNativeFunctions()
+        functions[Namespace.PHP_NATIVE] = phpNativeFunctions() + phpSuperglobals()
     }
 
     fun getFunctions(namespace: Namespace): List<PhelFunction> {
