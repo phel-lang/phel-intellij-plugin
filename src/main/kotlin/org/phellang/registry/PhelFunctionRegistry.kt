@@ -4,6 +4,7 @@ package org.phellang.registry
 import org.phellang.registry.data.registerAiFunctions
 import org.phellang.registry.data.registerAsyncFunctions
 import org.phellang.registry.data.registerBase64Functions
+import org.phellang.registry.data.registerBenchFunctions
 import org.phellang.registry.data.registerCliFunctions
 import org.phellang.registry.data.registerCoreFunctions
 import org.phellang.registry.data.registerEdnFunctions
@@ -72,6 +73,7 @@ object PhelFunctionRegistry {
         functions[Namespace.AI] = registerAiFunctions()
         functions[Namespace.ASYNC] = registerAsyncFunctions()
         functions[Namespace.BASE64] = registerBase64Functions()
+        functions[Namespace.BENCH] = registerBenchFunctions()
         functions[Namespace.CLI] = registerCliFunctions()
         functions[Namespace.CORE] = registerCoreFunctions()
         functions[Namespace.EDN] = registerEdnFunctions()
