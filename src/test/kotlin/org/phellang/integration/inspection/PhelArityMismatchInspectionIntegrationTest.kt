@@ -136,9 +136,9 @@ class PhelArityMismatchInspectionIntegrationTest : PhelIntegrationTestCase() {
     }
 
     fun testDiscardTurningValidCallInvalidIsFlagged() {
-        // Discarding a required arg makes (push coll) a 1-arg call -- still wrong.
-        val warnings = inspect("(ns app\\m)\n(push coll #_x)\n")
-        assertTrue("discard dropping a required arg should be flagged: $warnings", warnings.any { it.contains("'push'") })
+        // Discarding a required arg makes (some pred) a 1-arg call -- still wrong.
+        val warnings = inspect("(ns app\\m)\n(some pred #_coll)\n")
+        assertTrue("discard dropping a required arg should be flagged: $warnings", warnings.any { it.contains("'some'") })
     }
 
     fun testShortFnArgIsNotMiscounted() {

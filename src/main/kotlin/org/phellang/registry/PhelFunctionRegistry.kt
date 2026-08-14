@@ -38,6 +38,9 @@ import org.phellang.registry.data.test.registerTestSelectorFunctions
 import org.phellang.registry.data.test.registerTestShrinkFunctions
 // endregion GENERATED IMPORTS — updatePhelRegistry
 
+// Outside the GENERATED region on purpose: updatePhelRegistry rewrites only what is inside it.
+import org.jetbrains.annotations.TestOnly
+
 /**
  * Based on official Phel API documentation: https://phel-lang.org/documentation/api/
  */
@@ -139,16 +142,49 @@ object PhelFunctionRegistry {
     }
 
     fun getFunction(name: String): PhelFunction? {
-        return functionsByName[name]
+        return testFunctionsByName[name] ?: functionsByName[name]
     }
 
     fun isDeprecated(functionName: String): Boolean {
-        if (functionName in deprecatedFunctionNames) {
+        if (functionName in testDeprecatedNames || functionName in deprecatedFunctionNames) {
             return true
         }
 
         // A namespace-prefixed input (e.g. "core/put") may only be stored under its short name.
         val shortName = functionName.substringAfter("/")
-        return shortName in deprecatedFunctionNames
+        return shortName in testDeprecatedNames || shortName in deprecatedFunctionNames
     }
+
+    // region Test overlay
+    //
+    // Phel v0.50.0 deleted every deprecated function from the language, so api.json — and with it
+    // the generated registry — now carries no deprecation data at all. The deprecation feature
+    // (inspection, annotator rule, completion priority) is still shipped and still correct, but
+    // its tests had nothing left to exercise. They install synthetic functions here instead of
+    // pinning to whichever stdlib names happen to be deprecated this release.
+    //
+    // Deliberately narrow: the overlay backs [getFunction] and [isDeprecated] only. It is not part
+    // of `flattenedFunctions`, so it cannot leak into completion, `getFunctions`, or the
+    // priority caches. In production both fields stay empty and each read costs one miss on an
+    // empty map.
+
+    private var testFunctionsByName: Map<String, PhelFunction> = emptyMap()
+    private var testDeprecatedNames: Set<String> = emptySet()
+
+    /** Overlays [overlay] onto name and deprecation lookups. Always pair with [clearTestFunctions]. */
+    @TestOnly
+    fun installTestFunctions(overlay: List<PhelFunction>) {
+        // Indexed exactly like the production `functionsByName`, so a fixture is reachable under
+        // the same name shape the generated data would have used.
+        testFunctionsByName = overlay.associateBy { it.name }
+        testDeprecatedNames = overlay.filter { it.isDeprecated }
+            .flatMapTo(HashSet()) { setOf(it.name, it.name.substringAfter("/")) }
+    }
+
+    @TestOnly
+    fun clearTestFunctions() {
+        testFunctionsByName = emptyMap()
+        testDeprecatedNames = emptySet()
+    }
+    // endregion Test overlay
 }

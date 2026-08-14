@@ -1,8 +1,10 @@
 package org.phellang.unit.annotator.highlighters.rules
 
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -24,7 +26,9 @@ import org.phellang.core.highlighting.PhelAnnotationConstants.FUNCTION_CALL
 import org.phellang.core.highlighting.PhelAnnotationConstants.NAMESPACE_SYMBOL
 import org.phellang.core.highlighting.PhelAnnotationConstants.PHP_INTEROP
 import org.phellang.core.highlighting.PhelAnnotationConstants.REGULAR_SYMBOL
+import org.phellang.fixtures.PhelDeprecatedFunctionFixtures
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.registry.PhelFunctionRegistry
 
 /**
  * Covers the rules whose decision is driven by the symbol's text alone, which is every rule that
@@ -79,7 +83,19 @@ class PhelHighlightRuleTest {
     @Nested
     inner class Deprecation {
 
-        /** `function?` and `push` are marked deprecated in the generated registry data. */
+        // The rule asks the registry, which has held no deprecated functions since Phel v0.50.0
+        // dropped them all, so the names below are supplied as fixtures.
+        @BeforeEach
+        fun installFixtures() {
+            PhelFunctionRegistry.installTestFunctions(PhelDeprecatedFunctionFixtures.ALL)
+        }
+
+        @AfterEach
+        fun clearFixtures() {
+            PhelFunctionRegistry.clearTestFunctions()
+        }
+
+        /** `function?` and `push` were deprecated core functions up to Phel v0.49.0. */
         @ParameterizedTest
         @ValueSource(strings = ["function?", "push"])
         fun `paints deprecated core functions`(text: String) {
