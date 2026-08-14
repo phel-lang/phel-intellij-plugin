@@ -28,18 +28,9 @@ internal object PhelArityCallSite {
         if (isInQuoteContext(list)) return true
         if (isThreadedArgList(list)) return true
         if (PhelLocalBindingScope.resolvesToLocalBinding(head, name)) return true
-        if (containsShortFnMarker(forms)) return true
 
         return false
     }
-
-    /**
-     * True when any argument is a bare `|` symbol — the marker for Phel's deprecated `|(...)`
-     * short-fn syntax. The lexer treats `|` as a plain symbol, so `|(> $ 10)` parses as two forms
-     * (a `|` symbol and a list), inflating the textual argument count. Skip rather than misreport.
-     */
-    private fun containsShortFnMarker(forms: List<PhelForm>): Boolean =
-        forms.drop(1).any { PhelPsiUtils.asSymbol(it)?.text == "|" }
 
     /**
      * True when [list] is a data form — inside `quote`, `var`, or a `'` / `` ` `` reader macro — and

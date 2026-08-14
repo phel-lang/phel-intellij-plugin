@@ -23,7 +23,7 @@ Like <code>defn</code>, but every call to the defined function prints its argume
 """,
             example = "(deftrace fact [n] (if (&lt;= n 1) 1 (* n (fact (dec n)))))\n(fact 2)\n; TRACE t1: (fact 2)\n; TRACE t2: | (fact 1)\n; TRACE t2: | =&gt; 1\n; TRACE t1: =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/trace.phel#L58",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/trace.phel#L58",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Temporarily traces the given global functions while <code>body</code> runs, then
 """,
             example = "(defn add [a b] (+ a b))\n(dotrace [add] (add 1 2))\n; TRACE t1: (add 1 2)\n; TRACE t1: =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/trace.phel#L70",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/trace.phel#L70",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Resets the trace depth and the trace id counter to their initial values. Useful 
 """,
             example = "(reset-trace-state!)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/trace.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/trace.phel#L21",
                 docs = "",
             ),
         ),
@@ -80,7 +80,7 @@ Prints <code>value</code> to the standard error stream and returns it unchanged.
 """,
             example = "(trace :sum (+ 1 2)) ; stderr: TRACE :sum: 3\n; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/trace.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/trace.phel#L30",
                 docs = "",
             ),
         ),
@@ -99,7 +99,7 @@ Returns a function that behaves like <code>f</code> but prints every call with i
 """,
             example = "(def fib-t (trace-fn \"fib\" fib))\n(fib-t 2)\n; TRACE t1: (fib 2)\n; TRACE t2: | (fib 1)\n; TRACE t2: | =&gt; 1\n; TRACE t1: =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.49.0/src/phel/trace.phel#L39",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/trace.phel#L39",
                 docs = "",
             ),
         ),

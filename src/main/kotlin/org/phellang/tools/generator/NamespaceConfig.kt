@@ -12,6 +12,7 @@ object NamespaceConfig {
         "ai" to NamespaceInfo("registerAiFunctions", "registerAiFunctions.kt"),
         "async" to NamespaceInfo("registerAsyncFunctions", "registerAsyncFunctions.kt"),
         "base64" to NamespaceInfo("registerBase64Functions", "registerBase64Functions.kt"),
+        "bench" to NamespaceInfo("registerBenchFunctions", "registerBenchFunctions.kt"),
         "cli" to NamespaceInfo("registerCliFunctions", "registerCliFunctions.kt"),
         "core" to NamespaceInfo("registerCoreFunctions", "registerCoreFunctions.kt"),
         "edn" to NamespaceInfo("registerEdnFunctions", "registerEdnFunctions.kt"),

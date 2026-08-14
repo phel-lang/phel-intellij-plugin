@@ -1,13 +1,27 @@
 package org.phellang.integration.annotator
 
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.phellang.core.highlighting.PhelAnnotationConstants
+import org.phellang.fixtures.PhelDeprecatedFunctionFixtures
 import org.phellang.registry.PhelFunctionRegistry
 
 class PhelDeprecatedAnnotatorTest {
+
+    // No stdlib function has been deprecated since Phel v0.50.0; see the fixtures' KDoc.
+    @BeforeEach
+    fun installFixtures() {
+        PhelFunctionRegistry.installTestFunctions(PhelDeprecatedFunctionFixtures.ALL)
+    }
+
+    @AfterEach
+    fun clearFixtures() {
+        PhelFunctionRegistry.clearTestFunctions()
+    }
 
     @Nested
     inner class DeprecationHighlighting {

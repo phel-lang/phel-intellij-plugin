@@ -16,7 +16,10 @@ import org.phellang.registry.PhelFunctionRegistry
  */
 class PhpNativeFunctionsTest {
 
+    // The superglobals share this namespace but are variables, not functions: they carry no
+    // signature and link to php.net's reserved-variables page. See PhpSuperglobalsTest.
     private val functions = PhelFunctionRegistry.getFunctions(Namespace.PHP_NATIVE)
+        .filterNot { it.name.startsWith("php/$") }
 
     @Test
     fun `every entry is php-prefixed, PHP_INTEROP priority, with a php_net function link`() {

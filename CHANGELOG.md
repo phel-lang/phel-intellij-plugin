@@ -10,6 +10,33 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Added
+
+- The `bench` namespace (`defbench`, `run-benchmarks`) now completes and hovers. It shipped in Phel 0.50.0 but was
+  missing from the registry's namespace config, so the generator skipped it with a warning on every run (#321).
+- PHP superglobals (`php/$_SERVER`, `php/$_GET`, …) now appear in completion and hover, matching what Phel's own LSP
+  and REPL gained in 0.50.0. They are variables rather than functions, so no generator can derive them from the PHP
+  docs and the list is maintained by hand (#321).
+- A **Superseded interop or var form** inspection flags the source spellings Phel 0.50.0 deprecated: `php/new`,
+  `php/->`, `php/::` and `set-var`, each reported with the Clojure-style spelling to write instead. The rest of the
+  `php/` family is untouched, since each of those reaches a PHP capability Phel has no other word for (#321).
+
+### Changed
+
+- Registry refreshed to **Phel 0.50.0**. Documentation links now point at the 0.50.0 sources and multi-arity
+  signatures are shown one arity per line instead of collapsed into an `& [...]` tail (#321).
+- Phel 0.50.0 removed every deprecated function from the language, so no stdlib symbol is reported as deprecated any
+  more. The deprecated-function inspection, annotator and quick fix are unchanged and will light up again the next
+  time Phel deprecates something (#321).
+
+### Fixed
+
+- Arity checking is no longer suppressed for calls containing a bare `|`. That accommodated the `|(...)` short fn,
+  which Phel 0.50.0 removed; `(some |(> % 10) coll)` is now correctly reported as a wrong-arity call rather than
+  silently skipped (#321).
+- `$`-prefixed names are checked by the unresolved-symbol inspection again. Only bare `$` is still meaningful, as the
+  return value inside an `fn` `:post` condition; `$1` was a `|(...)` parameter and is now an ordinary symbol (#321).
+
 ## [1.1.0] - 2026-07-25
 
 ### Fixed
@@ -47,31 +74,6 @@ refreshed, since completion, hover and arity checking are all driven by it.
   directories, and both the `phel.test` and `phel\test` spellings are recognised.
 - **Run a single test** from the gutter icon beside any `deftest`. The test is selected with an anchored pattern, so
   running `void-tags` cannot also pull in `void-tags-ignore-content`, which a plain name filter would.
-- **Live templates** for eleven forms: `defn-`, `defmacro`, `ns`, `deftest`, `when`, `when-let`, `loop`, `cond`,
-  `case`, `try` and `foreach`. They appear under Settings > Editor > Live Templates > Phel, expand with Tab, and can
-  be edited or extended. The six abbreviations completion already offers (`()`, `defn`, `def`, `let`, `if`, `fn`) are
-  deliberately not redefined, so no name produces two differently-behaving entries (#268).
-- **Spellchecking** of string literals, including docstrings, and line comments. Symbols are not checked: in a Lisp
-  nearly every token is one, and checking them would underline most of a file (#268).
-- **Default keyboard shortcuts for the nine paredit actions**, which previously shipped reachable only through the
-  menu. All are two-stroke, under a shared `Ctrl+Alt+Shift+P` prefix: `S` / `B` slurp and barf forward, `Shift+S` /
-  `Shift+B` backward, `W` / `V` / `M` wrap in `( )` / `[ ]` / `{ }`, `U` splice, `R` raise (#267).
-- **Move Element Left/Right** (`Ctrl+Alt+Shift+Left/Right`) over the forms inside a list, vector, map or set, for
-  reordering arguments and map entries (#267).
-- **Surround With** (`Ctrl+Alt+T`) for wrapping a selection of whole forms in `( )`, `[ ]` or `{ }`. Unlike the
-  paredit wrap actions, which take the single form at the caret, this works across a multi-form selection (#267).
-- An **Unused private definition** inspection, reporting a `defn-` / `def-` / `^:private` definition that nothing in
-  its own file references. Only private definitions are reported: a public one may be called from any namespace, so
-  its own file cannot tell (#266).
-- An **Unused function parameter** inspection, covering `defn`, `defn-`, `fn`, `defmacro` and `defmacro-`. Names
-  starting with `_` or `&` are never reported (#266).
-- A **built-in formatter**, used when the project has no `phel` binary. Reformat Code, format-on-paste and
-  reindent-selection now work before `composer install`, in a scratch file, or where the binary is not on one of the
-  searched paths. `phel format` stays the preferred path and still wins whenever it is available; the built-in one
-  indents two spaces per level, matching what pressing Enter already does (#265).
-- A **Code Style page** for Phel (Settings > Editor > Code Style > Phel), covering indentation and blank lines:
-  how many consecutive blank lines to keep, and how many to force between top-level forms. Only options the
-  formatter actually honours are shown (#265).
 - A **REPL** run configuration, launching `phel repl` in the Run console, which accepts typed input and forwards it
   to the process (#263).
 - A **test** run configuration, running `phel test` over the whole suite or over named paths, into a real test tree
@@ -79,10 +81,6 @@ refreshed, since completion, hover and arity checking are all driven by it.
   alongside the normal console output and read when the run finishes (#263). The tree shows one node per `deftest`:
   that reporter emits an entry per `is` form, so the entries of a test are folded into a single node that fails when
   any of its assertions does and lists every failing form in its details.
-- A **run configuration** for Phel files. Right-click a `.phel` file, or use the Run icon in the gutter beside its
-  `(ns …)` form, to run it through the project's `phel` binary. The binary is found the same way the formatter finds
-  it (`./bin/phel`, then `./vendor/bin/phel`) and runs with the login shell's environment, so a Homebrew, Herd, asdf
-  or mise `php` is on its `PATH` even when the IDE was started from Dock or Spotlight (#263).
 - **Go to Symbol** (Navigate > Symbol) now finds Phel definitions. The project symbol index that already backed
   completion and arity resolution simply had no route into the platform's name popups; definitions are listed with
   their namespace, so two functions sharing a name can be told apart, and choosing one jumps to the name itself

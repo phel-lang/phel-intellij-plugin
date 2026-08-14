@@ -4,9 +4,11 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
+import org.phellang.fixtures.PhelDeprecatedFunctionFixtures
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.inspection.deprecated.PhelDeprecatedFunctionInspection
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.registry.PhelFunctionRegistry
 
 /**
  * Confirms the deprecated-function inspection actually fires against parsed PSI (it visits
@@ -14,6 +16,21 @@ import org.phellang.language.psi.files.PhelFile
  * deprecated core name.
  */
 class PhelDeprecatedFunctionInspectionFiringTest : PhelIntegrationTestCase() {
+
+    // Phel v0.50.0 deleted every deprecated function, so 'put' is supplied as a fixture; the
+    // inspection under test still reaches it through the ordinary registry lookup.
+    override fun setUp() {
+        super.setUp()
+        PhelFunctionRegistry.installTestFunctions(PhelDeprecatedFunctionFixtures.ALL)
+    }
+
+    override fun tearDown() {
+        try {
+            PhelFunctionRegistry.clearTestFunctions()
+        } finally {
+            super.tearDown()
+        }
+    }
 
     fun testDeprecatedCallIsFlagged() {
         val warnings = inspect("(ns app\\m)\n(put {} :a 1)\n")
