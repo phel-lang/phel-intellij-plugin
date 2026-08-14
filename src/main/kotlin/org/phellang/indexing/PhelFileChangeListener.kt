@@ -124,6 +124,8 @@ class PhelFileChangeListener(private val project: Project) : BulkFileListener {
                 fileEditorManager.openFiles
                     .filter { isPhelFile(it) }
                     .mapNotNull { psiManager.findFile(it) }
+                    // See PhelPsiChangeListener: restart(PsiFile) is deprecated from 2026.1, but is
+                    // the only per-file form the supported platform range offers.
                     .forEach { daemon.restart(it) }
             }
         }

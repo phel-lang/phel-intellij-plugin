@@ -18,10 +18,10 @@ open class PhelWorkingDirectoryEditor<T : PhelCliRunConfiguration>(
 
     protected val workingDirectoryField: TextFieldWithBrowseButton = TextFieldWithBrowseButton().apply {
         addBrowseFolderListener(
-            "Working Directory",
-            description,
             project,
-            FileChooserDescriptorFactory.createSingleFolderDescriptor(),
+            FileChooserDescriptorFactory.createSingleFolderDescriptor()
+                .withTitle("Working Directory")
+                .withDescription(description),
         )
     }
 

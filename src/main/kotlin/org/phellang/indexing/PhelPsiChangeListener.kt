@@ -83,6 +83,10 @@ class PhelPsiChangeListener(private val project: Project) : PsiTreeChangeAdapter
                 val freshPsi = psiManager.findFile(file) as? PhelFile ?: continue
 
                 index.refreshFileFromPsi(freshPsi)
+                // restart(PsiFile) is deprecated from 2026.1, which the Marketplace verifier
+                // reports. It stays until sinceBuild moves past 243: the platforms this plugin
+                // supports expose only restart() and restart(PsiFile), so there is nothing else to
+                // call, and the no-arg form would rehighlight every open file instead of this one.
                 daemon.restart(freshPsi)
             }
         }
