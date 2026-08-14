@@ -333,6 +333,59 @@ class PhelLexerTest {
         assertEquals("x", tokens[1].second)
     }
 
+    /**
+     * Phel v0.50.0 removed the bare `#` line comment, so `#` heads no token of its own: the reader
+     * rejects it and the rest of the line is read as ordinary forms. Rejecting the character is the
+     * contract — do not "fix" this by reviving a comment rule.
+     */
+    @Test
+    fun `bare hash line comment is rejected, not lexed as a comment`() {
+        val tokens = tokenize("# old comment\n(+ 1 2)")
+
+        assertEquals(TokenType.BAD_CHARACTER, tokens[0].first)
+        assertEquals("#", tokens[0].second)
+        // The remainder is read as code, not swallowed as comment text.
+        assertEquals(PhelTypes.SYM, tokens[2].first)
+        assertEquals("old", tokens[2].second)
+    }
+
+    /** `#| ... |#` went with it: `#` is rejected and the delimiters fall out as plain symbols. */
+    @Test
+    fun `hash-pipe block comment is rejected, not lexed as a comment`() {
+        val tokens = tokenize("#| block |# (+ 1 2)")
+
+        assertEquals(TokenType.BAD_CHARACTER, tokens[0].first)
+        assertEquals("#", tokens[0].second)
+        assertEquals(PhelTypes.SYM, tokens[1].first)
+        assertEquals("|", tokens[1].second)
+        // `block` is code, not comment text.
+        assertEquals(PhelTypes.SYM, tokens[3].first)
+        assertEquals("block", tokens[3].second)
+    }
+
+    /**
+     * The trailing `$` auto-gensym was replaced by a trailing `#`. Both are ordinary symbol
+     * characters to the lexer, so this pins that neither is given reader-macro meaning.
+     */
+    @Test
+    fun `trailing dollar is an ordinary symbol, not auto-gensym`() {
+        val tokens = tokenize("foo$")
+
+        assertEquals(1, tokens.size, "expected a single symbol, got $tokens")
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("foo$", tokens[0].second)
+    }
+
+    /** `$1` was a `|(...)` short-fn parameter; with that syntax gone it is just a name. */
+    @Test
+    fun `dollar-digit is an ordinary symbol, not a short-fn parameter`() {
+        val tokens = tokenize("$1")
+
+        assertEquals(1, tokens.size, "expected a single symbol, got $tokens")
+        assertEquals(PhelTypes.SYM, tokens[0].first)
+        assertEquals("$1", tokens[0].second)
+    }
+
     // --- Dot-separated namespaces (v0.32.0+): phel.core/fn, clojure.core/fn ---
 
     @Test
