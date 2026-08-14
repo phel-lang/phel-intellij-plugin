@@ -31,6 +31,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Fixed
 
+- The two platform APIs scheduled for removal are gone, so the plugin keeps working on IDEs that drop them:
+  `TextFieldWithBrowseButton.addBrowseFolderListener` in the run-configuration editors, and the
+  `RunLineMarkerContributor.Info` constructor behind the run gutter icons. Behaviour is unchanged. Two further
+  Marketplace reports stay for now — the `SafeDeleteProcessorDelegate.findConflicts` override, which is *abstract* on
+  2024.3 and deprecated on 2025.2+, and `DaemonCodeAnalyzer.restart(PsiFile)`, whose replacement does not exist below
+  2026.1. Both clear once the supported floor rises above 2024.3 (#325).
 - Arity checking is no longer suppressed for calls containing a bare `|`. That accommodated the `|(...)` short fn,
   which Phel 0.50.0 removed; `(some |(> % 10) coll)` is now correctly reported as a wrong-arity call rather than
   silently skipped (#321).
