@@ -31,6 +31,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Fixed
 
+- The Gradle version the `Wrapper` task writes is back in step with the wrapper itself. Dependabot bumps only
+  `gradle-wrapper.properties`, so the task had been left on 9.3.0 while the wrapper reached 9.6.1, and running
+  `./gradlew wrapper` would have quietly downgraded the project by six minor versions. Both now read 9.7.0 (#324).
 - Arity checking is no longer suppressed for calls containing a bare `|`. That accommodated the `|(...)` short fn,
   which Phel 0.50.0 removed; `(some |(> % 10) coll)` is now correctly reported as a wrong-arity call rather than
   silently skipped (#321).
