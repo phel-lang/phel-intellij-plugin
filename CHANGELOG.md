@@ -10,6 +10,8 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-08-14
+
 ### Added
 
 - The `bench` namespace (`defbench`, `run-benchmarks`) now completes and hovers. It shipped in Phel 0.50.0 but was
