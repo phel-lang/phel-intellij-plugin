@@ -9,12 +9,13 @@ import org.phellang.language.psi.PhelVisitor
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 
 /**
- * Flags the source forms Phel v0.50.0 superseded, mirroring the compiler's own
- * `--warn-deprecations` output in the IDE.
+ * Flags the source forms Phel v0.52.0 removed, mirroring the compiler's own `PHEL012` error in
+ * the IDE. v0.50.0 deprecated all four; v0.52.0 stopped accepting them, so a file holding one no
+ * longer compiles and the report is no longer conditional on `--warn-deprecations`.
  *
  * One rule drives the interop entries: `php/` means host access, and is never a second spelling
  * for something Phel already says the Clojure way. The three interop forms below each have a
- * Clojure-style spelling that is now *the* spelling; they remain as the compilation target the
+ * Clojure-style spelling that is now the only spelling; they remain as the compilation target the
  * shorthand expands to, which is why they still appear in the registry and in completion.
  *
  * The rest of the `php/` family is deliberately absent: `php/aget`, `php/aset`, `php/apush`,
@@ -26,7 +27,7 @@ import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
  * general, and a fix that mangles a working call is worse than none. The message names the
  * replacement instead.
  *
- * Sources: the language-surface spec's "Deprecated inside 1.x" table, and phel-lang #2877 / #2888.
+ * Sources: phel-lang ADR 0018 and `docs/errors/analyzer.md`, and phel-lang #2859 / #2877 / #2888.
  */
 class PhelSupersededFormInspection : LocalInspectionTool() {
 
@@ -42,8 +43,8 @@ class PhelSupersededFormInspection : LocalInspectionTool() {
 
                 holder.registerProblem(
                     symbol,
-                    "'$text' is deprecated since Phel 0.50; write $superseded instead",
-                    ProblemHighlightType.LIKE_DEPRECATED,
+                    "[PHEL012] '$text' was removed as source in Phel 0.52; write $superseded instead",
+                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
                 )
             }
         }
