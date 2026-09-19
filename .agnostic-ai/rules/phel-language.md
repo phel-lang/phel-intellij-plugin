@@ -28,11 +28,11 @@ an `fn` `:post` condition, and `$` remains an ordinary character in a name.
 **Keywords**: `:kw` · `:ns/kw` · `::foo` (current-ns) · `::alias/foo`.
 
 **PHP interop**: the Clojure-style shorthand is **the** spelling. `php/new`, `php/->`, `php/::`
-and `set-var` are deprecated as source since v0.50.0 (they remain as the expansion target, and
-`PhelSupersededFormInspection` flags them). A root class needs no leading `\`; namespaced classes
-take the dotted form (`Symfony.Component.Console.Command.Command/SUCCESS`). A class is recognised
-lexically by an upper-case first segment — import a lower-case-initial vendor namespace via
-`(:use ...)` first.
+and `set-var` were removed as source in v0.52.0: writing one is a `PHEL012` error. They remain the
+expansion target, so the table below still emits them and `PhelSupersededFormInspection` flags any
+that appear in source. A root class needs no leading `\`; namespaced classes take the dotted form
+(`Symfony.Component.Console.Command.Command/SUCCESS`). A class is recognised lexically by an
+upper-case first segment — import a lower-case-initial vendor namespace via `(:use ...)` first.
 
 | Written                 | Expands to                         | Position |
 |-------------------------|------------------------------------|----------|

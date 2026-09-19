@@ -10,6 +10,15 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Changed
+
+- The **Superseded interop or var form** inspection now reports a removal rather than a deprecation. Phel 0.52.0
+  stopped accepting `php/new`, `php/->`, `php/::` and `set-var` as source: writing one is a `PHEL012` error, not
+  something `--warn-deprecations` decides whether to mention. The message names the code and the release, and the
+  inspection moves from `WARNING` to `ERROR`: it reports a file that does not compile, so it should not render weaker
+  than the arity inspection, which reports a runtime failure. The Settings description is rewritten to match.
+  All four remain the target the Clojure-style shorthands expand to, so they stay in the registry and in completion.
+
 ## [1.2.0] - 2026-08-14
 
 ### Added

@@ -1,15 +1,17 @@
 <html>
 <body>
-<p>Reports the source forms Phel 0.50 superseded, mirroring the compiler's own
-    <code>--warn-deprecations</code> output in the editor.</p>
+<p>Reports the source forms Phel 0.52 removed as source, which the compiler
+    rejects with <code>PHEL012</code>. There is no flag to turn it off: a file that
+    writes one of these no longer compiles.</p>
 
 <p>The rule behind the interop entries is that <code>php/</code> means host access, and is never a
-    second spelling for something Phel already says the Clojure way. The superseded forms keep
-    working for every 1.x release and remain the target the Clojure-style shorthand expands to, so
-    they still appear in completion; they are the candidates for removal at the next major.</p>
+    second spelling for something Phel already says the Clojure way. These four remain the target
+    the Clojure-style shorthand expands to, so generated PHP is unchanged and a macro that expands
+    to one keeps working. They still appear in completion for that reason. What changed in 0.52 is
+    only that writing one yourself is an error.</p>
 
 <table>
-    <tr><th>Superseded</th><th>Write instead</th></tr>
+    <tr><th>Removed as source</th><th>Write instead</th></tr>
     <tr><td><code>(php/new Foo arg)</code></td><td><code>(Foo. arg)</code> or <code>(new Foo arg)</code></td></tr>
     <tr><td><code>(php/-&gt; obj (method arg))</code></td><td><code>(.method obj arg)</code> or <code>(.-field obj)</code></td></tr>
     <tr><td><code>(php/:: Foo (method arg))</code></td><td><code>(Foo/method arg)</code> or <code>Foo/CONST</code></td></tr>
@@ -19,7 +21,7 @@
 <p>The rest of the <code>php/</code> family is not reported. <code>php/aget</code>,
     <code>php/aset</code>, <code>php/apush</code>, <code>php/aunset</code>, <code>php/oset</code>,
     <code>php/ref</code> and <code>php/callable</code> each reach a PHP capability Phel has no other
-    word for, so they are current rather than superseded.</p>
+    word for, so they are current and stay valid source.</p>
 
 <p>No quick-fix is offered: every replacement here reorders or re-nests the call's arguments, so
     there is no text substitution that would be correct in general.</p>

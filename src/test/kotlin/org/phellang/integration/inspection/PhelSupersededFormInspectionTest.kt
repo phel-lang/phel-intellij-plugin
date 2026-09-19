@@ -9,8 +9,8 @@ import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.files.PhelFile
 
 /**
- * The forms Phel v0.50.0 superseded (#2877, #2888), and — just as important — the rest of the
- * `php/` family, which it deliberately kept and which must stay silent.
+ * The forms Phel v0.52.0 removed as source (#2859, #2877, #2888), and — just as important — the
+ * rest of the `php/` family, which it deliberately kept and which must stay silent.
  */
 class PhelSupersededFormInspectionTest : PhelIntegrationTestCase() {
 
@@ -33,6 +33,15 @@ class PhelSupersededFormInspectionTest : PhelIntegrationTestCase() {
         val warnings = inspect("(php/new Foo 1)")
         assertTrue("php/new should be flagged: $warnings", warnings.any { it.contains("'php/new'") })
         assertTrue("should name the replacement: $warnings", warnings.any { it.contains("(Foo. arg)") })
+    }
+
+    fun testTheMessageReportsARemovalRatherThanADeprecation() {
+        // Phel 0.52.0 stopped accepting these, so the message has to say so: a reader who is told
+        // "deprecated" will reasonably assume the file still compiles, and it does not.
+        val warnings = inspect("(php/new Foo 1)")
+        assertTrue("should name the error code: $warnings", warnings.any { it.contains("[PHEL012]") })
+        assertTrue("should say removed: $warnings", warnings.any { it.contains("removed as source in Phel 0.52") })
+        assertFalse("should not call it deprecated: $warnings", warnings.any { it.contains("deprecated") })
     }
 
     fun testPhpArrowIsFlagged() {

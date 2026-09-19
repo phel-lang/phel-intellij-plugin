@@ -143,7 +143,7 @@
                 displayName="Superseded interop or var form"
                 groupName="Phel"
                 enabledByDefault="true"
-                level="WARNING"
+                level="ERROR"
                 implementationClass="org.phellang.inspection.deprecated.PhelSupersededFormInspection"/>
         <localInspection
                 language="Phel"
