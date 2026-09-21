@@ -10,6 +10,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Changed
+
+- The `Wrapper` task's `gradleVersion` is back in step with the 9.7.1 wrapper. Dependabot bumps only
+  `gradle-wrapper.properties`, so the task had stayed on 9.7.0 and `./gradlew wrapper` would have downgraded the
+  project again (#328, #337).
+
 ## [1.3.0] - 2026-09-21
 
 ### Added
