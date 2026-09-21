@@ -10,6 +10,8 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-21
+
 ### Added
 
 - Destructuring patterns are now modelled. A name bound by a vector pattern (`[a b & rest]`) or a map pattern
