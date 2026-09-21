@@ -23,7 +23,7 @@ Decodes a Base64 string. When <code>strict?</code> is true, validates that the i
 """,
             example = "(decode \"SGVsbG8=\") ; =&gt; \"Hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/base64.phel#L9",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/base64.phel#L9",
                 docs = "",
             ),
         ),
@@ -44,7 +44,7 @@ Decodes a URL-safe Base64 string, adding padding automatically. When<br />
 """,
             example = "(decode-url \"SGVsbG8\") ; =&gt; \"Hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/base64.phel#L27",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/base64.phel#L27",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Decodes a URL-safe Base64 string, adding padding automatically. When<br />
             summary = "Encodes a string to Base64.",
             example = "(encode \"Hello\") ; =&gt; \"SGVsbG8=\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/base64.phel#L3",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/base64.phel#L3",
                 docs = "",
             ),
         ),
@@ -78,7 +78,7 @@ Decodes a URL-safe Base64 string, adding padding automatically. When<br />
             summary = "Encodes a string to URL-safe Base64 (no padding).",
             example = "(encode-url \"Hello\") ; =&gt; \"SGVsbG8\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/base64.phel#L15",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/base64.phel#L15",
                 docs = "",
             ),
         ),

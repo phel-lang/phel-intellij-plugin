@@ -30,7 +30,7 @@ Metadata attached to <code>bench-name</code> is forwarded to the defined functio
 """,
             example = "(defbench bench-sum {:revs 10000}\n  (reduce + 0 (range 100)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/bench.phel#L30",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/bench.phel#L30",
                 docs = "",
             ),
         ),
@@ -57,7 +57,7 @@ tolerance is set.
 """,
             example = "(run-benchmarks {:revs 100} 'my-app.bench)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/bench.phel#L285",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/bench.phel#L285",
                 docs = "",
             ),
         ),

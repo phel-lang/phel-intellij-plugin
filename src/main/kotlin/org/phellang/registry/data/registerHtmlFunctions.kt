@@ -24,7 +24,7 @@ Returns an HTML doctype declaration for the given type. Supports <code>:html4</c
 """,
             example = "(doctype :html5) ; =&gt; (phel.html.raw_string \"&lt;!DOCTYPE html&gt;\\n\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/html.phel#L255",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/html.phel#L311",
                 docs = "",
             ),
         ),
@@ -41,7 +41,7 @@ Returns an HTML doctype declaration for the given type. Supports <code>:html4</c
             summary = "Escapes HTML special characters to prevent XSS.",
             example = "(escape-html \"&lt;div&gt;\") ; =&gt; \"&amp;lt;div&amp;gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/html.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/html.phel#L24",
                 docs = "",
             ),
         ),
@@ -58,13 +58,14 @@ Returns an HTML doctype declaration for the given type. Supports <code>:html4</c
             summary = """
 Compiles nested Phel vectors to HTML strings at compile-time. A vector<br />
   <code>[tag attrs? children*]</code> becomes an element; <code>tag</code> is a keyword or string,<br />
-  the optional <code>attrs</code> is a map, and children are strings, keywords, raw<br />
-  strings, or nested vectors. Special list forms <code>for</code>, <code>if</code>, <code>when</code>, and<br />
-  <code>when-not</code> are supported for dynamic content.
+  and may include CSS-style id and class shorthand such as<br />
+  <code>:div#app.main.selected</code>. The optional <code>attrs</code> is a map, and children are<br />
+  strings, keywords, raw strings, or nested vectors. Special list forms <code>for</code>,<br />
+  <code>if</code>, <code>when</code>, and <code>when-not</code> are supported for dynamic content.
 """,
             example = "(html [:div \"Hello\"]) ; =&gt; \"&lt;div&gt;Hello&lt;/div&gt;\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/html.phel#L235",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/html.phel#L290",
                 docs = "",
             ),
         ),
@@ -81,7 +82,7 @@ Compiles nested Phel vectors to HTML strings at compile-time. A vector<br />
             summary = "Creates a new raw-string struct.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/html.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/html.phel#L4",
                 docs = "",
             ),
         ),
@@ -100,7 +101,7 @@ Checks if <code>x</code> is an instance of the raw-string struct.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/html.phel#L4",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/html.phel#L4",
                 docs = "",
             ),
         ),
