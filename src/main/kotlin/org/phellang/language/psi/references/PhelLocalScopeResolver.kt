@@ -6,6 +6,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 
 /**
@@ -56,11 +57,10 @@ internal object PhelLocalScopeResolver {
             ?: PsiTreeUtil.findChildOfType(forms[1], PhelVec::class.java)
             ?: return null
 
-        // Bindings are pairs: [name1 value1 name2 value2 …] — names sit at even indices.
-        val bindings = bindingsVec.forms
-        return (bindings.indices step 2)
-            .mapNotNull { PsiTreeUtil.findChildOfType(bindings[it], PhelSymbol::class.java) }
-            .firstOrNull { symbolName == it.text }
+        // Bindings are pairs: [pattern1 value1 pattern2 value2 …] — patterns sit at even indices,
+        // and each may destructure, so every name a pattern introduces is a candidate. Reading the
+        // first symbol found inside the entry used to resolve only `a` of `[a b]`.
+        return PhelDestructuringAnalyzer.letBoundSymbols(bindingsVec).firstOrNull { symbolName == it.text }
     }
 
     /** Walks every enclosing function form, not just the innermost, so shadowed params still resolve. */
@@ -80,10 +80,10 @@ internal object PhelLocalScopeResolver {
         return null
     }
 
-    /** The parameter symbols a function-defining form declares, or null when it declares none. */
+    /** The parameter symbols a function-defining form declares, destructured ones included, or null when it declares none. */
     private fun parametersOf(list: PhelList): List<PhelSymbol>? {
         val paramVec = PhelSymbolAnalyzer.findParameterVector(list) ?: return null
 
-        return paramVec.forms.mapNotNull { PsiTreeUtil.findChildOfType(it, PhelSymbol::class.java) }
+        return PhelDestructuringAnalyzer.parameterSymbols(paramVec)
     }
 }

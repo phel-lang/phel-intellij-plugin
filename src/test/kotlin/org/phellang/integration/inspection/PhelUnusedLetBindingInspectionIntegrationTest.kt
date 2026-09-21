@@ -30,6 +30,18 @@ class PhelUnusedLetBindingInspectionIntegrationTest : PhelIntegrationTestCase() 
         assertTrue("used binding should not be flagged: $warnings", warnings.isEmpty())
     }
 
+    /** A map pattern binds several names at once; each is checked on its own. */
+    fun testUnusedNameInsideADestructuringPatternIsFlagged() {
+        val warnings = inspect("(ns app\\m)\n(defn f [m]\n  (let [{used :a unused :b} m]\n    (println used)))\n")
+        assertEquals(listOf("Binding 'unused' is never used."), warnings)
+    }
+
+    /** The lookup key half of a binding-first pair, and an `:or` default, introduce no names. */
+    fun testPatternKeysAndDefaultsAreNotBindings() {
+        val warnings = inspect("(ns app\\m)\n(defn f [m]\n  (let [{n :name :or {n 1} :as all} m]\n    (println n all)))\n")
+        assertTrue("nothing to flag: $warnings", warnings.isEmpty())
+    }
+
     /**
      * `if-some` and `when-some` bind a vector exactly as `if-let` and `when-let` do. They were
      * absent from PhelSpecialForms.LET_LIKE, so the inspection never looked inside them at all.

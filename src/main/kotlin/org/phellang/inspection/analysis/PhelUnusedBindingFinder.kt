@@ -5,6 +5,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 /** Finds the names a let-like form binds and then never reads. */
@@ -45,11 +46,13 @@ internal object PhelUnusedBindingFinder {
                 continue
             }
 
-            val target = PhelPsiUtils.asSymbol(bindings[i]) ?: continue
-            val name = target.text
-            if (isIntentionallyUnused(name)) continue
+            // A pattern may destructure, so one entry can introduce several names.
+            for (target in PhelDestructuringAnalyzer.boundSymbols(bindings[i]).asReversed()) {
+                val name = target.text
+                if (isIntentionallyUnused(name)) continue
 
-            if (name !in bodySymbols && name !in laterValues) unused.add(target)
+                if (name !in bodySymbols && name !in laterValues) unused.add(target)
+            }
         }
 
         // Collected back to front; reported top to bottom for a natural reading order.

@@ -1,0 +1,29 @@
+<html>
+<body>
+<p>Reports map destructuring pairs written key-first, <code>{:name n}</code>, which Phel 0.51
+    deprecated in favour of the Clojure order, <code>{n :name}</code>. The compiler reports the same
+    under <code>--warn-deprecations</code>, and the key-first order is announced for removal in a
+    future release.</p>
+
+<p>Only patterns are inspected: the name half of a <code>let</code>-like binding vector and the
+    entries of a function's parameter vector, nested patterns included. An ordinary map literal is
+    never a pattern, and neither is the <code>:or</code> map of defaults, whose keys name bindings
+    rather than introduce them. The <code>:keys</code>, <code>:strs</code>, <code>:syms</code> and
+    <code>:as</code> directives are unchanged and are not reported.</p>
+
+<table>
+    <tr><th>Deprecated</th><th>Write instead</th></tr>
+    <tr><td><code>(let [{:name n :age a} user] ...)</code></td><td><code>(let [{n :name a :age} user] ...)</code></td></tr>
+    <tr><td><code>(defn f [{:id id}] ...)</code></td><td><code>(defn f [{id :id}] ...)</code></td></tr>
+    <tr><td><code>{:address {:keys [city]}}</code></td><td><code>{{:keys [city]} :address}</code></td></tr>
+    <tr><td><code>{0 a 1 b}</code></td><td><code>{a 0 b 1}</code></td></tr>
+</table>
+
+<p>The quick fix swaps the two halves of the pair. It is offered only when the pair is
+    unambiguous, which is when the key is something that cannot be bound to: a keyword, a string
+    or a number. A pair whose two sides are both symbols, <code>{k v}</code>, is still read
+    key-first by the compiler, which evaluates <code>k</code> as the lookup key. Swapping it would
+    silently change which side is looked up, so it is reported as a weak warning with no fix, and
+    the advice is to write the key as a keyword or a string.</p>
+</body>
+</html>

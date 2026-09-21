@@ -3,8 +3,10 @@ package org.phellang.language.psi.analysis
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelAccess
+import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypes
 import org.phellang.language.psi.PhelVec
 
 /**
@@ -39,17 +41,25 @@ internal object PhelFormWalker {
         else -> PsiTreeUtil.findChildOfType(element, PhelVec::class.java)
     }
 
-    /**
-     * True when [element] is a [T] or is the form wrapper directly around one.
-     *
-     * Direct children only, unlike [vectorOf]. Searching descendants makes a metadata map look like
-     * whatever it happens to contain: `{:see-also ["a" "b"]}` reads as a vector, which is how the
-     * parameter vector of a documented `defn` came to be misidentified.
-     */
-    inline fun <reified T : PsiElement> isOrDirectlyWraps(element: PsiElement): Boolean =
-        element is T || element.children.any { it is T }
-
     /** True when [candidate] either IS [target] or is the form wrapper around it. */
     fun isSameOrWrapperOf(candidate: PsiElement?, target: PhelVec): Boolean =
         candidate === target || candidate === target.parent
+
+    /**
+     * [form] with the reader's generic `form` wrapper peeled off: the node that decides what the
+     * form *is*.
+     *
+     * A form carrying metadata or a reader macro (`^int x`, `'sym`) parses as a generic wrapper
+     * around the real node; a bare vector, map, symbol or literal is that node already. Only the
+     * wrapper is looked through, never a container: peeking into a vector's children to decide
+     * what it is made `[{:id id}]` read as a metadata *map*, so a function whose first parameter
+     * destructures a map had no parameter vector at all.
+     */
+    fun unwrapped(form: PsiElement): PsiElement {
+        if (form.node?.elementType == PhelTypes.FORM) {
+            form.children.firstOrNull { it is PhelForm }?.let { return unwrapped(it) }
+        }
+
+        return form
+    }
 }

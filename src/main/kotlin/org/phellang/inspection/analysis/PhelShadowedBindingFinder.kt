@@ -6,6 +6,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 /** Finds bindings that reuse a name already bound by an enclosing form. */
@@ -27,10 +28,10 @@ internal object PhelShadowedBindingFinder {
             .filter { findOuterBinding(list, it.text) != null }
     }
 
-    /** Bindings are name/value pairs, so only the even-indexed entries declare anything. */
+    /** Bindings are pattern/value pairs, so only the even-indexed entries declare anything, and each may destructure. */
     private fun declaredNames(bindings: List<PhelForm>): List<PhelSymbol> =
         bindings.filterIndexed { index, _ -> index % 2 == 0 }
-            .mapNotNull { PhelPsiUtils.asSymbol(it) }
+            .flatMap { PhelDestructuringAnalyzer.boundSymbols(it) }
             .filter { isReportable(it.text) }
 
     /** `_` is a deliberate discard and `&` introduces a rest parameter; neither is a real shadow. */
@@ -76,6 +77,6 @@ internal object PhelShadowedBindingFinder {
     private fun findInParameterVector(forms: List<PhelForm>, name: String): PsiElement? {
         val vector = forms.drop(1).filterIsInstance<PhelVec>().firstOrNull() ?: return null
 
-        return PhelPsiUtils.activeForms(vector).firstOrNull { PhelPsiUtils.asSymbol(it)?.text == name }
+        return PhelDestructuringAnalyzer.parameterSymbols(vector).firstOrNull { it.text == name }
     }
 }

@@ -6,6 +6,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 import org.phellang.language.psi.analysis.PhelLocalBindingScope
 import org.phellang.language.psi.utils.PhelPsiUtils
 
@@ -64,36 +65,31 @@ internal object PhelFreeVariables {
     }
 
     /**
-     * A `let` vector binds every *even* element; a parameter vector binds all of them.
+     * A `let` vector binds every *even* element; a parameter vector binds all of them. Either kind
+     * of entry may destructure, and then every name the pattern introduces is bound.
      *
      * Taking every symbol in a `let` vector would treat its initialisers as bindings too, so
-     * `(let [a (f b)] …)` would wrongly report `b` as bound rather than free.
+     * `(let [a (f b)] …)` would wrongly report `b` as bound rather than free. The same holds inside a
+     * pattern: the default in `{:or {n (g m)}}` is an expression, and `m` stays free.
      */
     private fun namesIn(vector: PhelVec, isBindingVector: Boolean): List<String> {
-        val forms = PhelPsiUtils.activeForms(vector)
-        val binding = if (isBindingVector) forms.filterIndexed { index, _ -> index % 2 == 0 } else forms
+        val bound = if (isBindingVector) PhelDestructuringAnalyzer.letBoundSymbols(vector)
+        else PhelDestructuringAnalyzer.parameterSymbols(vector)
 
-        return binding.mapNotNull { PhelPsiUtils.asSymbol(it)?.text }
+        return bound.mapNotNull { it.text }
     }
 
     /**
      * True when [symbol] is being introduced here rather than read.
      *
-     * The symbol has to be a *direct* element of the vector, at an even index when the vector binds
-     * pairs. Treating every symbol inside one as bound made `n` in `(let [a (* n 2)] …)` a binding
-     * rather than the free variable it is, so the extracted function took `a` and not `n`.
+     * The symbol has to be a name the binding vector introduces, which for a `let` means the
+     * pattern half of a pair. Treating every symbol inside one as bound made `n` in
+     * `(let [a (* n 2)] …)` a binding rather than the free variable it is, so the extracted function
+     * took `a` and not `n`.
      */
     private fun isBindingSite(symbol: PhelSymbol): Boolean {
-        val vector = PsiTreeUtil.getParentOfType(symbol, PhelVec::class.java) ?: return false
-        val owner = PsiTreeUtil.getParentOfType(vector, PhelList::class.java) ?: return false
-        val head = PhelPsiUtils.asSymbol(PhelPsiUtils.activeForms(owner).firstOrNull())?.text ?: return false
+        val bindingVector = PhelDestructuringAnalyzer.enclosingBindingVector(symbol) ?: return false
 
-        val binds = head in PhelSpecialForms.LET_LIKE || head in PhelSpecialForms.FUNCTION_DEFINING
-        if (!binds) return false
-
-        val index = PhelPsiUtils.activeForms(vector).indexOfFirst { PhelPsiUtils.asSymbol(it) === symbol }
-        if (index < 0) return false
-
-        return head !in PhelSpecialForms.LET_LIKE || index % 2 == 0
+        return PhelDestructuringAnalyzer.declares(bindingVector, symbol)
     }
 }

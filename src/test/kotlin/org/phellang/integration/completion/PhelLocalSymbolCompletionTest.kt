@@ -39,6 +39,36 @@ class PhelLocalSymbolCompletionTest : PhelIntegrationTestCase() {
         assertTrue("expected total in $completions", completions.contains("total"))
     }
 
+    /**
+     * A binding entry may be a pattern rather than a name. Phel 0.51 made the Clojure order,
+     * `{local :key}`, the canonical spelling of a map pattern; the names it binds must be offered
+     * the same as a plain binding, nested patterns included.
+     */
+    fun testDestructuredLetBindingsAreOffered() {
+        val bindingFirst = completionsFor("(defn f [m] (let [{total :total} m] to<caret>))")
+        assertTrue("expected total in $bindingFirst", bindingFirst.contains("total"))
+
+        val nested = completionsFor("(defn f [m] (let [{{:keys [city]} :address} m] ci<caret>))")
+        assertTrue("expected city in $nested", nested.contains("city"))
+
+        val vector = completionsFor("(defn f [xs] (let [[head & tail] xs] ta<caret>))")
+        assertTrue("expected tail in $vector", vector.contains("tail"))
+    }
+
+    fun testDestructuredParametersAreOffered() {
+        val completions = completionsFor("(defn f [{name :name :as user} [x y]] na<caret>)")
+
+        assertTrue("expected name in $completions", completions.contains("name"))
+    }
+
+    /** The lookup key of a binding-first pair is not a name; it must not be offered. */
+    fun testTheLookupKeyOfAPatternIsNotOffered() {
+        val completions = completionsFor("(defn f [m] (let [{total \"total-key\"} m] to<caret>))")
+
+        assertTrue("expected total in $completions", completions.contains("total"))
+        assertFalse("total-key is a lookup key, not a binding: $completions", completions.contains("total-key"))
+    }
+
     /** Both `let` scopes are live at the caret, so both must be offered. */
     fun testNestedLetBindingsAreAllOffered() {
         val completions = completionsFor("(defn f [] (let [outer 1] (let [inner 2] <caret>)))")
