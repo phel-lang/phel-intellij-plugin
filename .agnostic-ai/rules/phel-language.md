@@ -55,3 +55,10 @@ operators `php/+ - && || !== @ ^ ~`.
 **Reader macros**: `'form` quote · `` `form `` syntax-quote · `~form` unquote · `~@form` splice · `^{...} form` meta.
 
 **Forms**: `def defn let if when fn do quote var throw try` · macros `when-let if-let defmacro time binding`.
+
+**Destructuring** (v0.51.0+): map patterns are **binding-first**, Clojure order: `{n :name}`,
+`{{:keys [c]} :inner}`, `{[a b] :pair}`. The key-first order `{:name n}` is deprecated since v0.51.0
+(the plugin flags it with a swap quick fix) but still compiles. `:keys`/`:strs`/`:syms [syms]`,
+`:as sym` and `:or {sym default}` are directives; `:or` binds nothing. `{k v}` with two symbols is
+ambiguous and read key-first (`k` is evaluated). Vector patterns: `[a _ b & rest]`, nested freely.
+The plugin's `PhelDestructuringAnalyzer` is the single reader of patterns; go through it.

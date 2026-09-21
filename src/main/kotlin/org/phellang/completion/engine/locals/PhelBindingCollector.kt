@@ -5,7 +5,7 @@ import com.intellij.psi.PsiElement
 import org.phellang.completion.infrastructure.PhelLocalSymbolKind
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelVec
-import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 
 /**
  * Offers the names bound by every enclosing binding form.
@@ -47,16 +47,15 @@ internal object PhelBindingCollector {
     }
 
     /**
-     * The vector holds name/value pairs, so every other form is a name.
+     * The vector holds pattern/value pairs, so every other form is a pattern, and a pattern may
+     * destructure: `[{n :name} m]` offers `n`.
      *
      * Counted over activeForms rather than children: `#_` leaves the form it discards in the tree,
      * and one discarded entry shifts the parity, dropping every later name from the results.
      */
     private fun collectNames(vector: PhelVec, kind: PhelLocalSymbolKind, sink: PhelLocalSymbolSink) {
-        val forms = PhelPsiUtils.activeForms(vector)
-
-        for (i in forms.indices step 2) {
-            val name = PhelPsiUtils.asSymbol(forms[i])?.text ?: continue
+        for (symbol in PhelDestructuringAnalyzer.letBoundSymbols(vector)) {
+            val name = symbol.text ?: continue
 
             sink.addScopedSymbol(name, kind, ICON)
         }

@@ -21,7 +21,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Ignores the body of the comment.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L190",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L212",
                 docs = "",
             ),
         ),
@@ -38,7 +38,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Define a private value that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L115",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L137",
                 docs = "",
             ),
         ),
@@ -70,7 +70,7 @@ Defines a native PHP enum. Each case is named by a keyword followed by an<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L164",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L186",
                 docs = "",
             ),
         ),
@@ -92,7 +92,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L148",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L170",
                 docs = "",
             ),
         ),
@@ -109,7 +109,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a macro.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L120",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L142",
                 docs = "",
             ),
         ),
@@ -126,7 +126,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a private macro that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L130",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L152",
                 docs = "",
             ),
         ),
@@ -143,7 +143,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a new global function.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L110",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L132",
                 docs = "",
             ),
         ),
@@ -160,7 +160,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a private function that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L125",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L147",
                 docs = "",
             ),
         ),
@@ -179,7 +179,26 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L135",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L157",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "to-array",
+        signature = "(to-array coll)",
+        completion = CompletionInfo(
+            tailText = "Returns a PHP array containing the elements of coll",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns a PHP array containing the elements of <code>coll</code>. Accepts any collection (vector, list, set, map, PHP array) or <code>nil</code>, which yields an empty PHP array. A map yields an indexed array of <code>[key value]</code> pairs; <code>phel->php</code> is the conversion that yields an associative array. Matches Clojure's <code>to-array</code> for <code>.cljc</code> interop — in Phel the result is a plain PHP array since PHP has no <code>Object[]</code>.
+""",
+            example = "(to-array [1 2 3]) ; =&gt; &lt;PHP-Array [1, 2, 3]&gt;\n(to-array nil) ; =&gt; &lt;PHP-Array []&gt;",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L23",
                 docs = "",
             ),
         ),
@@ -189,14 +208,17 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
         name = "to-php-array",
         signature = "(to-php-array coll)",
         completion = CompletionInfo(
-            tailText = "Creates a PHP Array from a sequential data structure",
-            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+            tailText = "Deprecated alias of to-array",
+            priority = PhelCompletionPriority.DEPRECATED_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Creates a PHP Array from a sequential data structure.",
+            summary = """
+Deprecated alias of <code>to-array</code>.
+""",
             example = null,
+            deprecation = DeprecationInfo(version = "0.51.0", replacement = "to-array"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/defs.phel#L23",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/defs.phel#L48",
                 docs = "",
             ),
         ),

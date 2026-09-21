@@ -20,12 +20,22 @@ internal object PhelParameterAnalyzer {
 
     private val FUNCTION_DEFINING_FORMS = PhelSpecialForms.FUNCTION_DEFINING
 
-    /** True when [symbol] is declared in the parameter vector of a function-defining form. */
+    /**
+     * True when [symbol] is declared in the parameter vector of a function-defining form, at any
+     * depth of destructuring — `x` in `(fn [x] …)`, `(fn [[x y]] …)` and `(fn [{x :x}] …)` alike.
+     *
+     * `&` is a marker rather than a name, so it is never *bound*; it still counts as being in the
+     * parameter vector unless [excludeSymbols] rules it out, which is how the variadic-marker
+     * highlighting finds it.
+     */
     fun isFunctionParameter(symbol: PhelSymbol, excludeSymbols: Set<String>): Boolean {
-        val paramVec = enclosingVector(symbol) ?: return false
-        if (!isParameterVector(paramVec)) return false
+        val text = symbol.text ?: return false
+        if (text in excludeSymbols) return false
 
-        return symbol.text !in excludeSymbols
+        val bindingVector = PhelDestructuringAnalyzer.enclosingBindingVector(symbol) ?: return false
+        if (bindingVector.isLetLike) return false
+
+        return text == REST_MARKER || PhelDestructuringAnalyzer.declares(bindingVector, symbol)
     }
 
     /** The parameter names visible to [symbol] from its enclosing function, empty when outside one. */
@@ -59,37 +69,47 @@ internal object PhelParameterAnalyzer {
      * may. Skipping them explicitly is what keeps a vector *inside* the metadata — Phel's standard
      * library writes `{:see-also ["update-in" "assoc"]}` on most of its definitions — from being
      * taken for the parameter vector, or from ending the search before the real one is reached.
+     *
+     * Only the form's own node is judged, through [PhelFormWalker.unwrapped]. Judging a form by
+     * what it *contains* took `[{:id id}]`, a parameter vector whose first entry destructures a
+     * map, for the metadata map, and the function lost its parameters.
      */
-    private fun isSignaturePrelude(form: PsiElement): Boolean =
-        PhelFormWalker.isOrDirectlyWraps<PhelLiteral>(form) || PhelFormWalker.isOrDirectlyWraps<PhelMap>(form)
+    private fun isSignaturePrelude(form: PsiElement): Boolean {
+        val node = PhelFormWalker.unwrapped(form)
+        return node is PhelLiteral || node is PhelMap
+    }
 
     /** Names bound by every arity of [functionList]. Cached: highlighting asks once per symbol. */
     private fun parameterNamesOf(functionList: PhelList): Set<String> =
         cachedPerPsi(functionList, FUNCTION_PARAMS_KEY) { computeParameterNames(functionList) }
 
-    private fun computeParameterNames(functionList: PhelList): Set<String> {
-        val names = mutableSetOf<String>()
+    private fun computeParameterNames(functionList: PhelList): Set<String> =
+        parameterVectorsOf(functionList).flatMapTo(mutableSetOf()) { namesIn(it) }
 
-        // Single arity: the vector sits directly in the function list.
-        findParameterVector(functionList)?.let { names += namesIn(it) }
+    /**
+     * Every parameter vector [functionList] declares: the single-arity one sitting directly in the
+     * list, and the head vector of each `([params] body)` arity list of a multi-arity form.
+     */
+    fun parameterVectorsOf(functionList: PhelList): List<PhelVec> {
+        val vectors = ArrayList<PhelVec>()
 
-        // Multi-arity: each child is an arity list `([params] body)` whose head is the vector.
+        findParameterVector(functionList)?.let(vectors::add)
+
+        // An arity list's *head* must itself be the vector: a deep search would also claim the
+        // parameter vector of a call like `((fn [x] x) m)` sitting in the body.
         functionList.children
-            .mapNotNull { it as? PhelList ?: PsiTreeUtil.findChildOfType(it, PhelList::class.java) }
-            .mapNotNull { arity -> arity.children.firstOrNull()?.let(PhelFormWalker::vectorOf) }
-            .forEach { names += namesIn(it) }
+            .mapNotNull { PhelFormWalker.unwrapped(it) as? PhelList }
+            .mapNotNull { arity -> arity.children.firstOrNull()?.let { PhelFormWalker.unwrapped(it) as? PhelVec } }
+            .forEach(vectors::add)
 
-        return names
+        return vectors
     }
 
-    /** `&` marks a rest parameter rather than naming one, so it is never a binding. */
-    private fun namesIn(paramVec: PhelVec): List<String> = paramVec.children
-        .filter(PhelFormWalker::isSymbolLike)
-        .mapNotNull { it.text }
-        .filter { it.isNotEmpty() && it != "&" }
+    /** Every name the vector binds, destructured ones included; `&` marks a rest parameter rather than naming one. */
+    private fun namesIn(paramVec: PhelVec): List<String> =
+        PhelDestructuringAnalyzer.parameterSymbols(paramVec).mapNotNull { it.text }.filter { it.isNotEmpty() }
 
-    fun enclosingVector(symbol: PhelSymbol): PhelVec? =
-        PsiTreeUtil.getParentOfType(symbol, PhelVec::class.java)
+    private const val REST_MARKER = "&"
 
     private fun enclosingFunction(symbol: PhelSymbol): PhelList? = PhelFormWalker.enclosingLists(symbol)
         .firstOrNull { PhelFormWalker.headText(it) in FUNCTION_DEFINING_FORMS }
@@ -99,7 +119,7 @@ internal object PhelParameterAnalyzer {
      * body. Two shapes qualify: the vector of a single-arity form, and the head of an arity list
      * inside a multi-arity form — `(defn name ([] body) ([x] body))`.
      */
-    private fun isParameterVector(paramVec: PhelVec): Boolean {
+    fun isParameterVector(paramVec: PhelVec): Boolean {
         val immediate = PsiTreeUtil.getParentOfType(paramVec, PhelList::class.java) ?: return false
         val immediateForms = PsiTreeUtil.getChildrenOfType(immediate, PhelForm::class.java) ?: return false
         val head = immediateForms.firstOrNull()?.let(PhelFormWalker::symbolTextOf)

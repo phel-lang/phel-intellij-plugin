@@ -10,8 +10,29 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Added
+
+- Destructuring patterns are now modelled. A name bound by a vector pattern (`[a b & rest]`) or a map pattern
+  (`{n :name}`, `{:keys [a]}`, `{:strs [b]}`, `{:syms [c]}`, `:as`) resolves, completes, highlights and is reported
+  unused or shadowed exactly like a plain binding, in `let`-like forms and in parameter vectors alike, at
+  any nesting depth. Map patterns are read in the Clojure order Phel 0.51.0 adopted (phel-lang #3115): the left side
+  of a pair is the binding and the right side is the lookup key, with `:or` binding nothing. Before this the
+  resolver took the first symbol it found inside an entry, so `[a b]` resolved only `a` and a map pattern resolved
+  whichever symbol came first in the text.
+- A **Deprecated key-first map destructuring** inspection flags pairs still written key-first, `{:name n}`, which
+  Phel 0.51.0 deprecated in favour of `{n :name}` and has announced for removal. The quick fix swaps the two halves.
+  A pair that binds on both sides, `{k v}`, is reported as a weak warning with no fix, since the compiler reads it
+  key-first and a swap would silently change which side is looked up. Ordinary map literals, `:or` maps and the
+  `:keys`/`:strs`/`:syms`/`:as` directives are never reported.
+
 ### Changed
 
+- Registry refreshed to **Phel 0.52.0**. Documentation links now point at the 0.52.0 sources, and the 0.51.0 test
+  additions (`test/skip!`, `test/focused-run?`, `test/*event-hook*`) and `ai/*sleep-fn*` complete and hover.
+- `to-php-array` is reported deprecated again, with a quick fix to `to-array`: Phel 0.51.0 deprecated it, and the
+  regenerated registry carries that metadata. It is the only deprecated stdlib symbol in 0.52.0.
+- The colour-settings demo text writes its destructuring binding-first and constructs its exception the Clojure
+  way, so the sample no longer showcases a deprecated pattern order or a form Phel 0.52.0 rejects.
 - The **Superseded interop or var form** inspection now reports a removal rather than a deprecation. Phel 0.52.0
   stopped accepting `php/new`, `php/->`, `php/::` and `set-var` as source: writing one is a `PHEL012` error, not
   something `--warn-deprecations` decides whether to mention. The message names the code and the release, and the

@@ -26,7 +26,7 @@ Calls the method <code>method</code> on <code>target</code>, where the method na
 """,
             example = "(php-invoke (new DateTimeImmutable \"2024-03-10\") \"format\" \"Y\") ; =&gt; \"2024\"\n(let [m \"format\"] (php-invoke (new DateTimeImmutable \"2024-03-10\") m \"Y\")) ; =&gt; \"2024\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/interop.phel#L60",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/interop.phel#L60",
                 docs = "",
             ),
         ),
@@ -53,7 +53,7 @@ A macro rather than a function because the place is a location, not a value.
 """,
             example = "(let [o (new ArrayObject)] (set! (.-y o) 2024)) ; =&gt; 2024\n(def ^:dynamic *x* 0)\n(binding [*x* 1] (set! *x* 2) *x*) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.50.0/src/phel/core/interop.phel#L21",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/interop.phel#L21",
                 docs = "",
             ),
         ),

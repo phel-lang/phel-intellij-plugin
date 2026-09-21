@@ -3,6 +3,7 @@ package org.phellang.inspection.analysis
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
@@ -34,16 +35,14 @@ internal object PhelUnusedParameterFinder {
 
         val used = PhelSymbolTexts.of(body)
 
-        return PhelPsiUtils.activeForms(parameters)
-            .mapNotNull { PhelPsiUtils.asSymbol(it) }
+        return PhelDestructuringAnalyzer.parameterSymbols(parameters)
             .filterNot { isIntentionallyUnused(it.text) }
             .filter { it.text !in used }
     }
 
     /**
-     * A leading `_` marks a deliberate throwaway, and `&` introduces a rest parameter. Destructuring
-     * targets are skipped too: the names a map or vector pattern binds are read through the pattern,
-     * not by the parameter symbol itself.
+     * A leading `_` marks a deliberate throwaway, and `&` introduces a rest parameter. A destructured
+     * parameter is checked name by name: `[{n :name}]` reports `n` when the body never reads it.
      */
     private fun isIntentionallyUnused(name: String?): Boolean {
         if (name == null) return true

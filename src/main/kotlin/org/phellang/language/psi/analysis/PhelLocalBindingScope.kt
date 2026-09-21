@@ -34,14 +34,14 @@ internal object PhelLocalBindingScope {
         return false
     }
 
-    /** Names sit at the even positions of a `[name value …]` binding vector. */
+    /** Patterns sit at the even positions of a `[pattern value …]` binding vector, and each may destructure. */
     private fun bindingVecContains(forms: List<PhelForm>, name: String): Boolean {
-        val bindings = (forms.getOrNull(1) as? PhelVec)?.forms ?: return false
-        return (bindings.indices step 2).any { PhelPsiUtils.asSymbol(bindings[it])?.text == name }
+        val bindingVec = forms.getOrNull(1) as? PhelVec ?: return false
+        return PhelDestructuringAnalyzer.letBoundSymbols(bindingVec).any { it.text == name }
     }
 
     private fun paramVecContains(forms: List<PhelForm>, name: String): Boolean {
         val paramVec = forms.drop(1).firstNotNullOfOrNull { it as? PhelVec } ?: return false
-        return paramVec.forms.any { PhelPsiUtils.asSymbol(it)?.text == name }
+        return PhelDestructuringAnalyzer.parameterSymbols(paramVec).any { it.text == name }
     }
 }

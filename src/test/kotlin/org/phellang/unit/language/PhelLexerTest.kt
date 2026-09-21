@@ -25,6 +25,22 @@ class PhelLexerTest {
         return tokenize(input).map { it.first }
     }
 
+    // --- Keywords ---
+
+    /**
+     * Phel 0.51 added CSS-style id and class shorthand to `phel.html` element tags:
+     * `[:div#main.card.wide ...]`. The tag is one keyword, so `#` and `.` must stay inside it
+     * rather than starting a dispatch form or an access operator.
+     */
+    @Test
+    fun `html tag with css id and class shorthand lexes as one keyword`() {
+        val tokens = tokenize("[:div#main.card.wide]")
+        assertEquals(PhelTypes.BRACKET1, tokens[0].first)
+        assertEquals(PhelTypes.KEYWORD_TOKEN, tokens[1].first)
+        assertEquals(":div#main.card.wide", tokens[1].second)
+        assertEquals(PhelTypes.BRACKET2, tokens[2].first)
+    }
+
     // --- New short function syntax #( ---
 
     @Test
