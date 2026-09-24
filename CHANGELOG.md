@@ -15,6 +15,16 @@ refreshed, since completion, hover and arity checking are all driven by it.
 - The `Wrapper` task's `gradleVersion` is back in step with the 9.7.1 wrapper. Dependabot bumps only
   `gradle-wrapper.properties`, so the task had stayed on 9.7.0 and `./gradlew wrapper` would have downgraded the
   project again (#328, #337).
+- Registry refreshed to **Phel 0.53.0**. Documentation links now point at the 0.53.0 sources, and the `transient`
+  hover carries the new docstring: a transient pays off after about eight writes on a map. No stdlib symbol was
+  added, removed or deprecated in 0.53.0.
+
+### Fixed
+
+- The **Unresolved symbol** inspection no longer reports a type tag. The symbol after `^` names a type, not a var,
+  so `(defn f [^string s] ...)` was reported as `Cannot resolve symbol 'string'`. Phel 0.53.0 made this more
+  common: it added short tags for its own values (`^map`, `^vector`, `^set`, `^list`, `^keyword`, `^symbol`,
+  `^atom`) and nullable spellings of each, `^?map` and `^map|null`, which name no function at all (phel-lang #3319).
 
 ## [1.3.0] - 2026-09-21
 
