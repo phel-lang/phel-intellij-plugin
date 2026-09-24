@@ -2,6 +2,7 @@ package org.phellang.editor.folding.placeholders
 
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.*
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 object PhelPlaceholderGenerator {
     /**
@@ -34,7 +35,8 @@ object PhelPlaceholderGenerator {
     }
 
     private fun generateDefiningFormPlaceholder(formType: String, nameForm: PhelForm): String {
-        val nameSymbol = PsiTreeUtil.findChildOfType(nameForm, PhelSymbol::class.java)
+        // asSymbol reads past a tag on the name: `(defn ^map build ...)` folds to `(defn build...`.
+        val nameSymbol = PhelPsiUtils.asSymbol(nameForm)
         val name = nameSymbol?.text
         return if (name != null) "($formType $name..." else "$formType..."
     }

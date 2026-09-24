@@ -9,6 +9,7 @@ import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVendorUtils
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Matches a name against the definitions a Phel file declares — `(def x …)`, `(defn f [..] …)` and
@@ -47,7 +48,8 @@ internal object PhelDefinitionFinder {
         val defKeyword = PsiTreeUtil.findChildOfType(forms[0], PhelSymbol::class.java) ?: return null
         if (!isDefiningKeyword(defKeyword.text)) return null
 
-        val definedName = PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java) ?: return null
+        // asSymbol, not the first symbol under the form: in `(defn ^map build ...)` that is the tag, not the name.
+        val definedName = PhelPsiUtils.asSymbol(forms[1]) ?: return null
         return definedName.takeIf { symbolName == it.text }
     }
 

@@ -9,6 +9,7 @@ import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.utils.SymbolCategory
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * What a Phel symbol *is* — a special form, a definition, a parameter, a binding, or a reference to
@@ -65,7 +66,8 @@ object PhelSymbolAnalyzer {
         val forms = PsiTreeUtil.getChildrenOfType(containingList, PhelForm::class.java) ?: return false
         if (forms.size <= 1) return false
 
-        val definedName = PsiTreeUtil.findChildOfType(forms[1], PhelSymbol::class.java) ?: return false
+        // asSymbol, not the first symbol under the form: in `(defn ^map build ...)` that is the tag, not the name.
+        val definedName = PhelPsiUtils.asSymbol(forms[1]) ?: return false
         return symbol === definedName
     }
 

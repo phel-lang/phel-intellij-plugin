@@ -1,7 +1,10 @@
 package org.phellang.integration.psi
 
 import com.intellij.psi.util.PsiTreeUtil
+import org.phellang.editor.folding.placeholders.PhelPlaceholderGenerator
+import org.phellang.editor.structure.PhelStructuralFormRecognizer
 import org.phellang.integration.PhelIntegrationTestCase
+import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelTypeTags
 
@@ -42,6 +45,15 @@ class PhelTypeTagPsiTest : PhelIntegrationTestCase() {
 
     fun testSymbolInsideMapMetadataIsNotATag() {
         assertFalse(isTypeTag("(def ^{:tag map} x {})", "map"))
+    }
+
+    /** A return tag on the name is not the name: the structure view and folding show `build`. */
+    fun testTaggedDefinitionIsNamedByItsNameNotItsTag() {
+        val file = myFixture.configureByText("tags.phel", "(defn ^map build []\n  {})")
+        val list = PsiTreeUtil.findChildOfType(file, PhelList::class.java)!!
+
+        assertEquals("build", PhelStructuralFormRecognizer.definedNameOf(list))
+        assertEquals("(defn build...", PhelPlaceholderGenerator.generateListPlaceholder(list))
     }
 
     private fun isTypeTag(code: String, symbolText: String, occurrence: Int = 0): Boolean {
