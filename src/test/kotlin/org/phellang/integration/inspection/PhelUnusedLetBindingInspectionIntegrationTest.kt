@@ -94,6 +94,12 @@ class PhelUnusedLetBindingInspectionIntegrationTest : PhelIntegrationTestCase() 
         assertTrue("pairing must stay aligned past the discard: $warnings", warnings.isEmpty())
     }
 
+    /** `^atom` names a type: it is not a read of a binding that happens to be called `atom`. */
+    fun testTypeTagOfTheSameNameIsNotAUsage() {
+        val warnings = inspect("(ns app\\m)\n(defn f []\n  (let [atom 1]\n    (fn [^atom x] x)))\n")
+        assertEquals(listOf("Binding 'atom' is never used."), warnings)
+    }
+
     /** Runs the inspection's visitor over every element and returns the reported messages. */
     private fun inspect(text: String): List<String> {
         val file = myFixture.configureByText("a.phel", text) as PhelFile

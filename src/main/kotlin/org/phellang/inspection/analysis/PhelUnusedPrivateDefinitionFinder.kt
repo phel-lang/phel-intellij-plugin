@@ -5,6 +5,7 @@ import org.phellang.indexing.scanner.PhelDefinitionPrivacy
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 
@@ -42,7 +43,8 @@ internal object PhelUnusedPrivateDefinitionFinder {
     }
 
     /**
-     * Any symbol with the same text other than the defining name itself.
+     * Any symbol with the same text other than the defining name itself, or a type tag: `^vector` spells
+     * `vector` but names a type, so it is no use of a private definition called `vector`.
      *
      * Only the name symbol is excluded, not the whole declaration, so a recursive call counts as a
      * use. A private function that merely calls itself is arguably dead too, but telling that apart
@@ -53,6 +55,6 @@ internal object PhelUnusedPrivateDefinitionFinder {
         val file = nameSymbol.containingFile ?: return true
 
         return PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)
-            .any { it.text == name && it !== nameSymbol }
+            .any { it.text == name && it !== nameSymbol && !PhelTypeTags.isTypeTag(it) }
     }
 }
