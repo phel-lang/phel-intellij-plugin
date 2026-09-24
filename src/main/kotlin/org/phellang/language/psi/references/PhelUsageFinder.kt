@@ -8,6 +8,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
@@ -20,6 +21,9 @@ import org.phellang.language.psi.utils.SymbolCategory
  *
  * A local binding (a parameter or `let` name) can only be used inside the form that introduces it,
  * so its search stops there. Only top-level definitions justify the project-wide scan.
+ *
+ * Usages are matched by name, so every walk drops type tags: `^map` spells `map` but names a type, and is
+ * never a usage of a definition or binding called `map`.
  */
 internal object PhelUsageFinder {
 
@@ -44,7 +48,7 @@ internal object PhelUsageFinder {
         val containingFile = symbol.containingFile as? PhelFile ?: return emptyList()
 
         return PsiTreeUtil.findChildrenOfType(containingFile, PhelSymbol::class.java)
-            .filter { it !== symbol && symbolName == PhelPsiUtils.getName(it) }
+            .filter { it !== symbol && isUsageNamed(it, symbolName) }
     }
 
     private fun findAcrossProject(symbol: PhelSymbol, symbolName: String): List<PsiElement> {
@@ -59,7 +63,7 @@ internal object PhelUsageFinder {
             // PSI walk for the many files that don't.
             .filter { it.text.contains(symbolName) }
             .flatMap { PsiTreeUtil.findChildrenOfType(it, PhelSymbol::class.java) }
-            .filter { symbolName == PhelPsiUtils.getName(it) }
+            .filter { isUsageNamed(it, symbolName) }
     }
 
     /** Usages only — other definitions of the same name in scope are not usages of this one. */
@@ -68,9 +72,12 @@ internal object PhelUsageFinder {
 
         return PsiTreeUtil.findChildrenOfType(containingForm, PhelSymbol::class.java)
             .filter { it !== symbol }
-            .filter { symbolName == PhelPsiUtils.getName(it) }
+            .filter { isUsageNamed(it, symbolName) }
             .filterNot { PhelSymbolAnalyzer.isDefinition(it) }
     }
+
+    private fun isUsageNamed(candidate: PhelSymbol, symbolName: String): Boolean =
+        symbolName == PhelPsiUtils.getName(candidate) && !PhelTypeTags.isTypeTag(candidate)
 
     /** The nearest enclosing special form or control-flow form — the scope a binding is confined to. */
     private fun findContainingForm(symbol: PhelSymbol): PhelList? {

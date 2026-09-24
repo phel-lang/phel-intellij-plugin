@@ -10,7 +10,9 @@ import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.util.IncorrectOperationException
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
+import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 import java.util.Collections
 import java.util.IdentityHashMap
@@ -28,6 +30,9 @@ import java.util.IdentityHashMap
  * * [PhelLocalScopeResolver]       — `let` bindings and function parameters
  * * [PhelDefinitionSearcher]       — top-level definitions in this file, then the project
  * * [PhelUsageFinder]              — the reverse direction, when the symbol *is* the definition
+ *
+ * A type tag (`^map` in `[^map m]`) is none of these: it names a type, so [resolveTypeTag] answers it
+ * before anything else is consulted.
  */
 class PhelReference @JvmOverloads constructor(
     element: PhelSymbol,
@@ -59,10 +64,10 @@ class PhelReference @JvmOverloads constructor(
     private fun resolveUncached(): Array<ResolveResult> {
         val name = symbolName?.takeIf { it.isNotEmpty() } ?: return ResolveResult.EMPTY_ARRAY
 
-        val targets = if (findUsages) {
-            PhelUsageFinder.findUsages(myElement, name)
-        } else {
-            findDefinitions(name)
+        val targets = when {
+            PhelTypeTags.isTypeTag(myElement) -> resolveTypeTag()
+            findUsages -> PhelUsageFinder.findUsages(myElement, name)
+            else -> findDefinitions(name)
         }
 
         return targets.map(::PsiElementResolveResult).toTypedArray()
@@ -120,6 +125,22 @@ class PhelReference @JvmOverloads constructor(
         return results
     }
 
+    /**
+     * A type tag resolves to PHP only, to the classes [PhpClassResolver.typeTagFqns] reads from it: `^map` to the
+     * interface Phel backs it with, `^DateTime` through the file's `(:use ...)` table, `^Foo.Bar` as written. It
+     * never reaches a Phel scope, so `^map` is not a use of `phel\core/map` or of a local named `map`, and renaming
+     * either leaves it alone. It is checked ahead of [findUsages] too, so a tag is never taken for a definition.
+     */
+    private fun resolveTypeTag(): List<PsiElement> {
+        if (!PhpIndexBridge.isAvailable()) return emptyList()
+
+        val file = myElement.containingFile as? PhelFile ?: return emptyList()
+        val useFqnIndex = PhelNamespaceUtils.buildUseFqnIndex(file)
+
+        return PhpClassResolver.typeTagFqns(myElement.text, useFqnIndex)
+            .flatMap { PhpIndexBridge.findClassesByFqn(myElement.project, it) }
+    }
+
     /** Prefer the specific member (`Class.` -> `__construct`) so go-to-def lands on the precise node. */
     private fun resolvePhpTargets(): List<PsiElement> {
         val members = PhpClassResolver.resolveAsPhpMember(myElement)
@@ -143,6 +164,7 @@ class PhelReference @JvmOverloads constructor(
 
     override fun getVariants(): Array<Any?> {
         val name = symbolName ?: return emptyArray()
+        if (PhelTypeTags.isTypeTag(myElement)) return emptyArray()
 
         val variants = mutableListOf<PsiElement>()
         variants += listOfNotNull(PhelLocalScopeResolver.resolve(myElement, name))

@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.files.PhelFile
 
 /**
@@ -120,6 +121,27 @@ object PhpClassResolver {
         val body = text.trim().trimStart('\\').replace('.', '\\')
         if (body.isEmpty()) return null
         return "\\$body"
+    }
+
+    /**
+     * The PHP classes a type tag names, read the way upstream `TagResolver` reads one: each member of a union
+     * (`|`) or intersection (`&`), its `?` dropped.
+     * * a short value tag (`map`)  -> the class Phel backs it with
+     * * a dotted or rooted name    -> that class, as written
+     * * a bare name (`DateTime`)   -> the class [useFqnIndex] (the file's `(:use ...)` table) maps it to
+     *
+     * A PHP type (`int`, `null`) names no class, and neither does a bare name nothing imports: Phel emits it as
+     * written, relative to the namespace, so there is nothing to point at.
+     */
+    fun typeTagFqns(tag: String, useFqnIndex: Map<String, String>): List<String> =
+        PhelTypeTags.members(tag).mapNotNull { typeTagMemberFqn(it.name, useFqnIndex) }.distinct()
+
+    private fun typeTagMemberFqn(name: String, useFqnIndex: Map<String, String>): String? {
+        if (name in PhelTypeTags.PHP_TYPES) return null
+        PhelTypeTags.backingClass(name)?.let { return "\\$it" }
+        if (name.startsWith('\\') || '.' in name) return phpFqnFromUseEntry(name)
+
+        return useFqnIndex[name]?.let(::phpFqnFromUseEntry)
     }
 
     /**
