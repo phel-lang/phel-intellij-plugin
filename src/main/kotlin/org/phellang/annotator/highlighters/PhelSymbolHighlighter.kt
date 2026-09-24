@@ -14,6 +14,7 @@ import org.phellang.annotator.highlighters.rules.PhelSymbolContext
 import org.phellang.annotator.highlighters.rules.PhpQualifiedRule
 import org.phellang.annotator.highlighters.rules.QualifiedSymbolRule
 import org.phellang.annotator.highlighters.rules.RegularSymbolRule
+import org.phellang.annotator.highlighters.rules.TypeTagRule
 import org.phellang.annotator.highlighters.rules.VariadicMarkerRule
 import org.phellang.annotator.infrastructure.PhelAnnotationUtils
 import org.phellang.language.psi.PhelSymbol
@@ -21,14 +22,16 @@ import org.phellang.language.psi.PhelSymbol
 /**
  * Classifies a symbol by running an ordered chain of rules and applying the first decision made.
  *
- * The order in [RULES] is the specification. Two constraints in particular are load-bearing:
- * [LocalBindingRule] precedes [DeprecatedSymbolRule], so a binding that shadows a deprecated core
- * function is not struck through; and [PhpQualifiedRule] precedes [InteropShorthandRule], so the
- * common `php/...` case never triggers the file-wide `(:use ...)` scan.
+ * The order in [RULES] is the specification. Three constraints in particular are load-bearing:
+ * [TypeTagRule] comes first, so `^map` is never read as the `map` function or as a local; [LocalBindingRule]
+ * precedes [DeprecatedSymbolRule], so a binding that shadows a deprecated core function is not struck
+ * through; and [PhpQualifiedRule] precedes [InteropShorthandRule], so the common `php/...` case never
+ * triggers the file-wide `(:use ...)` scan.
  */
 object PhelSymbolHighlighter {
 
     private val RULES: List<PhelHighlightRule> = listOf(
+        TypeTagRule,
         VariadicMarkerRule,
         LocalBindingRule,
         DeprecatedSymbolRule,

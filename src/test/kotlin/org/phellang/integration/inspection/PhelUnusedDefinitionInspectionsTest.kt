@@ -52,6 +52,27 @@ class PhelUnusedDefinitionInspectionsTest : PhelIntegrationTestCase() {
         assertEmpty(privateDefinitions("(ns app\\a)\n(defn- helper [x] (* x 2))\n(defn run [] (helper 1))\n"))
     }
 
+    /** `^vector` names a type, so it is no call of a private definition called `vector`. */
+    fun testReportsAPrivateDefinitionOnlyATypeTagSpells() {
+        val problems = privateDefinitions("(ns app\\a)\n(defn- vector [] 1)\n(defn run [^vector v] v)\n")
+
+        assertEquals(listOf("Private definition 'vector' is never used."), problems)
+    }
+
+    /**
+     * A return tag on the name, upstream's own spelling (`docs/examples/04_functions-recursion.phel`). The name
+     * is `shout`, not the tag in front of it, so the call counts and nothing is reported.
+     */
+    fun testDoesNotReportACalledPrivateDefinitionWhoseNameCarriesATag() {
+        assertEmpty(privateDefinitions("(ns app\\a)\n(defn- ^string shout [^string m] (str m \"!\"))\n(defn run [] (shout \"hi\"))\n"))
+    }
+
+    fun testReportsAnUncalledPrivateDefinitionByItsNameNotItsTag() {
+        val problems = privateDefinitions("(ns app\\a)\n(defn- ^string shout [^string m] (str m \"!\"))\n")
+
+        assertEquals(listOf("Private definition 'shout' is never used."), problems)
+    }
+
     /** A public definition may be called from another namespace, so its own file cannot judge it. */
     fun testDoesNotReportAPublicDefinition() {
         assertEmpty(privateDefinitions("(ns app\\a)\n(defn helper [x] (* x 2))\n"))
@@ -84,6 +105,12 @@ class PhelUnusedDefinitionInspectionsTest : PhelIntegrationTestCase() {
 
     fun testDoesNotReportAParameterTheBodyReads() {
         assertEmpty(parameters("(defn greet [name] (println name))\n"))
+    }
+
+    fun testReportsAParameterOnlyATypeTagSpells() {
+        val problems = parameters("(defn greet [vector] (fn [^vector v] (println v)))\n")
+
+        assertEquals(listOf("Parameter 'vector' is never used."), problems)
     }
 
     fun testDoesNotReportAnUnderscoreParameter() {

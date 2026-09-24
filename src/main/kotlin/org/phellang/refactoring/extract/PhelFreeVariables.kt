@@ -5,6 +5,7 @@ import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 import org.phellang.language.psi.analysis.PhelLocalBindingScope
@@ -30,6 +31,8 @@ internal object PhelFreeVariables {
         val free = LinkedHashSet<String>()
 
         for (symbol in PsiTreeUtil.findChildrenOfType(expression, PhelSymbol::class.java)) {
+            // `^atom` names a type, not the `atom` binding it spells, so it needs no parameter.
+            if (PhelTypeTags.isTypeTag(symbol)) continue
             val name = symbol.text ?: continue
             if (name in boundInside) continue
             if (isBindingSite(symbol)) continue

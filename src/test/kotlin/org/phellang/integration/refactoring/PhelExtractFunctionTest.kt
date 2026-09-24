@@ -86,6 +86,29 @@ class PhelExtractFunctionTest : PhelIntegrationTestCase() {
         assertTrue("helper must not become a parameter: $extracted", extracted.contains("(defn extracted []"))
     }
 
+    /**
+     * `^atom` names a type; the `atom` binding outside the selection is not what it reads. Only the
+     * signature and the call are asserted: the extracted body goes through Reformat, which currently puts
+     * a space after every reader prefix (`^ atom`), a formatter issue of its own.
+     */
+    fun testDoesNotTakeATypeTagAsAParameter() {
+        val extracted = extracted("(ns app\\m)\n(defn f [] (let [atom 1] <selection>(fn [^atom x] x)</selection>))\n")
+
+        assertTrue(extracted, extracted.startsWith("(ns app\\m)\n(defn extracted []\n"))
+        assertTrue(extracted, extracted.endsWith("(defn f [] (let [atom 1] (extracted)))\n"))
+    }
+
+    /**
+     * `^vector` on the argument vector is the function's return type (upstream's spelling), which wraps the
+     * vector in a metadata form. The parameters inside it are still locals of the selection.
+     */
+    fun testTakesAParameterOfAFunctionWithATaggedArgumentVector() {
+        val extracted = extracted("(ns app\\m)\n(defn f ^vector [x] <selection>(conj [] x)</selection>)\n")
+
+        assertTrue(extracted, extracted.startsWith("(ns app\\m)\n(defn extracted [x]\n"))
+        assertTrue(extracted, extracted.endsWith("(defn f ^vector [x] (extracted x))\n"))
+    }
+
     // ---- placement ----
 
     /** Immediately above the form it came from, which is where a reader looks for it. */

@@ -6,16 +6,20 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.completion.PlainPrefixMatcher
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import org.phellang.completion.engine.context.PhelCallPosition
 import org.phellang.completion.handlers.PhelTemplateInsertHandler
 import org.phellang.completion.infrastructure.PhelProjectCompletionHelper
 import org.phellang.completion.infrastructure.PhelReferCompletionHelper
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
+import org.phellang.completion.infrastructure.PhelTypeTagCompletionHelper
 import org.phellang.completion.infrastructure.PhelUsedClassCompletionHelper
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.files.PhelFile
 
 class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
@@ -32,6 +36,14 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
 
     private fun complete(parameters: CompletionParameters, result: CompletionResultSet) {
         val element = parameters.position
+
+        // Ahead of the suppression below: a tag usually sits in a parameter vector or on a binding, the
+        // very positions that suppression silences because a name is being introduced there.
+        if (isTypeTag(element)) {
+            PhelTypeTagCompletionHelper.addTypeTagCompletions(result, element.containingFile as? PhelFile)
+            return
+        }
+
         val completionContext = PhelCompletionContext(parameters)
 
         if (completionContext.shouldSuppressCompletions()) return
@@ -73,6 +85,9 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
 
         return withPrefixMatcher(PlainPrefixMatcher(prefix))
     }
+
+    private fun isTypeTag(element: PsiElement): Boolean =
+        PsiTreeUtil.getParentOfType(element, PhelSymbol::class.java, false)?.let(PhelTypeTags::isTypeTag) == true
 
     /** Inside a `:refer` vector, only the required namespace's own symbols make sense. */
     private fun addReferCompletions(completionContext: PhelCompletionContext, result: CompletionResultSet) {

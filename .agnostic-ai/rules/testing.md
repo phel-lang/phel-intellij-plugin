@@ -1,5 +1,5 @@
 ---
-globs: ["src/test/**"]
+globs: [ "src/test/**" ]
 description: Testing conventions
 ---
 

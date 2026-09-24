@@ -5,13 +5,13 @@ import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelList
-import org.phellang.language.psi.PhelMetadata
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSpecialForms
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.analysis.PhelFormWalker
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
@@ -87,7 +87,7 @@ internal object PhelUnresolvedSymbolFinder {
      * name at all, or a binding form whose exact shape the plugin does not model.
      */
     private fun isBeyondStaticAnalysis(symbol: PhelSymbol): Boolean =
-        isTypeTag(symbol) ||
+        PhelTypeTags.isTypeTag(symbol) ||
                 isInsideQuotedForm(symbol) ||
                 isInsideMacroCall(symbol) ||
                 isInsidePhpInterop(symbol) ||
@@ -95,13 +95,6 @@ internal object PhelUnresolvedSymbolFinder {
                 isInsideATypeDeclaration(symbol) ||
                 isCatchBinding(symbol) ||
                 isBoundByAnEnclosingVector(symbol)
-
-    /**
-     * `^string s`, `^map m`, `^?map m`, `^map|null m`. The symbol after `^` names a type, not a var:
-     * `string` is no function at all, and the nullable spellings Phel 0.53 added never are.
-     */
-    private fun isTypeTag(symbol: PhelSymbol): Boolean =
-        (symbol.parent as? PhelMetadata)?.symbol == symbol
 
     /**
      * `(php/-> obj (getName))`, `(php/:: Class (create x))`. The head of the inner list is a PHP

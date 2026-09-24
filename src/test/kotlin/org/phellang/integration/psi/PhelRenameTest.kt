@@ -3,6 +3,7 @@ package org.phellang.integration.psi
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
+import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
@@ -50,6 +51,49 @@ class PhelRenameTest : PhelIntegrationTestCase() {
             newName = "now",
             expected = "DateTime/now",
         )
+    }
+
+    /**
+     * A type tag names a type, not the var it spells, so renaming a definition or a binding that happens to
+     * share a tag's name must leave the tag alone. Runs the whole rename refactoring, not just
+     * `handleElementRename`, because which occurrences get renamed is decided by the reference search.
+     */
+    fun testRenamingADefinitionLeavesATagOfTheSameNameAlone() {
+        assertFullRename(
+            source = "(ns app\\main)\n(defn map [] 1)\n(defn f [^map m] (map))\n",
+            symbolText = "map",
+            newName = "build-map",
+            expected = "(ns app\\main)\n(defn build-map [] 1)\n(defn f [^map m] (build-map))\n",
+        )
+    }
+
+    fun testRenamingABindingLeavesATagOfTheSameNameAlone() {
+        assertFullRename(
+            source = "(ns app\\main)\n(defn f [] (let [vector 1] (fn [^vector v] (+ vector v))))\n",
+            symbolText = "vector",
+            newName = "n",
+            expected = "(ns app\\main)\n(defn f [] (let [n 1] (fn [^vector v] (+ n v))))\n",
+        )
+    }
+
+    fun testRenamingADefinitionWhoseNameCarriesATagRenamesTheName() {
+        assertFullRename(
+            source = "(ns app\\main)\n(defn ^map build [] {})\n(defn f [] (build))\n",
+            symbolText = "build",
+            newName = "make",
+            expected = "(ns app\\main)\n(defn ^map make [] {})\n(defn f [] (make))\n",
+        )
+    }
+
+    /** Renames the first occurrence of [symbolText], which in every source here is its definition. */
+    private fun assertFullRename(source: String, symbolText: String, newName: String, expected: String) {
+        val file = myFixture.configureByText("rename_full_${name}.phel", source) as PhelFile
+        PhelProjectSymbolIndex.getInstance(project).refreshFileFromPsi(file)
+
+        val definition = PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java).first { it.text == symbolText }
+        myFixture.renameElement(definition, newName)
+
+        assertEquals(expected, file.text)
     }
 
     private fun assertRename(source: String, symbolText: String, newName: String, expected: String) {

@@ -140,6 +140,17 @@ class PhelSafeDeleteTest : PhelIntegrationTestCase() {
         )
     }
 
+    /** A type tag spelling the name is not a usage: `^vector` names a type, not this definition. */
+    fun testATypeTagOfTheSameNameIsNotAUsage() {
+        val file = configure("(ns app\\m)\n(defn- vector [] 1)\n(defn f [^vector v] v)\n")
+        val name = definitionNamed(file, "vector")
+
+        val usages = mutableListOf<UsageInfo>()
+        PhelSafeDeleteProcessor().findUsages(name, arrayOf(name), usages)
+
+        assertEmpty(usages)
+    }
+
     // ---- safety ----
 
     /** The point of the refactoring: a live usage stops it. */

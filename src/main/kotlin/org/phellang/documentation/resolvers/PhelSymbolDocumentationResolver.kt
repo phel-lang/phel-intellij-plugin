@@ -11,6 +11,7 @@ import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelReferUtils
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 
@@ -26,12 +27,28 @@ class PhelSymbolDocumentationResolver {
         }
 
         val content = when {
+            PhelTypeTags.isTypeTag(symbol) -> typeTagDocumentation(symbolName)
             isLocalSymbol(symbol) -> generateLocalSymbolDoc(symbol, symbolName)
             isInsideReferVector(symbol) -> resolveReferSymbolDocumentation(symbol, symbolName)
             else -> resolveApiDocumentation(symbol, symbolName)
         }
 
         return PhelDocHtml.page(content)
+    }
+
+    /**
+     * `^map`, `^?int`, `^map|null`: what each member of the tag names. Never the documentation of the
+     * function a tag happens to spell, which is what the API lookup below would find for `map`.
+     */
+    private fun typeTagDocumentation(tag: String): String =
+        PhelDocHtml.typeTag(tag, PhelTypeTags.members(tag).map { it.name to describeTagMember(it) })
+
+    private fun describeTagMember(member: PhelTypeTags.Member): String {
+        val kind = PhelTypeTags.backingClass(member.name)
+            ?.let { "Phel value type, \\$it" }
+            ?: if (member.name in PhelTypeTags.PHP_TYPES) "PHP type" else "PHP class"
+
+        return if (member.nullable) "nullable $kind" else kind
     }
 
     private fun isInsideReferVector(symbol: PhelSymbol): Boolean {
