@@ -23,7 +23,7 @@ Returns a shallow copy of a PHP array. The returned array is a distinct value â€
 """,
             example = "(aclone (object-array 3)) ; =&gt; &lt;PHP-Array [nil, nil, nil]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L100",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L100",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Returns the value at <code>index</code> in a PHP array. With multiple indices, a
 """,
             example = "(aget (php-indexed-array 10 20 30) 1) ; =&gt; 20",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L200",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L200",
                 docs = "",
             ),
         ),
@@ -63,7 +63,7 @@ Returns the number of elements in a PHP array. Matches Clojure's<br />
 """,
             example = "(alength (int-array 3)) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L107",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L107",
                 docs = "",
             ),
         ),
@@ -87,7 +87,7 @@ Sets the value at <code>index</code> in a PHP array to <code>val</code>. Returns
 """,
             example = "(let [a (php-indexed-array 1 2 3)] (aset a 0 42) (aget a 0)) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L214",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L214",
                 docs = "",
             ),
         ),
@@ -106,7 +106,7 @@ Creates a PHP array of doubles (same as float-array in PHP). Accepts the same ar
 """,
             example = "(double-array 3) ; =&gt; &lt;PHP-Array [0.0, 0.0, 0.0]&gt;\n(double-array 4 1.5) ; =&gt; &lt;PHP-Array [1.5, 1.5, 1.5, 1.5]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L186",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L186",
                 docs = "",
             ),
         ),
@@ -125,7 +125,7 @@ Creates a PHP array of floats. Accepts the same arities as <code>int-array</code
 """,
             example = "(float-array 3) ; =&gt; &lt;PHP-Array [0.0, 0.0, 0.0]&gt;\n(float-array 4 1.5) ; =&gt; &lt;PHP-Array [1.5, 1.5, 1.5, 1.5]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L179",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L179",
                 docs = "",
             ),
         ),
@@ -151,7 +151,7 @@ PHP has no typed arrays, so the result is a plain PHP array.
 """,
             example = "(int-array 3) ; =&gt; &lt;PHP-Array [0, 0, 0]&gt;\n(int-array [1.5 2.7]) ; =&gt; &lt;PHP-Array [1, 2]&gt;\n(int-array 4 7) ; =&gt; &lt;PHP-Array [7, 7, 7, 7]&gt;\n(int-array 5 [10 20]) ; =&gt; &lt;PHP-Array [10, 20, 0, 0, 0]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L156",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L156",
                 docs = "",
             ),
         ),
@@ -176,7 +176,7 @@ Returns a PHP array containing the elements of <code>aseq</code>. Accepts any<br
 """,
             example = "(into-array [1 2 3]) ; =&gt; &lt;PHP-Array [1, 2, 3]&gt;\n(into-array :Object [:a :b]) ; =&gt; &lt;PHP-Array [:a, :b]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L79",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L79",
                 docs = "",
             ),
         ),
@@ -195,7 +195,7 @@ Creates a PHP array of longs (same as int-array in PHP). Accepts the same aritie
 """,
             example = "(long-array 3) ; =&gt; &lt;PHP-Array [0, 0, 0]&gt;\n(long-array 4 7) ; =&gt; &lt;PHP-Array [7, 7, 7, 7]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L172",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L172",
                 docs = "",
             ),
         ),
@@ -218,7 +218,7 @@ Creates a PHP array of the given size initialized to <code>nil</code>, or a PHP<
 """,
             example = "(object-array 3) ; =&gt; &lt;PHP-Array [nil, nil, nil]&gt;\n(object-array [1 2 3]) ; =&gt; &lt;PHP-Array [1, 2, 3]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L59",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L59",
                 docs = "",
             ),
         ),
@@ -239,7 +239,7 @@ Arguments:<br />
 """,
             example = "(php-associative-array \"name\" \"Alice\" \"age\" 30) ; =&gt; &lt;PHP-Array [\"name\":\"Alice\", \"age\":30]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L26",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L26",
                 docs = "",
             ),
         ),
@@ -256,7 +256,7 @@ Arguments:<br />
             summary = "Creates a PHP indexed array from the given values.",
             example = "(php-indexed-array 1 2 3) ; =&gt; &lt;PHP-Array [1, 2, 3]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L19",
                 docs = "",
             ),
         ),
@@ -275,7 +275,7 @@ Creates a PHP array of shorts (16-bit integers). Accepts the same arities and se
 """,
             example = "(short-array 3) ; =&gt; &lt;PHP-Array [0, 0, 0]&gt;\n(short-array 4 7) ; =&gt; &lt;PHP-Array [7, 7, 7, 7]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/arrays.phel#L193",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/arrays.phel#L193",
                 docs = "",
             ),
         ),

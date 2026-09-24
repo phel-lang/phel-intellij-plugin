@@ -23,7 +23,7 @@ Returns the number of required parameters of the function <code>f</code>. For a 
 """,
             example = "(arity inc) ; =&gt; 1\n(arity swap!) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L212",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L212",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Returns a function that takes the same arguments as <code>f</code> and returns t
 """,
             example = "((complement even?) 3) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L191",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L191",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Returns a function that always returns <code>x</code> and ignores any passed arg
 """,
             example = "((constantly 42) 1 2 3) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L179",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L179",
                 docs = "",
             ),
         ),
@@ -78,7 +78,7 @@ Returns a function that always returns <code>x</code> and ignores any passed arg
             summary = "Recursively merges data structures.",
             example = "(deep-merge {:a {:x 1}} {:a {:y 2}}) ; =&gt; {:a {:x 1, :y 2}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L567",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L567",
                 docs = "",
             ),
         ),
@@ -95,7 +95,7 @@ Returns a function that always returns <code>x</code> and ignores any passed arg
             summary = "Difference between multiple sets into a new one.",
             example = "(difference (hash-set 1 2 3) (hash-set 2)) ; =&gt; #{1 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L94",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L94",
                 docs = "",
             ),
         ),
@@ -114,7 +114,7 @@ Takes a variadic set of predicates and returns a function <code>f</code> that, w
 """,
             example = "((every-pred even? pos?) 2 4 6) ; =&gt; true\n((every-pred even? pos?) 2 -4) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L244",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L244",
                 docs = "",
             ),
         ),
@@ -131,7 +131,7 @@ Takes a variadic set of predicates and returns a function <code>f</code> that, w
             summary = "Flattens nested sequential structure into a lazy sequence of all leaf values.",
             example = "(flatten [[1 2] [3 [4 5]] 6]) ; =&gt; (1 2 3 4 5 6)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L492",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L492",
                 docs = "",
             ),
         ),
@@ -150,7 +150,7 @@ Returns a function that replaces nil arguments with the provided defaults before
 """,
             example = "(let [safe-inc (fnil inc 0)] (safe-inc nil)) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L336",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L336",
                 docs = "",
             ),
         ),
@@ -169,7 +169,7 @@ Returns a map that groups the maps in the relation <code>xrel</code> by their va
 """,
             example = "(index (hash-set {:name \"a\" :dept 1} {:name \"b\" :dept 1}) [:dept]) ; =&gt; {{:dept 1} #{{:name \"a\", :dept 1} {:name \"b\", :dept 1}}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L153",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L153",
                 docs = "",
             ),
         ),
@@ -186,7 +186,7 @@ Returns a map that groups the maps in the relation <code>xrel</code> by their va
             summary = "Intersect multiple sets into a new one.",
             example = "(intersection (hash-set 1 2 3) (hash-set 2 3 4)) ; =&gt; #{2 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L68",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L68",
                 docs = "",
             ),
         ),
@@ -205,7 +205,7 @@ Takes a list of functions and returns a new function that is the juxtaposition o
 """,
             example = "((juxt inc dec #(* % 2)) 10) ; =&gt; [11 9 20]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L262",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L262",
                 docs = "",
             ),
         ),
@@ -224,7 +224,7 @@ Returns a map with the keys and values of <code>m</code> swapped. When several k
 """,
             example = "(map-invert {:a 1 :b 2}) ; =&gt; {1 :a, 2 :b}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L610",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L610",
                 docs = "",
             ),
         ),
@@ -243,7 +243,7 @@ Returns a memoized version of the function <code>f</code>. The memoized function
 """,
             example = "(defn fact [n]\n  (if (zero? n)\n    1\n    (* n (fact (dec n)))))\n(def fact-memo (memoize fact))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L396",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L396",
                 docs = "",
             ),
         ),
@@ -263,7 +263,7 @@ Without arguments, uses a default cache size of 128 entries.
 """,
             example = "(defn fact [n]\n  (if (zero? n)\n    1\n    (* n (fact (dec n)))))\n(def fact-memo (memoize-lru fact 100))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L418",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L418",
                 docs = "",
             ),
         ),
@@ -282,7 +282,7 @@ Merges multiple maps into one new map. If a key appears in more than one collect
 """,
             example = "(merge-with + {:a 1 :b 2} {:a 10}) ; =&gt; {:a 11, :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L542",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L542",
                 docs = "",
             ),
         ),
@@ -301,7 +301,7 @@ Takes a function <code>f</code> and fewer than the normal number of arguments to
 """,
             example = "((partial + 10) 1 2) ; =&gt; 13",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L301",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L301",
                 docs = "",
             ),
         ),
@@ -320,7 +320,7 @@ Returns a set of maps, keeping only the keys in <code>ks</code> from each map in
 """,
             example = "(project (hash-set {:a 1 :b 2}) [:a]) ; =&gt; #{{:a 1}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L139",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L139",
                 docs = "",
             ),
         ),
@@ -339,7 +339,7 @@ Returns a set of maps like the relation <code>xrel</code>, with the keys of each
 """,
             example = "(rename (hash-set {:a 1 :b 2}) {:a :x}) ; =&gt; #{{:x 1, :b 2}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L146",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L146",
                 docs = "",
             ),
         ),
@@ -358,7 +358,7 @@ Returns a set of the elements of <code>xset</code> for which <code>(pred element
 """,
             example = "(select even? (hash-set 1 2 3 4)) ; =&gt; #{2 4}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L132",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L132",
                 docs = "",
             ),
         ),
@@ -377,7 +377,7 @@ Takes a variadic set of predicates and returns a function <code>f</code> that, w
 """,
             example = "((some-fn even? nil?) 1 2) ; =&gt; true\n((some-fn pos? even?) -3 -1) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L226",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L226",
                 docs = "",
             ),
         ),
@@ -396,7 +396,7 @@ Returns true if <code>s1</code> is a subset of <code>s2</code>, i.e. every eleme
 """,
             example = "(subset? (hash-set 1 2) (hash-set 1 2 3)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L118",
                 docs = "",
             ),
         ),
@@ -415,7 +415,7 @@ Returns true if <code>s1</code> is a superset of <code>s2</code>, i.e. every ele
 """,
             example = "(superset? (hash-set 1 2 3) (hash-set 1 2)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L126",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L126",
                 docs = "",
             ),
         ),
@@ -432,7 +432,7 @@ Returns true if <code>s1</code> is a superset of <code>s2</code>, i.e. every ele
             summary = "Symmetric difference between multiple sets into a new one.",
             example = "(symmetric-difference (hash-set 1 2) (hash-set 2 3)) ; =&gt; #{1 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L107",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L107",
                 docs = "",
             ),
         ),
@@ -451,7 +451,7 @@ Calls <code>f</code> with any supplied <code>args</code>. While the return value
 """,
             example = "(defn my-even? [n] (if (zero? n) true (fn [] (my-odd? (dec n)))))\n(defn my-odd? [n] (if (zero? n) false (fn [] (my-even? (dec n)))))\n(trampoline my-even? 10000) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L383",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L383",
                 docs = "",
             ),
         ),
@@ -470,7 +470,7 @@ Returns a vector of the nodes in the tree, via a depth-first walk. branch? is a 
 """,
             example = "(tree-seq indexed? identity [1 [2 3]]) ; =&gt; [[1 [2 3]] 1 [2 3] 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L464",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L464",
                 docs = "",
             ),
         ),
@@ -487,7 +487,7 @@ Returns a vector of the nodes in the tree, via a depth-first walk. branch? is a 
             summary = "Union multiple sets into a new one.",
             example = "(union (hash-set 1 2) (hash-set 2 3)) ; =&gt; #{1 2 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L37",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L37",
                 docs = "",
             ),
         ),
@@ -506,7 +506,7 @@ Returns a map with <code>f</code> applied to each key.
 """,
             example = "(update-keys {:a 1 :b 2} name) ; =&gt; {\"a\" 1, \"b\" 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L580",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L580",
                 docs = "",
             ),
         ),
@@ -525,7 +525,7 @@ Returns a map with <code>f</code> applied to each value.
 """,
             example = "(update-vals {:a 1 :b 2} inc) ; =&gt; {:a 2, :b 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L592",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L592",
                 docs = "",
             ),
         ),
@@ -544,7 +544,7 @@ Returns true if the function <code>f</code> accepts a variable number of argumen
 """,
             example = "(variadic? +) ; =&gt; true\n(variadic? inc) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/fns-sets.phel#L219",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/fns-sets.phel#L219",
                 docs = "",
             ),
         ),

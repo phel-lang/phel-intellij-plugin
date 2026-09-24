@@ -21,7 +21,7 @@ internal fun registerCoreSeqBasicsFunctions(): List<PhelFunction> = listOf(
             summary = "Prepends an element to the beginning of a collection.",
             example = "(cons 0 [1 2 3]) ; =&gt; [0 1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-basics.phel#L65",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-basics.phel#L65",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Throws for a lazily consumed source that has no size of its own — a transducer
 """,
             example = "(count [1 2 3]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-basics.phel#L128",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-basics.phel#L128",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Same as <code>(first (first coll))</code>.
 """,
             example = "(ffirst [[1 2] [3 4]]) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-basics.phel#L78",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-basics.phel#L78",
                 docs = "",
             ),
         ),
@@ -80,7 +80,7 @@ Same as <code>(first (next coll))</code>.
 """,
             example = "(fnext [1 2 3]) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-basics.phel#L114",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-basics.phel#L114",
                 docs = "",
             ),
         ),
@@ -99,7 +99,7 @@ Same as <code>(next (first coll))</code>.
 """,
             example = "(nfirst [[1 2 3] [4 5]]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-basics.phel#L107",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-basics.phel#L107",
                 docs = "",
             ),
         ),
@@ -118,7 +118,7 @@ Same as <code>(next (next coll))</code>.
 """,
             example = "(nnext [1 2 3 4]) ; =&gt; [3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-basics.phel#L121",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-basics.phel#L121",
                 docs = "",
             ),
         ),
@@ -135,7 +135,7 @@ Same as <code>(next (next coll))</code>.
             summary = "Returns the sequence after the first element, or empty sequence if none.",
             example = "(rest [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-basics.phel#L91",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-basics.phel#L91",
                 docs = "",
             ),
         ),
@@ -152,7 +152,7 @@ Same as <code>(next (next coll))</code>.
             summary = "Returns the second element of a sequence, or nil if not present.",
             example = "(second [1 2 3]) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-basics.phel#L85",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-basics.phel#L85",
                 docs = "",
             ),
         ),

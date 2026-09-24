@@ -21,7 +21,7 @@ internal fun registerCoreStringsFunctions(): List<PhelFunction> = listOf(
             summary = "Generates a new unique symbol.",
             example = "(gensym) ; =&gt; __phel_1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/strings.phel#L85",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/strings.phel#L85",
                 docs = "",
             ),
         ),
@@ -40,7 +40,7 @@ Creates a string by concatenating values together. If no arguments are provided 
 """,
             example = "(str \"a\" \"b\" \"c\") ; =&gt; \"abc\"\n(str 1 2 3) ; =&gt; \"123\"\n(str 1 nil true) ; =&gt; \"1true\"\n(str) ; =&gt; \"\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/strings.phel#L116",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/strings.phel#L116",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Throws <code>InvalidArgumentException</code> for any other input (including func
 """,
             example = "(symbol \"foo\") ; =&gt; foo\n(symbol :abc) ; =&gt; abc\n(symbol nil \"foo\") ; =&gt; foo\n(symbol #'phel.core/+) ; =&gt; phel.core/+",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/strings.phel#L46",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/strings.phel#L46",
                 docs = "",
             ),
         ),

@@ -50,6 +50,15 @@ bare name in read position is the constant. The rest of the `php/` family stays 
 `php/aget` `php/aset` `php/apush` `php/aunset` `php/oset` `php/ref` `php/callable`, plus the
 operators `php/+ - && || !== @ ^ ~`.
 
+**Type tags**: `^int ^string ^float ^bool ^array`, a class name, and since v0.53.0 the short tags
+for Phel values: `^map ^vector ^set ^list ^keyword ^symbol ^atom`. Nullable spellings: `^?map` or
+`^map|null`. The symbol after `^` names a type, never a var, so `PhelUnresolvedSymbolFinder` skips it.
+
+**Strings**: an octal escape above `\377` is a compile error since v0.53.0 (it used to wrap to NUL
+silently). The plugin lexes it as an ordinary string and does not validate escapes.
+
+**Runtime**: Phel v0.53.0 requires PHP 8.5 or newer.
+
 **File**: starts `(ns namespace\name)`. Top-level: `def`/`defn`/`defmacro`/comments. Bare literals not idiomatic.
 
 **Reader macros**: `'form` quote · `` `form `` syntax-quote · `~form` unquote · `~@form` splice · `^{...} form` meta.
