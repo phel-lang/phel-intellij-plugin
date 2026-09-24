@@ -24,7 +24,7 @@ Creates intermediate maps if they don't exist.
 """,
             example = "(assoc-in {:a {:b 1}} [:a :c] 2) ; =&gt; {:a {:b 1, :c 2}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L441",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L445",
                 docs = "",
             ),
         ),
@@ -43,7 +43,7 @@ Returns a Phel map of the public properties of PHP object <code>obj</code>, with
 """,
             example = "(bean (hydrate \"My\\\\Dto\" {:id 1})) ; =&gt; {:id 1}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1092",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1096",
                 docs = "",
             ),
         ),
@@ -62,7 +62,7 @@ Returns the number of items in <code>coll</code>, but counts at most <code>n</co
 """,
             example = "(bounded-count 3 [1 2 3 4 5]) ; =&gt; 5\n(bounded-count 3 (map inc (range 100))) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L846",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L850",
                 docs = "",
             ),
         ),
@@ -82,7 +82,7 @@ Returns all but the last item in <code>coll</code>. Returns <code>nil</code> whe
 """,
             example = "(butlast [1 2 3 4]) ; =&gt; (1 2 3)\n(butlast [0]) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L560",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L564",
                 docs = "",
             ),
         ),
@@ -99,7 +99,7 @@ Returns all but the last item in <code>coll</code>. Returns <code>nil</code> whe
             summary = "A transducer that concatenates the contents of each input into the reduction.",
             example = "(transduce cat conj [] [[1 2] [3 4]]) ; =&gt; [1 2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1409",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1413",
                 docs = "",
             ),
         ),
@@ -118,7 +118,7 @@ Takes a list of functions and returns a function that is the composition of thos
 """,
             example = "((comp inc (fn [x] (* x 2))) 3) ; =&gt; 7",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L96",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L96",
                 docs = "",
             ),
         ),
@@ -137,7 +137,7 @@ Returns a lazy sequence with specified values removed from <code>coll</code>. If
 """,
             example = "(compact [1 nil 2 nil 3]) ; =&gt; (1 2 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1765",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1769",
                 docs = "",
             ),
         ),
@@ -154,7 +154,7 @@ Returns a lazy sequence with specified values removed from <code>coll</code>. If
             summary = "Concatenates multiple collections into a lazy sequence.",
             example = "(concat [1 2] [3 4]) ; =&gt; (1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1381",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1385",
                 docs = "",
             ),
         ),
@@ -173,7 +173,7 @@ Returns true if the value is present in the given collection, otherwise returns 
 """,
             example = "(contains-value? {:a 1 :b 2} 2) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1113",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1117",
                 docs = "",
             ),
         ),
@@ -192,7 +192,7 @@ Returns an infinite lazy sequence that cycles through the elements of collection
 """,
             example = "(take 7 (cycle [1 2 3])) ; =&gt; (1 2 3 1 2 3 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1372",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1376",
                 docs = "",
             ),
         ),
@@ -211,7 +211,7 @@ Returns a lazy sequence with consecutive duplicate values removed in <code>coll<
 """,
             example = "(dedupe [1 1 2 2 2 3 1 1]) ; =&gt; (1 2 3 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1724",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1728",
                 docs = "",
             ),
         ),
@@ -230,7 +230,7 @@ Returns a new set that does not contain the given key(s). Works on hash-sets and
 """,
             example = "(disj #{1 2 3} 2) ; =&gt; #{1 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L315",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L319",
                 docs = "",
             ),
         ),
@@ -247,7 +247,7 @@ Returns a new set that does not contain the given key(s). Works on hash-sets and
             summary = "Dissociates a value from a nested data structure at the given path.",
             example = "(dissoc-in {:a {:b 1 :c 2}} [:a :b]) ; =&gt; {:a {:c 2}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L504",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L508",
                 docs = "",
             ),
         ),
@@ -266,7 +266,7 @@ Returns a lazy sequence with duplicated values removed in <code>coll</code>. Whe
 """,
             example = "(distinct [1 2 1 3 2 4 3]) ; =&gt; (1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L810",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L814",
                 docs = "",
             ),
         ),
@@ -285,7 +285,7 @@ Returns true if no two of the arguments are <code>=</code>. Requires at least on
 """,
             example = "(distinct? 1 2 3) ; =&gt; true\n(distinct? 1 2 1) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L838",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L842",
                 docs = "",
             ),
         ),
@@ -302,7 +302,7 @@ Returns true if no two of the arguments are <code>=</code>. Requires at least on
             summary = "Forces realization of a lazy sequence and returns it as a vector.",
             example = "(doall (map println [1 2 3])) ; =&gt; [nil nil nil]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1526",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1530",
                 docs = "",
             ),
         ),
@@ -319,7 +319,7 @@ Returns true if no two of the arguments are <code>=</code>. Requires at least on
             summary = "Forces realization of a lazy sequence for side effects, returns nil.",
             example = "(dorun (map println [1 2 3])) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1534",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1538",
                 docs = "",
             ),
         ),
@@ -338,7 +338,7 @@ Drops the first <code>n</code> elements of <code>coll</code>. Returns a lazy seq
 """,
             example = "(drop 2 [1 2 3 4 5]) ; =&gt; (3 4 5)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L516",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L520",
                 docs = "",
             ),
         ),
@@ -357,7 +357,7 @@ Drops the last <code>n</code> elements of <code>coll</code>. <code>n</code> defa
 """,
             example = "(drop-last [1 2 3 4 5]) ; =&gt; (1 2 3 4)\n(drop-last 2 [1 2 3 4 5]) ; =&gt; (1 2 3)\n(drop-last 5 nil) ; =&gt; ()",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L538",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L542",
                 docs = "",
             ),
         ),
@@ -376,7 +376,7 @@ Drops all elements at the front of <code>coll</code> where <code>(pred x)</code>
 """,
             example = "(drop-while #(&lt; % 5) [1 2 3 4 5 6 3 2 1]) ; =&gt; (5 6 3 2 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L569",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L573",
                 docs = "",
             ),
         ),
@@ -398,7 +398,7 @@ Returns a reducible/iterable applying transducers to <code>coll</code>. The last
 """,
             example = "(reduce + (eduction (map inc) (filter odd?) [1 2 3 4])) ; =&gt; 8",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1750",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1754",
                 docs = "",
             ),
         ),
@@ -417,7 +417,7 @@ Returns a lazy sequence of elements where predicate returns true. When called wi
 """,
             example = "(filter even? [1 2 3 4 5 6]) ; =&gt; (2 4 6)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L671",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L675",
                 docs = "",
             ),
         ),
@@ -436,7 +436,7 @@ Returns a vector of the items in <code>coll</code> for which <code>(pred item)</
 """,
             example = "(filterv even? [1 2 3 4 5 6]) ; =&gt; [2 4 6]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L716",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L720",
                 docs = "",
             ),
         ),
@@ -455,7 +455,7 @@ When called with a collection first, returns <code>[key value]</code> when <code
 """,
             example = "(find {:a 1} :a) ; =&gt; [:a 1]\n(find #(&gt; % 5) [1 2 3 6 7 8]) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L789",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L793",
                 docs = "",
             ),
         ),
@@ -474,7 +474,7 @@ Returns the index of the first item in <code>coll</code> where <code>(pred item)
 """,
             example = "(find-index #(&gt; % 5) [1 2 3 6 7 8]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L798",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L802",
                 docs = "",
             ),
         ),
@@ -494,7 +494,7 @@ Works with vectors, lists, sets, and strings.
 """,
             example = "(frequencies [:a :b :a :c :b :a]) ; =&gt; {:a 3, :b 2, :c 1}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L889",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L893",
                 docs = "",
             ),
         ),
@@ -514,7 +514,7 @@ Returns <code>opt</code> (default nil) when a key is missing mid-traversal. When
 """,
             example = "(get-in {:a {:b {:c 42}}} [:a :b :c]) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L412",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L416",
                 docs = "",
             ),
         ),
@@ -533,7 +533,7 @@ Returns a map of the elements of coll keyed by the result of <code>f</code> on e
 """,
             example = "(group-by count [\"a\" \"bb\" \"c\" \"ddd\" \"ee\"]) ; =&gt; {1 [\"a\" \"c\"], 2 [\"bb\" \"ee\"], 3 [\"ddd\"]}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1558",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1562",
                 docs = "",
             ),
         ),
@@ -552,7 +552,7 @@ Creates an instance of PHP class <code>class-name</code> (a class-string) withou
 """,
             example = "(hydrate \"My\\\\Dto\" {:id 1 :name \"x\"})",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1102",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1106",
                 docs = "",
             ),
         ),
@@ -571,7 +571,7 @@ Returns a lazy sequence of the first item in each <code>colls</code>, then the s
 """,
             example = "(interleave [1 2 3] [:a :b :c]) ; =&gt; (1 :a 2 :b 3 :c)\n(interleave [1 2 3] [:a :b]) ; =&gt; (1 :a 2 :b)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1488",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1492",
                 docs = "",
             ),
         ),
@@ -590,7 +590,7 @@ Returns elements separated by a separator. Returns a lazy sequence. When called 
 """,
             example = "(interpose 0 [1 2 3]) ; =&gt; (1 0 2 0 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1443",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1447",
                 docs = "",
             ),
         ),
@@ -610,7 +610,7 @@ When <code>from</code> is associative, it is treated as a sequence of key-value 
 """,
             example = "(into [] '(1 2 3)) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L162",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L162",
                 docs = "",
             ),
         ),
@@ -630,7 +630,7 @@ If map has duplicated values, some keys will be ignored.
 """,
             example = "(invert {:a 1 :b 2 :c 3}) ; =&gt; {1 :a, 2 :b, 3 :c}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1678",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1682",
                 docs = "",
             ),
         ),
@@ -647,7 +647,7 @@ If map has duplicated values, some keys will be ignored.
             summary = "Returns an infinite lazy sequence of x, (f x), (f (f x)), and so on.",
             example = "(take 5 (iterate inc 0)) ; =&gt; (0 1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1333",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1337",
                 docs = "",
             ),
         ),
@@ -666,7 +666,7 @@ Returns a lazy sequence over a PHP <code>Traversable</code> (Iterator, Generator
 """,
             example = "(take 3 (iterator-seq (new ArrayIterator (php-indexed-array 1 2 3 4 5)))) ; =&gt; (1 2 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1365",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1369",
                 docs = "",
             ),
         ),
@@ -685,7 +685,7 @@ Returns a lazy sequence of non-nil results of applying function to elements. Whe
 """,
             example = "(keep #(when (even? %) (* % %)) [1 2 3 4 5]) ; =&gt; (4 16)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L741",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L745",
                 docs = "",
             ),
         ),
@@ -704,7 +704,7 @@ Returns a lazy sequence of non-nil results of <code>(pred i x)</code>. When call
 """,
             example = "(keep-indexed #(when (even? %1) %2) [\"a\" \"b\" \"c\" \"d\"]) ; =&gt; (\"a\" \"c\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L758",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L762",
                 docs = "",
             ),
         ),
@@ -725,7 +725,7 @@ Returns the key of a map entry. Accepts a typed<br />
 """,
             example = "(key (first (pairs {:a 1}))) ; =&gt; :a",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L928",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L932",
                 docs = "",
             ),
         ),
@@ -744,7 +744,7 @@ Returns a sequence of all keys in a map, or <code>nil</code> when the map is <co
 """,
             example = "(keys {:a 1 :b 2}) ; =&gt; [:a :b]\n(keys nil) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L907",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L911",
                 docs = "",
             ),
         ),
@@ -763,7 +763,7 @@ Returns a vector of key-value pairs like <code>[k1 v1 k2 v2 k3 v3 ...]</code>.
 """,
             example = "(kvs {:a 1 :b 2}) ; =&gt; [:a 1 :b 2]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1005",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1009",
                 docs = "",
             ),
         ),
@@ -782,7 +782,7 @@ Returns the last element of <code>coll</code> or nil if <code>coll</code> is emp
 """,
             example = "(last [1 2 3]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L546",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L550",
                 docs = "",
             ),
         ),
@@ -799,7 +799,7 @@ Returns the last element of <code>coll</code> or nil if <code>coll</code> is emp
             summary = "Concatenates collections into a lazy sequence (expands to concat).",
             example = "(lazy-cat [1 2] [3 4]) ; =&gt; (1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1327",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1331",
                 docs = "",
             ),
         ),
@@ -816,7 +816,7 @@ Returns the last element of <code>coll</code> or nil if <code>coll</code> is emp
             summary = "Creates a lazy sequence that evaluates the body only when accessed.",
             example = "(lazy-seq (cons 1 (lazy-seq nil))) ; =&gt; (1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1318",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1322",
                 docs = "",
             ),
         ),
@@ -841,7 +841,7 @@ When given a single collection, applies the function to each element.<br />
 """,
             example = "(map inc [1 2 3]) ; =&gt; (2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L59",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L59",
                 docs = "",
             ),
         ),
@@ -860,7 +860,7 @@ Returns a typed <code>Phel\Lang\Collections\Map\MapEntry</code> for <code>k</cod
 """,
             example = "(map-entry :a 1) ; =&gt; [:a 1]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L921",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L925",
                 docs = "",
             ),
         ),
@@ -880,7 +880,7 @@ Applies <code>f</code> to each element in <code>xs</code>. <code>f</code> is a t
 """,
             example = "(map-indexed vector [:a :b :c]) ; =&gt; ([0 :a] [1 :b] [2 :c])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1474",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1478",
                 docs = "",
             ),
         ),
@@ -904,7 +904,7 @@ With a single collection behaves like <code>(apply concat (map f coll))</code>. 
 """,
             example = "(mapcat reverse [[1 2] [3 4]]) ; =&gt; (2 1 4 3)\n(mapcat list [:a :b :c] [1 2 3]) ; =&gt; (:a 1 :b 2 :c 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1417",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1421",
                 docs = "",
             ),
         ),
@@ -923,7 +923,7 @@ Returns a vector consisting of the result of applying <code>f</code> to the set 
 """,
             example = "(mapv inc [1 2 3]) ; =&gt; [2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L695",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L699",
                 docs = "",
             ),
         ),
@@ -944,7 +944,7 @@ An associative PHP array merges by key and keeps its type; an indexed one is app
 """,
             example = "(merge {:a 1 :b 2} {:b 3 :c 4}) ; =&gt; {:a 1, :b 3, :c 4}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1622",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1626",
                 docs = "",
             ),
         ),
@@ -961,7 +961,7 @@ An associative PHP array merges by key and keeps its type; an indexed one is app
             summary = "Gets the pairs of an associative data structure.",
             example = "(pairs {:a 1 :b 2}) ; =&gt; [[:a 1] [:b 2]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L997",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1001",
                 docs = "",
             ),
         ),
@@ -981,7 +981,7 @@ With one collection argument, returns consecutive non-overlapping chunks and dro
 """,
             example = "(partition 3 [1 2 3 4 5 6 7]) ; =&gt; ([1 2 3] [4 5 6])\n(partition 2 1 [1 2 3]) ; =&gt; ([1 2] [2 3])\n(partition 3 3 [:x] [1 2 3 4]) ; =&gt; ([1 2 3] [4 :x])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1777",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1781",
                 docs = "",
             ),
         ),
@@ -1000,7 +1000,7 @@ Partitions collection into chunks of size <code>n</code>, including any incomple
 """,
             example = "(partition-all 3 [1 2 3 4 5 6 7]) ; =&gt; ([1 2 3] [4 5 6] [7])\n(partition-all 3 2 [0 1 2 3 4]) ; =&gt; ([0 1 2] [2 3 4] [4])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1807",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1811",
                 docs = "",
             ),
         ),
@@ -1019,7 +1019,7 @@ Returns a lazy sequence of partitions. Applies <code>f</code> to each value in <
 """,
             example = "(partition-by #(&lt; % 3) [1 2 3 4 5 1 2]) ; =&gt; ([1 2] [3 4 5] [1 2])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1714",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1718",
                 docs = "",
             ),
         ),
@@ -1036,7 +1036,7 @@ Returns a lazy sequence of partitions. Applies <code>f</code> to each value in <
             summary = "Recursively converts a Phel data structure to a PHP array.",
             example = "(phel-&gt;php {:a [1 2 3] :b {:c 4}}) ; =&gt; &lt;PHP-Array [\"a\":&lt;PHP-Array [1, 2, 3]&gt;, \"b\":&lt;PHP-Array [\"c\":4]&gt;]&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1037",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1041",
                 docs = "",
             ),
         ),
@@ -1056,7 +1056,7 @@ Indexed PHP arrays become vectors, associative PHP arrays become maps.
 """,
             example = "(php-&gt;phel (php-associative-array \"a\" 1 \"b\" 2)) ; =&gt; {\"a\" 1, \"b\" 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1069",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1073",
                 docs = "",
             ),
         ),
@@ -1073,7 +1073,7 @@ Indexed PHP arrays become vectors, associative PHP arrays become maps.
             summary = "Converts a PHP Array to a Phel map.",
             example = "(php-array-to-map (php-associative-array \"a\" 1 \"b\" 2)) ; =&gt; {\"a\" 1, \"b\" 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1017",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1021",
                 docs = "",
             ),
         ),
@@ -1092,7 +1092,7 @@ Returns true if a lazy sequence, delay, promise, or future has been realized, fa
 """,
             example = "(realized? (lazy-seq (cons 1 nil))) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1544",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1548",
                 docs = "",
             ),
         ),
@@ -1111,7 +1111,7 @@ Returns a lazy sequence of the intermediate values of the reduction (as per redu
 """,
             example = "(reductions + [1 2 3 4]) ; =&gt; (1 3 6 10)\n(reductions + 0 [1 2 3 4]) ; =&gt; (0 1 3 6 10)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1340",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1344",
                 docs = "",
             ),
         ),
@@ -1130,7 +1130,7 @@ Returns a lazy sequence of elements where predicate returns false. Opposite of f
 """,
             example = "(remove even? [1 2 3 4 5 6]) ; =&gt; (1 3 5)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L732",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L736",
                 docs = "",
             ),
         ),
@@ -1149,7 +1149,7 @@ Returns the map with keys renamed according to kmap. Keys not present in kmap ar
 """,
             example = "(rename-keys {:a 1 :b 2 :c 3} {:a :x :b :y}) ; =&gt; {:x 1, :y 2, :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1666",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1670",
                 docs = "",
             ),
         ),
@@ -1169,7 +1169,7 @@ With one argument returns an infinite lazy sequence of x.
 """,
             example = "(repeat 3 :a) ; =&gt; [:a :a :a]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1291",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1295",
                 docs = "",
             ),
         ),
@@ -1189,7 +1189,7 @@ With one argument returns an infinite lazy sequence of calls to f.
 """,
             example = "(repeatedly 3 rand) ; =&gt; (0.234 0.892 0.456) (random values)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1302",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1306",
                 docs = "",
             ),
         ),
@@ -1206,7 +1206,7 @@ With one argument returns an infinite lazy sequence of calls to f.
             summary = "Reverses the order of the elements in the given sequence.",
             example = "(reverse [1 2 3 4]) ; =&gt; [4 3 2 1]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L859",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L863",
                 docs = "",
             ),
         ),
@@ -1225,7 +1225,7 @@ Returns true if <code>coll</code> can be reverse-iterated in constant time. Curr
 """,
             example = "(reversible? [1 2 3]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L870",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L874",
                 docs = "",
             ),
         ),
@@ -1244,7 +1244,7 @@ Returns, in constant time, a sequence of the items in <code>rev</code> in revers
 """,
             example = "(rseq [1 2 3]) ; =&gt; (3 2 1)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L878",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L882",
                 docs = "",
             ),
         ),
@@ -1263,7 +1263,7 @@ Like <code>subseq</code>, but returns the matching entries in descending order. 
 """,
             example = "(rsubseq (sorted-map 1 :a 2 :b 3 :c) &lt;= 2) ; =&gt; ([2 :b] [1 :a])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L981",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L985",
                 docs = "",
             ),
         ),
@@ -1282,7 +1282,7 @@ Returns a new map including key value pairs from <code>m</code> selected with ke
 """,
             example = "(select-keys {:a 1 :b 2 :c 3} [:a :c]) ; =&gt; {:a 1, :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1633",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1637",
                 docs = "",
             ),
         ),
@@ -1301,7 +1301,7 @@ Applies transducer <code>xform</code> to <code>coll</code>, returning a vector o
 """,
             example = "(sequence (comp (filter even?) (map inc)) [1 2 3 4 5]) ; =&gt; [3 5]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1743",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1747",
                 docs = "",
             ),
         ),
@@ -1320,7 +1320,7 @@ Coerces a collection to a set. Returns a set containing the distinct elements of
 """,
             example = "(set [1 2 3 2 1]) ; =&gt; #{1 2 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L371",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L375",
                 docs = "",
             ),
         ),
@@ -1337,7 +1337,7 @@ Coerces a collection to a set. Returns a set containing the distinct elements of
             summary = "Returns a random permutation of coll.",
             example = "(shuffle [1 2 3 4 5]) ; =&gt; [2 3 5 1 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1283",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1287",
                 docs = "",
             ),
         ),
@@ -1356,7 +1356,7 @@ Extracts a slice of <code>coll</code> starting at <code>offset</code> with optio
 """,
             example = "(slice [1 2 3 4 5] 1 3) ; =&gt; [2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L325",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L329",
                 docs = "",
             ),
         ),
@@ -1373,7 +1373,7 @@ Extracts a slice of <code>coll</code> starting at <code>offset</code> with optio
             summary = "Returns a sorted vector. If no comparator is supplied compare is used.",
             example = "(sort [3 1 4 1 5 9 2 6]) ; =&gt; [1 1 2 3 4 5 6 9]\n(sort (fn [a b] (compare b a)) [1 2 3]) ; =&gt; [3 2 1]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1259",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1263",
                 docs = "",
             ),
         ),
@@ -1393,7 +1393,7 @@ If no comparator is supplied compare is used.
 """,
             example = "(sort-by count [\"aaa\" \"c\" \"bb\"]) ; =&gt; [\"c\" \"bb\" \"aaa\"]\n(sort-by count compare [\"aaa\" \"c\" \"bb\"]) ; =&gt; [\"c\" \"bb\" \"aaa\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1270",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1274",
                 docs = "",
             ),
         ),
@@ -1412,7 +1412,7 @@ Returns a vector of <code>[(take n coll) (drop n coll)]</code>.
 """,
             example = "(split-at 2 [1 2 3 4 5]) ; =&gt; [(1 2) (3 4 5)]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1693",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1697",
                 docs = "",
             ),
         ),
@@ -1431,7 +1431,7 @@ Returns a vector of <code>[(take-while pred coll) (drop-while pred coll)]</code>
 """,
             example = "(split-with #(&lt; % 4) [1 2 3 4 5 6]) ; =&gt; [(1 2 3) (4 5 6)]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1707",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1711",
                 docs = "",
             ),
         ),
@@ -1450,7 +1450,7 @@ Returns a vector <code>[(vec (take n coll)) (vec (drop n coll))]</code>. Like <c
 """,
             example = "(splitv-at 2 [1 2 3 4 5]) ; =&gt; [[1 2] [3 4 5]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1700",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1704",
                 docs = "",
             ),
         ),
@@ -1469,7 +1469,7 @@ Returns a lazy sequence of the entries of the sorted collection <code>sc</code> 
 """,
             example = "(subseq (sorted-map 1 :a 2 :b 3 :c) &gt;= 2) ; =&gt; ([2 :b] [3 :c])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L965",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L969",
                 docs = "",
             ),
         ),
@@ -1488,7 +1488,7 @@ Returns a persistent vector of the items in <code>v</code> from <code>start</cod
 """,
             example = "(subvec [1 2 3 4 5] 1 3) ; =&gt; [2 3]\n(subvec [1 2 3 4 5] 2) ; =&gt; [3 4 5]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L355",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L359",
                 docs = "",
             ),
         ),
@@ -1507,7 +1507,7 @@ Takes the first <code>n</code> elements of <code>coll</code>. When called with n
 """,
             example = "(take 2 [1 2 3 4]) ; =&gt; (1 2)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L588",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L592",
                 docs = "",
             ),
         ),
@@ -1526,7 +1526,7 @@ Takes the last <code>n</code> elements of <code>coll</code>.
 """,
             example = "(take-last 3 [1 2 3 4 5]) ; =&gt; [3 4 5]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L622",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L626",
                 docs = "",
             ),
         ),
@@ -1545,7 +1545,7 @@ Returns every nth item in <code>coll</code>. Returns a lazy sequence. When calle
 """,
             example = "(take-nth 2 [0 1 2 3 4 5 6 7 8]) ; =&gt; (0 2 4 6 8)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L650",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L654",
                 docs = "",
             ),
         ),
@@ -1564,7 +1564,7 @@ Takes all elements at the front of <code>coll</code> where <code>(pred x)</code>
 """,
             example = "(take-while #(&lt; % 5) [1 2 3 4 5 6 3 2 1]) ; =&gt; (1 2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L634",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L638",
                 docs = "",
             ),
         ),
@@ -1583,7 +1583,7 @@ Updates a value in a datastructure by applying <code>f</code> to the current val
 """,
             example = "(update {:count 5} :count inc) ; =&gt; {:count 6}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L457",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L461",
                 docs = "",
             ),
         ),
@@ -1602,7 +1602,7 @@ Updates a value in a nested data structure by applying <code>f</code> to the val
 """,
             example = "(update-in {:a {:b 5}} [:a :b] inc) ; =&gt; {:a {:b 6}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L482",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L486",
                 docs = "",
             ),
         ),
@@ -1623,7 +1623,7 @@ Returns the value of a map entry. Accepts a typed<br />
 """,
             example = "(val (first (pairs {:a 1}))) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L939",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L943",
                 docs = "",
             ),
         ),
@@ -1642,7 +1642,7 @@ Returns a sequence of all values in a map, or <code>nil</code> when the map is <
 """,
             example = "(vals {:a 1 :b 2}) ; =&gt; [1 2]\n(vals nil) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L914",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L918",
                 docs = "",
             ),
         ),
@@ -1661,7 +1661,7 @@ Coerces a collection to a vector. For hash-maps and structs, entries are returne
 """,
             example = "(vec {:a 1 :b 2}) ; =&gt; [[:a 1] [:b 2]]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L385",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L389",
                 docs = "",
             ),
         ),
@@ -1678,7 +1678,7 @@ Coerces a collection to a vector. For hash-maps and structs, entries are returne
             summary = "Creates a map from two sequential data structures. Returns a new map.",
             example = "(zipcoll [:a :b :c] [1 2 3]) ; =&gt; {:a 1, :b 2, :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1604",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1608",
                 docs = "",
             ),
         ),
@@ -1698,7 +1698,7 @@ Stops when the shorter of <code>keys</code> or <code>vals</code> is exhausted. W
 """,
             example = "(zipmap [:a :b :c] [1 2 3]) ; =&gt; {:a 1, :b 2, :c 3}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.52.0/src/phel/core/seq-fns.phel#L1585",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/seq-fns.phel#L1589",
                 docs = "",
             ),
         ),
