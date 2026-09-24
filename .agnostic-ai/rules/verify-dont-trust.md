@@ -6,11 +6,16 @@ alwaysApply: true
 
 # Verify, Don't Trust
 
-Factual claims about this codebase must be backed by a file read in *this conversation*. No inferring, guessing, or paraphrasing from memory, issues, PRs, ADRs, or comments.
+Factual claims about this codebase must be backed by a file read in *this conversation*. No inferring, guessing, or
+paraphrasing from memory, issues, PRs, ADRs, or comments.
 
-Treat "is this really X?", "how does this work?", "is this issue valid?" as verify-first. Open files before opining. Trace call chains end-to-end (action → annotator/completion → PSI/parser → registry/api.json). Cite the file+line you actually read.
+Treat "is this really X?", "how does this work?", "is this issue valid?" as verify-first. Open files before opining.
+Trace call chains end-to-end (action → annotator/completion → PSI/parser → registry/api.json). Cite the file+line you
+actually read.
 
-If not locally verifiable (IntelliJ Platform internals, JFlex/Grammar-Kit runtime behavior, third-party APIs), say so — don't guess. For Phel language semantics, verify against the official docs (https://phel-lang.org/) and `api.json`, not memory.
+If not locally verifiable (IntelliJ Platform internals, JFlex/Grammar-Kit runtime behavior, third-party APIs), say so —
+don't guess. For Phel language semantics, verify against the official docs (https://phel-lang.org/) and `api.json`, not
+memory.
 
 **The code is law. The code never lies.**
 

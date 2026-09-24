@@ -31,7 +31,8 @@ Conventional commits.
 - Description starts lowercase
 - No period at the end
 - Scope is optional: `feat(completion): add namespace alias matching`
-- **Never** reference an AI assistant in commit messages, bodies, or trailers (no `Co-Authored-By`, no "generated with…")
+- **Never** reference an AI assistant in commit messages, bodies, or trailers (no `Co-Authored-By`, no "generated
+  with…")
 - Merge and revert commits are always allowed
 
 ### Examples
@@ -57,26 +58,30 @@ test/brace-matching
 ## Feature Development Cycle
 
 ### 1. Planning
+
 - Understand requirements fully
 - Identify affected packages under `src/main/kotlin/org/phellang/`
 - Plan test strategy (unit vs integration)
 
 ### 2. Test-Driven Development
+
 - Write a failing test first
 - Implement the minimum code to pass
 - Refactor while green
 - Every feature should include:
-  - **Happy path** tests (expected success)
-  - **Edge case** tests (boundaries, empty input, ordering)
-  - **Sad path** tests (malformed input, not-found, errors)
+    - **Happy path** tests (expected success)
+    - **Edge case** tests (boundaries, empty input, ordering)
+    - **Sad path** tests (malformed input, not-found, errors)
 
 ### 3. Review
+
 - Self-review before PR
 - Verify the feature is registered in `src/main/resources/META-INF/plugin.xml`
 - Verify no debug code remains
 - If grammar (`.flex`/`.bnf`) changed, confirm `src/main/gen/` was regenerated and committed
 
 ### 4. Integration
+
 - Write a descriptive conventional commit message
 - Create the PR with a summary and test plan
 - Address review feedback
