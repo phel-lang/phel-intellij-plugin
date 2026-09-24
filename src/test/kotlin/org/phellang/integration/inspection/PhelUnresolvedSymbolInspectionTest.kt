@@ -151,6 +151,17 @@ class PhelUnresolvedSymbolInspectionTest : PhelIntegrationTestCase() {
         assertSilent("(defn f [xs] (dofor [x :in xs] (println x)))")
     }
 
+    /**
+     * A type tag names a type, not a var. Phel 0.53 added the short tags for its own values, and a
+     * nullable spelling of each (phel-lang #3319): `?map` and `map|null` name no function at all.
+     */
+    fun testTypeTagsAreSilent() {
+        assertSilent("(defn f [^int n ^string s] (+ n (count s)))")
+        assertSilent("(defn f [^map m ^vector v ^set s ^list l ^keyword k ^symbol y ^atom a] [m v s l k y a])")
+        assertSilent("(defn f [^?map m ^map|null n ^?vector v] [m n v])")
+        assertSilent("(defn ^map f [] {})")
+    }
+
     fun testQualifiedSymbolsAreLeftToTheOtherValidators() {
         assertSilent("(defn f [] (nope/missing 1))")
     }
