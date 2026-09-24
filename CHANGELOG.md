@@ -10,6 +10,15 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-09-24
+
+### Added
+
+- **Completion after `^`** offers what a type tag can name: Phel's short value tags, each with the class it stands
+  for, PHP types, and the classes the namespace imports with `(:use ...)`. It completes one member at a time, so
+  `^?vec` becomes `^?vector` and `^map|nu` becomes `^map|null`. Completion used to stay silent there, since a tag
+  usually sits in a parameter vector or on a binding, where completion is switched off while a name is typed.
+
 ### Changed
 
 - The `Wrapper` task's `gradleVersion` is back in step with the 9.7.1 wrapper. Dependabot bumps only
@@ -25,6 +34,22 @@ refreshed, since completion, hover and arity checking are all driven by it.
   so `(defn f [^string s] ...)` was reported as `Cannot resolve symbol 'string'`. Phel 0.53.0 made this more
   common: it added short tags for its own values (`^map`, `^vector`, `^set`, `^list`, `^keyword`, `^symbol`,
   `^atom`) and nullable spellings of each, `^?map` and `^map|null`, which name no function at all (phel-lang #3319, #339).
+- The rest of the editor reads a type tag as a type too. All seven short tags are also core function names, so
+  `^map` in `(defn f [^map m] ...)` was treated as the `map` function everywhere but that inspection:
+  - it is highlighted as metadata, the colour of its `^`, instead of as a function call;
+  - hover describes the type (`^map` names `Phel\Lang\Collections\Map\PersistentMapInterface`, `^?int` a nullable
+    PHP type) instead of showing the `map` function's documentation, and Ctrl-hover no longer shows its signature;
+  - go to declaration no longer lands on `phel\core/map` or on a local called `map`. With the PHP plugin installed it
+    opens the class the tag names: the interface Phel backs `^map` with, the class `(:use ...)` imports for
+    `^DateTime`, or a dotted `^Foo.Bar` as written, for each member of `^?map` or `^map|null` too. Only a rooted
+    `^\DateTime` navigated before;
+  - Find Usages, rename and safe delete of a definition or binding called `map` leave `^map` alone; rename used to
+    rewrite the tag as well;
+  - a binding, parameter or private definition that only a tag of the same name mentions is now reported as unused,
+    and Extract Function no longer turns such a tag into a parameter of the new function.
+- A tag on a definition's name, as in upstream's own `(defn ^string shout [^string message] ...)`, is no longer read
+  as the name. `(shout ...)` did not resolve, renaming `shout` missed its calls, and the structure view and folding
+  showed `string`. Worse, one `(defn ^map build ...)` made every `(map ...)` call in the project resolve to that tag.
 
 ## [1.3.0] - 2026-09-21
 

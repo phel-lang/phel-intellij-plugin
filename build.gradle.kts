@@ -4,7 +4,7 @@ import org.jetbrains.grammarkit.tasks.GenerateParserTask
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginProjectConfigurationTask
 
 group = "org.phellang"
-version = "1.3.0"
+version = "1.4.0"
 
 plugins {
     id("java")
