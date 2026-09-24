@@ -49,8 +49,12 @@ position is the constant. The rest of the `php/` family stays current: `php/aget
 `php/oset` `php/ref` `php/callable`, plus the operators `php/+ - && || !== @ ^ ~`.
 
 **Type tags**: `^int ^string ^float ^bool ^array`, a class name, and since v0.53.0 the short tags for Phel values:
-`^map ^vector ^set ^list ^keyword ^symbol ^atom`. Nullable spellings: `^?map` or `^map|null`. The symbol after `^`
-names a type, never a var, so `PhelUnresolvedSymbolFinder` skips it.
+`^map ^vector ^set ^list ^keyword ^symbol ^atom`. Nullable spellings: `^?map` or `^map|null`, and `|` / `&` combine
+members. The symbol after `^` names a type, never a var.
+`language/psi/PhelTypeTags` is the one place that decides what is a tag (`isTypeTag`) and holds the short-tag table
+(from upstream `TagResolver::TYPE_ALIASES`). Every feature that reads a symbol as a var must ask it first: references
+resolve a tag to PHP only, highlighting paints it as metadata, hover describes the type, completion after `^` offers
+only tag names, and usage, unused and extract checks skip it.
 
 **Strings**: an octal escape above `\377` is a compile error since v0.53.0 (it used to wrap to NUL silently). The plugin
 lexes it as an ordinary string and does not validate escapes.
