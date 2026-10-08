@@ -10,6 +10,8 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-08
+
 ### Changed
 
 - Registry refreshed to **Phel 0.54.0**. Documentation links now point at the 0.54.0 sources. Completion, hover and
