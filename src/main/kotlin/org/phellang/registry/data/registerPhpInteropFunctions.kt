@@ -24,7 +24,7 @@ Deprecated. Reaches an instance member; write <code>(.method obj arg)</code> or 
             example = "(.format date \"Y-m-d\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#php-set-object-properties",
+                docs = "/documentation/language/php-interop/#php-set-object-properties",
             ),
         ),
     ),
@@ -43,7 +43,7 @@ Deprecated. Reaches a static member; write <code>(Foo/method arg)</code> or <cod
             example = "(DateTime/createFromFormat \"Y-m-d\" \"2024-01-01\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#php-static-method-and-property-call",
+                docs = "/documentation/language/php-interop/#php-static-method-and-property-call",
             ),
         ),
     ),
@@ -62,7 +62,7 @@ Equivalent to PHP's <code>arr[index] ?? null</code>.
             example = "(php/aget (php/array \"a\" \"b\" \"c\") 1) ; =&gt; \"b\"",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#get-php-array-value",
+                docs = "/documentation/language/php-interop/#read-and-write-a-php-array-in-place",
             ),
         ),
     ),
@@ -81,7 +81,7 @@ Equivalent to PHP's <code>arr[k1][k2][k...] ?? null</code>.
             example = "(php/aget-in nested-arr [\"users\" 0 \"name\"])",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#get-php-array-value",
+                docs = "/documentation/language/php-interop/#read-and-write-a-php-array-in-place",
             ),
         ),
     ),
@@ -98,7 +98,7 @@ Equivalent to PHP's <code>arr[k1][k2][k...] ?? null</code>.
             example = "(php/apush arr \"new-item\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#append-php-array-value",
+                docs = "/documentation/language/php-interop/#read-and-write-a-php-array-in-place",
             ),
         ),
     ),
@@ -117,7 +117,7 @@ Equivalent to PHP's <code>arr[k1][k2][k...][] = value</code>.
             example = "(php/apush-in arr [\"users\"] {:name \"Bob\"})",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#append-php-array-value",
+                docs = "/documentation/language/php-interop/#read-and-write-a-php-array-in-place",
             ),
         ),
     ),
@@ -136,7 +136,7 @@ Equivalent to PHP's <code>arr[index] = value</code>.
             example = "(php/aset arr 0 \"new-value\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#set-php-array-value",
+                docs = "/documentation/language/php-interop/#read-and-write-a-php-array-in-place",
             ),
         ),
     ),
@@ -155,7 +155,7 @@ Equivalent to PHP's <code>arr[k1][k2][k...] = value</code>.
             example = "(php/aset-in arr [\"users\" 0 \"name\"] \"Alice\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#set-php-array-value",
+                docs = "/documentation/language/php-interop/#read-and-write-a-php-array-in-place",
             ),
         ),
     ),
@@ -174,7 +174,7 @@ Equivalent to PHP's <code>unset(arr[index])</code>.
             example = "(php/aunset arr \"key-to-remove\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#unset-php-array-value",
+                docs = "/documentation/language/php-interop/#read-and-write-a-php-array-in-place",
             ),
         ),
     ),
@@ -193,7 +193,7 @@ Equivalent to PHP's <code>unset(arr[k1][k2][k...])</code>.
             example = "(php/aunset-in arr [\"users\" 0])",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#unset-php-array-value",
+                docs = "/documentation/language/php-interop/#read-and-write-a-php-array-in-place",
             ),
         ),
     ),
@@ -212,7 +212,7 @@ Builds a native PHP first-class callable from a function or method, without an f
             example = "(map (php/callable \\strtoupper) [\"a\" \"b\"])",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#php-first-class-callable",
+                docs = "/documentation/language/php-interop/#php-first-class-callable",
             ),
         ),
     ),
@@ -231,7 +231,7 @@ Deprecated. Creates a PHP object; write <code>(new Foo arg)</code> instead.
             example = "(new DateTime \"2024-01-01\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#php-class-instantiation",
+                docs = "/documentation/language/php-interop/#php-class-instantiation",
             ),
         ),
     ),
@@ -250,7 +250,7 @@ Sets a class/object property. <code>set!</code> is the top-level name for the sa
             example = "(php/oset (.-name obj) \"Alice\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/#php-set-object-properties",
+                docs = "/documentation/language/php-interop/#php-set-object-properties",
             ),
         ),
     ),
@@ -267,7 +267,7 @@ Sets a class/object property. <code>set!</code> is the top-level name for the sa
             example = "(.bindColumn stmt 1 (php/ref out))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/php-interop/",
+                docs = "/documentation/language/php-interop/#by-reference-arguments",
             ),
         ),
     )

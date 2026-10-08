@@ -23,7 +23,7 @@ Vector of user arguments passed to the script (excludes program name). Use <em>p
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core.phel#L240",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core.phel#L240",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical fa
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core.phel#L23",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core.phel#L23",
                 docs = "",
             ),
         ),
@@ -93,7 +93,7 @@ Controls whether <code>assert</code> expands to a runtime check. When logical fa
             summary = "The script path or namespace being executed.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core.phel#L235",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core.phel#L235",
                 docs = "",
             ),
         ),
@@ -113,7 +113,7 @@ Calls the function with the given arguments. The last argument must be a list of
             example = "(apply + [1 2 3]) ; =&gt; 6",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/functions-and-recursion/#apply-functions",
+                docs = "/documentation/language/functions-and-recursion/#apply-and-compose",
             ),
         ),
     ),
@@ -131,7 +131,7 @@ Constructs a map from the given key/value pairs. If any keys are equal, later va
 """,
             example = "(array-map :a 1 :b 2) ; =&gt; {:a 1, :b 2}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core.phel#L91",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core.phel#L91",
                 docs = "",
             ),
         ),
@@ -170,7 +170,7 @@ Handle exceptions thrown in a <code>try</code> block by matching on the provided
             example = "(try (throw (new Exception \"error\")) (catch Exception e (.getMessage e)))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/control-flow/#try-catch-and-finally",
+                docs = "/documentation/language/error-handling/#try-catch-finally",
             ),
         ),
     ),
@@ -189,7 +189,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             example = "(conj [1 2] 3) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/data-structures/#adding-elements-with-conj",
+                docs = "/documentation/language/data-structures/#adding-elements-with-conj",
             ),
         ),
     ),
@@ -202,10 +202,12 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
-            summary = "Declare a global symbol before it is defined.",
+            summary = """
+Declare a global symbol before it is defined. A symbol that already has a root value keeps it, so loading a namespace again does not unbind what it declares.
+""",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core.phel#L222",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core.phel#L222",
                 docs = "",
             ),
         ),
@@ -223,7 +225,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             example = "(def my-value 42)",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/global-and-local-bindings/#definition-def",
+                docs = "/documentation/language/global-and-local-bindings/#definition-def",
             ),
         ),
     ),
@@ -240,7 +242,7 @@ Returns a new collection with values added. Appends to vectors/sets, prepends to
             example = "(defexception my-error \\RuntimeException)",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/exceptions",
+                docs = "/documentation/language/error-handling/#custom-exception-types-with-defexception",
             ),
         ),
     ),
@@ -259,7 +261,7 @@ An interface in Phel defines an abstract set of functions. It is directly mapped
             example = "(definterface Greeter (greet [name]))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/interfaces/#defining-interfaces",
+                docs = "/documentation/language/interfaces/#define-and-implement-an-interface",
             ),
         ),
     ),
@@ -278,7 +280,7 @@ Like <code>def</code>, but only binds the value when <code>name</code> is not al
             example = "(defonce app-state (atom {}))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/global-and-local-bindings/#definition-def",
+                docs = "/documentation/language/global-and-local-bindings/#definition-def",
             ),
         ),
     ),
@@ -297,7 +299,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
             example = "(defstruct point [x y])",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/data-structures/#structs",
+                docs = "/documentation/language/data-structures/#structs",
             ),
         ),
     ),
@@ -316,7 +318,7 @@ Evaluates the expressions in order and returns the value of the last expression.
             example = "(do (println \"Hello\") (+ 1 2)) ; prints \"Hello\", returns 3",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/control-flow/#statements-do",
+                docs = "/documentation/language/control-flow/#statements-do",
             ),
         ),
     ),
@@ -335,7 +337,7 @@ Evaluate expressions after the try body and all matching catches have completed.
             example = "(defn risky-operation [] (throw (new Exception \"Error!\")))\n(defn cleanup [] (println \"Cleanup!\"))\n(try (risky-operation) (catch Exception e nil) (finally (cleanup)))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/control-flow/#try-catch-and-finally",
+                docs = "/documentation/language/error-handling/#try-catch-finally",
             ),
         ),
     ),
@@ -355,7 +357,7 @@ A lazily consumed source with no indexed access of its own (an <code>eduction</c
 """,
             example = "(first [1 2 3]) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core.phel#L180",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core.phel#L180",
                 docs = "",
             ),
         ),
@@ -375,7 +377,7 @@ Defines a function. A function consists of a list of parameters and a list of ex
             example = "(fn [x y] (+ x y))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/functions-and-recursion/#anonymous-function-fn",
+                docs = "/documentation/language/functions-and-recursion/#anonymous-function-fn",
             ),
         ),
     ),
@@ -394,7 +396,7 @@ The foreach special form can be used to iterate over all kind of PHP datastructu
             example = "(foreach [x [1 2 3]] (println x))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/control-flow/#foreach",
+                docs = "/documentation/language/control-flow/#foreach",
             ),
         ),
     ),
@@ -413,7 +415,7 @@ Creates a new hash map. If no argument is provided, an empty hash map is created
             example = "(hash-map :name \"Alice\" :age 30) ; =&gt; {:name \"Alice\", :age 30}",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/data-structures/#maps",
+                docs = "/documentation/language/data-structures/#maps",
             ),
         ),
     ),
@@ -432,7 +434,7 @@ A control flow structure. First evaluates test. If test evaluates to true, only 
             example = "(if (&gt; x 0) \"positive\" \"non-positive\")",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/control-flow/#if",
+                docs = "/documentation/language/control-flow/#if",
             ),
         ),
     ),
@@ -451,7 +453,7 @@ Switches to an existing namespace without creating it (REPL, and <code>load</cod
             example = "(in-ns my-app.core)",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/namespaces/",
+                docs = "/documentation/language/namespaces/",
             ),
         ),
     ),
@@ -470,7 +472,7 @@ Creates a new lexical context with assignments defined in bindings. Afterwards t
             example = "(let [x 1 y 2] (+ x y)) ; =&gt; 3",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/global-and-local-bindings/#local-bindings-let",
+                docs = "/documentation/language/global-and-local-bindings/#local-bindings-let",
             ),
         ),
     ),
@@ -487,7 +489,7 @@ Creates a new lexical context with assignments defined in bindings. Afterwards t
             example = "(list 1 2 3) ; =&gt; '(1 2 3)",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/data-structures/#lists",
+                docs = "/documentation/language/data-structures/#lists",
             ),
         ),
     ),
@@ -506,7 +508,7 @@ Loads a Phel source file into the caller namespace at runtime, resolving the pat
             example = "(load \"core/meta\") ; loads and evaluates core/meta into the current namespace",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/namespaces/",
+                docs = "/documentation/language/namespaces/",
             ),
         ),
     ),
@@ -525,7 +527,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             example = "(loop [i 0] (if (&lt; i 5) (do (println i) (recur (inc i)))))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/control-flow/#loop",
+                docs = "/documentation/language/control-flow/#loop",
             ),
         ),
     ),
@@ -541,7 +543,7 @@ Creates a new lexical context with variables defined in bindings and defines a r
             summary = "Returns the sequence after the first element, or nil if empty.",
             example = "(next [1 2 3]) ; =&gt; [2 3]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core.phel#L128",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core.phel#L128",
                 docs = "",
             ),
         ),
@@ -561,7 +563,7 @@ Defines the namespace for the current file and adds imports to the environment. 
             example = "(ns my-app.core (:require phel.string :as str))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/namespaces/#namespace-ns",
+                docs = "/documentation/language/namespaces/#declare-a-namespace",
             ),
         ),
     ),
@@ -579,7 +581,7 @@ Creates a persistent FIFO queue. With no arguments returns an empty queue; with 
 """,
             example = "(queue 1 2 3) ; =&gt; &lt;-(1 2 3)-&lt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core.phel#L64",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core.phel#L64",
                 docs = "",
             ),
         ),
@@ -597,7 +599,7 @@ Creates a persistent FIFO queue. With no arguments returns an empty queue; with 
             example = "(quote (+ 1 2)) ; =&gt; '(+ 1 2)",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/macros/#quote",
+                docs = "/documentation/language/macros/#quote",
             ),
         ),
     ),
@@ -616,7 +618,7 @@ Internally recur is implemented as a PHP while loop and therefore prevents the M
             example = "(loop [n 5 acc 1] (if (&lt;= n 1) acc (recur (dec n) (* acc n))))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/functions-and-recursion/#recursion",
+                docs = "/documentation/language/functions-and-recursion/#recursion",
             ),
         ),
     ),
@@ -635,7 +637,7 @@ Variables provide a way to manage mutable state that can be updated with <code>s
             example = "(def counter (var 0))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/global-and-local-bindings/#variables",
+                docs = "/documentation/language/global-and-local-bindings/#variables",
             ),
         ),
     ),
@@ -652,7 +654,7 @@ Variables provide a way to manage mutable state that can be updated with <code>s
             example = "(throw (new InvalidArgumentException \"Invalid input\"))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/control-flow/#try-catch-and-finally",
+                docs = "/documentation/language/error-handling/#throwing",
             ),
         ),
     ),
@@ -671,7 +673,7 @@ All expressions are evaluated and if no exception is thrown the value of the las
             example = "(try (/ 1 0) (catch Exception e \"error\"))",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/control-flow/#try-catch-and-finally",
+                docs = "/documentation/language/error-handling/#try-catch-finally",
             ),
         ),
     ),
@@ -690,7 +692,7 @@ Values that should be evaluated in a macro are marked with the unquote function.
             example = "`(+ 1 ~(+ 2 3)) ; =&gt; (phel.core/+ 1 5)",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/macros/#quasiquote",
+                docs = "/documentation/language/macros/#quasiquote",
             ),
         ),
     ),
@@ -709,7 +711,7 @@ Values that should be evaluated in a macro are marked with the unquote function.
             example = "`(+ ~@[1 2 3]) ; =&gt; (phel.core/+ 1 2 3)",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/macros/#quasiquote",
+                docs = "/documentation/language/macros/#quasiquote",
             ),
         ),
     ),
@@ -726,7 +728,7 @@ Values that should be evaluated in a macro are marked with the unquote function.
             example = "(use DateTimeImmutable :as Date)",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/namespaces/",
+                docs = "/documentation/language/namespaces/",
             ),
         ),
     ),
@@ -743,7 +745,7 @@ Values that should be evaluated in a macro are marked with the unquote function.
             example = "(var map) ; resolves to the Var for phel.core/map",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/global-and-local-bindings/#variables",
+                docs = "/documentation/language/global-and-local-bindings/#variables",
             ),
         ),
     ),
@@ -760,7 +762,7 @@ Values that should be evaluated in a macro are marked with the unquote function.
             example = "(vector 1 2 3) ; =&gt; [1 2 3]",
             links = DocumentationLinks(
                 github = "",
-                docs = "/documentation/data-structures/#vectors",
+                docs = "/documentation/language/data-structures/#vectors",
             ),
         ),
     )
