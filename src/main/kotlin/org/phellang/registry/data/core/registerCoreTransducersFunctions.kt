@@ -23,7 +23,45 @@ Takes a reducing function <code>f</code> of 2 args and returns a fn suitable for
 """,
             example = "(transduce (filter even?) (completing conj) [] [1 2 3 4]) ; =&gt; [2 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L104",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L107",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "ensure-reduced",
+        signature = "(ensure-reduced x)",
+        completion = CompletionInfo(
+            tailText = "Returns x if it is already reduced, otherwise wraps it in reduced",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns <code>x</code> if it is already reduced, otherwise wraps it in <code>reduced</code>. Never wraps twice.
+""",
+            example = "(reduced? (ensure-reduced 1)) ; =&gt; true\n(unreduced (ensure-reduced (reduced 1))) ; =&gt; 1",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L41",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "halt-when",
+        signature = "(halt-when pred)\n(halt-when pred retf)",
+        completion = CompletionInfo(
+            tailText = "Returns a transducer that ends the transduction at the first input for which pred is truthy",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns a transducer that ends the transduction at the first input for which <code>pred</code> is truthy. The whole transduction then returns that input, or <code>(retf (rf result) input)</code> when <code>retf</code> is given. Inputs that do not match pass through unchanged.
+""",
+            example = "(transduce (halt-when neg?) conj [] [1 2 -1 3]) ; =&gt; -1\n(transduce (halt-when neg? (fn [r x] [r x])) conj [] [1 -1 2]) ; =&gt; [[1] -1]\n(into [] (halt-when neg?) [1 2]) ; =&gt; [1 2]",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L142",
                 docs = "",
             ),
         ),
@@ -42,7 +80,7 @@ Reduces collection to a single value by repeatedly applying function to accumula
 """,
             example = "(reduce + [1 2 3 4]) ; =&gt; 10",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L52",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L55",
                 docs = "",
             ),
         ),
@@ -61,7 +99,7 @@ Reduces an associative collection by applying <code>f</code> to the accumulator,
 """,
             example = "(reduce-kv (fn [m k v] (assoc m v k)) {} {:a 1 :b 2}) ; =&gt; {1 :a, 2 :b}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L88",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L91",
                 docs = "",
             ),
         ),
@@ -80,7 +118,7 @@ Wraps <code>x</code> in a Reduced, signaling early termination from reduce/trans
 """,
             example = "(reduce (fn [acc x] (if (= x 3) (reduced acc) (+ acc x))) 0 [1 2 3 4]) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L17",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L18",
                 docs = "",
             ),
         ),
@@ -99,7 +137,7 @@ Returns true if <code>x</code> is a Reduced value.
 """,
             example = "(reduced? (reduced 1)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L25",
                 docs = "",
             ),
         ),
@@ -116,11 +154,13 @@ Returns true if <code>x</code> is a Reduced value.
             summary = """
 Reduce with a transformation of <code>f</code> (xf). If init is not supplied,<br />
   <code>(f)</code> will be called to produce it. <code>f</code> should be a reducing function<br />
-  that returns the initial value when called with no arguments.
+  that returns the initial value when called with no arguments. The<br />
+  result is passed once to <code>f</code>'s 1-arity (completion); wrap a 2-arity<br />
+  reducer in <code>completing</code>.
 """,
             example = "(transduce (map inc) + [1 2 3]) ; =&gt; 9",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L118",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L118",
                 docs = "",
             ),
         ),
@@ -139,7 +179,7 @@ If <code>x</code> is Reduced, returns the unwrapped value; otherwise returns <co
 """,
             example = "(unreduced (reduced 1)) ; =&gt; 1\n(unreduced 1) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L31",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L32",
                 docs = "",
             ),
         ),
@@ -158,7 +198,7 @@ Creates a volatile mutable reference with initial value <code>val</code>. Use fo
 """,
             example = "(let [v (volatile! 0)] (vreset! v 5) @v) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L134",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L160",
                 docs = "",
             ),
         ),
@@ -177,7 +217,7 @@ Returns true if <code>x</code> is a Volatile.
 """,
             example = "(volatile? (volatile! 0)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L155",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L181",
                 docs = "",
             ),
         ),
@@ -196,7 +236,7 @@ Sets the value of volatile <code>vol</code> to <code>val</code>. Returns <code>v
 """,
             example = "(let [v (volatile! 0)] (vreset! v 9)) ; =&gt; 9",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L141",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L167",
                 docs = "",
             ),
         ),
@@ -215,7 +255,7 @@ Applies <code>f</code> to the current value of volatile <code>vol</code> plus <c
 """,
             example = "(let [v (volatile! 10)] (vswap! v + 5)) ; =&gt; 15",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/transducers.phel#L148",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/transducers.phel#L174",
                 docs = "",
             ),
         ),

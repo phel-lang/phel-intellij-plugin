@@ -23,7 +23,7 @@ Returns true given any argument, including <code>nil</code> and <code>false</cod
 """,
             example = "(any? nil) ; =&gt; true\n(any? 0) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L374",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L397",
                 docs = "",
             ),
         ),
@@ -44,7 +44,7 @@ Associative data structures include vectors, hash maps, structs, and PHP arrays<
 """,
             example = "(associative? [1 2 3]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L556",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L590",
                 docs = "",
             ),
         ),
@@ -64,7 +64,7 @@ Coerces <code>x</code> to a boolean. Returns <code>false</code> if <code>x</code
 """,
             example = "(boolean nil) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L367",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L390",
                 docs = "",
             ),
         ),
@@ -83,7 +83,7 @@ Returns true if <code>x</code> is a boolean, false otherwise.
 """,
             example = "(boolean? true) ; =&gt; true\n(boolean? nil) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L360",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L383",
                 docs = "",
             ),
         ),
@@ -107,7 +107,7 @@ Returns true if <code>x</code> is a single-character string, false otherwise.<br
 """,
             example = "(char? \\A) ; =&gt; true\n(char? \"a\") ; =&gt; true\n(char? \"ab\") ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L223",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L225",
                 docs = "",
             ),
         ),
@@ -126,7 +126,7 @@ Returns a <code>Phel\Lang\PhpClass</code> for <code>x</code>. With an object arg
 """,
             example = "(class (new stdClass)) ; =&gt; stdClass",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L113",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L115",
                 docs = "",
             ),
         ),
@@ -145,7 +145,7 @@ Returns the FQN string of <code>c</code> (a <code>Phel\Lang\PhpClass</code>). Le
 """,
             example = "(class-name (class \"stdClass\")) ; =&gt; \"stdClass\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L124",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L126",
                 docs = "",
             ),
         ),
@@ -164,7 +164,7 @@ Returns true if <code>x</code> is a <code>Phel\Lang\PhpClass</code> value.
 """,
             example = "(class? (class (new stdClass))) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L106",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L108",
                 docs = "",
             ),
         ),
@@ -187,7 +187,7 @@ Returns true if <code>x</code> is a persistent collection — vector, list, hash
 """,
             example = "(coll? [1 2 3]) ; =&gt; true\n(coll? \"abc\") ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L577",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L611",
                 docs = "",
             ),
         ),
@@ -211,7 +211,7 @@ Returns true if <code>coll</code> can report its length in constant time — per
 """,
             example = "(counted? [1 2 3]) ; =&gt; true\n(counted? (range)) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L602",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L637",
                 docs = "",
             ),
         ),
@@ -230,7 +230,7 @@ Returns true if <code>x</code> is a floating-point number, false otherwise. Alia
 """,
             example = "(double? 1.0) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L202",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L204",
                 docs = "",
             ),
         ),
@@ -249,7 +249,7 @@ Returns an empty collection of the same category as <code>coll</code>, preservin
 """,
             example = "(empty [1 2 3]) ; =&gt; []\n(empty {:a 1}) ; =&gt; {}\n(empty (range 10)) ; =&gt; ()",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L477",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L500",
                 docs = "",
             ),
         ),
@@ -269,7 +269,7 @@ A non-countable iterable (an <code>eduction</code> pipeline, a PHP generator) is
 """,
             example = "(empty? []) ; =&gt; true\n(empty? [1]) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L430",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L453",
                 docs = "",
             ),
         ),
@@ -288,7 +288,7 @@ Returns true if <code>x</code> is float point number, false otherwise.
 """,
             example = "(float? 1.0) ; =&gt; true\n(float? 1) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L133",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L135",
                 docs = "",
             ),
         ),
@@ -307,7 +307,7 @@ Returns true if <code>x</code> is a function, false otherwise.
 """,
             example = "(fn? inc) ; =&gt; true\n(fn? 42) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L297",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L320",
                 docs = "",
             ),
         ),
@@ -326,7 +326,7 @@ Returns true if <code>x</code> is a symbol or keyword.
 """,
             example = "(ident? 'x) ; =&gt; true\n(ident? :a) ; =&gt; true\n(ident? 42) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L250",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L252",
                 docs = "",
             ),
         ),
@@ -345,7 +345,7 @@ Returns true if <code>x</code> can be invoked as a function. This includes funct
 """,
             example = "(ifn? inc) ; =&gt; true\n(ifn? :a) ; =&gt; true\n(ifn? {}) ; =&gt; true\n(ifn? 42) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L304",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L327",
                 docs = "",
             ),
         ),
@@ -365,7 +365,26 @@ Indexed sequences include lists, vectors, and indexed PHP arrays.
 """,
             example = "(indexed? [1 2 3]) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L546",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L580",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "inst?",
+        signature = "(inst? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a date-time instant, the value an #inst literal reads to",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a date-time instant, the value an <code>#inst</code> literal reads to. Any PHP <code>DateTimeInterface</code> counts.
+""",
+            example = "(inst? #inst \"2026-03-04\") ; =&gt; true\n(inst? \"2026-03-04\") ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L294",
                 docs = "",
             ),
         ),
@@ -388,7 +407,7 @@ Returns true if <code>x</code> is an instance of class <code>c</code>, false oth
 """,
             example = "(instance? DateTime (new DateTime)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L381",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L404",
                 docs = "",
             ),
         ),
@@ -407,7 +426,7 @@ Returns true if <code>x</code> is a fixed-precision PHP integer. <code>BigInt</c
 """,
             example = "(int? 1) ; =&gt; true\n(int? 1.0) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L149",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L151",
                 docs = "",
             ),
         ),
@@ -427,7 +446,7 @@ Returns true if <code>x</code> is a mathematical integer: a fixed-precision PHP<
 """,
             example = "(integer? 1) ; =&gt; true\n(integer? 1.0) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L140",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L142",
                 docs = "",
             ),
         ),
@@ -446,7 +465,7 @@ Returns true if <code>x</code> is a keyword, false otherwise.
 """,
             example = "(keyword? :a) ; =&gt; true\n(keyword? 'a) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L236",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L238",
                 docs = "",
             ),
         ),
@@ -466,7 +485,7 @@ Unlike <code>seq?</code>, this predicate is true only for lazy sequences, not fo
 """,
             example = "(lazy-seq? (map inc [1 2 3])) ; =&gt; true\n(lazy-seq? '(1 2 3))         ; =&gt; false\n(lazy-seq? [1 2 3])          ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L421",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L444",
                 docs = "",
             ),
         ),
@@ -485,7 +504,7 @@ Returns true if <code>x</code> is a list, false otherwise. Returns false for the
 """,
             example = "(list? '(1 2)) ; =&gt; true\n(list? [1 2]) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L343",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L366",
                 docs = "",
             ),
         ),
@@ -506,7 +525,7 @@ Returns true if <code>x</code> is a map entry. Accepts both the typed<br />
 """,
             example = "(map-entry? [:a 1]) ; =&gt; true\n(map-entry? (map-entry :a 1)) ; =&gt; true\n(map-entry? [1 2 3]) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L333",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L356",
                 docs = "",
             ),
         ),
@@ -525,7 +544,7 @@ Returns true if <code>x</code> is a hash map, false otherwise.
 """,
             example = "(map? {:a 1}) ; =&gt; true\n(map? [1 2]) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L317",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L340",
                 docs = "",
             ),
         ),
@@ -544,7 +563,7 @@ Returns true if <code>x</code> is a non-negative integer (zero or positive). Acc
 """,
             example = "(nat-int? 0) ; =&gt; true\n(nat-int? 1) ; =&gt; true\n(nat-int? (bigint 5)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L177",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L179",
                 docs = "",
             ),
         ),
@@ -563,7 +582,7 @@ Returns true if <code>x</code> is a negative integer. Accepts both fixed-precisi
 """,
             example = "(neg-int? -1) ; =&gt; true\n(neg-int? 0) ; =&gt; false\n(neg-int? (bigint -5)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L163",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L165",
                 docs = "",
             ),
         ),
@@ -582,7 +601,7 @@ Returns <code>coll</code> if it contains elements, otherwise nil.
 """,
             example = "(not-empty [1 2]) ; =&gt; [1 2]\n(not-empty []) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L468",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L491",
                 docs = "",
             ),
         ),
@@ -601,7 +620,7 @@ Returns true if <code>x</code> is a number: int, float, <code>Ratio</code>, <cod
 """,
             example = "(number? 1) ; =&gt; true\n(number? \"a\") ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L184",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L186",
                 docs = "",
             ),
         ),
@@ -620,7 +639,7 @@ Returns true if <code>x</code> is a PHP Array, false otherwise.
 """,
             example = "(php-array? (php-indexed-array 1 2)) ; =&gt; true\n(php-array? [1 2]) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L392",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L415",
                 docs = "",
             ),
         ),
@@ -639,7 +658,7 @@ Returns true if <code>x</code> is a PHP object, false otherwise.
 """,
             example = "(php-object? (new stdClass)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L404",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L427",
                 docs = "",
             ),
         ),
@@ -658,7 +677,7 @@ Returns true if <code>x</code> is a PHP resource, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L399",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L422",
                 docs = "",
             ),
         ),
@@ -677,7 +696,45 @@ Returns true if <code>x</code> is a positive integer (greater than zero). Accept
 """,
             example = "(pos-int? 1) ; =&gt; true\n(pos-int? 0) ; =&gt; false\n(pos-int? (bigint 5)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L170",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L172",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "qualified-keyword?",
+        signature = "(qualified-keyword? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a keyword with a namespace",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a keyword with a namespace.
+""",
+            example = "(qualified-keyword? :foo/bar) ; =&gt; true\n(qualified-keyword? :a) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L287",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "qualified-symbol?",
+        signature = "(qualified-symbol? x)",
+        completion = CompletionInfo(
+            tailText = "Returns true if x is a symbol with a namespace",
+            priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns true if <code>x</code> is a symbol with a namespace.
+""",
+            example = "(qualified-symbol? 'foo/bar) ; =&gt; true\n(qualified-symbol? 'a) ; =&gt; false",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L280",
                 docs = "",
             ),
         ),
@@ -696,7 +753,7 @@ Returns true if <code>x</code> is a <code>Phel\Lang\Collections\Queue\Persistent
 """,
             example = "(queue? (queue 1 2 3)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L353",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L376",
                 docs = "",
             ),
         ),
@@ -715,7 +772,7 @@ Returns true if <code>x</code> is a <code>Ratio</code> value. Integer-valued rat
 """,
             example = "(ratio? 1/2) ; =&gt; true\n(ratio? 0.5) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L195",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L197",
                 docs = "",
             ),
         ),
@@ -734,7 +791,7 @@ Returns true if <code>x</code> is a rational number: an integer (<code>int</code
 """,
             example = "(rational? 1/2) ; =&gt; true\n(rational? 1.0) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L209",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L211",
                 docs = "",
             ),
         ),
@@ -754,7 +811,7 @@ This function is useful for explicitly converting strings to sequences of charac
 """,
             example = "(seq \"hello\") ; =&gt; [\"h\" \"e\" \"l\" \"l\" \"o\"]\n(seq [1 2 3]) ; =&gt; (1 2 3)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L503",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L526",
                 docs = "",
             ),
         ),
@@ -774,7 +831,7 @@ Returns true if <code>x</code> is a seq (a list, a lazy sequence, or a realized<
 """,
             example = "(seq? '(1 2)) ; =&gt; true\n(seq? [1 2]) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L411",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L434",
                 docs = "",
             ),
         ),
@@ -789,11 +846,11 @@ Returns true if <code>x</code> is a seq (a list, a lazy sequence, or a realized<
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if <code>(seq x)</code> is supported: collections (vectors, lists, maps, sets, structs), lazy sequences, strings, PHP arrays, and nil. Returns false for numbers, booleans, keywords, symbols, and other types.
+Returns true if <code>(seq x)</code> is supported: collections (vectors, lists, maps, sets, structs), lazy sequences, strings, PHP arrays, PHP <code>Traversable</code> objects, and nil. Returns false for numbers, booleans, keywords, symbols, and other types.
 """,
             example = "(seqable? [1 2]) ; =&gt; true\n(seqable? 42) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L592",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L626",
                 docs = "",
             ),
         ),
@@ -812,7 +869,7 @@ Returns true if <code>x</code> is a sequential collection (vector, list, or lazy
 """,
             example = "(sequential? [1 2 3]) ; =&gt; true\n(sequential? {:a 1}) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L568",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L602",
                 docs = "",
             ),
         ),
@@ -831,7 +888,7 @@ Returns true if <code>x</code> is a set, false otherwise.
 """,
             example = "(set? (hash-set 1 2)) ; =&gt; true\n(set? [1 2]) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L617",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L652",
                 docs = "",
             ),
         ),
@@ -850,7 +907,7 @@ Returns true if <code>x</code> is a symbol or keyword without a namespace.
 """,
             example = "(simple-ident? 'a) ; =&gt; true\n(simple-ident? 'foo/bar) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L271",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L273",
                 docs = "",
             ),
         ),
@@ -869,7 +926,7 @@ Returns true if <code>x</code> is a keyword without a namespace.
 """,
             example = "(simple-keyword? :a) ; =&gt; true\n(simple-keyword? :foo/bar) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L264",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L266",
                 docs = "",
             ),
         ),
@@ -888,7 +945,7 @@ Returns true if <code>x</code> is a symbol without a namespace.
 """,
             example = "(simple-symbol? 'a) ; =&gt; true\n(simple-symbol? 'foo/bar) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L257",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L259",
                 docs = "",
             ),
         ),
@@ -907,7 +964,7 @@ Returns true if <code>coll</code> is a sorted collection (sorted-map or sorted-s
 """,
             example = "(sorted? (sorted-set 1 2 3)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L624",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L659",
                 docs = "",
             ),
         ),
@@ -926,7 +983,7 @@ Returns true if <code>s</code> names a special form.
 """,
             example = "(special-symbol? 'def) ; =&gt; true\n(special-symbol? 'map) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L290",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L313",
                 docs = "",
             ),
         ),
@@ -945,7 +1002,7 @@ Returns true if <code>x</code> is a string, false otherwise.
 """,
             example = "(string? \"a\") ; =&gt; true\n(string? :a) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L216",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L218",
                 docs = "",
             ),
         ),
@@ -964,7 +1021,7 @@ Returns true if <code>x</code> is a struct, false otherwise.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L312",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L335",
                 docs = "",
             ),
         ),
@@ -983,7 +1040,7 @@ Returns true if <code>x</code> is a symbol, false otherwise.
 """,
             example = "(symbol? 'a) ; =&gt; true\n(symbol? :a) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L243",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L245",
                 docs = "",
             ),
         ),
@@ -1028,7 +1085,7 @@ Returns the type of <code>x</code>. The following types can be returned:<br /><b
 """,
             example = "(type [1 2]) ; =&gt; :vector\n(type :a) ; =&gt; :keyword",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L41",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L43",
                 docs = "",
             ),
         ),
@@ -1047,7 +1104,7 @@ Returns true if <code>x</code> is a vector. Map entries returned by iterating a 
 """,
             example = "(vector? [1 2]) ; =&gt; true\n(vector? '(1 2)) ; =&gt; false",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/predicates.phel#L325",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/predicates.phel#L348",
                 docs = "",
             ),
         ),

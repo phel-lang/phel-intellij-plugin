@@ -21,7 +21,7 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
             summary = "Ignores the body of the comment.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L212",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L222",
                 docs = "",
             ),
         ),
@@ -29,16 +29,18 @@ internal fun registerCoreDefsFunctions(): List<PhelFunction> = listOf(
     PhelFunction(
         namespace = "core",
         name = "def-",
-        signature = "(def- name value)",
+        signature = "(def- name & args)",
         completion = CompletionInfo(
             tailText = "Define a private value that will not be exported",
             priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
-            summary = "Define a private value that will not be exported.",
+            summary = """
+Define a private value that will not be exported. Takes the same arguments as <code>def</code>, so <code>(def- x "doc" 1)</code> binds <code>x</code> to <code>1</code> with <code>"doc"</code> as its docstring.
+""",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L137",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L137",
                 docs = "",
             ),
         ),
@@ -70,7 +72,7 @@ Defines a native PHP enum. Each case is named by a keyword followed by an<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L186",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L196",
                 docs = "",
             ),
         ),
@@ -92,7 +94,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L170",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L180",
                 docs = "",
             ),
         ),
@@ -109,7 +111,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a macro.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L142",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L152",
                 docs = "",
             ),
         ),
@@ -126,7 +128,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a private macro that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L152",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L162",
                 docs = "",
             ),
         ),
@@ -143,7 +145,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a new global function.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L132",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L132",
                 docs = "",
             ),
         ),
@@ -160,7 +162,7 @@ Define a new exception. Optionally pass a parent class to extend (defaults to<br
             summary = "Define a private function that will not be exported.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L147",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L157",
                 docs = "",
             ),
         ),
@@ -179,7 +181,7 @@ A Struct is a special kind of Map. It only supports a predefined number of keys 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L157",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L167",
                 docs = "",
             ),
         ),
@@ -198,7 +200,7 @@ Returns a PHP array containing the elements of <code>coll</code>. Accepts any co
 """,
             example = "(to-array [1 2 3]) ; =&gt; &lt;PHP-Array [1, 2, 3]&gt;\n(to-array nil) ; =&gt; &lt;PHP-Array []&gt;",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L23",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L23",
                 docs = "",
             ),
         ),
@@ -218,7 +220,7 @@ Deprecated alias of <code>to-array</code>.
             example = null,
             deprecation = DeprecationInfo(version = "0.51.0", replacement = "to-array"),
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/defs.phel#L48",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/defs.phel#L48",
                 docs = "",
             ),
         ),
