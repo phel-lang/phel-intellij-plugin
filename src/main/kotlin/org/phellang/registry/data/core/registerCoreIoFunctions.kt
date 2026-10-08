@@ -23,7 +23,7 @@ Threads the expr through the forms. Inserts <code>x</code> as the second item in
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L377",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L469",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Threads the expr through the forms. Inserts <code>x</code> as the last item in t
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L390",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L482",
                 docs = "",
             ),
         ),
@@ -61,7 +61,7 @@ Binds <code>name</code> to <code>expr</code>, evaluates the first form in the le
 """,
             example = "(as-&gt; 1 x (+ x 2) (* x 3)) ; =&gt; 9",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L455",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L547",
                 docs = "",
             ),
         ),
@@ -87,7 +87,7 @@ Throws at runtime if any var in the bindings vector is not<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L533",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L625",
                 docs = "",
             ),
         ),
@@ -106,7 +106,7 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
 """,
             example = "(cond-&gt; 1 true inc false (* 42) true (* 3)) ; =&gt; 6",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L478",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L570",
                 docs = "",
             ),
         ),
@@ -125,7 +125,7 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
 """,
             example = "(cond-&gt;&gt; [1 2 3] true (map inc) false (filter odd?)) ; =&gt; (2 3 4)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L492",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L584",
                 docs = "",
             ),
         ),
@@ -142,7 +142,7 @@ Takes an expression and a set of test/form pairs. Threads <code>expr</code> (via
             summary = "Returns a lazy sequence of rows from a CSV file.",
             example = "(take 10 (csv-seq \"data.csv\")) ; =&gt; [[\"col1\" \"col2\"] [\"val1\" \"val2\"] ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L320",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L412",
                 docs = "",
             ),
         ),
@@ -161,7 +161,7 @@ Prints <code>[file:line] form => value</code> to the standard error stream and r
 """,
             example = "(defn area [w h] (* (dbg w) h))\n(area 3 4) ; stderr: [src/main.phel:12] w =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L191",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L283",
                 docs = "",
             ),
         ),
@@ -180,7 +180,7 @@ Writes <code>message</code> to the standard error stream. Output primitive behin
 """,
             example = "(dbg-write \"debug line\\n\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L172",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L264",
                 docs = "",
             ),
         ),
@@ -199,7 +199,7 @@ Evaluates x then calls all of the methods and functions with the value of x supp
 """,
             example = "(deref (doto (atom 0) (reset! 5))) ; =&gt; 5",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L464",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L556",
                 docs = "",
             ),
         ),
@@ -216,7 +216,7 @@ Evaluates x then calls all of the methods and functions with the value of x supp
             summary = "Returns a lazy sequence of all files and directories in a directory tree.",
             example = "(filter #(php/str_ends_with % \".phel\") (file-seq \"src/\")) ; =&gt; [\"src/file1.phel\" \"src/file2.phel\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L294",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L386",
                 docs = "",
             ),
         ),
@@ -231,11 +231,11 @@ Evaluates x then calls all of the methods and functions with the value of x supp
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns a formatted string. See PHP's <a href="https://www.php.net/manual/en/function.sprintf.php">sprintf</a> for more information.
+Returns a formatted string. See PHP's <a href="https://www.php.net/manual/en/function.sprintf.php">sprintf</a> for more information. A ratio, bigint or bigdec is converted first: to a float for <code>%f</code>, <code>%e</code> and <code>%g</code> (a bigdec keeps about 15 significant digits; use <code>%s</code> for all of them), and to an int for <code>%d</code> and the other integer directives, which throw for a ratio, a bigdec, or a bigint outside the PHP int range. <code>%s</code> prints the Phel representation.
 """,
             example = "(format \"%d-%s\" 1 \"a\") ; =&gt; \"1-a\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L159",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L249",
                 docs = "",
             ),
         ),
@@ -252,7 +252,7 @@ Returns a formatted string. See PHP's <a href="https://www.php.net/manual/en/fun
             summary = "Returns a lazy sequence of lines from a file.",
             example = "(take 10 (line-seq \"large-file.txt\")) ; =&gt; [\"line1\" \"line2\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L282",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L374",
                 docs = "",
             ),
         ),
@@ -271,7 +271,7 @@ Same as <code>print</code>, but prints each value readably (strings quoted). Ret
 """,
             example = "(pr \"a\" 1) ; prints \"a\" 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L135",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L162",
                 docs = "",
             ),
         ),
@@ -290,7 +290,7 @@ Same as <code>print-str</code>, but prints each value readably: strings are quot
 """,
             example = "(pr-str \"a\" 1) ; =&gt; \"\\\"a\\\" 1\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L108",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L135",
                 docs = "",
             ),
         ),
@@ -307,7 +307,7 @@ Same as <code>print-str</code>, but prints each value readably: strings are quot
             summary = "Prints the given values to the default output stream. Returns nil.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L115",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L142",
                 docs = "",
             ),
         ),
@@ -326,7 +326,7 @@ Same as print. But instead of writing it to an output stream, the resulting stri
 """,
             example = "(print-str \"a\" 1) ; =&gt; \"a 1\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L101",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L128",
                 docs = "",
             ),
         ),
@@ -341,11 +341,11 @@ Same as print. But instead of writing it to an output stream, the resulting stri
         ),
         documentation = DocumentationInfo(
             summary = """
-Output a formatted string. See PHP's <a href="https://www.php.net/manual/en/function.printf.php">printf</a> for more information.
+Output a formatted string. See PHP's <a href="https://www.php.net/manual/en/function.printf.php">printf</a> for more information. Numbers convert as in <code>format</code>.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L166",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L257",
                 docs = "",
             ),
         ),
@@ -362,7 +362,7 @@ Output a formatted string. See PHP's <a href="https://www.php.net/manual/en/func
             summary = "Same as print followed by a newline.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L121",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L148",
                 docs = "",
             ),
         ),
@@ -381,7 +381,7 @@ Same as <code>println</code>, but instead of writing to an output stream the res
 """,
             example = "(println-str \"a\" \"b\") ; =&gt; \"a b\\n\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L128",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L155",
                 docs = "",
             ),
         ),
@@ -400,7 +400,7 @@ Same as <code>pr</code> followed by a newline. Returns nil.
 """,
             example = "(prn \"a\" 1) ; prints \"a\" 1 and a newline",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L143",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L170",
                 docs = "",
             ),
         ),
@@ -419,7 +419,7 @@ Same as <code>prn</code>, but instead of writing to an output stream the resulti
 """,
             example = "(prn-str \"a\" 1) ; =&gt; \"\\\"a\\\" 1\\n\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L152",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L179",
                 docs = "",
             ),
         ),
@@ -438,7 +438,7 @@ Returns the first match of pattern in string, or nil if no match. If the pattern
 """,
             example = "(re-find #\"\\d+\" \"abc123def\") ; =&gt; \"123\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L49",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L54",
                 docs = "",
             ),
         ),
@@ -457,7 +457,7 @@ Returns the match, if any, of string to pattern. If the pattern has groups, retu
 """,
             example = "(re-matches #\"(\\d+)-(\\d+)\" \"12-34\") ; =&gt; [\"12-34\" \"12\" \"34\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L62",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L67",
                 docs = "",
             ),
         ),
@@ -476,7 +476,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
 """,
             example = "(re-pattern \"\\\\d+\") ; =&gt; \"/\\\\d+/\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L29",
                 docs = "",
             ),
         ),
@@ -493,7 +493,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Returns a sequence of successive matches of pattern in string.",
             example = "(re-seq #\"\\d+\" \"a1b2c3\") ; =&gt; [\"1\" \"2\" \"3\"]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L37",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L42",
                 docs = "",
             ),
         ),
@@ -510,7 +510,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Returns a lazy sequence of byte chunks from a file.",
             example = "(take 5 (read-file-lazy \"large-file.bin\" 1024)) ; =&gt; [\"chunk1\" \"chunk2\" ...]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L306",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L398",
                 docs = "",
             ),
         ),
@@ -527,7 +527,7 @@ Returns a PCRE pattern string from <code>s</code>. If <code>s</code> is already 
             summary = "Reads an entire file, URL or stream into a string.",
             example = "(slurp \"file.txt\") ; =&gt; \"file contents\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L242",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L334",
                 docs = "",
             ),
         ),
@@ -546,7 +546,7 @@ Threads <code>x</code> through the forms like <code>-></code> but stops when a f
 """,
             example = "(some-&gt; {:a 1} :a inc) ; =&gt; 2",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L403",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L495",
                 docs = "",
             ),
         ),
@@ -565,7 +565,7 @@ Threads <code>x</code> through the forms like <code>->></code> but stops when a 
 """,
             example = "(some-&gt;&gt; 5 (+ 3) (* 2)) ; =&gt; 16",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L429",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L521",
                 docs = "",
             ),
         ),
@@ -585,7 +585,7 @@ See PHP's <a href="https://www.php.net/manual/en/function.file-put-contents.php"
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L268",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L360",
                 docs = "",
             ),
         ),
@@ -604,7 +604,7 @@ Like <code>binding</code> but takes a map of <code>Var -> value</code> instead o
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L560",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L652",
                 docs = "",
             ),
         ),
@@ -626,7 +626,26 @@ Evaluates body with the names bound as in <code>let</code>, then closes every bo
 """,
             example = "(with-open [f (php/fopen \"data.txt\" \"r\")] (php/fgets f))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L350",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L442",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "with-out-str",
+        signature = "(with-out-str & body)",
+        completion = CompletionInfo(
+            tailText = "Evaluates body and returns everything it printed as a string",
+            priority = PhelCompletionPriority.MACROS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Evaluates <code>body</code> and returns everything it printed as a string. The buffer is closed even when <code>body</code> throws.
+""",
+            example = "(with-out-str (print \"a\") (print 1)) ; =&gt; \"a1\"",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L108",
                 docs = "",
             ),
         ),
@@ -636,16 +655,17 @@ Evaluates body with the names bound as in <code>let</code>, then closes every bo
         name = "with-output-buffer",
         signature = "(with-output-buffer & body)",
         completion = CompletionInfo(
-            tailText = "Everything that is printed inside the body will be stored in a buffer",
+            tailText = "Evaluates body and returns everything it printed as a string",
             priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Everything that is printed inside the body will be stored in a buffer. The result of the buffer is returned.
+Evaluates <code>body</code> and returns everything it printed as a string. The buffer is closed even when <code>body</code> throws. <code>with-out-str</code> is the Clojure name for it.<br /><br />
+A body that opens an output buffer without PHP's removable flag cannot be captured: PHP refuses to close that buffer, so it and the one opened here stay active and keep capturing later output. This throws a <code>RuntimeException</code> in that case instead of returning the wrong output.
 """,
-            example = null,
+            example = "(with-output-buffer (print \"hello\")) ; =&gt; \"hello\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L77",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L82",
                 docs = "",
             ),
         ),
@@ -671,7 +691,7 @@ Accepts any var, dynamic or not. The previous root values are<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/io.phel#L547",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/io.phel#L639",
                 docs = "",
             ),
         ),

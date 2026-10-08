@@ -10,6 +10,15 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Changed
+
+- Registry refreshed to **Phel 0.54.0**. Documentation links now point at the 0.54.0 sources. Completion, hover and
+  arity checking know 22 new names: `with-out-str`, `subs`, `list*`, `qualified-keyword?`, `qualified-symbol?`, `hash`,
+  `comparator`, `load-string`, `pcalls`, `pvalues`, `inst?`, `halt-when`, `ensure-reduced`, `partitionv`,
+  `partitionv-all`, `replace`, `protocol-class-impl`, `protocol-fallback-impl`, `repl/find-doc`, `test/thrown?`,
+  `test/thrown-with-msg?` and `test/output?`. `map-indexed`, `partition-by` and `partition-all` gain the transducer
+  arity, and `def-` takes the same arguments as `def`. No symbol was removed.
+
 ## [1.4.0] - 2026-09-24
 
 ### Added
