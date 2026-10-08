@@ -23,7 +23,7 @@ Converts a Phel function to a PHP Closure. Many PHP libraries (AMPHP, ReactPHP) 
 """,
             example = "(-&gt;closure (fn [x] (* x 2)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L19",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L19",
                 docs = "",
             ),
         ),
@@ -45,7 +45,7 @@ Captures the caller's dynamic bindings and reinstalls them inside<br />
 """,
             example = "(async (do-something))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L25",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L25",
                 docs = "",
             ),
         ),
@@ -64,7 +64,7 @@ Blocks the current fiber until the Future resolves and returns its value. Accept
 """,
             example = "(await (async (+ 1 2)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L46",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L46",
                 docs = "",
             ),
         ),
@@ -83,7 +83,7 @@ Awaits all Futures in the given collection. Returns a vector of results in the s
 """,
             example = "(await-all [(async 1) (async 2)])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L53",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L53",
                 docs = "",
             ),
         ),
@@ -102,7 +102,7 @@ Awaits the first Future to resolve. Returns its value. Accepts a mix of raw <cod
 """,
             example = "(await-any [(async 1) (async 2)])",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L67",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L67",
                 docs = "",
             ),
         ),
@@ -121,7 +121,7 @@ Delivers <code>value</code> to <code>p</code> if it is still unrealized. Returns
 """,
             example = "(deliver (promise) 7)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L131",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L145",
                 docs = "",
             ),
         ),
@@ -145,7 +145,7 @@ Captures the caller's dynamic bindings and reinstalls them inside<br />
 """,
             example = "(future-call (fn [] 42))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L138",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L152",
                 docs = "",
             ),
         ),
@@ -164,7 +164,7 @@ Signals the future's internal cancellation token, causing any pending or subsequ
 """,
             example = "(future-cancel (future (expensive-call)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L89",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L103",
                 docs = "",
             ),
         ),
@@ -183,7 +183,7 @@ Returns <code>true</code> if <code>future-cancel</code> was called on <code>f</c
 """,
             example = "(future-cancelled? f)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L96",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L110",
                 docs = "",
             ),
         ),
@@ -203,7 +203,7 @@ Dispatches on type: for a <code>Phel.Fiber.Domain.Future</code> (fiber-backed) i
 """,
             example = "(future-done? f)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L103",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L117",
                 docs = "",
             ),
         ),
@@ -226,7 +226,7 @@ Runs <code>body</code> in a new fiber via the cooperative scheduler. Returns a<b
 """,
             example = "@(future-fiber (+ 1 2))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L154",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L168",
                 docs = "",
             ),
         ),
@@ -245,7 +245,26 @@ Returns true if <code>x</code> is a fiber-future (from <code>future-call</code>/
 """,
             example = "(future? (future-call (fn [] 1))) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L165",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L179",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "pcalls",
+        signature = "(pcalls & fns)",
+        completion = CompletionInfo(
+            tailText = "Calls each of the no-argument fns fns concurrently via fibers and returns a seq of their results,...",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Calls each of the no-argument fns <code>fns</code> concurrently via fibers and returns a seq of their results, in the order given. Like <code>pmap</code>, it overlaps IO-bound work but runs on one thread, and every call has finished when it returns.
+""",
+            example = "(pcalls (fn [] 1) (fn [] 2)) ; =&gt; (1 2)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L89",
                 docs = "",
             ),
         ),
@@ -266,7 +285,7 @@ PHP fibers are cooperative on a single thread, so <code>pmap</code> overlaps IO-
 """,
             example = "(pmap inc [1 2 3]) ; =&gt; [2 3 4]",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L75",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L75",
                 docs = "",
             ),
         ),
@@ -286,7 +305,26 @@ Once delivered the value is frozen; subsequent <code>deliver</code> calls are no
 """,
             example = "(let [p (promise)] (deliver p 42) @p) ; =&gt; 42",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/async.phel#L122",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L136",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "pvalues",
+        signature = "(pvalues & exprs)",
+        completion = CompletionInfo(
+            tailText = "Evaluates each expression in exprs concurrently via fibers and returns a seq of their values, in ...",
+            priority = PhelCompletionPriority.MACROS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Evaluates each expression in <code>exprs</code> concurrently via fibers and returns a seq of their values, in the order given. Same as <code>pcalls</code> with each expression wrapped in a fn.
+""",
+            example = "(pvalues (+ 1 2) (* 2 3)) ; =&gt; (3 6)",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/async.phel#L96",
                 docs = "",
             ),
         ),

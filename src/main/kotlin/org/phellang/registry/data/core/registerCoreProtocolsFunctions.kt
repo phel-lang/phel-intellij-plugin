@@ -23,7 +23,7 @@ Returns the set of all transitive ancestors of tag, or nil. When a hierarchy is 
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L319",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L322",
                 docs = "",
             ),
         ),
@@ -42,7 +42,7 @@ Throws an exception if expr is falsy. Optional message string. Used for precondi
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L962",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1137",
                 docs = "",
             ),
         ),
@@ -59,7 +59,7 @@ Throws an exception if expr is falsy. Optional message string. Used for precondi
             summary = "Returns the compiled PHP code string for the given form.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L1013",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1196",
                 docs = "",
             ),
         ),
@@ -78,7 +78,7 @@ An interface in Phel defines an abstract set of functions. It is directly mapped
 """,
             example = "(definterface name &amp; fns)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L24",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L27",
                 docs = "",
             ),
         ),
@@ -103,7 +103,7 @@ Registers a method implementation for a multimethod.<br /><br />
 """,
             example = "(defmethod area :circle [{:radius r}] (* 3.14159 r r))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L775",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L950",
                 docs = "",
             ),
         ),
@@ -121,13 +121,20 @@ Registers a method implementation for a multimethod.<br /><br />
 Defines a multimethod. <code>dispatch-fn</code> is called on the arguments to<br />
   produce a dispatch value, which is then used to select the appropriate<br />
   method registered via <code>defmethod</code>.<br /><br />
-An optional docstring may be provided between <code>name</code> and <code>dispatch-fn</code>.<br /><br />
-If no method matches the dispatch value, the <code>:default</code> method is used<br />
+Signature: <code>(defmulti name docstring? attr-map? dispatch-fn & options)</code>.<br />
+  A docstring and an attribute map may come before <code>dispatch-fn</code>.<br /><br />
+Options, given as key/value pairs after <code>dispatch-fn</code>:<br />
+  - <code>:default</code> sets the dispatch value of the fallback method. It defaults<br />
+    to <code>:default</code>.<br />
+  - <code>:hierarchy</code> takes an atom or var holding a hierarchy (see<br />
+    <code>make-hierarchy</code>). Dispatch reads it on every call, for both <code>isa?</code><br />
+    matching and <code>prefer-method</code>, instead of the global hierarchy.<br /><br />
+If no method matches the dispatch value, the fallback method is used<br />
   (if defined), otherwise an error is thrown.
 """,
-            example = "(defmulti area \"Area of shape.\" :shape)",
+            example = "(defmulti area \"Area of shape.\" :shape :default :unknown)\n(defmethod area :unknown [_] 0)\n(area {:shape :blob}) ; =&gt; 0",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L706",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L835",
                 docs = "",
             ),
         ),
@@ -144,11 +151,11 @@ If no method matches the dispatch value, the <code>:default</code> method is use
             summary = """
 Defines a protocol with the given method signatures. Each method signature is a list of (method-name [args]).<br /><br />
 Creates a dispatching function for each method that dispatches on the type of the first argument. Use <code>extend-type</code> to add implementations.<br /><br />
-A <code>:default</code> type can be registered via <code>extend-type</code> as a fallback when no specific type implementation is found.
+When x is an object with no implementation for its exact type, dispatch looks for one registered for a parent class of x, nearest first, then for an interface x implements. A <code>:default</code> type can be registered via <code>extend-type</code> as the last fallback.
 """,
             example = "(defprotocol Stringable (to-string [this]))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L432",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L507",
                 docs = "",
             ),
         ),
@@ -176,7 +183,7 @@ An optional tail of protocol/method forms is spliced into an <code>extend-type</
 """,
             example = "(defrecord Point [x y] Drawable (draw [this canvas] ...))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L643",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L772",
                 docs = "",
             ),
         ),
@@ -206,7 +213,7 @@ Deviation from Clojure: Phel's <code>deftype</code> shares the map-backed<br />
 """,
             example = "(deftype PointT [x y] Drawable (draw [this canvas] ...))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L673",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L802",
                 docs = "",
             ),
         ),
@@ -225,7 +232,7 @@ Establishes a parent/child relationship between child and parent keywords. With 
 """,
             example = "(derive ::square ::shape)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L256",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L259",
                 docs = "",
             ),
         ),
@@ -247,7 +254,7 @@ Returns the set of all descendants of tag, or nil.<br />
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L330",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L333",
                 docs = "",
             ),
         ),
@@ -264,7 +271,7 @@ Returns the set of all descendants of tag, or nil.<br />
             summary = "Evaluates a form and return the evaluated results.",
             example = "(eval '(+ 1 2)) ; =&gt; 3",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L1005",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1180",
                 docs = "",
             ),
         ),
@@ -284,7 +291,7 @@ Equivalent to multiple <code>extend-type</code> calls.
 """,
             example = "(extend-protocol Describable\n  :string (describe [s] s)\n  :int (describe [n] (str n)))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L576",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L684",
                 docs = "",
             ),
         ),
@@ -306,14 +313,20 @@ type-spec can be:<br />
     <code>:boolean</code>, <code>:keyword</code>, <code>:symbol</code>, <code>:vector</code>, <code>:list</code>, <code>:hash-map</code>, <code>:set</code>,<br />
     <code>:atom</code>, <code>:var</code>, <code>:function</code>, <code>:php/array</code><br />
   - a symbol for struct names (resolved in current namespace)<br />
+  - a PHP class or interface symbol: <code>\ArrayObject</code>, <code>\Countable</code>, a name<br />
+    imported with <code>(:use ArrayObject)</code>, or one that names an existing class<br />
   - a string for explicit PHP class names (cross-namespace structs)<br /><br />
+A PHP class or interface registers under its name without the leading <code>\</code>,<br />
+  so <code>\ArrayObject</code>, <code>ArrayObject</code> and <code>"ArrayObject"</code> are the same key.<br />
+  An implementation for a parent class or an interface applies to every<br />
+  class that extends or implements it. See <code>defprotocol</code> for the order.<br /><br />
 Note: <code>:struct</code> and <code>:php/object</code> cannot be used as type-specs because<br />
   protocol dispatch resolves these to their specific PHP class names.<br />
   Use a struct symbol or PHP class name string instead.
 """,
             example = "(extend-type :string Stringable (to-string [s] s))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L499",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L592",
                 docs = "",
             ),
         ),
@@ -328,11 +341,11 @@ Note: <code>:struct</code> and <code>:php/object</code> cannot be used as type-s
         ),
         documentation = DocumentationInfo(
             summary = """
-Returns true if the given type-key has implementations for all methods of the protocol. type-key should match what protocol-type-key returns.
+Returns true if the given type-key has implementations for all methods of the protocol. type-key should match what protocol-type-key returns. A PHP class name also counts implementations for its parent classes and interfaces.
 """,
             example = "(extends? Stringable :string)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L566",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L668",
                 docs = "",
             ),
         ),
@@ -340,21 +353,23 @@ Returns true if the given type-key has implementations for all methods of the pr
     PhelFunction(
         namespace = "core",
         name = "find-hierarchy-method",
-        signature = "(find-hierarchy-method methods dispatch-val)\n(find-hierarchy-method methods dispatch-val prefers-map)",
+        signature = "(find-hierarchy-method methods dispatch-val)\n(find-hierarchy-method methods dispatch-val prefers-map)\n(find-hierarchy-method methods dispatch-val prefers-map hierarchy default-val)",
         completion = CompletionInfo(
-            tailText = "Finds the best matching method for dispatch-val using the global hierarchy",
+            tailText = "Finds the best matching method for dispatch-val using hierarchy, or the global hierarchy when it ...",
             priority = PhelCompletionPriority.CORE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Finds the best matching method for dispatch-val using the global hierarchy.<br />
-  Returns the method function or nil. Used internally by defmulti. When<br />
-  multiple methods match and none is more specific, consults <code>prefers-map</code><br />
-  (built by <code>prefer-method</code>); if still ambiguous, throws.
+Finds the best matching method for dispatch-val using <code>hierarchy</code>, or the<br />
+  global hierarchy when it is nil. Returns the method function or nil. Used<br />
+  internally by defmulti. The method registered under <code>default-val</code> (<code>:default</code><br />
+  unless given) is never a candidate. When multiple methods match and none is<br />
+  more specific, consults <code>prefers-map</code> (built by <code>prefer-method</code>); if still<br />
+  ambiguous, throws.
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L369",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L372",
                 docs = "",
             ),
         ),
@@ -371,7 +386,7 @@ Finds the best matching method for dispatch-val using the global hierarchy.<br /
             summary = "Return the namespace and name string of a string, keyword or symbol.",
             example = "(full-name :foo/bar) ; =&gt; \"foo/bar\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L987",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1162",
                 docs = "",
             ),
         ),
@@ -390,7 +405,7 @@ If test is true, evaluates then with binding-form bound to the value of test, if
 """,
             example = "(if-let [x (get {:a 1} :a)] x :none) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L832",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1007",
                 docs = "",
             ),
         ),
@@ -409,7 +424,7 @@ Binds name to the value of test. If test is not nil, evaluates then with binding
 """,
             example = "(if-some [x false] :yes :no) ; =&gt; :yes",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L875",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1050",
                 docs = "",
             ),
         ),
@@ -428,7 +443,7 @@ Returns true if child equals parent, or child is a descendant of parent. When a 
 """,
             example = "(do (derive ::square ::shape) (isa? ::square ::shape)) ; =&gt; true",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L246",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L249",
                 docs = "",
             ),
         ),
@@ -448,7 +463,26 @@ bindings is a vector of function specs: (letfn [(f [params] body) (g [params] bo
 """,
             example = "(letfn [(my-even? [n] (if (zero? n) true (my-odd? (dec n))))\n        (my-odd? [n] (if (zero? n) false (my-even? (dec n))))]\n  (my-even? 10))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L926",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1101",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "load-string",
+        signature = "(load-string s)",
+        completion = CompletionInfo(
+            tailText = "Reads and evaluates every form in the string s, in order, and returns the value of the last one",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Reads and evaluates every form in the string <code>s</code>, in order, and returns the value of the last one. Returns nil when <code>s</code> holds no form.
+""",
+            example = "(load-string \"(def x 2) (* x 3)\") ; =&gt; 6",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1188",
                 docs = "",
             ),
         ),
@@ -468,7 +502,7 @@ Returns a map with <code>:parents</code>, <code>:descendants</code>, and <code>:
 """,
             example = "(make-hierarchy) ; =&gt; {:parents {}, :descendants {}, :ancestors {}}",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L54",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L57",
                 docs = "",
             ),
         ),
@@ -485,7 +519,7 @@ Returns a map with <code>:parents</code>, <code>:descendants</code>, and <code>:
             summary = "Returns the name string of a string, keyword or symbol.",
             example = "(name :foo) ; =&gt; \"foo\"\n(name 'bar) ; =&gt; \"bar\"",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L973",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1148",
                 docs = "",
             ),
         ),
@@ -502,7 +536,7 @@ Returns a map with <code>:parents</code>, <code>:descendants</code>, and <code>:
             summary = "Return the namespace string of a symbol or keyword. Nil if not present.",
             example = "(namespace :foo/bar) ; =&gt; \"foo\"\n(namespace :foo) ; =&gt; nil",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L980",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1155",
                 docs = "",
             ),
         ),
@@ -521,7 +555,7 @@ Returns the set of immediate parents of tag, or nil. When a hierarchy is provide
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L308",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L311",
                 docs = "",
             ),
         ),
@@ -544,7 +578,7 @@ Throws if the new preference would create a cycle, i.e. <code>y</code> is alread
 """,
             example = "(prefer-method draw :drawable :shape)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L792",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L967",
                 docs = "",
             ),
         ),
@@ -563,7 +597,7 @@ Returns the preference map for a multimethod (built by <code>prefer-method</code
 """,
             example = "(prefers draw)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L821",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L996",
                 docs = "",
             ),
         ),
@@ -582,7 +616,50 @@ Returns true if dispatch value <code>x</code> is preferred over <code>y</code> i
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L351",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L354",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "protocol-class-impl",
+        signature = "(protocol-class-impl dispatch-table class-name)",
+        completion = CompletionInfo(
+            tailText = "Returns the implementation dispatch-table holds for the PHP class or interface class-name: its ow...",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the implementation <code>dispatch-table</code> holds for the PHP class or<br />
+  interface <code>class-name</code>: its own entry, then its parent classes nearest<br />
+  first, then its interfaces, or nil. When several interfaces match, the one<br />
+  that extends the others wins; otherwise it throws. Memoized per table.
+""",
+            example = "(= count (protocol-class-impl {\"Countable\" count} \"ArrayObject\")) ; =&gt; true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L478",
+                docs = "",
+            ),
+        ),
+    ),
+    PhelFunction(
+        namespace = "core",
+        name = "protocol-fallback-impl",
+        signature = "(protocol-fallback-impl dispatch-table x)",
+        completion = CompletionInfo(
+            tailText = "Returns the implementation protocol dispatch uses for x when dispatch-table has no entry for its ...",
+            priority = PhelCompletionPriority.CORE_FUNCTIONS,
+        ),
+        documentation = DocumentationInfo(
+            summary = """
+Returns the implementation protocol dispatch uses for x when<br />
+  <code>dispatch-table</code> has no entry for its type key: one found through x's PHP<br />
+  class, parents or interfaces, then <code>:default</code>, or nil.
+""",
+            example = "(= identity (protocol-fallback-impl {:default identity} 1)) ; =&gt; true",
+            links = DocumentationLinks(
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L496",
                 docs = "",
             ),
         ),
@@ -604,7 +681,7 @@ Optimized to avoid the full <code>type</code> cond chain: checks scalars first<b
 """,
             example = "(protocol-type-key \"hi\") ; =&gt; :string\n(protocol-type-key 42) ; =&gt; :int",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L410",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L417",
                 docs = "",
             ),
         ),
@@ -621,7 +698,7 @@ Optimized to avoid the full <code>type</code> cond chain: checks scalars first<b
             summary = "Reads the first phel expression from the string s.",
             example = "(read-string \"(+ 1 2)\") ; =&gt; (+ 1 2)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L994",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1169",
                 docs = "",
             ),
         ),
@@ -642,7 +719,7 @@ Records that <code>type-key</code> implements the protocol identified by both<br
 """,
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L127",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L130",
                 docs = "",
             ),
         ),
@@ -652,24 +729,26 @@ Records that <code>type-key</code> implements the protocol identified by both<br
         name = "reify",
         signature = "(reify & specs)",
         completion = CompletionInfo(
-            tailText = "Creates an anonymous object implementing one or more protocols",
+            tailText = "Creates an anonymous object implementing protocols and PHP interfaces",
             priority = PhelCompletionPriority.MACROS,
         ),
         documentation = DocumentationInfo(
             summary = """
-Creates an anonymous object implementing one or more protocols.<br />
+Creates an anonymous object implementing protocols and PHP interfaces.<br />
   Method bodies close over local bindings. Each instance carries its<br />
   own captured state, so reify works correctly inside loops.<br /><br />
+A PHP interface lists every method it declares, and each method takes<br />
+  the interface's return type.<br /><br />
 Syntax:<br />
     (reify<br />
       ProtocolName<br />
       (method-name [this arg1] body)<br />
-      AnotherProtocol<br />
-      (another-method [this] body))
+      \JsonSerializable<br />
+      (jsonSerialize [this] body))
 """,
             example = "(reify Speakable (speak [this] \"hello\"))",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L590",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L712",
                 docs = "",
             ),
         ),
@@ -688,7 +767,7 @@ Resolves the given symbol in the current environment and returns a resolved Symb
 """,
             example = "(resolve 'map) ; =&gt; phel.core/map",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L1025",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1208",
                 docs = "",
             ),
         ),
@@ -698,14 +777,16 @@ Resolves the given symbol in the current environment and returns a resolved Symb
         name = "satisfies?",
         signature = "(satisfies? protocol x)",
         completion = CompletionInfo(
-            tailText = "Returns true if x's type implements all methods of the given protocol",
+            tailText = "Returns true if x's type implements all methods of the given protocol, directly or through a pare...",
             priority = PhelCompletionPriority.PREDICATE_FUNCTIONS,
         ),
         documentation = DocumentationInfo(
-            summary = "Returns true if x's type implements all methods of the given protocol.",
+            summary = """
+Returns true if x's type implements all methods of the given protocol, directly or through a parent class or interface of x.
+""",
             example = "(satisfies? Stringable \"hello\")",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L555",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L652",
                 docs = "",
             ),
         ),
@@ -722,7 +803,7 @@ Resolves the given symbol in the current environment and returns a resolved Symb
             summary = "Evaluates expr and prints the time it took. Returns the value of expr.",
             example = null,
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L954",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1129",
                 docs = "",
             ),
         ),
@@ -741,7 +822,7 @@ Removes a parent/child relationship. With two arguments, mutates the global hier
 """,
             example = "(underive :square :shape)",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L283",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L286",
                 docs = "",
             ),
         ),
@@ -761,7 +842,7 @@ Binds name to the first element of coll. When the collection is non-empty<br />
 """,
             example = "(when-first [x [1 2 3]] x) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L904",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1079",
                 docs = "",
             ),
         ),
@@ -778,7 +859,7 @@ Binds name to the first element of coll. When the collection is non-empty<br />
             summary = "When test is true, evaluates body with binding-form bound to the value of test",
             example = "(when-let [x (get {:a 1} :a)] (* x 10)) ; =&gt; 10",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L854",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1029",
                 docs = "",
             ),
         ),
@@ -797,7 +878,7 @@ Binds name to the value of test. When test is not nil, evaluates body with bindi
 """,
             example = "(when-some [x 0] (inc x)) ; =&gt; 1",
             links = DocumentationLinks(
-                github = "https://github.com/phel-lang/phel-lang/blob/v0.53.0/src/phel/core/protocols.phel#L897",
+                github = "https://github.com/phel-lang/phel-lang/blob/v0.54.0/src/phel/core/protocols.phel#L1072",
                 docs = "",
             ),
         ),
