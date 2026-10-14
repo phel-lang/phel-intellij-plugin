@@ -52,6 +52,11 @@ class PhelUnusedDefinitionInspectionsTest : PhelIntegrationTestCase() {
         assertEmpty(privateDefinitions("(ns app\\a)\n(defn- helper [x] (* x 2))\n(defn run [] (helper 1))\n"))
     }
 
+    /** Each definition's name is another symbol spelling the other's, which counts as a use, as it always has. */
+    fun testDoesNotReportAPrivateDefinitionDeclaredTwice() {
+        assertEmpty(privateDefinitions("(ns app\\a)\n(def- x 1)\n(def- x 2)\n"))
+    }
+
     /** `^vector` names a type, so it is no call of a private definition called `vector`. */
     fun testReportsAPrivateDefinitionOnlyATypeTagSpells() {
         val problems = privateDefinitions("(ns app\\a)\n(defn- vector [] 1)\n(defn run [^vector v] v)\n")
