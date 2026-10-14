@@ -32,10 +32,10 @@ object PhelArityResolver {
                 ?.let { return it.arities }
         }
 
-        PhelFunctionRegistry.getFunction(shortName)?.let { fn ->
-            val parsed = PhelArity.parseAll(fn.signature)
-            if (parsed.isNotEmpty()) return parsed
-        }
+        PhelFunctionRegistry.getFunction(shortName)
+            ?.arities
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { return it }
 
         return index.findByName(shortName)
             .firstOrNull { it.arities.isNotEmpty() }

@@ -1,8 +1,11 @@
 package org.phellang.language.psi.references
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
+import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
@@ -10,6 +13,7 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVendorUtils
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.language.psi.utils.cachedPerPsi
 
 /**
  * Matches a name against the definitions a Phel file declares — `(def x …)`, `(defn f [..] …)` and
@@ -21,11 +25,30 @@ import org.phellang.language.psi.utils.PhelPsiUtils
  */
 internal object PhelDefinitionFinder {
 
-    /** The definitions of [symbolName] declared anywhere in [root]. */
+    private val DEFINITIONS_BY_NAME_KEY: Key<CachedValue<Map<String, List<PsiElement>>>> =
+        Key.create("phel.definitionsByName")
+
+    /**
+     * The definitions of [symbolName] declared anywhere in [root], in document order.
+     *
+     * A whole file is answered from [definitionsByName], built once per file version: every resolve
+     * asks this of the current file, every candidate project file and every `phel.core` file, and
+     * walking each one's lists per name was most of what a resolve cost.
+     */
     fun collectDefinitionsIn(root: PsiElement, symbolName: String): List<PsiElement> {
+        if (root is PsiFile) return definitionsByName(root)[symbolName].orEmpty()
+
         return PsiTreeUtil.findChildrenOfType(root, PhelList::class.java)
             .mapNotNull { findDefinitionInList(it, symbolName) }
     }
+
+    /** Every defined name in [file], mapped to its defining name symbols in document order. */
+    private fun definitionsByName(file: PsiFile): Map<String, List<PsiElement>> =
+        cachedPerPsi(file, DEFINITIONS_BY_NAME_KEY) {
+            PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
+                .mapNotNull(::definedNameIn)
+                .groupBy { it.text }
+        }
 
     /** The definitions of [symbolName] across every vendor file backing [namespace]. */
     fun collectVendorDefinitions(project: Project, namespace: String, symbolName: String): List<PsiElement> {
@@ -41,7 +64,11 @@ internal object PhelDefinitionFinder {
     }
 
     /** The name symbol of `(def name …)` / `(defn name …)` when it is [symbolName], else null. */
-    fun findDefinitionInList(list: PhelList, symbolName: String): PsiElement? {
+    fun findDefinitionInList(list: PhelList, symbolName: String): PsiElement? =
+        definedNameIn(list)?.takeIf { symbolName == it.text }
+
+    /** The name symbol of `(def name …)` / `(defn name …)`, whatever the name, or null when [list] defines nothing. */
+    private fun definedNameIn(list: PhelList): PsiElement? {
         val forms = list.forms
         if (forms.size < 2) return null
 
@@ -49,8 +76,7 @@ internal object PhelDefinitionFinder {
         if (!isDefiningKeyword(defKeyword.text)) return null
 
         // asSymbol, not the first symbol under the form: in `(defn ^map build ...)` that is the tag, not the name.
-        val definedName = PhelPsiUtils.asSymbol(forms[1]) ?: return null
-        return definedName.takeIf { symbolName == it.text }
+        return PhelPsiUtils.asSymbol(forms[1])
     }
 
     /**
