@@ -10,6 +10,14 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Performance
+
+- The **Unresolved symbol** inspection no longer resolves a symbol that the standard library, a local binding, a
+  special form or the project index already accounts for. It asked the full reference resolve first, for every bare
+  symbol, and that resolve scans every project file and walks the whole of `phel.core`. With the Phel stdlib under
+  `vendor/`, one ~280-line file of ordinary code took ~11.6 s of CPU to highlight, and in our measurements again after
+  every edit; it now takes ~0.4 s. What the inspection reports is unchanged.
+
 ## [1.5.0] - 2026-10-08
 
 ### Changed
