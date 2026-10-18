@@ -10,6 +10,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Changed
+
+- The build runs on Gradle **9.8.0**. The wrapper files match what Gradle 9.8.0's own `wrapper` task generates, and the
+  `Wrapper` task's `gradleVersion` moves with them, so `./gradlew wrapper` no longer downgrades the project to 9.7.1
+  (#342).
+
 ### Performance
 
 - The **Unresolved symbol** inspection no longer resolves a symbol that the standard library, a local binding, a
