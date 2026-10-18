@@ -2,12 +2,10 @@ package org.phellang.language.psi.references
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.psi.search.GlobalSearchScope
 import org.phellang.language.psi.PhelAccess
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelNamespaceFiles
 import org.phellang.language.psi.PhelNamespaceUtils
-import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.PhelVendorUtils
@@ -29,28 +27,18 @@ internal object PhelRequireNamespaceResolver {
         val project = symbol.project
         val target = PhelNamespaceUtils.normalizeNamespace(namespaceText)
 
-        val inProject = findInProjectFiles(symbol, namespaceText, target)
+        val inProject = findInProjectFiles(symbol, target)
         if (inProject.isNotEmpty()) return inProject
 
         return findInVendor(symbol, namespaceText, target)
     }
 
-    private fun findInProjectFiles(symbol: PhelSymbol, namespaceText: String, target: String): List<PsiElement> {
-        val project = symbol.project
-        val psiManager = PsiManager.getInstance(project)
-        val phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", GlobalSearchScope.projectScope(project))
-
-        // A matching file's (ns …) form ends with this segment, so its text must contain it —
-        // skip the parse for files that cannot be the target.
-        val targetShortName = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
-
-        return phelFiles
-            .mapNotNull { psiManager.findFile(it) as? PhelFile }
-            .filter { it.text.contains(targetShortName) }
+    /** The `(ns ...)` forms that declare [target]; a file that only joins it with `in-ns` has none to jump to. */
+    private fun findInProjectFiles(symbol: PhelSymbol, target: String): List<PsiElement> =
+        PhelNamespaceFiles.filesOf(symbol.project, target)
             .mapNotNull { PhelNamespaceUtils.findNamespaceDeclaration(it) }
             .filter { declaresNamespace(it, target) }
             .map(::navigationTarget)
-    }
 
     private fun findInVendor(symbol: PhelSymbol, namespaceText: String, target: String): List<PsiElement> {
         val project = symbol.project

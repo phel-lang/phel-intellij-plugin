@@ -15,6 +15,8 @@ object PhelNamespaceUtils {
     private val NS_DECLARATION_KEY: Key<CachedValue<Optional<PhelList>>> = Key.create("phel.namespace.declaration")
     private val REQUIRE_FORMS_KEY: Key<CachedValue<List<PhelList>>> = Key.create("phel.namespace.requireForms")
     private val USE_FORMS_KEY: Key<CachedValue<List<PhelList>>> = Key.create("phel.namespace.useForms")
+    private val IMPORTS_KEY: Key<CachedValue<List<PhelRequireClauseAnalyzer.RequireImport>>> =
+        Key.create("phel.namespace.imports")
 
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
         // Resolved once per file: highlighting and reference resolution look up the (ns …)
@@ -66,7 +68,10 @@ object PhelNamespaceUtils {
     }
 
     private fun findNsClauseForms(nsDeclaration: PhelList, clauseKeyword: String): List<PhelList> {
+        // A `#_`-discarded clause is no clause.
         return PsiTreeUtil.findChildrenOfType(nsDeclaration, PhelList::class.java).filter { list ->
+            if (PhelPsiUtils.isDiscardedByFormComment(list)) return@filter false
+
             val forms = list.forms
             if (forms.isEmpty()) return@filter false
 
@@ -94,6 +99,13 @@ object PhelNamespaceUtils {
     fun extractShortClassName(text: String): String? = PhelUseClauseAnalyzer.extractShortClassName(text)
 
     fun buildUseFqnIndex(file: PhelFile): Map<String, String> = PhelUseClauseAnalyzer.buildUseFqnIndex(file)
+
+    /**
+     * Every namespace [file]'s `(:require ...)` clauses import, with its alias. Cached per file: the
+     * project's namespace lookup reads it for every file whenever a Phel file changes.
+     */
+    internal fun extractImports(file: PhelFile): List<PhelRequireClauseAnalyzer.RequireImport> =
+        cachedPerPsi(file, IMPORTS_KEY) { PhelRequireClauseAnalyzer.imports(file) }
 
     fun extractAliasMap(file: PhelFile): Map<String, String> {
         return cachedPerPsi(file, ALIAS_MAP_KEY) { PhelRequireClauseAnalyzer.computeAliasMap(file) }

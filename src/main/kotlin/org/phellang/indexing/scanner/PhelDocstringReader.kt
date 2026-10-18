@@ -2,6 +2,7 @@ package org.phellang.indexing.scanner
 
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelMap
+import org.phellang.language.psi.analysis.PhelFormReader
 
 /** Finds the documentation string of a top-level definition, in either place Phel allows it. */
 internal object PhelDocstringReader {

@@ -1,17 +1,23 @@
-package org.phellang.indexing.scanner
+package org.phellang.language.psi.analysis
 
+import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelKeyword
+import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelMap
 import org.phellang.language.psi.PhelMetadata
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
- * Decides whether a top-level definition is private, and so must stay out of the project symbol
- * index.
+ * Decides whether a definition is private: kept out of the project symbol index, and not reachable
+ * from another namespace (Phel's analyzer rejects it there, `SymbolResolver::isPrivateDefinitionAllowed`).
  *
  * Phel offers three spellings: the `defn-` family, a `^` flag on the name symbol, and a
  * keyword or map in the metadata slot between the name and the value.
+ *
+ * Lives in `language` rather than `indexing` because resolution needs it too, and `language` sits
+ * below `indexing`.
  */
 internal object PhelDefinitionPrivacy {
 
@@ -21,6 +27,21 @@ internal object PhelDefinitionPrivacy {
 
     /** The `defn-` / `def-` / `defmacro-` family, private by virtue of the keyword alone. */
     fun isPrivateKeyword(keyword: String): Boolean = keyword in PRIVATE_KEYWORDS
+
+    /**
+     * Whether the definition that [nameSymbol] names is private, in any of the three spellings.
+     *
+     * [nameSymbol] is the defined name, as `PhelDefinitionFinder` returns it; its nearest enclosing
+     * list is the defining form. `#_`-discarded forms are skipped, as everywhere privacy is read.
+     */
+    fun isPrivateDefinition(nameSymbol: PsiElement): Boolean {
+        val list = PsiTreeUtil.getParentOfType(nameSymbol, PhelList::class.java) ?: return false
+        val forms = PhelPsiUtils.activeForms(list)
+        if (forms.size < 2) return false
+
+        val keyword = PhelPsiUtils.asSymbol(forms[0])?.text ?: return false
+        return isPrivateKeyword(keyword) || isPrivate(forms)
+    }
 
     /**
      * The body is never consulted: a definition that merely mentions `:private` in its docstring or

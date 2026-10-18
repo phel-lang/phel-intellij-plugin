@@ -136,8 +136,15 @@ class PhelSymbolDocumentationResolver {
         val sourceNamespace = PhelNamespaceUtils.findReferSource(file, symbolName) ?: return null
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(sourceNamespace)
 
-        return PhelApiDocumentation.getDocumentation("$shortNamespace/$symbolName")
-            ?: resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
+        // The registry is keyed by short name, so only a stdlib namespace may use it: a project's
+        // `app.string` refers its own `join`, not `phel.string`'s.
+        val standardLibraryDocumentation = if (PhelProjectNamespaceFinder.isStandardLibrary(sourceNamespace)) {
+            PhelApiDocumentation.getDocumentation("$shortNamespace/$symbolName")
+        } else {
+            null
+        }
+
+        return standardLibraryDocumentation ?: resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
     }
 
     private fun ownNamespaceDocumentation(symbol: PhelSymbol, file: PhelFile, symbolName: String): String? {

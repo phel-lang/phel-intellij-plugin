@@ -1,12 +1,11 @@
 package org.phellang.language.psi.references
 
+import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
+import org.phellang.language.psi.PhelNamespaceFiles
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.PhelVec
@@ -20,7 +19,7 @@ import org.phellang.language.psi.utils.SymbolCategory
  * clicked symbol *is* the definition.
  *
  * A local binding (a parameter or `let` name) can only be used inside the form that introduces it,
- * so its search stops there. Only top-level definitions justify the project-wide scan.
+ * so its search stops there. A top-level definition is searched for in the files that can reach it.
  *
  * Usages are matched by name, so every walk drops type tags: `^map` spells `map` but names a type, and is
  * never a usage of a definition or binding called `map`.
@@ -51,17 +50,25 @@ internal object PhelUsageFinder {
             .filter { it !== symbol && isUsageNamed(it, symbolName) }
     }
 
+    /**
+     * The uses in other files: those of the definition's own namespace, and those that require it,
+     * whether qualified, through an alias or `:refer`'d. No other file can reach the definition, so
+     * a namespace that merely has a same-named symbol of its own is never searched; Rename used to
+     * rewrite those too. A definition in a file with no namespace has no uses elsewhere.
+     *
+     * The narrowing is per file: within a file that does require the namespace, every symbol of the
+     * name still counts, as before.
+     */
     private fun findAcrossProject(symbol: PhelSymbol, symbolName: String): List<PsiElement> {
+        val file = symbol.containingFile as? PhelFile ?: return emptyList()
+        val namespace = PhelNamespaceFiles.declaredNamespace(file) ?: return emptyList()
         val project = symbol.project
-        val currentFile = symbol.containingFile?.virtualFile
-        val psiManager = PsiManager.getInstance(project)
 
-        return FilenameIndex.getAllFilesByExt(project, "phel", GlobalSearchScope.projectScope(project))
-            .filter { it != currentFile }
-            .mapNotNull { psiManager.findFile(it) as? PhelFile }
-            // Fast reject: a file whose text never mentions the name cannot use it, so skip the
-            // PSI walk for the many files that don't.
-            .filter { it.text.contains(symbolName) }
+        return (PhelNamespaceFiles.filesOf(project, namespace) + PhelNamespaceFiles.importersOf(project, namespace))
+            .distinct()
+            .filter { it != file }
+            // Fast reject without copying the text: a file that never spells the name cannot use it.
+            .filter { StringUtil.contains(it.viewProvider.contents, symbolName) }
             .flatMap { PsiTreeUtil.findChildrenOfType(it, PhelSymbol::class.java) }
             .filter { isUsageNamed(it, symbolName) }
     }

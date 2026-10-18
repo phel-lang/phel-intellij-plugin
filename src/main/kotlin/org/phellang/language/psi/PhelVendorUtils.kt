@@ -1,5 +1,6 @@
 package org.phellang.language.psi
 
+import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootModificationTracker
 import com.intellij.openapi.util.Key
@@ -49,6 +50,8 @@ object PhelVendorUtils {
                 computePhelLibraryFolder(project),
                 VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS,
                 ProjectRootModificationTracker.getInstance(project),
+                // Its `composer.json` lookup can run during indexing; leaving dumb mode recomputes it.
+                DumbService.getInstance(project).modificationTracker,
             )
         }, false)?.takeIf { it.isValid }
 

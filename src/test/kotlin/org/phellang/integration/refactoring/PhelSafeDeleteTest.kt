@@ -25,8 +25,8 @@ class PhelSafeDeleteTest : PhelIntegrationTestCase() {
 
     private fun configure(source: String): PhelFile {
         val file = myFixture.configureByText("sd${fileIndex++}.phel", source) as PhelFile
-        // PhelReference resolves project-wide through the index; without priming, whether a usage is
-        // found would depend on which test ran first.
+        // Primed so index-backed lookups see this file. PhelReference itself reads no index: it
+        // resolves within this file and the files of its namespace (PhelNamespaceFiles).
         PhelProjectSymbolIndex.getInstance(project).refreshFileFromPsi(file)
 
         return file

@@ -1,10 +1,7 @@
 package org.phellang.language.psi.references
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.psi.search.GlobalSearchScope
-import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelNamespaceFiles
 import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelRequireClauseAnalyzer
 import org.phellang.language.psi.PhelSymbol
@@ -30,37 +27,28 @@ internal object PhelQualifiedSymbolResolver {
             ?.let(PhelProjectNamespaceFinder::extractShortNamespace)
             ?: qualifier
 
-        val results = mutableListOf<PsiElement>()
-        results += PhelDefinitionFinder.collectVendorDefinitions(project, searchNamespace, symbolName)
-        results += findInProjectFiles(project, qualifier, importedNamespace, symbolName)
-        return results
+        // distinct: a stdlib file under a `vendor/` the project includes is reached both ways.
+        return (PhelDefinitionFinder.collectVendorDefinitions(project, searchNamespace, symbolName) +
+                findInProjectFiles(project, qualifier, importedNamespace, symbolName)).distinct()
     }
 
+    /**
+     * The definitions in the files of the qualifier's namespace: the imported namespace when the file
+     * requires it, else every namespace whose short name is the qualifier (no require to go by).
+     */
     private fun findInProjectFiles(
         project: com.intellij.openapi.project.Project,
         qualifier: String,
         importedNamespace: String?,
         symbolName: String,
     ): List<PsiElement> {
-        val psiManager = PsiManager.getInstance(project)
-        val phelFiles = FilenameIndex.getAllFilesByExt(project, "phel", GlobalSearchScope.projectScope(project))
-
-        return phelFiles
-            .mapNotNull { psiManager.findFile(it) as? PhelFile }
-            .filter { declaresSearchedNamespace(it, qualifier, importedNamespace) }
-            .flatMap { PhelDefinitionFinder.collectDefinitionsIn(it, symbolName) }
-    }
-
-    private fun declaresSearchedNamespace(file: PhelFile, qualifier: String, importedNamespace: String?): Boolean {
-        val fileNamespace = PhelNamespaceUtils.extractNamespaceFromFile(file) ?: return false
-
-        // Match on the full namespace when the import told us what it is; otherwise the qualifier is
-        // all we have, so match files whose short namespace equals it.
-        return if (importedNamespace != null) {
-            fileNamespace == importedNamespace
+        val files = if (importedNamespace != null) {
+            PhelNamespaceFiles.filesOf(project, importedNamespace)
         } else {
-            PhelProjectNamespaceFinder.extractShortNamespace(fileNamespace) == qualifier
+            PhelNamespaceFiles.filesWithShortNamespace(project, qualifier)
         }
+
+        return files.flatMap { PhelDefinitionFinder.collectDefinitionsIn(it, symbolName) }
     }
 
     /**
