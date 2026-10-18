@@ -1,7 +1,10 @@
 package org.phellang.language.psi.references
 
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelList
@@ -13,6 +16,7 @@ import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.utils.SymbolCategory
+import org.phellang.language.psi.utils.cachedPerPsi
 
 /**
  * Finds the usages of a definition — the reverse direction of [PhelReference], taken when the
@@ -25,6 +29,8 @@ import org.phellang.language.psi.utils.SymbolCategory
  * never a usage of a definition or binding called `map`.
  */
 internal object PhelUsageFinder {
+
+    private val SYMBOLS_BY_NAME_KEY: Key<CachedValue<Map<String, List<PhelSymbol>>>> = Key.create("phel.usages.symbolsByName")
 
     fun findUsages(symbol: PhelSymbol, symbolName: String): List<PsiElement> {
         if (isLocalBinding(symbol)) {
@@ -46,9 +52,26 @@ internal object PhelUsageFinder {
     private fun findInCurrentFile(symbol: PhelSymbol, symbolName: String): List<PsiElement> {
         val containingFile = symbol.containingFile as? PhelFile ?: return emptyList()
 
-        return PsiTreeUtil.findChildrenOfType(containingFile, PhelSymbol::class.java)
-            .filter { it !== symbol && isUsageNamed(it, symbolName) }
+        return symbolsNamed(containingFile, symbolName).filter { it !== symbol }
     }
+
+    /**
+     * The symbols in [file] that spell [symbolName], a qualified one by its name part, type tags
+     * left out, in document order: the candidates every usage search here filters.
+     *
+     * Answered from one map built per file version. The search used to walk every symbol of the
+     * file once per definition resolved, which was most of what resolving a file's definitions cost.
+     */
+    fun symbolsNamed(file: PsiFile, symbolName: String): List<PhelSymbol> =
+        symbolsByName(file)[symbolName].orEmpty()
+
+    private fun symbolsByName(file: PsiFile): Map<String, List<PhelSymbol>> =
+        cachedPerPsi(file, SYMBOLS_BY_NAME_KEY) {
+            PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)
+                .filterNot(PhelTypeTags::isTypeTag)
+                .mapNotNull { symbol -> PhelPsiUtils.getName(symbol)?.let { it to symbol } }
+                .groupBy({ it.first }, { it.second })
+        }
 
     /**
      * The uses in other files: those of the definition's own namespace, and those that require it,
@@ -69,8 +92,7 @@ internal object PhelUsageFinder {
             .filter { it != file }
             // Fast reject without copying the text: a file that never spells the name cannot use it.
             .filter { StringUtil.contains(it.viewProvider.contents, symbolName) }
-            .flatMap { PsiTreeUtil.findChildrenOfType(it, PhelSymbol::class.java) }
-            .filter { isUsageNamed(it, symbolName) }
+            .flatMap { symbolsNamed(it, symbolName) }
     }
 
     /** Usages only — other definitions of the same name in scope are not usages of this one. */
