@@ -15,6 +15,18 @@ refreshed, since completion, hover and arity checking are all driven by it.
 - The build runs on Gradle **9.8.0**. The wrapper files match what Gradle 9.8.0's own `wrapper` task generates, and the
   `Wrapper` task's `gradleVersion` moves with them, so `./gradlew wrapper` no longer downgrades the project to 9.7.1
   (#342).
+- **Go to definition** follows Phel's own name resolution. A bare name resolves to a local, then to the namespace it
+  is `:refer`'d from (its public definitions only), or else to the current namespace, and finally to `phel.core`. The
+  current namespace includes every file that declares it, also files that join it with `(in-ns ...)`. It no longer
+  jumps into a namespace the file does not refer from, which the compiler rejects too (PHEL001): `map` reaches
+  `phel.core/map` even when another namespace defines its own `map`, and another namespace's private definition is no
+  target. A name `:refer`'d from the standard library, such as `phel.string :refer [join]`, resolves to the standard
+  library file.
+- **Find Usages, Rename and Safe Delete** narrow the same way: a definition's uses are looked for in its own namespace
+  and in the namespaces that require it, so renaming `app.a/helper` no longer rewrites an unrelated `helper` in
+  another namespace.
+- The **Unresolved symbol** inspection now reports a bare use of another namespace's private definition, as the
+  compiler does.
 
 ### Performance
 
@@ -27,6 +39,20 @@ refreshed, since completion, hover and arity checking are all driven by it.
   definitions and parameters are looked up from a per-file cache, the location of the Phel stdlib under `vendor/` is
   remembered, and a cached value now lasts until its own file changes instead of being dropped by an edit anywhere in
   the project. Resolving every symbol of the same file went from ~32 s to ~0.8 s.
+- Resolving a bare name no longer searches every project file. It looks only in the files of the namespaces the name
+  can reach, through a cached map of which files make up each namespace; only an edit to a Phel file, or a file being
+  created, deleted, moved or renamed, rebuilds it. On the same file, the cross-file lookup went from ~735 ms to ~3 ms,
+  and resolving every symbol, definitions included, from ~0.8 s to ~0.2-0.4 s.
+
+### Fixed
+
+- **Hover** on a name brought in with `(:require ... :refer [...])` shows its documentation. The lookup of where a name
+  is referred from read the clause's `:require` head instead of the namespace that refers it, so it never matched and
+  a referred `join` showed nothing.
+- `(:require ...)` clauses are read the way the compiler reads them. A vector spec such as
+  `[app.util :as u :refer [helper]]` keeps its alias and its refers. `:as` and `:refer` combine in either order. A
+  `:refer [...]` vector is no longer mistaken for a namespace of its own. `#_`-discarded specs, names and clauses no
+  longer count.
 
 ## [1.5.0] - 2026-10-08
 

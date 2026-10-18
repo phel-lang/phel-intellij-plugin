@@ -4,6 +4,7 @@ import com.intellij.codeInspection.InspectionManager
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
+import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.inspection.PhelUnresolvedSymbolInspection
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.files.PhelFile
@@ -164,5 +165,25 @@ class PhelUnresolvedSymbolInspectionTest : PhelIntegrationTestCase() {
 
     fun testQualifiedSymbolsAreLeftToTheOtherValidators() {
         assertSilent("(defn f [] (nope/missing 1))")
+    }
+
+    /**
+     * PHEL001 for the compiler too: a private definition is unreachable from another namespace, and a bare name
+     * never reaches into one it did not refer from.
+     */
+    fun testAnotherNamespacesPrivateDefinitionIsReported() {
+        myFixture.addFileToProject("src/xns_private/util.phel", "(ns xnsprivate.util)\n(defn- xns-secret [] 1)\n")
+
+        assertEquals(listOf("Cannot resolve symbol 'xns-secret'"), inspect("(defn f [] (xns-secret))"))
+    }
+
+    /** Deliberately lenient (under-report): any indexed public definition of the name keeps it silent. */
+    fun testAnotherNamespacesPublicDefinitionStaysSilent() {
+        val util = myFixture.addFileToProject(
+            "src/xns_public/util.phel", "(ns xnspublic.util)\n(defn xns-shared [] 1)\n"
+        ) as PhelFile
+        PhelProjectSymbolIndex.getInstance(project).refreshFileFromPsi(util)
+
+        assertSilent("(defn f [] (xns-shared))")
     }
 }

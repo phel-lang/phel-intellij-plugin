@@ -1,4 +1,4 @@
-package org.phellang.indexing.scanner
+package org.phellang.language.psi.analysis
 
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelKeyword

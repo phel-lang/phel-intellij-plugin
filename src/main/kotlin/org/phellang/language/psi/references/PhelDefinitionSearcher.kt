@@ -1,12 +1,18 @@
 package org.phellang.language.psi.references
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.psi.search.GlobalSearchScope
+import org.phellang.language.psi.PhelNamespaceFiles
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelDefinitionPrivacy
 
-/** Finds unqualified definitions of a name: first in the file being edited, then across the project. */
+/**
+ * Finds unqualified definitions of a name: in the file being edited, and in the other files of one
+ * namespace.
+ *
+ * Which namespace is the caller's question, answered the way the Phel compiler does: the current one,
+ * or the one the name is `:refer`'d from. There is no project-wide search. An unqualified name never
+ * reaches a namespace the file neither belongs to nor refers from.
+ */
 internal object PhelDefinitionSearcher {
 
     fun findInCurrentFile(symbol: PhelSymbol, symbolName: String): List<PsiElement> {
@@ -14,16 +20,19 @@ internal object PhelDefinitionSearcher {
         return PhelDefinitionFinder.collectDefinitionsIn(file, symbolName)
     }
 
-    fun findInProject(symbol: PhelSymbol, symbolName: String): List<PsiElement> {
-        val project = symbol.project
+    /**
+     * The definitions of [symbolName] in the files of [namespace] other than [symbol]'s own.
+     *
+     * [publicOnly] is for a name reached from another namespace through `:refer`: the compiler
+     * rejects a private definition there (`SymbolResolver::isPrivateDefinitionAllowed`), so it is no
+     * target.
+     */
+    fun findInNamespace(symbol: PhelSymbol, namespace: String, symbolName: String, publicOnly: Boolean): List<PsiElement> {
         val currentFile = symbol.containingFile
-        val psiManager = PsiManager.getInstance(project)
 
-        return FilenameIndex.getAllFilesByExt(project, "phel", GlobalSearchScope.projectScope(project))
-            .mapNotNull { psiManager.findFile(it) }
+        return PhelNamespaceFiles.filesOf(symbol.project, namespace)
             .filter { it != currentFile }
-            // No `text.contains(symbolName)` pre-check: each file's definitions are a cached lookup
-            // now, and the check copied the whole text of every project file once per symbol.
             .flatMap { PhelDefinitionFinder.collectDefinitionsIn(it, symbolName) }
+            .filterNot { publicOnly && PhelDefinitionPrivacy.isPrivateDefinition(it) }
     }
 }

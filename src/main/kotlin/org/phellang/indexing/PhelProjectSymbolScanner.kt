@@ -2,12 +2,12 @@ package org.phellang.indexing
 
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.indexing.scanner.PhelDefinitionPrivacy
 import org.phellang.indexing.scanner.PhelDocstringReader
 import org.phellang.indexing.scanner.PhelSignatureBuilder
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
+import org.phellang.language.psi.analysis.PhelDefinitionPrivacy
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.registry.PhelProjectSymbol

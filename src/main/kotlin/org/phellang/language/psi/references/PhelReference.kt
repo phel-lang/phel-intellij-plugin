@@ -8,6 +8,7 @@ import com.intellij.psi.PsiReferenceBase
 import com.intellij.psi.ResolveResult
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.intellij.util.IncorrectOperationException
+import org.phellang.language.psi.PhelNamespaceFiles
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelTypeTags
@@ -28,7 +29,7 @@ import java.util.IdentityHashMap
  * * [PhpClassResolver]             — PHP interop (`(:use ...)` entries, `Class/method`)
  * * [PhelQualifiedSymbolResolver]  — `ns/name`, including `:as` aliases
  * * [PhelLocalScopeResolver]       — `let` bindings and function parameters
- * * [PhelDefinitionSearcher]       — top-level definitions in this file, then the project
+ * * [PhelDefinitionSearcher]       — definitions in this file, then its namespace or the `:refer`'d one
  * * [PhelUsageFinder]              — the reverse direction, when the symbol *is* the definition
  *
  * A type tag (`^map` in `[^map m]`) is none of these: it names a type, so [resolveTypeTag] answers it
@@ -45,11 +46,11 @@ class PhelReference @JvmOverloads constructor(
     /**
      * Cached, because the chain below is expensive and asked for constantly.
      *
-     * Resolving one symbol walks local scope, the current file's definitions, the project index,
-     * vendor `phel/core` and finally the PHP index — measured at ~1.3 ms per symbol, and the
-     * annotator, the inspections and the documentation provider all resolve while highlighting. A
-     * file with 300 symbols cost ~400 ms of that per pass. [isReferenceTo] made it worse again by
-     * calling this once per candidate during Find Usages.
+     * Resolving one symbol walks local scope, the current file's definitions, the files of one
+     * namespace, vendor `phel/core` and finally the PHP index. While highlighting, only the
+     * unresolved-symbol inspection resolves, and only after its cheap checks; go to declaration,
+     * rename, Find Usages and Safe Delete resolve on demand, the last three once per candidate
+     * through [isReferenceTo].
      *
      * [ResolveCache] is the platform's answer: it keys on the reference, drops on any PSI change,
      * and is what a [PsiPolyVariantReference] is expected to route through.
@@ -98,20 +99,31 @@ class PhelReference @JvmOverloads constructor(
         return findUnqualifiedDefinitions(name)
     }
 
-    /** Every scope an unqualified name can be declared in, de-duplicated by PSI identity. */
+    /**
+     * Every scope an unqualified name can be declared in, in the Phel compiler's order
+     * (`SymbolResolver::resolveWithoutAlias`), de-duplicated by PSI identity.
+     *
+     * After locals, a `:refer`'d name is looked up only in the namespace it is referred from, and
+     * only among its public definitions; the current namespace is not consulted. Any other name is
+     * looked up in this file, then in the other files of this file's namespace, private definitions
+     * included. Neither ever reaches a namespace the file does not refer from.
+     */
     private fun findUnqualifiedDefinitions(name: String): List<PsiElement> {
         val seen = Collections.newSetFromMap(IdentityHashMap<PsiElement, Boolean>())
         val results = mutableListOf<PsiElement>()
 
         fun addAll(elements: List<PsiElement>) = elements.forEach { if (seen.add(it)) results.add(it) }
 
-        addAll(listOfNotNull(PhelLocalScopeResolver.resolve(myElement, name)))
-        addAll(PhelDefinitionSearcher.findInCurrentFile(myElement, name))
-        myElement.containingFile?.let { addAll(PhelLocalScopeResolver.findAllParametersIn(it, name)) }
-        addAll(PhelDefinitionSearcher.findInProject(myElement, name))
+        val referredFrom = referSourceOf(name)
 
-        // The standard library is only consulted when nothing else matched — `map`, `filter` and the
-        // rest of phel\core would otherwise shadow a project's own definitions.
+        addAll(listOfNotNull(PhelLocalScopeResolver.resolve(myElement, name)))
+        if (referredFrom == null) addAll(PhelDefinitionSearcher.findInCurrentFile(myElement, name))
+        myElement.containingFile?.let { addAll(PhelLocalScopeResolver.findAllParametersIn(it, name)) }
+        addAll(findInNamespaces(name, referredFrom))
+
+        // The standard library is only consulted when nothing else matched, as in the compiler: a
+        // definition in this namespace shadows `phel.core`'s, and one in an unrelated namespace never
+        // reaches this far.
         if (results.isEmpty()) {
             addAll(PhelDefinitionFinder.collectVendorDefinitions(myElement.project, "core", name))
         }
@@ -123,6 +135,24 @@ class PhelReference @JvmOverloads constructor(
         }
 
         return results
+    }
+
+    /** The namespace [name] is `:refer`'d from in this file's `(ns ...)`, or null when it is not referred. */
+    private fun referSourceOf(name: String): String? =
+        (myElement.containingFile as? PhelFile)?.let { PhelNamespaceUtils.findReferSource(it, name) }
+
+    /**
+     * Definitions of [name] in other files: the public ones of the namespace it is referred from, or
+     * else every one in the other files of this file's own namespace.
+     */
+    private fun findInNamespaces(name: String, referredFrom: String?): List<PsiElement> {
+        if (referredFrom != null) {
+            return PhelDefinitionSearcher.findInNamespace(myElement, referredFrom, name, publicOnly = true)
+        }
+
+        val file = myElement.containingFile as? PhelFile ?: return emptyList()
+        val namespace = PhelNamespaceFiles.declaredNamespace(file) ?: return emptyList()
+        return PhelDefinitionSearcher.findInNamespace(myElement, namespace, name, publicOnly = false)
     }
 
     /**
@@ -171,7 +201,7 @@ class PhelReference @JvmOverloads constructor(
         variants += PhelDefinitionSearcher.findInCurrentFile(myElement, name)
 
         if (variants.size < MAX_PROJECT_VARIANTS) {
-            variants += PhelDefinitionSearcher.findInProject(myElement, name)
+            variants += findInNamespaces(name, referSourceOf(name))
         }
 
         return variants.toTypedArray()

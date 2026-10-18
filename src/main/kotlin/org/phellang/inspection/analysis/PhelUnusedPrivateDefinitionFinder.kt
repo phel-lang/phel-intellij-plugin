@@ -4,11 +4,11 @@ import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.PsiTreeUtil
-import org.phellang.indexing.scanner.PhelDefinitionPrivacy
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelTypeTags
+import org.phellang.language.psi.analysis.PhelDefinitionPrivacy
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.utils.cachedPerPsi
