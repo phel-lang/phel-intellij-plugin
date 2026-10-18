@@ -78,8 +78,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:6.1.3")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:6.1.3")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:5.23.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.23.0")
+    testImplementation("org.mockito:mockito-core:5.24.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.24.0")
     // gson is used only by the build-time generator under org/phellang/tools/**, never by runtime
     // plugin code (ArchitectureBoundaryTest enforces this), so it is not a plugin `implementation`
     // dependency and never ships in the distribution. The generator source set and the tools tests
