@@ -230,10 +230,15 @@ internal object PhelUnresolvedSymbolFinder {
 
     private val MACRO_DEFINING = setOf("defmacro", "defmacro-")
 
-    /** Phel's resolution order: locals, current-namespace globals, `use` aliases, then `phel.core`. */
+    /**
+     * Phel's resolution order: locals, current-namespace globals, `use` aliases, then `phel.core`.
+     *
+     * Each check only answers yes, so their order decides the cost, not the result. The reference
+     * resolve goes last: it scans every project file and walks the whole of `phel.core`, ~24 ms a
+     * symbol on a realistic project, and asking it first made one file of stdlib calls take ~11 s to
+     * highlight, again after every edit.
+     */
     private fun resolves(symbol: PhelSymbol, text: String): Boolean {
-        // Locals, plus same-file and vendor definitions, all of which the reference already answers.
-        if (symbol.reference?.resolve() != null) return true
         if (PhelSymbolAnalyzer.isLocalBindingOrReference(symbol)) return true
 
         // Language keywords are not always registry entries, and never resolve to a definition.
@@ -246,7 +251,11 @@ internal object PhelUnresolvedSymbolFinder {
         if (PhelNamespaceUtils.isReferredSymbol(file, text)) return true
         if (text in PhelNamespaceUtils.extractUsedClasses(file)) return true
 
-        return PhelProjectSymbolIndex.getInstance(symbol.project).findByName(text).isNotEmpty()
+        if (PhelProjectSymbolIndex.getInstance(symbol.project).findByName(text).isNotEmpty()) return true
+
+        // What none of the above sees: private definitions, which the index skips (a same-file
+        // `(def- x ...)`), and vendor definitions the registry does not list.
+        return symbol.reference?.resolve() != null
     }
 
     private val QUOTE_CHARS = setOf('\'', '`')
