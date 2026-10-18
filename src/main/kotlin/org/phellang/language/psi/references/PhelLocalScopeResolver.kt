@@ -1,6 +1,9 @@
 package org.phellang.language.psi.references
 
+import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
@@ -8,12 +11,16 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVec
 import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
+import org.phellang.language.psi.utils.cachedPerPsi
 
 /**
  * Resolves a symbol to a binding introduced in an enclosing scope: a `let`-like binding vector, or a
  * function's parameter vector.
  */
 internal object PhelLocalScopeResolver {
+
+    private val PARAMETERS_BY_NAME_KEY: Key<CachedValue<Map<String, List<PsiElement>>>> =
+        Key.create("phel.parametersByName")
 
     /** The nearest enclosing binding or parameter that declares [symbolName], or null. */
     fun resolve(symbol: PhelSymbol, symbolName: String): PsiElement? {
@@ -32,12 +39,28 @@ internal object PhelLocalScopeResolver {
         return null
     }
 
-    /** Every parameter named [symbolName] anywhere in [file] — polyvariant resolve shows them all. */
+    /**
+     * Every parameter named [symbolName] anywhere in [file], in document order: polyvariant resolve
+     * shows them all.
+     *
+     * A whole file is answered from [parametersByName], built once per file version: every unqualified
+     * resolve asks this of its own file, and walking every list per symbol was most of what a resolve
+     * still cost once the definitions were cached.
+     */
     fun findAllParametersIn(file: PsiElement, symbolName: String): List<PsiElement> {
+        if (file is PsiFile) return parametersByName(file)[symbolName].orEmpty()
+
         return PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
             .flatMap { list -> parametersOf(list).orEmpty() }
             .filter { symbolName == it.text }
     }
+
+    private fun parametersByName(file: PsiFile): Map<String, List<PsiElement>> =
+        cachedPerPsi(file, PARAMETERS_BY_NAME_KEY) {
+            PsiTreeUtil.findChildrenOfType(file, PhelList::class.java)
+                .flatMap { list -> parametersOf(list).orEmpty() }
+                .groupBy { it.text }
+        }
 
     /**
      * The binding named [symbolName] in [letForm]'s binding vector.
