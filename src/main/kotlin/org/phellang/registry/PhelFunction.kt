@@ -89,6 +89,12 @@ data class PhelFunction(
         get() = documentation.deprecation != null
 
     /**
+     * The call shapes [signature] spells, parsed on first use and kept: inlay hints and the arity
+     * inspection ask for them at every call site on every highlighting pass.
+     */
+    val arities: List<PhelArity> by lazy { PhelArity.parseAll(signature) }
+
+    /**
      * True when this can only ever *head* a form — a macro or a special form, never a value.
      *
      * `(map inc xs)` is fine because `inc` is a function, but `(map if xs)` and `(println let)` are

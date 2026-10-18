@@ -22,9 +22,8 @@ internal object PhelDefinitionSearcher {
         return FilenameIndex.getAllFilesByExt(project, "phel", GlobalSearchScope.projectScope(project))
             .mapNotNull { psiManager.findFile(it) }
             .filter { it != currentFile }
-            // Fast reject: a file whose text never mentions the name cannot define it, so skip the
-            // PSI walk for the many files that don't reference this symbol.
-            .filter { it.text.contains(symbolName) }
+            // No `text.contains(symbolName)` pre-check: each file's definitions are a cached lookup
+            // now, and the check copied the whole text of every project file once per symbol.
             .flatMap { PhelDefinitionFinder.collectDefinitionsIn(it, symbolName) }
     }
 }
