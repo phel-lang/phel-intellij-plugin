@@ -1,5 +1,8 @@
 package org.phellang.inspection.analysis
 
+import com.intellij.openapi.util.Key
+import com.intellij.psi.PsiFile
+import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.indexing.scanner.PhelDefinitionPrivacy
 import org.phellang.language.psi.PhelList
@@ -8,6 +11,7 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.language.psi.utils.cachedPerPsi
 
 /**
  * Finds a private top-level definition that nothing in its own file references.
@@ -22,6 +26,8 @@ import org.phellang.language.psi.utils.PhelPsiUtils
  * happens to mention the word does not make a definition private.
  */
 internal object PhelUnusedPrivateDefinitionFinder {
+
+    private val SYMBOL_COUNTS_KEY: Key<CachedValue<Map<String, Int>>> = Key.create("phel.unusedPrivate.symbolCounts")
 
     /** The defined name when [list] is a private definition nothing else in the file mentions. */
     fun unusedPrivateDefinition(list: PhelList): PhelSymbol? {
@@ -54,7 +60,20 @@ internal object PhelUnusedPrivateDefinitionFinder {
     private fun isReferenced(nameSymbol: PhelSymbol, name: String): Boolean {
         val file = nameSymbol.containingFile ?: return true
 
-        return PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)
-            .any { it.text == name && it !== nameSymbol && !PhelTypeTags.isTypeTag(it) }
+        // Counted once per file rather than walked once per private definition. The defining name
+        // is one of the counted symbols unless it is itself a tag, so it is taken back out.
+        val spellings = symbolCounts(file)[name] ?: 0
+        val ownName = if (PhelTypeTags.isTypeTag(nameSymbol)) 0 else 1
+
+        return spellings - ownName > 0
     }
+
+    /** How many symbols in [file] spell each name, type tags left out. */
+    private fun symbolCounts(file: PsiFile): Map<String, Int> =
+        cachedPerPsi(file, SYMBOL_COUNTS_KEY) {
+            PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)
+                .filterNot(PhelTypeTags::isTypeTag)
+                .groupingBy { it.text }
+                .eachCount()
+        }
 }

@@ -1,14 +1,22 @@
 package org.phellang.language.psi
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectRootModificationTracker
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.util.CachedValue
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
 
 object PhelVendorUtils {
 
     private const val PHEL_VENDOR_PATH = "phel-lang/phel-lang/src/phel"
+
+    private val PHEL_LIBRARY_FOLDER_KEY: Key<CachedValue<VirtualFile?>> = Key.create("phel.vendor.libraryFolder")
 
     fun findVendorFolder(project: Project): VirtualFile? {
         val composerFiles =
@@ -27,7 +35,24 @@ object PhelVendorUtils {
         return projectRoot?.findChild("vendor")
     }
 
-    fun findPhelLibraryFolder(project: Project): VirtualFile? {
+    /**
+     * The `phel-lang/phel-lang/src/phel` folder under the project's `vendor/`, or null.
+     *
+     * Cached per project. Resolving any standard-library name asks for it, so uncached it cost a
+     * `composer.json` index query for every symbol resolved. Only a file or folder being created,
+     * deleted, moved or renamed, or a change to the project's roots, can change the answer, so those
+     * are the dependencies; edits to file contents leave it alone.
+     */
+    fun findPhelLibraryFolder(project: Project): VirtualFile? =
+        CachedValuesManager.getManager(project).getCachedValue(project, PHEL_LIBRARY_FOLDER_KEY, {
+            CachedValueProvider.Result.create(
+                computePhelLibraryFolder(project),
+                VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS,
+                ProjectRootModificationTracker.getInstance(project),
+            )
+        }, false)?.takeIf { it.isValid }
+
+    private fun computePhelLibraryFolder(project: Project): VirtualFile? {
         val vendorFolder = findVendorFolder(project) ?: return null
         val phelFolder = vendorFolder.findFileByRelativePath(PHEL_VENDOR_PATH)
         return if (phelFolder != null && phelFolder.isDirectory) phelFolder else null

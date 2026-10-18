@@ -10,6 +10,24 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Changed
+
+- The build runs on Gradle **9.8.0**. The wrapper files match what Gradle 9.8.0's own `wrapper` task generates, and the
+  `Wrapper` task's `gradleVersion` moves with them, so `./gradlew wrapper` no longer downgrades the project to 9.7.1
+  (#342).
+
+### Performance
+
+- The **Unresolved symbol** inspection no longer resolves a symbol that the standard library, a local binding, a
+  special form or the project index already accounts for. It asked the full reference resolve first, for every bare
+  symbol, and that resolve scans every project file and walks the whole of `phel.core`. With the Phel stdlib under
+  `vendor/`, one ~280-line file of ordinary code took ~11.6 s of CPU to highlight, and in our measurements again after
+  every edit; it now takes ~0.4 s. What the inspection reports is unchanged.
+- Resolving a Phel name, as go to definition does, no longer re-walks files it has already read. Each file's
+  definitions and parameters are looked up from a per-file cache, the location of the Phel stdlib under `vendor/` is
+  remembered, and a cached value now lasts until its own file changes instead of being dropped by an edit anywhere in
+  the project. Resolving every symbol of the same file went from ~32 s to ~0.8 s.
+
 ## [1.5.0] - 2026-10-08
 
 ### Changed
