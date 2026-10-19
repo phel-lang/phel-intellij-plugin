@@ -26,12 +26,14 @@ object PhelReferSymbolValidator {
             return listOf(PhelValidationProblem("'$symbolName' is already referred"))
         }
 
-        if (existsInStandardLibrary(shortNamespace, symbolName)) {
+        // The registry is keyed by short name, so only a stdlib namespace may use it: a project's
+        // `app.string` refers its own names, not `phel.string`'s.
+        if (PhelProjectNamespaceFinder.isStandardLibrary(namespace) && existsInStandardLibrary(shortNamespace, symbolName)) {
             return emptyList() // Valid
         }
 
         val containingFile = symbol.containingFile as? PhelFile
-        if (containingFile != null && existsInProject(containingFile, shortNamespace, symbolName)) {
+        if (containingFile != null && existsInProject(containingFile, namespace, symbolName)) {
             return emptyList() // Valid
         }
 
@@ -52,10 +54,6 @@ object PhelReferSymbolValidator {
         }
     }
 
-    private fun existsInProject(file: PhelFile, shortNamespace: String, symbolName: String): Boolean {
-        val index = PhelProjectSymbolIndex.getInstance(file.project)
-        val symbols = index.getSymbolsForNamespace(shortNamespace)
-
-        return symbols.any { it.name == symbolName }
-    }
+    private fun existsInProject(file: PhelFile, namespace: String, symbolName: String): Boolean =
+        PhelProjectSymbolIndex.getInstance(file.project).findInNamespace(namespace, symbolName) != null
 }

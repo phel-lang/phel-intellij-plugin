@@ -63,6 +63,33 @@ refreshed, since completion, hover and arity checking are all driven by it.
   `[app.util :as u :refer [helper]]` keeps its alias and its refers. `:as` and `:refer` combine in either order. A
   `:refer [...]` vector is no longer mistaken for a namespace of its own. `#_`-discarded specs, names and clauses no
   longer count.
+- Two namespaces whose names end alike, such as `app.util` and `lib.util`, are no longer mixed up. The project symbol
+  index filed both under `util`, and the features reading it shortened the full namespace before asking:
+  - `(:require lib.util :refer [x])` is reported when only `app.util` defines `x`, and completion inside the
+    `:refer [...]` offers `lib.util`'s names only;
+  - an aliased call such as `(l/x)` is checked against the namespace `l` stands for, and completion after `l/` offers
+    that namespace's names only. An alias a later require took over is not offered for the earlier namespace, since
+    the compiler keeps the last alias of a name;
+  - the **Wrong number of args** inspection, parameter hints and parameter info take an aliased, default-aliased or
+    fully qualified call's arities from the namespace it names, and from nowhere else. `(l/count 1 2)` was checked
+    against `phel.core`'s one-argument `count`, and `(l/helper 1 2 3)` against another namespace's `helper`. A
+    standard-library call such as `(s/join ...)` with `phel.string :as s` is now checked against `phel.string/join`
+    itself;
+  - hover shows the docstring of the namespace the name comes from;
+  - completion of a name from an unrequired namespace whose short name the file already uses for another namespace
+    requires it under an alias of its own, `(:require app.util :as app-util)`, and inserts `app-util/x`. A plain
+    require would take `util` over and re-point the file's existing `util/` calls. Editing `x.util` no longer hides
+    every other `*.util` namespace from completion.
+- A project namespace that shares its last segment with a standard-library one, such as `app.string`, is no longer read
+  as `phel.string`. Its `:refer [...]` names, aliased calls, completion after its alias and hover come from the project
+  namespace: `(:require app.string :refer [split])` passed because `phel.string` has a `split`, and
+  `(:require app.string :as s)` offered `s/split`.
+- A fully qualified call such as `(app.util/helper)` is no longer reported as `Namespace 'app.util' does not exist`.
+  With the namespace required it is accepted; without it, it is reported as not imported, with the quick fix to
+  require it.
+- A `:refer [...]` is read against the spec it belongs to. In `(:require app.util :as u lib.util :refer [count])` the
+  check, completion and hover used the clause's first namespace, `app.util`; and a vector spec such as
+  `[lib.util :refer [x]]` got none of the three.
 
 ## [1.5.0] - 2026-10-08
 

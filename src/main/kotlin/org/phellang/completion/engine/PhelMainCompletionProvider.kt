@@ -18,6 +18,7 @@ import org.phellang.completion.infrastructure.PhelUsedClassCompletionHelper
 import org.phellang.core.utils.PhelErrorHandler
 import org.phellang.language.infrastructure.PhelIcons
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.files.PhelFile
@@ -112,7 +113,7 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
 
     private fun addGeneralCompletions(element: PsiElement, result: CompletionResultSet) {
         val psiFile = element.containingFile as? PhelFile
-        val aliasMap = psiFile?.let { PhelNamespaceUtils.extractAliasMap(it) } ?: emptyMap()
+        val aliasMap = psiFile?.let(::standardLibraryAliases) ?: emptyMap()
 
         // In Lisp the head of a form is what gets called and the rest are values, so the two
         // positions accept different things — see PhelCallPosition.
@@ -122,10 +123,20 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
         PhelRegistryCompletionHelper.addStandardLibraryFunctions(result, aliasMap, position)
 
         if (psiFile != null) {
-            PhelProjectCompletionHelper.addProjectCompletions(result, psiFile, aliasMap)
+            PhelProjectCompletionHelper.addProjectCompletions(result, psiFile)
             PhelUsedClassCompletionHelper.addUsedClassCompletions(result, psiFile)
         }
     }
+
+    /**
+     * alias -> short namespace, for the stdlib requires only. A project namespace's alias spells that
+     * namespace's own names: with `(:require app.string :as s)`, `s/split` is no `phel.string/split`.
+     */
+    private fun standardLibraryAliases(file: PhelFile): Map<String, String> =
+        PhelNamespaceUtils.extractImports(file)
+            .filter { PhelProjectNamespaceFinder.isStandardLibrary(it.fullNamespace) }
+            .mapNotNull { import -> import.alias?.let { it to import.shortNamespace } }
+            .toMap()
 
     /** A structural suggestion offered at top level, where there is no form to complete against. */
     private class FormTemplate(

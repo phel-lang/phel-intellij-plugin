@@ -31,33 +31,12 @@ object PhelReferUtils {
 
         if (PhelPsiUtils.asKeyword(forms[0])?.text != ":require") return null
 
-        // The namespace symbol precedes :refer; remember it so the context can carry it.
-        var namespace: String? = null
+        // One clause can require several namespaces, so the one that owns this vector is asked for.
+        // The clause's first namespace symbol is what this used to take: in
+        // `(:require app.util :as u lib.util :refer [count])` it checked `count` against `app.util`.
+        val namespace = PhelRequireClauseAnalyzer.namespaceReferringWith(requireForm, containingVec) ?: return null
 
-        for (i in 1 until forms.size) {
-            val form = forms[i]
-
-            val keyword = PhelPsiUtils.asKeyword(form)
-
-            if (keyword?.text == ":refer" && i + 1 < forms.size) {
-                if (forms[i + 1] === containingVec || PsiTreeUtil.isAncestor(forms[i + 1], containingVec, false)) {
-                    return if (namespace != null) {
-                        ReferContext(namespace, containingVec)
-                    } else {
-                        null
-                    }
-                }
-            }
-
-            if (keyword == null) {
-                val namespaceSymbol = PhelPsiUtils.asSymbol(form)
-                if (namespaceSymbol != null && namespace == null) {
-                    namespace = namespaceSymbol.text
-                }
-            }
-        }
-
-        return null
+        return ReferContext(namespace, containingVec)
     }
 
     @JvmStatic

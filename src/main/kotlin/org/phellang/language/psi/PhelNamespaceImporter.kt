@@ -19,14 +19,16 @@ object PhelNamespaceImporter {
         return addRequireToNamespace(file.project, nsDeclaration, phelNamespace)
     }
 
-    fun ensureNamespaceImportedByFullName(file: PhelFile, fullNamespace: String): Boolean {
+    /** Requires [fullNamespace] unless it already is, with `:as` [alias] when one is given. */
+    fun ensureNamespaceImportedByFullName(file: PhelFile, fullNamespace: String, alias: String? = null): Boolean {
         val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false
 
         if (PhelNamespaceUtils.isNamespaceRequired(nsDeclaration, fullNamespace)) {
             return true
         }
 
-        return addRequireToNamespace(file.project, nsDeclaration, fullNamespace)
+        val spec = if (alias != null) "$fullNamespace :as $alias" else fullNamespace
+        return addRequireToNamespace(file.project, nsDeclaration, spec)
     }
 
     private fun addRequireToNamespace(project: Project, nsDeclaration: PhelList, namespace: String): Boolean {
