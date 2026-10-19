@@ -14,15 +14,25 @@ object PhelRegistryCompletionHelper {
      * `api.json`) rather than a hand-maintained list keeps a namespace added to `NamespaceConfig`
      * from being loaded but never suggested.
      */
+    /**
+     * [overrideFor] answers, per registry namespace (`string`), how to write its functions when the
+     * registry spelling would name another namespace in the file; null keeps the registry spelling.
+     */
     @JvmStatic
     @JvmOverloads
     fun addStandardLibraryFunctions(
         result: CompletionResultSet,
         aliasMap: Map<String, String> = emptyMap(),
         position: PhelCallPosition = PhelCallPosition.OTHER,
+        overrideFor: (String) -> PhelStandardLibraryQualifiers.Override? = { null },
     ) {
+        val overrides = HashMap<String, PhelStandardLibraryQualifiers.Override?>()
+        val cachedOverrideFor = { registryNamespace: String ->
+            overrides.getOrPut(registryNamespace) { overrideFor(registryNamespace) }
+        }
+
         Namespace.entries.forEach { namespace ->
-            addNamespaceFunctions(result, namespace, aliasMap, position)
+            addNamespaceFunctions(result, namespace, aliasMap, position, cachedOverrideFor)
         }
     }
 
@@ -31,15 +41,33 @@ object PhelRegistryCompletionHelper {
         namespace: Namespace,
         aliasMap: Map<String, String>,
         position: PhelCallPosition,
+        overrideFor: (String) -> PhelStandardLibraryQualifiers.Override?,
     ) {
         val functions = PhelFunctionRegistry.getFunctions(namespace)
         functions.forEach { function ->
             // A macro or special form cannot be an argument, so offering one there is always wrong.
             if (position == PhelCallPosition.PLAIN_CALL_ARGUMENT && function.isCallOnly) return@forEach
 
-            val displayName = transformNameWithAlias(function, aliasMap)
-            PhelCompletionUtils.addRankedCompletion(
-                result, displayName, function.signature, function.completion.tailText, priorityFor(function, position)
+            val priority = priorityFor(function, position)
+            // Core functions are written bare, so no alias of `core` concerns them.
+            val override = if (function.name.contains('/')) overrideFor(function.namespace) else null
+
+            if (override == null) {
+                val displayName = transformNameWithAlias(function, aliasMap)
+                PhelCompletionUtils.addRankedCompletion(
+                    result, displayName, function.signature, function.completion.tailText, priority
+                )
+                return@forEach
+            }
+
+            val qualifier = override.qualifier ?: return@forEach
+            PhelCompletionUtils.addRankedCompletionWithNamespace(
+                result,
+                "$qualifier/${function.name.substringAfter('/')}",
+                function.signature,
+                function.completion.tailText,
+                priority,
+                override.fullNamespace,
             )
         }
     }

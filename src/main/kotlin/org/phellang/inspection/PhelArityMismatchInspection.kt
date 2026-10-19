@@ -30,7 +30,7 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 val name = head.text ?: return
                 if (PhelArityCallSite.shouldSkip(o, head, name, forms)) return
 
-                val arities = PhelArityResolver.resolve(head.project, name) ?: return
+                val arities = PhelArityResolver.resolve(head, name) ?: return
                 if (arities.isEmpty()) return
 
                 val argCount = forms.size - 1

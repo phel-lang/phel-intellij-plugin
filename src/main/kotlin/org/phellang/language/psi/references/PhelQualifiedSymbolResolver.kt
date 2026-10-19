@@ -21,8 +21,9 @@ internal object PhelQualifiedSymbolResolver {
         val project = symbol.project
 
         // An import may alias the qualifier (`:as m`), in which case the namespace to search for is
-        // the aliased one rather than the text the user typed.
-        val importedNamespace = resolveQualifierToNamespace(containingFile, qualifier)
+        // the aliased one rather than the text the user typed. The full name used to be missed, so
+        // `(app.util/helper)` resolved to nothing and Safe Delete reported a live function as unused.
+        val importedNamespace = PhelNamespaceUtils.importedNamespaceFor(containingFile, qualifier)
         val searchNamespace = importedNamespace
             ?.let(PhelProjectNamespaceFinder::extractShortNamespace)
             ?: qualifier
@@ -52,23 +53,5 @@ internal object PhelQualifiedSymbolResolver {
         }
 
         return files.flatMap { PhelDefinitionFinder.collectDefinitionsIn(it, symbolName) }
-    }
-
-    /**
-     * The full namespace a qualifier refers to, via the file's `(:require ...)` clauses. Null when no
-     * import matches, in which case the caller looks the qualifier up as a namespace name.
-     *
-     * An aliased import is referenced by its alias, a plain one by its short name (the compiler's
-     * default alias), and either by its full name, which a qualifier that is no alias always means.
-     * The full name used to be missed, so `(app.util/helper)` resolved to nothing and Safe Delete
-     * reported a live function as unused.
-     */
-    private fun resolveQualifierToNamespace(file: PhelFile, qualifier: String): String? {
-        val asWritten = PhelNamespaceUtils.normalizeNamespace(qualifier)
-
-        return PhelNamespaceUtils.extractImports(file).firstOrNull { spec ->
-            val byAlias = if (spec.alias != null) spec.alias == qualifier else spec.shortNamespace == qualifier
-            byAlias || PhelNamespaceUtils.normalizeNamespace(spec.fullNamespace) == asWritten
-        }?.fullNamespace
     }
 }
