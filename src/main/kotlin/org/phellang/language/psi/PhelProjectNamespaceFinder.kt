@@ -61,6 +61,8 @@ object PhelProjectNamespaceFinder {
         "phel.test.shrink",
     )
 
+    private const val STANDARD_LIBRARY_PREFIX = "phel."
+
     val STANDARD_LIBRARY_NAMESPACES: Set<String> =
         STANDARD_LIBRARY_SHORT_TO_FULL.values.toSet() + EXTRA_STANDARD_LIBRARY_NAMESPACES
 
@@ -95,6 +97,16 @@ object PhelProjectNamespaceFinder {
     fun isStandardLibrary(fullNamespace: String): Boolean {
         return PhelNamespaceUtils.normalizeNamespace(fullNamespace) in STANDARD_LIBRARY_NAMESPACES
     }
+
+    /**
+     * The name the registry files [namespace]'s functions under, or null for a namespace that is no
+     * stdlib one: its full name without `phel.`, so `string` for `phel.string` and `schema.coercer`
+     * for `phel.schema.coercer`, whose functions are `schema.coercer/coerce` and the like.
+     */
+    fun registryNamespaceOf(namespace: String): String? =
+        PhelNamespaceUtils.normalizeNamespace(namespace)
+            .takeIf { it in STANDARD_LIBRARY_NAMESPACES }
+            ?.removePrefix(STANDARD_LIBRARY_PREFIX)
 
     fun getStandardLibraryFullNamespace(shortName: String): String? {
         return STANDARD_LIBRARY_SHORT_TO_FULL[shortName.lowercase()]

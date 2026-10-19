@@ -13,6 +13,7 @@ import org.phellang.completion.handlers.PhelTemplateInsertHandler
 import org.phellang.completion.infrastructure.PhelProjectCompletionHelper
 import org.phellang.completion.infrastructure.PhelReferCompletionHelper
 import org.phellang.completion.infrastructure.PhelRegistryCompletionHelper
+import org.phellang.completion.infrastructure.PhelStandardLibraryQualifiers
 import org.phellang.completion.infrastructure.PhelTypeTagCompletionHelper
 import org.phellang.completion.infrastructure.PhelUsedClassCompletionHelper
 import org.phellang.core.utils.PhelErrorHandler
@@ -120,7 +121,9 @@ class PhelMainCompletionProvider : CompletionProvider<CompletionParameters?>() {
         val position = PhelCallPosition.of(element)
 
         PhelLocalSymbolCompletions.addLocalSymbols(result, element)
-        PhelRegistryCompletionHelper.addStandardLibraryFunctions(result, aliasMap, position)
+        PhelRegistryCompletionHelper.addStandardLibraryFunctions(result, aliasMap, position) { registryNamespace ->
+            psiFile?.let { PhelStandardLibraryQualifiers.overrideFor(it, registryNamespace, aliasMap) }
+        }
 
         if (psiFile != null) {
             PhelProjectCompletionHelper.addProjectCompletions(result, psiFile)

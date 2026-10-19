@@ -119,7 +119,9 @@ class PhelSymbolDocumentationResolver {
         val imported = PhelNamespaceUtils.importedNamespaceFor(file, qualifier)
 
         if (imported == null || PhelProjectNamespaceFinder.isStandardLibrary(imported)) {
-            val resolvedNamespace = PhelNamespaceUtils.extractAliasMap(file)[qualifier] ?: qualifier
+            val resolvedNamespace = PhelProjectNamespaceFinder.registryNamespaceOf(imported ?: qualifier)
+                ?: PhelNamespaceUtils.extractAliasMap(file)[qualifier]
+                ?: qualifier
             PhelApiDocumentation.getDocumentation("$resolvedNamespace/$functionName")?.let { return it }
             PhelApiDocumentation.getDocumentation(symbolName)?.let { return it }
         }
