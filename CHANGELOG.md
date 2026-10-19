@@ -96,6 +96,15 @@ refreshed, since completion, hover and arity checking are all driven by it.
   unused while `util/x` called it. A call by full name, `app.util/x`, now counts as a use; when two plain requires
   share a short name, `util/x` counts for the last, the one it calls. A `:refer` spares only its own spec: in
   `(:require app.util :as u lib.util :refer [x])` an unused `app.util` is reported.
+- Completion no longer offers a standard-library name under a qualifier a project namespace has taken. With
+  `(:require app.string)`, `string/` is `app.string`'s, yet `string/upper-case` was offered, and accepting it added
+  `(:require phel.string)`, which takes `string` over and re-points every existing `string/` call: the compiler keeps
+  the last alias of a name. It is now offered as `phel-string/upper-case`, required as
+  `(:require phel.string :as phel-string)`, or by its full name `phel.string/upper-case` when `phel.string` is already
+  required.
+- A standard-library call by full name, such as `(phel.string/upper-case s)`, is checked and documented like any other,
+  and so is one through an alias of a stdlib subnamespace, such as `(c/coerce ...)` with
+  `(:require phel.schema.coercer :as c)`. They were looked up under the wrong registry name and never checked.
 
 ## [1.5.0] - 2026-10-08
 

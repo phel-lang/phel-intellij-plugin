@@ -25,7 +25,7 @@ object PhelFunctionReferenceValidator {
         if (resolves(file, qualifier, resolvedNamespace, functionName)) return emptyList()
 
         // An unknown namespace is the namespace validator's problem, not this one's.
-        if (!isNamespaceKnown(symbol, qualifier, resolvedNamespace)) return emptyList()
+        if (!isNamespaceKnown(file, symbol, qualifier, resolvedNamespace)) return emptyList()
 
         // The namespace is real, so the function name itself is wrong — and only the user can say
         // what they meant, which is why no fix is offered.
@@ -47,8 +47,11 @@ object PhelFunctionReferenceValidator {
     private fun resolves(file: PhelFile, qualifier: String, resolvedNamespace: String, functionName: String): Boolean {
         val imported = PhelNamespaceUtils.importedNamespaceFor(file, qualifier)
         val mayBeStandardLibrary = imported == null || PhelProjectNamespaceFinder.isStandardLibrary(imported)
+        // A stdlib namespace in full, required or as written, is filed under its registry name:
+        // `phel.string/split` is `string/split`, and `phel.schema.coercer :as c` is `schema.coercer`.
+        val registryNamespace = PhelProjectNamespaceFinder.registryNamespaceOf(imported ?: qualifier) ?: resolvedNamespace
 
-        return (mayBeStandardLibrary && existsInStandardLibrary(resolvedNamespace, functionName)) ||
+        return (mayBeStandardLibrary && existsInStandardLibrary(registryNamespace, functionName)) ||
                 existsInProjectSymbols(file, qualifier, functionName)
     }
 
@@ -72,7 +75,10 @@ object PhelFunctionReferenceValidator {
     private fun existsInProjectSymbols(file: PhelFile, qualifier: String, functionName: String): Boolean =
         PhelProjectSymbolIndex.getInstance(file.project).findQualified(file, qualifier, functionName) != null
 
-    private fun isNamespaceKnown(symbol: PhelSymbol, qualifier: String, resolvedNamespace: String): Boolean {
+    private fun isNamespaceKnown(file: PhelFile, symbol: PhelSymbol, qualifier: String, resolvedNamespace: String): Boolean {
+        val named = PhelNamespaceUtils.importedNamespaceFor(file, qualifier) ?: qualifier
+        if (PhelProjectNamespaceFinder.isStandardLibrary(named)) return true
+
         if (PhelProjectNamespaceFinder.getStandardLibraryFullNamespace(resolvedNamespace) != null) {
             return true
         }
