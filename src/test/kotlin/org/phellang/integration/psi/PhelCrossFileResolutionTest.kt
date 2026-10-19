@@ -126,6 +126,31 @@ class PhelCrossFileResolutionTest : PhelIntegrationTestCase() {
         assertEquals(main.virtualFile.path, fileOf(use(main, "helper").reference?.resolve()))
     }
 
+    /**
+     * A qualifier that is not an alias names the namespace literally (`SymbolResolver::resolveWithAlias`),
+     * so the full name works with or without a require, and next to an alias.
+     */
+    fun testAFullyQualifiedNameResolvesWithoutARequire() {
+        val util = file("util", "(ns ${ns("util")})\n(defn helper [] 1)\n")
+        val main = file("main", "(ns ${ns("main")})\n(defn f [] (${ns("util")}/helper))\n")
+
+        assertEquals(util.virtualFile.path, fileOf(use(main, "${ns("util")}/helper").reference?.resolve()))
+    }
+
+    fun testAFullyQualifiedNameResolvesAlongsideItsRequire() {
+        val util = file("util", "(ns ${ns("util")})\n(defn helper [] 1)\n")
+        val main = file("main", "(ns ${ns("main")}\n  (:require ${ns("util")}))\n(defn f [] (${ns("util")}/helper))\n")
+
+        assertEquals(util.virtualFile.path, fileOf(use(main, "${ns("util")}/helper").reference?.resolve()))
+    }
+
+    fun testAFullyQualifiedNameResolvesAlongsideAnAlias() {
+        val util = file("util", "(ns ${ns("util")})\n(defn helper [] 1)\n")
+        val main = file("main", "(ns ${ns("main")}\n  (:require ${ns("util")} :as u))\n(defn f [] (${ns("util")}/helper))\n")
+
+        assertEquals(util.virtualFile.path, fileOf(use(main, "${ns("util")}/helper").reference?.resolve()))
+    }
+
     /** No require: the qualifier is matched against short namespace names, as before (spec D2). */
     fun testAnUnrequiredQualifierStillResolvesByShortNamespace() {
         // A dot-free namespace, so its short name is unique to this test too.
