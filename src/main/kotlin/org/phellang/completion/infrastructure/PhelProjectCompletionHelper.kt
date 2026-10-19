@@ -3,7 +3,7 @@ package org.phellang.completion.infrastructure
 import com.intellij.codeInsight.completion.CompletionResultSet
 import org.phellang.indexing.PhelProjectSymbolIndex
 import org.phellang.language.psi.PhelNamespaceUtils
-import org.phellang.language.psi.PhelRequireClauseAnalyzer
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.registry.PhelCompletionPriority
 import org.phellang.registry.PhelProjectSymbol
@@ -13,71 +13,95 @@ import org.phellang.registry.SymbolType
 object PhelProjectCompletionHelper {
 
     @JvmStatic
-    fun addProjectCompletions(result: CompletionResultSet, file: PhelFile, aliasMap: Map<String, String>) {
+    fun addProjectCompletions(result: CompletionResultSet, file: PhelFile) {
         val index = PhelProjectSymbolIndex.getInstance(file.project)
         val current = CurrentFile(file)
 
-        val imported = addImportedSymbols(result, index, file, aliasMap, current)
-        addUnimportedSymbols(result, index, current, imported)
+        val imported = addImportedSymbols(result, index, file, current)
+        addUnimportedSymbols(result, index, file, current, imported)
     }
 
     /**
-     * Namespaces the file already requires, spelled with whatever alias is in force.
+     * Namespaces the file already requires, spelled with whatever qualifier is in force.
      *
-     * Returns the short namespaces handled here, so the second pass does not offer them again
-     * fully-qualified.
+     * Returns the namespaces handled here, normalized, so the second pass does not offer them again.
      */
     private fun addImportedSymbols(
         result: CompletionResultSet,
         index: PhelProjectSymbolIndex,
         file: PhelFile,
-        aliasMap: Map<String, String>,
         current: CurrentFile,
     ): Set<String> {
         val handled = mutableSetOf<String>()
 
-        for (import in PhelRequireClauseAnalyzer.imports(file)) {
-            handled += import.shortNamespace
+        for (import in PhelNamespaceUtils.extractImports(file)) {
+            val namespace = PhelNamespaceUtils.normalizeNamespace(import.fullNamespace)
+            // A namespace required twice is offered once.
+            if (!handled.add(namespace)) continue
 
-            for (symbol in index.getSymbolsForNamespace(import.shortNamespace)) {
+            val qualifier = requiredQualifier(file, namespace)
+            for (symbol in index.symbolsInNamespace(namespace)) {
                 // The edited file's own symbols come from local completions, unqualified.
                 if (current.owns(symbol)) continue
 
-                addCompletion(result, symbol, aliasedName(symbol, import, aliasMap))
+                addCompletion(result, symbol, "$qualifier/${symbol.name}")
             }
         }
 
         return handled
     }
 
-    /** Everything else in the project, offered fully qualified and auto-imported on acceptance. */
+    /** Everything else in the project, required on acceptance. */
     private fun addUnimportedSymbols(
         result: CompletionResultSet,
         index: PhelProjectSymbolIndex,
+        file: PhelFile,
         current: CurrentFile,
         handled: Set<String>,
     ) {
-        for (symbol in index.getAllSymbols()) {
-            if (current.owns(symbol)) continue
-            if (symbol.shortNamespace in handled) continue
-            if (symbol.shortNamespace == current.namespace) continue
+        val byNamespace = index.getAllSymbols()
+            .filterNot(current::owns)
+            .groupBy { PhelNamespaceUtils.normalizeNamespace(it.namespace) }
 
-            addCompletion(result, symbol, symbol.qualifiedName)
+        for ((namespace, symbols) in byNamespace) {
+            if (namespace in handled || namespace == current.namespace) continue
+            val qualifier = unrequiredQualifier(file, namespace) ?: continue
+
+            for (symbol in symbols) addCompletion(result, symbol, "$qualifier/${symbol.name}")
         }
     }
 
-    /** An explicit `:as` wins; otherwise an alias pointing at the same namespace, else the full name. */
-    private fun aliasedName(
-        symbol: PhelProjectSymbol,
-        import: PhelRequireClauseAnalyzer.RequireImport,
-        aliasMap: Map<String, String>,
-    ): String {
-        import.alias?.let { return "$it/${symbol.name}" }
+    /**
+     * How a required [namespace] is written in front of a name: the alias it was required with, or its
+     * short name for a plain require, while that still names it; else its full name, which always does.
+     * The compiler keeps the last alias of a name, so a later require can take either one over.
+     */
+    private fun requiredQualifier(file: PhelFile, namespace: String): String {
+        val shortName = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
-        val alias = aliasMap.entries.find { it.value == symbol.shortNamespace }?.key
-
-        return if (alias != null) "$alias/${symbol.name}" else symbol.qualifiedName
+        return PhelNamespaceUtils.extractImports(file)
+            .filter { PhelNamespaceUtils.normalizeNamespace(it.fullNamespace) == namespace }
+            .map { it.alias ?: shortName }
+            .firstOrNull { namedBy(file, it) == namespace }
+            ?: namespace
     }
+
+    /**
+     * How a [namespace] completion will require is written: its short name, which the plain require
+     * makes its alias, unless that already means another namespace here. Requiring it plainly would then
+     * take the name over and re-point the file's existing calls, so it gets an alias of its own
+     * (`app-util` for `app.util`), or is not offered when even that is taken.
+     */
+    private fun unrequiredQualifier(file: PhelFile, namespace: String): String? {
+        val shortName = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
+        if (namedBy(file, shortName) == null) return shortName
+
+        return namespace.replace('.', '-').takeIf { namedBy(file, it) == null }
+    }
+
+    /** The namespace, normalized, that [qualifier] names through the file's requires. */
+    private fun namedBy(file: PhelFile, qualifier: String): String? =
+        PhelNamespaceUtils.importedNamespaceFor(file, qualifier)?.let(PhelNamespaceUtils::normalizeNamespace)
 
     private fun addCompletion(result: CompletionResultSet, symbol: PhelProjectSymbol, displayName: String) {
         PhelCompletionUtils.addRankedCompletionWithNamespace(
@@ -90,12 +114,12 @@ object PhelProjectCompletionHelper {
         )
     }
 
-    /** The edited file's identity. Both its path and its namespace suppress a suggestion. */
+    /** The edited file's identity. Both its path and its namespace, normalized, suppress a suggestion. */
     private class CurrentFile(file: PhelFile) {
         val path: String? = file.virtualFile?.path
 
-        val namespace: String? = PhelNamespaceUtils.findNamespaceDeclaration(file)
-            ?.let { PhelNamespaceUtils.extractShortNamespaceFromDeclaration(it) }
+        val namespace: String? = PhelNamespaceUtils.extractNamespaceFromFile(file)
+            ?.let(PhelNamespaceUtils::normalizeNamespace)
 
         fun owns(symbol: PhelProjectSymbol): Boolean = symbol.file.path == path
     }

@@ -11,13 +11,19 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
 import org.phellang.registry.PhelProjectSymbol
+import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.files.PhelFile
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 @Service(Service.Level.PROJECT)
 class PhelProjectSymbolIndex(private val project: Project) : Disposable {
-    /** Cache: shortNamespace -> List of symbols */
+    /**
+     * Cache: namespace, normalized to dots -> List of symbols.
+     *
+     * Keyed by the full name: `app.util` and `lib.util` are two namespaces. Under the short name they
+     * shared one entry, so a `lib.util` lookup also answered with `app.util`'s definitions.
+     */
     private val symbolsByNamespace = ConcurrentHashMap<String, List<PhelProjectSymbol>>()
 
     /** Cache: simple name -> List of symbols. Used for fast cross-namespace lookups by name. */
@@ -63,9 +69,10 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         return symbolsByName[name] ?: emptyList()
     }
 
-    fun getSymbolsForNamespace(shortNamespace: String): List<PhelProjectSymbol> {
+    /** The public definitions of [namespace], a full name in either separator (`app.web`, `app\web`). */
+    fun symbolsInNamespace(namespace: String): List<PhelProjectSymbol> {
         ensureIndexBuilt()
-        return symbolsByNamespace[shortNamespace] ?: emptyList()
+        return symbolsByNamespace[namespaceKey(namespace)] ?: emptyList()
     }
 
     fun getAllSymbols(): List<PhelProjectSymbol> {
@@ -73,10 +80,26 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         return symbolsByNamespace.values.flatten()
     }
 
-    fun findSymbol(shortNamespace: String, name: String): PhelProjectSymbol? {
-        ensureIndexBuilt()
-        return symbolsByNamespace[shortNamespace]?.find { it.name == name }
+    fun findInNamespace(namespace: String, name: String): PhelProjectSymbol? =
+        symbolsInNamespace(namespace).find { it.name == name }
+
+    /**
+     * The definition `qualifier/name` reaches from [file], read the way resolution reads a qualifier:
+     * the namespace a require gives it (alias, default alias or full name), else the namespace it
+     * spells. Failing both, a namespace whose short name it is, the file's own first: a leniency
+     * resolution keeps for a qualifier no require accounts for.
+     */
+    fun findQualified(file: PhelFile, qualifier: String, name: String): PhelProjectSymbol? {
+        PhelNamespaceUtils.importedNamespaceFor(file, qualifier)?.let { return findInNamespace(it, name) }
+        findInNamespace(qualifier, name)?.let { return it }
+
+        val ownNamespace = PhelNamespaceUtils.extractNamespaceFromFile(file)?.let(::namespaceKey)
+        val byShortName = findByName(name).filter { it.shortNamespace == qualifier }
+
+        return byShortName.find { namespaceKey(it.namespace) == ownNamespace } ?: byShortName.firstOrNull()
     }
+
+    private fun namespaceKey(namespace: String): String = PhelNamespaceUtils.normalizeNamespace(namespace)
 
     /** Serializes the per-file remove-then-add so concurrent refreshers can't duplicate a file. */
     private val refreshLock = Any()
@@ -97,13 +120,13 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         synchronized(refreshLock) {
             val oldSymbols = symbolsByFile[filePath] ?: emptyList()
             for (symbol in oldSymbols) {
-                removeFromMap(symbolsByNamespace, symbol.shortNamespace, filePath)
+                removeFromMap(symbolsByNamespace, namespaceKey(symbol.namespace), filePath)
                 removeFromMap(symbolsByName, symbol.name, filePath)
             }
 
             symbolsByFile[filePath] = newSymbols
             for (symbol in newSymbols) {
-                addToMap(symbolsByNamespace, symbol.shortNamespace, symbol)
+                addToMap(symbolsByNamespace, namespaceKey(symbol.namespace), symbol)
                 addToMap(symbolsByName, symbol.name, symbol)
             }
         }
@@ -142,7 +165,7 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         synchronized(refreshLock) {
             val oldSymbols = symbolsByFile.remove(file.path) ?: return
             for (symbol in oldSymbols) {
-                removeFromMap(symbolsByNamespace, symbol.shortNamespace, file.path)
+                removeFromMap(symbolsByNamespace, namespaceKey(symbol.namespace), file.path)
                 removeFromMap(symbolsByName, symbol.name, file.path)
             }
         }

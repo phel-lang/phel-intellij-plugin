@@ -60,6 +60,7 @@ object PhelNamespaceValidator {
     private fun reportNotImported(symbol: PhelSymbol, qualifier: String): List<PhelValidationProblem> {
         val importable = PhelProjectNamespaceFinder.getStandardLibraryFullNamespace(qualifier)
             ?: PhelProjectNamespaceFinder.findByShortName(symbol.project, qualifier)
+            ?: qualifier.takeIf { isFullNamespace(symbol.project, it) }
             ?: return listOf(PhelValidationProblem("Namespace '$qualifier' does not exist"))
 
         return listOf(
@@ -75,9 +76,11 @@ object PhelNamespaceValidator {
     private fun importStatus(file: PhelFile, qualifier: String): ImportStatus {
         val imports = PhelRequireClauseAnalyzer.imports(file)
 
-        // An `:as` alias takes priority; otherwise match the import's short namespace.
+        // An `:as` alias takes priority; otherwise match the import's short namespace, or its full name:
+        // a qualifier that is no alias names the namespace itself (`SymbolResolver::resolveWithAlias`).
         val import = imports.firstOrNull { it.alias == qualifier }
             ?: imports.firstOrNull { it.shortNamespace == qualifier }
+            ?: imports.firstOrNull { sameNamespace(it.fullNamespace, qualifier) }
             ?: return ImportStatus.NOT_IMPORTED
 
         return if (namespaceExists(file.project, import.fullNamespace)) {
@@ -86,6 +89,13 @@ object PhelNamespaceValidator {
             ImportStatus.IMPORTED_BUT_NOT_EXISTS
         }
     }
+
+    private fun sameNamespace(namespace: String, qualifier: String): Boolean =
+        PhelNamespaceUtils.normalizeNamespace(namespace) == PhelNamespaceUtils.normalizeNamespace(qualifier)
+
+    /** `app.util/helper` with no require: the full name of a namespace that exists, so it can be required. */
+    private fun isFullNamespace(project: Project, qualifier: String): Boolean =
+        PhelNamespaceUtils.looksLikeNamespace(qualifier) && namespaceExists(project, qualifier)
 
     private fun namespaceExists(project: Project, fullNamespace: String): Boolean =
         PhelProjectNamespaceFinder.isStandardLibrary(fullNamespace) ||

@@ -29,13 +29,16 @@ object PhelReferCompletionHelper {
     ) {
         val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespaceText)
 
+        // The registry is keyed by short name, so only a stdlib namespace may use it: a project's
+        // `app.string` offers its own names, not `phel.string`'s.
         val namespace = Namespace.fromShortName(shortNamespace)
+            ?.takeIf { PhelProjectNamespaceFinder.isStandardLibrary(namespaceText) }
         if (namespace != null) {
             addStandardLibraryCompletions(result, namespace, shortNamespace, alreadyReferred)
         }
 
         if (file != null) {
-            addProjectSymbolCompletions(result, shortNamespace, file, alreadyReferred)
+            addProjectSymbolCompletions(result, namespaceText, file, alreadyReferred)
         }
     }
 
@@ -71,12 +74,12 @@ object PhelReferCompletionHelper {
 
     private fun addProjectSymbolCompletions(
         result: CompletionResultSet,
-        shortNamespace: String,
+        namespace: String,
         file: PhelFile,
         alreadyReferred: Set<String>
     ) {
         val index = PhelProjectSymbolIndex.getInstance(file.project)
-        val symbols = index.getSymbolsForNamespace(shortNamespace)
+        val symbols = index.symbolsInNamespace(namespace)
 
         for (symbol in symbols) {
             if (symbol.file.path == file.virtualFile?.path) {
