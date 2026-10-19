@@ -63,6 +63,48 @@ refreshed, since completion, hover and arity checking are all driven by it.
   `[app.util :as u :refer [helper]]` keeps its alias and its refers. `:as` and `:refer` combine in either order. A
   `:refer [...]` vector is no longer mistaken for a namespace of its own. `#_`-discarded specs, names and clauses no
   longer count.
+- Two namespaces whose names end alike, such as `app.util` and `lib.util`, are no longer mixed up. The project symbol
+  index filed both under `util`, and the features reading it shortened the full namespace before asking:
+  - `(:require lib.util :refer [x])` is reported when only `app.util` defines `x`, and completion inside the
+    `:refer [...]` offers `lib.util`'s names only;
+  - an aliased call such as `(l/x)` is checked against the namespace `l` stands for, and completion after `l/` offers
+    that namespace's names only. An alias a later require took over is not offered for the earlier namespace, since
+    the compiler keeps the last alias of a name;
+  - the **Wrong number of args** inspection, parameter hints and parameter info take an aliased, default-aliased or
+    fully qualified call's arities from the namespace it names, and from nowhere else. `(l/count 1 2)` was checked
+    against `phel.core`'s one-argument `count`, and `(l/helper 1 2 3)` against another namespace's `helper`. A
+    standard-library call such as `(s/join ...)` with `phel.string :as s` is now checked against `phel.string/join`
+    itself;
+  - hover shows the docstring of the namespace the name comes from;
+  - completion of a name from an unrequired namespace whose short name the file already uses for another namespace
+    requires it under an alias of its own, `(:require app.util :as app-util)`, and inserts `app-util/x`. A plain
+    require would take `util` over and re-point the file's existing `util/` calls. Editing `x.util` no longer hides
+    every other `*.util` namespace from completion.
+- A project namespace that shares its last segment with a standard-library one, such as `app.string`, is no longer read
+  as `phel.string`. Its `:refer [...]` names, aliased calls, completion after its alias and hover come from the project
+  namespace: `(:require app.string :refer [split])` passed because `phel.string` has a `split`, and
+  `(:require app.string :as s)` offered `s/split`.
+- A fully qualified call such as `(app.util/helper)` is no longer reported as `Namespace 'app.util' does not exist`.
+  With the namespace required it is accepted; without it, it is reported as not imported, with the quick fix to
+  require it.
+- A `:refer [...]` is read against the spec it belongs to. In `(:require app.util :as u lib.util :refer [count])` the
+  check, completion and hover used the clause's first namespace, `app.util`; and a vector spec such as
+  `[lib.util :refer [x]]` got none of the three.
+- The **Unused import** inspection and **Optimize Imports** credit a use to the require it belongs to, read as the
+  compiler reads a qualifier. An alias was looked up by short namespace, so with `app.util :as u` and a plain
+  `lib.util`, `u/x` counted as a use of `lib.util`, and with the alias on the other one `app.util` was reported
+  unused while `util/x` called it. A call by full name, `app.util/x`, now counts as a use; when two plain requires
+  share a short name, `util/x` counts for the last, the one it calls. A `:refer` spares only its own spec: in
+  `(:require app.util :as u lib.util :refer [x])` an unused `app.util` is reported.
+- Completion no longer offers a standard-library name under a qualifier a project namespace has taken. With
+  `(:require app.string)`, `string/` is `app.string`'s, yet `string/upper-case` was offered, and accepting it added
+  `(:require phel.string)`, which takes `string` over and re-points every existing `string/` call: the compiler keeps
+  the last alias of a name. It is now offered as `phel-string/upper-case`, required as
+  `(:require phel.string :as phel-string)`, or by its full name `phel.string/upper-case` when `phel.string` is already
+  required.
+- A standard-library call by full name, such as `(phel.string/upper-case s)`, is checked and documented like any other,
+  and so is one through an alias of a stdlib subnamespace, such as `(c/coerce ...)` with
+  `(:require phel.schema.coercer :as c)`. They were looked up under the wrong registry name and never checked.
 
 ## [1.5.0] - 2026-10-08
 

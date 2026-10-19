@@ -106,7 +106,7 @@ class PhelParameterInfoHandler : ParameterInfoHandler<PhelList, PhelArity> {
         if (PhelInteropShorthands.isInteropCall(name)) return null
         if (PhelLocalBindingScope.resolvesToLocalBinding(head, name)) return null
 
-        return PhelArityResolver.resolve(head.project, name)?.takeIf { it.isNotEmpty() }
+        return PhelArityResolver.resolve(head, name)?.takeIf { it.isNotEmpty() }
     }
 
     /** Which argument the caret sits in: 0 for the first, counting the head as -1. */

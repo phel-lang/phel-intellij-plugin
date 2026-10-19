@@ -107,6 +107,24 @@ object PhelNamespaceUtils {
     internal fun extractImports(file: PhelFile): List<PhelRequireClauseAnalyzer.RequireImport> =
         cachedPerPsi(file, IMPORTS_KEY) { PhelRequireClauseAnalyzer.imports(file) }
 
+    /**
+     * The full namespace, as written, that [qualifier] names through [file]'s `(:require ...)` clauses.
+     * Null when no import matches; the compiler then reads the qualifier as the namespace's own name.
+     *
+     * An aliased import is reached by its alias, a plain one by its short name (the compiler's default
+     * alias), and either by its full name, which a qualifier that is no alias always means
+     * (`SymbolResolver::resolveWithAlias`). Two imports claiming one alias: the compiler keeps the last
+     * (`GlobalEnvironment::addRequireAlias`), so this does too.
+     */
+    internal fun importedNamespaceFor(file: PhelFile, qualifier: String): String? {
+        val asWritten = normalizeNamespace(qualifier)
+
+        return extractImports(file).lastOrNull { spec ->
+            val byAlias = if (spec.alias != null) spec.alias == qualifier else spec.shortNamespace == qualifier
+            byAlias || normalizeNamespace(spec.fullNamespace) == asWritten
+        }?.fullNamespace
+    }
+
     fun extractAliasMap(file: PhelFile): Map<String, String> {
         return cachedPerPsi(file, ALIAS_MAP_KEY) { PhelRequireClauseAnalyzer.computeAliasMap(file) }
     }

@@ -7,6 +7,7 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.util.Key
 import org.phellang.language.psi.PhelNamespaceImporter
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelProjectNamespaceFinder
 import org.phellang.language.psi.files.PhelFile
 
 class NamespacedInsertHandler : InsertHandler<LookupElement?> {
@@ -61,7 +62,7 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
         val fullNamespace = item.getUserData(FULL_NAMESPACE_KEY)
         if (fullNamespace != null) {
             WriteCommandAction.runWriteCommandAction(context.project) {
-                PhelNamespaceImporter.ensureNamespaceImportedByFullName(psiFile, fullNamespace)
+                PhelNamespaceImporter.ensureNamespaceImportedByFullName(psiFile, fullNamespace, aliasFor(qualifier, fullNamespace))
             }
         } else if (!PhelNamespaceUtils.isNamespaceImportedOrAliased(psiFile, qualifier)) {
             WriteCommandAction.runWriteCommandAction(context.project) {
@@ -69,4 +70,15 @@ class NamespacedInsertHandler : InsertHandler<LookupElement?> {
             }
         }
     }
+
+    /**
+     * The `:as` the new require needs for [qualifier] to name [fullNamespace]: none when it is the
+     * namespace's short name, the default alias, or its full name. Completion picks another alias
+     * (`app-util/`) when the short name already means a different namespace in the file.
+     */
+    private fun aliasFor(qualifier: String, fullNamespace: String): String? =
+        qualifier.takeUnless {
+            it == PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace) ||
+                    PhelNamespaceUtils.normalizeNamespace(it) == PhelNamespaceUtils.normalizeNamespace(fullNamespace)
+        }
 }

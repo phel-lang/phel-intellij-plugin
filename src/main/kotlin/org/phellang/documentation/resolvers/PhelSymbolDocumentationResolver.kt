@@ -64,13 +64,14 @@ class PhelSymbolDocumentationResolver {
 
     private fun resolveReferSymbolDocumentation(symbol: PhelSymbol, symbolName: String): String {
         val namespace = PhelReferUtils.getReferNamespace(symbol) ?: return generateBasicDocumentation(symbol, symbolName)
-        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
-        val canonicalName = "$shortNamespace/$symbolName"
-        val apiDoc = PhelApiDocumentation.getDocumentation(canonicalName)
-        if (apiDoc != null) return apiDoc
+        // The registry is keyed by short name, so only a stdlib namespace may use it.
+        if (PhelProjectNamespaceFinder.isStandardLibrary(namespace)) {
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
+            PhelApiDocumentation.getDocumentation("$shortNamespace/$symbolName")?.let { return it }
+        }
 
-        val projectDoc = resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
+        val projectDoc = resolveProjectSymbolDocumentation(symbol, namespace, symbolName)
         if (projectDoc != null) return projectDoc
 
         return generateBasicDocumentation(symbol, symbolName)
@@ -104,7 +105,9 @@ class PhelSymbolDocumentationResolver {
      * A qualified symbol such as `str/replace` or `s/replace`.
      *
      * The qualifier may be an `:as` alias, so it is resolved through the file's alias map before the
-     * canonical lookup; the symbol's literal text is tried next in case it is already canonical.
+     * canonical lookup; the symbol's literal text is tried next in case it is already canonical. Both
+     * are registry lookups, keyed by short name, so a qualifier that names a required project namespace
+     * skips them: `app.string :as s` documents its own `s/join`, not `phel.string`'s.
      */
     private fun qualifiedDocumentation(
         symbol: PhelSymbol,
@@ -113,11 +116,18 @@ class PhelSymbolDocumentationResolver {
         functionName: String,
     ): String? {
         val file = symbol.containingFile as? PhelFile ?: return null
-        val resolvedNamespace = PhelNamespaceUtils.extractAliasMap(file)[qualifier] ?: qualifier
+        val imported = PhelNamespaceUtils.importedNamespaceFor(file, qualifier)
 
-        return PhelApiDocumentation.getDocumentation("$resolvedNamespace/$functionName")
-            ?: PhelApiDocumentation.getDocumentation(symbolName)
-            ?: resolveProjectSymbolDocumentation(symbol, resolvedNamespace, functionName)
+        if (imported == null || PhelProjectNamespaceFinder.isStandardLibrary(imported)) {
+            val resolvedNamespace = PhelProjectNamespaceFinder.registryNamespaceOf(imported ?: qualifier)
+                ?: PhelNamespaceUtils.extractAliasMap(file)[qualifier]
+                ?: qualifier
+            PhelApiDocumentation.getDocumentation("$resolvedNamespace/$functionName")?.let { return it }
+            PhelApiDocumentation.getDocumentation(symbolName)?.let { return it }
+        }
+
+        val projectSymbol = PhelProjectSymbolIndex.getInstance(symbol.project).findQualified(file, qualifier, functionName)
+        return projectSymbol?.let(PhelDocHtml::projectSymbol)
     }
 
     /**
@@ -134,32 +144,32 @@ class PhelSymbolDocumentationResolver {
         ownNamespaceDocumentation(symbol, file, symbolName)?.let { return it }
 
         val sourceNamespace = PhelNamespaceUtils.findReferSource(file, symbolName) ?: return null
-        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(sourceNamespace)
 
         // The registry is keyed by short name, so only a stdlib namespace may use it: a project's
         // `app.string` refers its own `join`, not `phel.string`'s.
         val standardLibraryDocumentation = if (PhelProjectNamespaceFinder.isStandardLibrary(sourceNamespace)) {
+            val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(sourceNamespace)
             PhelApiDocumentation.getDocumentation("$shortNamespace/$symbolName")
         } else {
             null
         }
 
-        return standardLibraryDocumentation ?: resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
+        return standardLibraryDocumentation ?: resolveProjectSymbolDocumentation(symbol, sourceNamespace, symbolName)
     }
 
     private fun ownNamespaceDocumentation(symbol: PhelSymbol, file: PhelFile, symbolName: String): String? {
         val namespace = PhelNamespaceUtils.extractNamespaceFromFile(file) ?: return null
-        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(namespace)
 
-        return resolveProjectSymbolDocumentation(symbol, shortNamespace, symbolName)
+        return resolveProjectSymbolDocumentation(symbol, namespace, symbolName)
     }
 
+    /** The project's definition of [functionName] in [namespace], a full name. */
     private fun resolveProjectSymbolDocumentation(
-        symbol: PhelSymbol, shortNamespace: String, functionName: String
+        symbol: PhelSymbol, namespace: String, functionName: String
     ): String? {
         val project = symbol.project
         val index = PhelProjectSymbolIndex.getInstance(project)
-        val projectSymbol = index.findSymbol(shortNamespace, functionName) ?: return null
+        val projectSymbol = index.findInNamespace(namespace, functionName) ?: return null
 
         return PhelDocHtml.projectSymbol(projectSymbol)
     }

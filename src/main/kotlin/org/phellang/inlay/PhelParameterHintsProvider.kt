@@ -37,7 +37,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             if (!takesPositionalParameters(headSymbol, headName)) return
 
             val args = forms.drop(1)
-            val arities = PhelArityResolver.resolve(headSymbol.project, headName) ?: return
+            val arities = PhelArityResolver.resolve(headSymbol, headName) ?: return
             val arity = arities.selectFor(args.size) ?: return
 
             emitHints(args, arity, sink)
