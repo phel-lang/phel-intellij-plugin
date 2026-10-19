@@ -43,6 +43,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
   can reach, through a cached map of which files make up each namespace; only an edit to a Phel file, or a file being
   created, deleted, moved or renamed, rebuilds it. On the same file, the cross-file lookup went from ~735 ms to ~3 ms,
   and resolving every symbol, definitions included, from ~0.8 s to ~0.2-0.4 s.
+- Resolving a definition no longer walks every symbol of its file. This is what Ctrl-click on a definition does, and
+  what Find Usages, Rename and Safe Delete do for each same-named definition they meet. Each file's symbols are now
+  grouped by name once per file version. Resolving every definition of the same file went from ~170 ms to ~15 ms.
 
 ### Fixed
 

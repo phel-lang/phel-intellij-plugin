@@ -8,12 +8,16 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.integration.PhelIntegrationTestCase
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelNamespaceUtils
+import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.PhelTypeTags
 import org.phellang.language.psi.PhelVendorUtils
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.analysis.PhelDestructuringAnalyzer
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
 import org.phellang.language.psi.references.PhelDefinitionFinder
 import org.phellang.language.psi.references.PhelLocalScopeResolver
+import org.phellang.language.psi.references.PhelUsageFinder
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * What the per-file caches keep, and what invalidates them.
@@ -130,6 +134,37 @@ class PhelPerFileCachingTest : PhelIntegrationTestCase() {
         edit(file) { it.insertString(it.textLength, "(defn g [fresh] fresh)\n") }
 
         assertEquals(listOf("fresh"), PhelLocalScopeResolver.findAllParametersIn(file, "fresh").map { it.text })
+    }
+
+    fun testTheSymbolsOfANameInAFileAreCollectedOnce() {
+        val file = phelFile("src/usages.phel", "(ns app.usages)\n(defn helper [] 1)\n(defn f [] (helper))\n")
+
+        assertSame(PhelUsageFinder.symbolsNamed(file, "helper"), PhelUsageFinder.symbolsNamed(file, "helper"))
+    }
+
+    /** What the full walk matched: a qualified use by its name part, no type tags, in document order. */
+    fun testTheCachedUsageLookupMatchesTheFullWalk() {
+        val file = phelFile(
+            "src/usagewalk.phel",
+            "(ns app.usagewalk)\n(defn helper [^helper h] h)\n(defn f [] (helper) (u/helper) [helper])\n",
+        )
+
+        for (name in listOf("helper", "h", "f", "missing")) {
+            val walked = PsiTreeUtil.findChildrenOfType(file, PhelSymbol::class.java)
+                .filter { name == PhelPsiUtils.getName(it) && !PhelTypeTags.isTypeTag(it) }
+
+            assertEquals("symbols named '$name'", walked, PhelUsageFinder.symbolsNamed(file, name))
+        }
+        assertEquals(4, PhelUsageFinder.symbolsNamed(file, "helper").size)
+    }
+
+    fun testAUseAddedByAnEditIsFound() {
+        val file = phelFile("src/usageedit.phel", "(ns app.usageedit)\n(defn helper [] 1)\n")
+        assertEquals(1, PhelUsageFinder.symbolsNamed(file, "helper").size)
+
+        edit(file) { it.insertString(it.textLength, "(defn g [] (helper))\n") }
+
+        assertEquals(2, PhelUsageFinder.symbolsNamed(file, "helper").size)
     }
 
     fun testTheStdlibFolderIsFoundOnceItExists() {
