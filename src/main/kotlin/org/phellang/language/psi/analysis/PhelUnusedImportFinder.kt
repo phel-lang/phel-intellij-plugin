@@ -4,10 +4,8 @@ import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelImportAnalysis
-import org.phellang.language.psi.PhelKeyword
-import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelNamespaceUtils
-import org.phellang.language.psi.PhelProjectNamespaceFinder
+import org.phellang.language.psi.PhelRequireClauseAnalyzer
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.cachedPerPsi
@@ -36,21 +34,23 @@ object PhelUnusedImportFinder {
         val containingFile = namespaceSymbol.containingFile as? PhelFile ?: return false
 
         // `:refer` pulls names in unqualified, so no `ns/name` qualifier will ever appear for it.
-        // Judging such an import by qualifier use would report every one of them as unused.
-        if (hasReferClause(namespaceSymbol)) return false
+        // Judging such an import by qualifier use would report every one of them as unused. Its own
+        // spec's `:refer` only: one clause can require several namespaces.
+        if (PhelRequireClauseAnalyzer.refersFrom(containingFile, fullNamespace)) return false
 
         // A duplicate is trivially also unused, and the annotator already reports it as a duplicate.
         // Saying both on the same symbol is the noise this precedence rule exists to avoid.
         if (PhelImportAnalysis.isDuplicateImport(containingFile, namespaceSymbol, fullNamespace)) return false
 
-        val shortNamespace = PhelProjectNamespaceFinder.extractShortNamespace(fullNamespace)
-        val aliasMap = PhelNamespaceUtils.extractAliasMap(containingFile)
-        val alias = aliasMap.entries.find { it.value == shortNamespace }?.key
+        // A qualifier is a use of the import it names, read as the compiler reads it: an alias, a plain
+        // require's short name, or the full name, the last require claiming a name winning. Matching
+        // by short namespace credited `u/x` to every `*.util` and nothing to `app.util/x`.
+        val namespace = PhelNamespaceUtils.normalizeNamespace(fullNamespace)
 
-        // Under `:as`, uses are written with the alias, so that is the qualifier to look for.
-        val qualifierToFind = alias ?: shortNamespace
-
-        return qualifierToFind !in usedNamespaceQualifiers(containingFile)
+        return usedNamespaceQualifiers(containingFile).none { qualifier ->
+            PhelNamespaceUtils.importedNamespaceFor(containingFile, qualifier)
+                ?.let(PhelNamespaceUtils::normalizeNamespace) == namespace
+        }
     }
 
     /**
@@ -78,9 +78,4 @@ object PhelUnusedImportFinder {
         return qualifiers
     }
 
-    private fun hasReferClause(namespaceSymbol: PhelSymbol): Boolean {
-        val requireForm = PsiTreeUtil.getParentOfType(namespaceSymbol, PhelList::class.java) ?: return false
-
-        return PsiTreeUtil.findChildrenOfType(requireForm, PhelKeyword::class.java).any { it.text == ":refer" }
-    }
 }

@@ -49,6 +49,12 @@ internal object PhelRequireClauseAnalyzer {
     fun findReferSource(file: PhelFile, symbolName: String): String? =
         specsOf(file).firstOrNull { spec -> spec.referVectors.any { symbolName in referredNamesIn(it) } }?.namespace
 
+    /** Whether a spec requiring [namespace] (either separator) has a `:refer [...]`. */
+    fun refersFrom(file: PhelFile, namespace: String): Boolean {
+        val normalized = PhelNamespaceUtils.normalizeNamespace(namespace)
+        return specsOf(file).any { PhelNamespaceUtils.normalizeNamespace(it.namespace) == normalized && it.referVectors.isNotEmpty() }
+    }
+
     /**
      * The namespace, as written, whose `:refer` is [vector] in [requireForm]; null when [vector] is no
      * `:refer` vector there. The spec that owns it, flat or `[ns :refer [...]]`, never the clause's first

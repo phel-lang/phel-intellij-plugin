@@ -90,6 +90,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
 - A `:refer [...]` is read against the spec it belongs to. In `(:require app.util :as u lib.util :refer [count])` the
   check, completion and hover used the clause's first namespace, `app.util`; and a vector spec such as
   `[lib.util :refer [x]]` got none of the three.
+- The **Unused import** inspection and **Optimize Imports** credit a use to the require it belongs to, read as the
+  compiler reads a qualifier. An alias was looked up by short namespace, so with `app.util :as u` and a plain
+  `lib.util`, `u/x` counted as a use of `lib.util`, and with the alias on the other one `app.util` was reported
+  unused while `util/x` called it. A call by full name, `app.util/x`, now counts as a use; when two plain requires
+  share a short name, `util/x` counts for the last, the one it calls. A `:refer` spares only its own spec: in
+  `(:require app.util :as u lib.util :refer [x])` an unused `app.util` is reported.
 
 ## [1.5.0] - 2026-10-08
 
