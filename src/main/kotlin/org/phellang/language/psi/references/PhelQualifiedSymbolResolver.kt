@@ -2,8 +2,8 @@ package org.phellang.language.psi.references
 
 import com.intellij.psi.PsiElement
 import org.phellang.language.psi.PhelNamespaceFiles
+import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelProjectNamespaceFinder
-import org.phellang.language.psi.PhelRequireClauseAnalyzer
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 
@@ -34,7 +34,9 @@ internal object PhelQualifiedSymbolResolver {
 
     /**
      * The definitions in the files of the qualifier's namespace: the imported namespace when the file
-     * requires it, else every namespace whose short name is the qualifier (no require to go by).
+     * requires it. With no require to go by, the compiler reads the qualifier as the namespace itself
+     * (`SymbolResolver::resolveWithAlias`); a namespace whose short name is the qualifier is also
+     * accepted, a leniency the plugin keeps.
      */
     private fun findInProjectFiles(
         project: com.intellij.openapi.project.Project,
@@ -45,21 +47,28 @@ internal object PhelQualifiedSymbolResolver {
         val files = if (importedNamespace != null) {
             PhelNamespaceFiles.filesOf(project, importedNamespace)
         } else {
-            PhelNamespaceFiles.filesWithShortNamespace(project, qualifier)
+            (PhelNamespaceFiles.filesOf(project, qualifier) + PhelNamespaceFiles.filesWithShortNamespace(project, qualifier))
+                .distinct()
         }
 
         return files.flatMap { PhelDefinitionFinder.collectDefinitionsIn(it, symbolName) }
     }
 
     /**
-     * The full namespace a qualifier refers to, via the file's `(:require ...)` clauses — resolving
-     * `:as` aliases as well as direct imports. Null when no import matches, in which case the caller
-     * falls back to matching files by short namespace.
+     * The full namespace a qualifier refers to, via the file's `(:require ...)` clauses. Null when no
+     * import matches, in which case the caller looks the qualifier up as a namespace name.
+     *
+     * An aliased import is referenced by its alias, a plain one by its short name (the compiler's
+     * default alias), and either by its full name, which a qualifier that is no alias always means.
+     * The full name used to be missed, so `(app.util/helper)` resolved to nothing and Safe Delete
+     * reported a live function as unused.
      */
     private fun resolveQualifierToNamespace(file: PhelFile, qualifier: String): String? {
-        return PhelRequireClauseAnalyzer.imports(file).firstOrNull { spec ->
-            // An aliased import is referenced by its alias only; a plain one by its short name.
-            if (spec.alias != null) spec.alias == qualifier else spec.shortNamespace == qualifier
+        val asWritten = PhelNamespaceUtils.normalizeNamespace(qualifier)
+
+        return PhelNamespaceUtils.extractImports(file).firstOrNull { spec ->
+            val byAlias = if (spec.alias != null) spec.alias == qualifier else spec.shortNamespace == qualifier
+            byAlias || PhelNamespaceUtils.normalizeNamespace(spec.fullNamespace) == asWritten
         }?.fullNamespace
     }
 }

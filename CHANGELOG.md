@@ -49,6 +49,13 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Fixed
 
+- **Safe Delete** no longer deletes a function that is still called:
+  - a fully qualified call such as `(app.util/helper)` resolves now, with or without a require and next to an alias,
+    because a qualifier that is no alias names the namespace itself;
+  - a use in another file no longer counts as part of the deleted form just because its offsets fall inside the
+    form's range;
+  - a same-named symbol that resolves to nothing is reported as a possible usage, so a use the plugin cannot link
+    stops the deletion instead of passing silently.
 - **Hover** on a name brought in with `(:require ... :refer [...])` shows its documentation. The lookup of where a name
   is referred from read the clause's `:require` head instead of the namespace that refers it, so it never matched and
   a referred `join` showed nothing.

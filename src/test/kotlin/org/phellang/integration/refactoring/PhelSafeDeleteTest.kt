@@ -11,6 +11,7 @@ import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.files.PhelFile
 import org.phellang.refactoring.PhelRefactoringSupportProvider
 import org.phellang.refactoring.safedelete.PhelSafeDeleteProcessor
+import org.phellang.refactoring.safedelete.PhelSafeDeleteTarget
 
 /**
  * Safe Delete over a Phel definition.
@@ -165,5 +166,78 @@ class PhelSafeDeleteTest : PhelIntegrationTestCase() {
         }
 
         assertTrue("nothing should have been deleted: ${file.text}", file.text.contains("(defn helper [] 1)"))
+    }
+
+    // ---- uses the plugin cannot link (each test gets its own namespaces: the lookup is project-wide) ----
+
+    private val prefix: String get() = getTestName(true).lowercase()
+
+    private fun projectFile(short: String, text: String): PhelFile =
+        myFixture.addFileToProject("src/sd_$prefix/$short.phel", text) as PhelFile
+
+    /** A fully qualified call is a real use, so Safe Delete must refuse rather than delete a live function. */
+    fun testAFullyQualifiedUseStopsTheDeletion() {
+        val util = projectFile("util", "(ns $prefix.util)\n(defn helper [] 1)\n")
+        projectFile("main", "(ns $prefix.main)\n(defn f [] ($prefix.util/helper))\n")
+
+        try {
+            safeDelete(util, "helper")
+            fail("expected safe delete to report the fully qualified use, util is now: ${util.text}")
+        } catch (expected: BaseRefactoringProcessor.ConflictsInTestsException) {
+            assertTrue(expected.messages.toString(), expected.messages.isNotEmpty())
+        }
+
+        assertTrue("nothing should have been deleted: ${util.text}", util.text.contains("(defn helper [] 1)"))
+    }
+
+    /**
+     * A same-named symbol that resolves to nothing may be a use the plugin cannot see: here an
+     * `in-ns` file calling a name its namespace's `ns` file refers. It is reported as a usage that
+     * stops the deletion, so the user decides, instead of a silent "no usages".
+     */
+    fun testAnUnresolvedSameNamedSymbolIsReportedAsAPossibleUse() {
+        val util = projectFile("util", "(ns $prefix.util)\n(defn helper [] 1)\n")
+        projectFile("main", "(ns $prefix.main\n  (:require $prefix.util :refer [helper]))\n")
+        val extra = projectFile("main_extra", "(in-ns $prefix.main)\n(defn g [] (helper))\n")
+        val name = definitionNamed(util, "helper")
+
+        val usages = mutableListOf<UsageInfo>()
+        PhelSafeDeleteProcessor().findUsages(name, arrayOf(name), usages)
+
+        val inExtra = usages.filter { it.element?.containingFile == extra }
+        assertEquals("the in-ns file's call: $usages", 1, inExtra.size)
+        assertFalse("it must stop the deletion", (inExtra.single() as SafeDeleteReferenceSimpleDeleteUsageInfo).isSafeDelete)
+    }
+
+    /** Every same-named symbol resolves somewhere else: nothing more to report. */
+    fun testNoPossibleUseWhenEverySameNamedSymbolResolves() {
+        val util = projectFile("util", "(ns $prefix.util)\n(defn helper [] 1)\n")
+        projectFile("other", "(ns $prefix.other)\n(defn helper [] 2)\n(defn k [] (helper))\n")
+        val name = definitionNamed(util, "helper")
+
+        val usages = mutableListOf<UsageInfo>()
+        PhelSafeDeleteProcessor().findUsages(name, arrayOf(name), usages)
+
+        assertEmpty(usages)
+    }
+
+    /**
+     * Inside the deleted form means inside it *in its own file*. A use in another file whose offsets
+     * happen to fall within the form's range was counted as harmless, so the function was deleted.
+     */
+    fun testAUseInAnotherFileAtOverlappingOffsetsStillStopsTheDeletion() {
+        val util = projectFile("util", "(ns $prefix.util)\n(defn helper [] 1)\n")
+        // A second file of the same namespace: same `(ns ...)` line, so `(helper)` starts where `(defn` does.
+        val main = projectFile("main", "(ns $prefix.util)\n(helper)\n")
+        val name = definitionNamed(util, "helper")
+        val formRange = PhelSafeDeleteTarget.enclosingFormOf(name)!!.textRange
+        val use = PsiTreeUtil.findChildrenOfType(main, PhelSymbol::class.java).last { it.text == "helper" }
+        assertTrue("precondition: the use's offsets fall inside the form's range", formRange.contains(use.textRange))
+
+        val usages = mutableListOf<UsageInfo>()
+        PhelSafeDeleteProcessor().findUsages(name, arrayOf(name), usages)
+
+        val fromMain = usages.single { it.element === use } as SafeDeleteReferenceSimpleDeleteUsageInfo
+        assertFalse("a use in another file is never inside the deleted form", fromMain.isSafeDelete)
     }
 }

@@ -2,12 +2,16 @@ package org.phellang.refactoring.safedelete
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.searches.ReferencesSearch
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.safeDelete.NonCodeUsageSearchInfo
 import com.intellij.refactoring.safeDelete.SafeDeleteProcessorDelegate
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceSimpleDeleteUsageInfo
 import com.intellij.usageView.UsageInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Condition
+import org.phellang.language.psi.PhelSymbol
+import java.util.Collections
+import java.util.IdentityHashMap
 
 /**
  * Safe Delete for a Phel name: finds what still refers to it, and removes the whole form.
@@ -34,6 +38,11 @@ class PhelSafeDeleteProcessor : SafeDeleteProcessorDelegate {
      * The whole definition form goes, so its own body refers to a name that is on its way out with
      * it — a recursive `defn` is the obvious case, and without this it would always report itself as
      * a blocking usage.
+     *
+     * Besides what resolves to the definition, every same-named symbol that resolves to *nothing* is
+     * reported as a blocking usage too ([PhelUnseenUseFinder]): it may be a use the plugin cannot
+     * link, and deleting a function that is still called is the one outcome Safe Delete exists to
+     * prevent. The user can still look and delete anyway.
      */
     override fun findUsages(
         element: PsiElement,
@@ -42,19 +51,29 @@ class PhelSafeDeleteProcessor : SafeDeleteProcessorDelegate {
     ): NonCodeUsageSearchInfo {
         // Against the *forms* being removed, not the names selected. At this point
         // allElementsToDelete holds the name symbol alone — the enclosing form is contributed later,
-        // by getAdditionalElementsToDelete — so a range test against it can never contain anything,
+        // by getAdditionalElementsToDelete — so a test against it can never contain anything,
         // and a recursive call was reported as a usage blocking its own definition's deletion.
-        val deletedRanges = allElementsToDelete
+        val deletedForms = allElementsToDelete
             .filter { it.isValid }
-            .map { (PhelSafeDeleteTarget.enclosingFormOf(it) ?: it).textRange }
+            .map { PhelSafeDeleteTarget.enclosingFormOf(it) ?: it }
 
+        // By ancestry, not by text range: a range says nothing about which file it is in, and a use in
+        // another file whose offsets fell inside the form's range was counted as harmless.
         val insideDeleted = Condition<PsiElement> { candidate ->
-            deletedRanges.any { it.contains(candidate.textRange) }
+            deletedForms.any { PsiTreeUtil.isAncestor(it, candidate, false) }
         }
 
+        val reported = Collections.newSetFromMap(IdentityHashMap<PsiElement, Boolean>())
         ReferencesSearch.search(element).forEach { reference ->
             val usage = reference.element
+            reported += usage
             result.add(SafeDeleteReferenceSimpleDeleteUsageInfo(usage, element, insideDeleted.value(usage)))
+        }
+
+        (element as? PhelSymbol)?.let { definition ->
+            PhelUnseenUseFinder.find(definition, insideDeleted::value)
+                .filter { reported.add(it) }
+                .forEach { result.add(SafeDeleteReferenceSimpleDeleteUsageInfo(it, element, false)) }
         }
 
         return NonCodeUsageSearchInfo(insideDeleted, element)
