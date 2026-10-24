@@ -4,6 +4,7 @@ import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.psi.PsiElementVisitor
+import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelVisitor
 import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
@@ -14,9 +15,10 @@ import org.phellang.language.psi.analysis.PhelSymbolAnalyzer
  * longer compiles and the report is no longer conditional on `--warn-deprecations`.
  *
  * One rule drives the interop entries: `php/` means host access, and is never a second spelling
- * for something Phel already says the Clojure way. The three interop forms below each have a
- * Clojure-style spelling that is now the only spelling; they remain as the compilation target the
- * shorthand expands to, which is why they still appear in the registry and in completion.
+ * for something Phel already says the Clojure way. The three interop forms in
+ * [PhelSpecialForms.SUPERSEDED] each have a Clojure-style spelling that is now the only spelling;
+ * they remain as the compilation target the shorthand expands to, which is why they still appear in
+ * the registry. Completion no longer offers them (#350).
  *
  * The rest of the `php/` family is deliberately absent: `php/aget`, `php/aset`, `php/apush`,
  * `php/aunset`, `php/oset`, `php/ref` and `php/callable` each reach a PHP capability Phel has no
@@ -35,7 +37,7 @@ class PhelSupersededFormInspection : LocalInspectionTool() {
         return object : PhelVisitor() {
             override fun visitSymbol(symbol: PhelSymbol) {
                 val text = symbol.text ?: return
-                val superseded = SUPERSEDED[text] ?: return
+                val superseded = PhelSpecialForms.SUPERSEDED[text] ?: return
 
                 // A local binding or a definition that happens to share the name is not the form.
                 if (PhelSymbolAnalyzer.isLocalBindingOrReference(symbol)) return
@@ -48,15 +50,5 @@ class PhelSupersededFormInspection : LocalInspectionTool() {
                 )
             }
         }
-    }
-
-    private companion object {
-        /** Superseded form -> the spelling to write instead, as it appears in the warning. */
-        val SUPERSEDED = mapOf(
-            "php/new" to "(Foo. arg) or (new Foo arg)",
-            "php/->" to "(.method obj arg) or (.-field obj)",
-            "php/::" to "(Foo/method arg) or Foo/CONST",
-            "set-var" to "(alter-var-root #'v f), or (set! v x) for the current binding frame",
-        )
     }
 }

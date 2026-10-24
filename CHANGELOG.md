@@ -14,6 +14,7 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 - Auto-import in an `in-ns` file, from completion or the **Import** quick fix, adds the require to the namespace's
   `ns` file; it added nothing.
+- Completion no longer offers `php/new`, `php/->`, `php/::` or `set-var`, which Phel 0.52 rejects as source (#350).
 
 ## [1.6.0] - 2026-10-24
 
