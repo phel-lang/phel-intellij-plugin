@@ -158,7 +158,7 @@ class PhelSymbolDocumentationResolver {
     }
 
     private fun ownNamespaceDocumentation(symbol: PhelSymbol, file: PhelFile, symbolName: String): String? {
-        val namespace = PhelNamespaceUtils.extractNamespaceFromFile(file) ?: return null
+        val namespace = PhelNamespaceUtils.fileNamespace(file) ?: return null
 
         return resolveProjectSymbolDocumentation(symbol, namespace, symbolName)
     }

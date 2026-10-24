@@ -122,6 +122,12 @@ refreshed, since completion, hover and arity checking are all driven by it.
   neither is a `defn` still being typed, with no parameter vector yet.
 - A method named inside `php/->` or `php/::`, as in `(php/-> obj (count))` or `(php/-> m (put :k v))`, is PHP's, and
   is no longer checked, hinted or shown in parameter info as the Phel function it is spelled like.
+- A file that joins a namespace with `(in-ns ...)`, the way `phel.core` spreads over the files under `core/`, is
+  part of that namespace everywhere the project symbol index is read. Its definitions were left out, so a call such
+  as `(c/bucket-fn)` was reported as `Cannot resolve function`, a `:refer` of one was rejected, and completion, hover
+  and parameter hints knew nothing of them. Completion in one file of a namespace now offers the names its other
+  files define, unqualified. A vendored standard library, which joins its files the same way, adds no `core/` copy of
+  the registry's functions to completion, and a call into it keeps the registry's arity.
 
 ## [1.5.0] - 2026-10-08
 

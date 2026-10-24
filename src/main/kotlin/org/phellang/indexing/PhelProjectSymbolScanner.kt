@@ -22,7 +22,8 @@ import org.phellang.registry.SymbolType
 object PhelProjectSymbolScanner {
 
     fun scanFile(psiFile: PhelFile): List<PhelProjectSymbol> {
-        val namespace = PhelNamespaceUtils.extractNamespaceFromFile(psiFile) ?: return emptyList()
+        // `in-ns` too: a file joining a namespace holds its definitions like the `ns` file does.
+        val namespace = PhelNamespaceUtils.fileNamespace(psiFile) ?: return emptyList()
         val virtualFile = psiFile.virtualFile ?: return emptyList()
         val topLevelLists = PsiTreeUtil.getChildrenOfType(psiFile, PhelList::class.java) ?: return emptyList()
 

@@ -38,6 +38,8 @@ object PhelProjectCompletionHelper {
             val namespace = PhelNamespaceUtils.normalizeNamespace(import.fullNamespace)
             // A namespace required twice is offered once.
             if (!handled.add(namespace)) continue
+            // The registry offers it, under this alias too.
+            if (PhelProjectNamespaceFinder.isStandardLibrary(namespace)) continue
 
             val qualifier = requiredQualifier(file, namespace)
             for (symbol in index.symbolsInNamespace(namespace)) {
@@ -64,7 +66,16 @@ object PhelProjectCompletionHelper {
             .groupBy { PhelNamespaceUtils.normalizeNamespace(it.namespace) }
 
         for ((namespace, symbols) in byNamespace) {
-            if (namespace in handled || namespace == current.namespace) continue
+            // A stdlib namespace's functions come from the registry, documented and spelled the way it
+            // spells them. A vendored copy in the index, `phel.core`'s `in-ns` buckets say, adds none.
+            if (namespace in handled || PhelProjectNamespaceFinder.isStandardLibrary(namespace)) continue
+
+            // Another file of the namespace being edited, an `in-ns` one say: its names need no qualifier.
+            if (namespace == current.namespace) {
+                symbols.forEach { addCompletion(result, it, it.name) }
+                continue
+            }
+
             val qualifier = unrequiredQualifier(file, namespace) ?: continue
 
             for (symbol in symbols) addCompletion(result, symbol, "$qualifier/${symbol.name}")
@@ -118,7 +129,7 @@ object PhelProjectCompletionHelper {
     private class CurrentFile(file: PhelFile) {
         val path: String? = file.virtualFile?.path
 
-        val namespace: String? = PhelNamespaceUtils.extractNamespaceFromFile(file)
+        val namespace: String? = PhelNamespaceUtils.fileNamespace(file)
             ?.let(PhelNamespaceUtils::normalizeNamespace)
 
         fun owns(symbol: PhelProjectSymbol): Boolean = symbol.file.path == path

@@ -180,6 +180,14 @@ object PhelNamespaceUtils {
     }
 
     /**
+     * The namespace [file]'s definitions belong to: the name in its `(ns X)`, as written, else the one
+     * its `(in-ns X)` joins. That is how one namespace spans several files, as `phel.core` does over
+     * the files under `core/`.
+     */
+    fun fileNamespace(file: PhelFile): String? =
+        extractNamespaceFromFile(file) ?: PhelNamespaceFiles.declaredNamespace(file)
+
+    /**
      * Converts a short namespace to its canonical Phel form (Phel 0.35+ dot-separated).
      * e.g., "string" -> "phel.string"
      *       "http"   -> "phel.http"

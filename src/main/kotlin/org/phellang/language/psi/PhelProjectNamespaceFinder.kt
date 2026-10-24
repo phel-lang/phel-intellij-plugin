@@ -140,7 +140,7 @@ object PhelProjectNamespaceFinder {
 
         for (virtualFile in phelFiles) {
             val psiFile = psiManager.findFile(virtualFile) as? PhelFile ?: continue
-            val fileNamespace = PhelNamespaceUtils.extractNamespaceFromFile(psiFile) ?: continue
+            val fileNamespace = PhelNamespaceUtils.fileNamespace(psiFile) ?: continue
             namespaces.add(fileNamespace)
         }
 
