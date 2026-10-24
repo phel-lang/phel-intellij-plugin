@@ -141,13 +141,13 @@ class PhelArityMismatchInspectionIntegrationTest : PhelIntegrationTestCase() {
         assertTrue("discard dropping a required arg should be flagged: $warnings", warnings.any { it.contains("'some'") })
     }
 
-    fun testRemovedShortFnIsNoLongerTreatedAsOneForm() {
-        // Phel v0.50.0 removed the `|(...)` short fn, and `|` is no longer a token: the reader
-        // reports an unresolvable symbol `|`. So (some |(> % 10) coll) is a genuine 3-arg call to
-        // a 2-arg function, and suppressing the arity warning would hide a real error.
+    fun testRemovedShortFnCountsAsTheOneArgumentItWasWrittenAs() {
+        // Phel v0.50.0 removed the `|(...)` short fn: since then `|` is a symbol of its own, and
+        // (some |(> % 10) coll) reads as three arguments. The removed-short-fn inspection reports
+        // that, with a fix to `#(...)`, so the arity check counts what the call was written as rather
+        // than adding a second warning about the same mistake.
         val warnings = inspect("(ns app\\m)\n(some |(> % 10) coll)\n")
-        assertTrue("removed |(...) syntax should not suppress the arity check: $warnings",
-            warnings.any { it.contains("'some'") })
+        assertTrue("the short fn is one argument: $warnings", warnings.isEmpty())
     }
 
     fun testHashFnArgIsNotMiscounted() {

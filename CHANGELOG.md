@@ -10,6 +10,11 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+### Added
+
+- **Removed `|(...)` short function** inspection: Phel 0.50 dropped `|(...)`; it is reported with a quick fix to
+  `#(...)`, and no longer reads as an unresolved `|` plus an extra argument.
+
 ### Changed
 
 - The build runs on Gradle **9.8.2**. The wrapper files match what Gradle 9.8.2's own `wrapper` task generates, and the

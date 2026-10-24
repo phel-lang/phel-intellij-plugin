@@ -17,6 +17,7 @@ import org.phellang.language.psi.files.PhelFile
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.registry.PhelFunctionRegistry
 import org.phellang.registry.SymbolType
+import org.phellang.language.psi.analysis.PhelPipeShortFn
 
 /**
  * Decides whether a bare symbol names something that exists.
@@ -67,6 +68,9 @@ internal object PhelUnresolvedSymbolFinder {
         // short fn, whose parameters were `$` and `$1`. A `$`-prefixed *name* is now an ordinary
         // symbol and is checked like any other.
         if (text.startsWith("%") || text == "$") return false
+        // A removed `|(...)` reads as a `|` symbol and `$1`, `$&` placeholders. The removed-short-fn
+        // inspection reports it, with a fix; "Cannot resolve symbol '|'" would only hide the reason.
+        if (PhelPipeShortFn.isMarker(symbol) || PhelPipeShortFn.isPlaceholder(symbol)) return false
         if (text.contains("/") || text.contains("\\")) return false
         if (text.startsWith(".") || PhelInteropShorthands.isInteropClassName(text)) return false
 

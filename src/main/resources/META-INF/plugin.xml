@@ -147,6 +147,14 @@
                 implementationClass="org.phellang.inspection.deprecated.PhelSupersededFormInspection"/>
         <localInspection
                 language="Phel"
+                shortName="PhelRemovedShortFn"
+                displayName="Removed |(...) short function"
+                groupName="Phel"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="org.phellang.inspection.deprecated.PhelRemovedShortFnInspection"/>
+        <localInspection
+                language="Phel"
                 shortName="PhelKeyFirstDestructuring"
                 displayName="Deprecated key-first map destructuring"
                 groupName="Phel"

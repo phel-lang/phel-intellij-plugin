@@ -1,0 +1,18 @@
+<html>
+<body>
+<p>Reports the <code>|(...)</code> short function, which Phel 0.50 removed in favor of
+    <code>#(...)</code>. From 0.50 on, <code>|</code> is an ordinary symbol and the list after it a call
+    of its own, so the code no longer means what it says.</p>
+
+<table>
+    <tr><th>Removed</th><th>Write instead</th></tr>
+    <tr><td><code>|(inc $)</code></td><td><code>#(inc %)</code></td></tr>
+    <tr><td><code>|(+ $1 $2)</code></td><td><code>#(+ %1 %2)</code></td></tr>
+    <tr><td><code>|(apply str $&amp;)</code></td><td><code>#(apply str %&amp;)</code></td></tr>
+</table>
+
+<p>The quick-fix <b>Convert to #(...)</b> respells the function and its own placeholders. It is not
+    offered when the body already holds a <code>#(...)</code>, which converting would nest inside
+    another.</p>
+</body>
+</html>

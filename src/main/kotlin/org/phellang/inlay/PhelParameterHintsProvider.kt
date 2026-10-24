@@ -19,6 +19,7 @@ import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.analysis.PhelLocalBindingScope
 import org.phellang.language.psi.utils.PhelPsiUtils
+import org.phellang.language.psi.analysis.PhelPipeShortFn
 
 class PhelParameterHintsProvider : InlayHintsProvider {
 
@@ -38,7 +39,7 @@ class PhelParameterHintsProvider : InlayHintsProvider {
             val headName = headSymbol.text ?: return
             if (!takesPositionalParameters(headSymbol, headName)) return
 
-            val args = forms.drop(1)
+            val args = PhelPipeShortFn.withoutMarkers(forms).drop(1)
             val arities = PhelArityResolver.resolve(headSymbol, headName) ?: return
             val arity = arities.selectFor(args.size) ?: return
 
