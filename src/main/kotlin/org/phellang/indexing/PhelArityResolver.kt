@@ -55,9 +55,9 @@ object PhelArityResolver {
     /**
      * `qualifier/name` is checked against the namespace the qualifier names and nowhere else: a userland
      * `u/count` binds to the `count` of the namespace `u` stands for, never to the stdlib's `count` or to
-     * another namespace's. The project's definition there first; else, unless the qualifier names a
-     * required project namespace, the stdlib's by its registry name (`string/join`; core functions are
-     * registered bare).
+     * another namespace's. Unless the qualifier names a required project namespace, the stdlib's by its
+     * registry name first (`string/join`; core functions are registered bare); else the project's
+     * definition there.
      */
     private fun qualifiedArities(
         index: PhelProjectSymbolIndex,
@@ -65,12 +65,15 @@ object PhelArityResolver {
         qualifier: String,
         name: String,
     ): List<PhelArity>? {
-        index.findQualified(file, qualifier, name)?.let { return aritiesOf(it) }
-
         val imported = PhelNamespaceUtils.importedNamespaceFor(file, qualifier)
-        if (imported != null && !PhelProjectNamespaceFinder.isStandardLibrary(imported)) return null
 
-        return stdlibFunction(imported ?: qualifier, name)?.arities?.ifEmpty { null }
+        // The registry first for the stdlib: a vendored copy in the index, `phel.core`'s `in-ns`
+        // buckets say, must not change what completion and hover show for the same function.
+        if (imported == null || PhelProjectNamespaceFinder.isStandardLibrary(imported)) {
+            stdlibFunction(imported ?: qualifier, name)?.let { return it.arities.ifEmpty { null } }
+        }
+
+        return index.findQualified(file, qualifier, name)?.let(::aritiesOf)
     }
 
     /**

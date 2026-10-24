@@ -93,7 +93,7 @@ class PhelProjectSymbolIndex(private val project: Project) : Disposable {
         PhelNamespaceUtils.importedNamespaceFor(file, qualifier)?.let { return findInNamespace(it, name) }
         findInNamespace(qualifier, name)?.let { return it }
 
-        val ownNamespace = PhelNamespaceUtils.extractNamespaceFromFile(file)?.let(::namespaceKey)
+        val ownNamespace = PhelNamespaceUtils.fileNamespace(file)?.let(::namespaceKey)
         val byShortName = findByName(name).filter { it.shortNamespace == qualifier }
 
         return byShortName.find { namespaceKey(it.namespace) == ownNamespace } ?: byShortName.firstOrNull()
