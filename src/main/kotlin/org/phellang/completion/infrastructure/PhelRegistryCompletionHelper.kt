@@ -47,6 +47,8 @@ object PhelRegistryCompletionHelper {
         functions.forEach { function ->
             // A macro or special form cannot be an argument, so offering one there is always wrong.
             if (position == PhelCallPosition.PLAIN_CALL_ARGUMENT && function.isCallOnly) return@forEach
+            // Removed as source in Phel 0.52: still listed, and documented on hover, but not written.
+            if (function.name in PhelSpecialForms.SUPERSEDED) return@forEach
 
             val priority = priorityFor(function, position)
             // Core functions are written bare, so no alias of `core` concerns them.

@@ -105,4 +105,17 @@ object PhelSpecialForms {
         "comment", "deftest", "is", "are", "testing", "with-output-buffer",
         "import", "require", "use", "set!", "..", ".",
     ) + LET_LIKE + FUNCTION_DEFINING + THREADING
+
+    /**
+     * The source forms Phel 0.52 removed, each with the spelling to write instead. The compiler
+     * rejects them with `PHEL012`. They remain what the Clojure-style shorthand expands to, so the
+     * registry still lists them and hover still documents them, but nobody writes them any more:
+     * the Superseded form inspection reports them, and completion does not offer them.
+     */
+    val SUPERSEDED: Map<String, String> = mapOf(
+        "php/new" to "(Foo. arg) or (new Foo arg)",
+        "php/->" to "(.method obj arg) or (.-field obj)",
+        "php/::" to "(Foo/method arg) or Foo/CONST",
+        "set-var" to "(alter-var-root #'v f), or (set! v x) for the current binding frame",
+    )
 }
