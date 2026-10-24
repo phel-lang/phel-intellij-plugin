@@ -12,9 +12,9 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Changed
 
-- The build runs on Gradle **9.8.0**. The wrapper files match what Gradle 9.8.0's own `wrapper` task generates, and the
-  `Wrapper` task's `gradleVersion` moves with them, so `./gradlew wrapper` no longer downgrades the project to 9.7.1
-  (#342).
+- The build runs on Gradle **9.8.2**. The wrapper files match what Gradle 9.8.2's own `wrapper` task generates, and the
+  `Wrapper` task's `gradleVersion` moves with them, so `./gradlew wrapper` no longer downgrades the project
+  (#342, #355, #360).
 - **Go to definition** follows Phel's own name resolution. A bare name resolves to a local, then to the namespace it
   is `:refer`'d from (its public definitions only), or else to the current namespace, and finally to `phel.core`. The
   current namespace includes every file that declares it, also files that join it with `(in-ns ...)`. It no longer
