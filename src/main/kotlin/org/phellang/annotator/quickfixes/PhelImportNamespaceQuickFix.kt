@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import org.phellang.language.psi.PhelNamespaceImporter
+import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.files.PhelFile
 
 class PhelImportNamespaceQuickFix(
@@ -31,9 +32,10 @@ class PhelImportNamespaceQuickFix(
         }
     }
 
+    /** Against the namespace's requires: for an `in-ns` file they are in its `ns` file. */
     private fun isAlreadyImported(file: PhelFile): Boolean {
-        val nsDeclaration = org.phellang.language.psi.PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return false
-        return org.phellang.language.psi.PhelNamespaceUtils.isNamespaceRequired(nsDeclaration, fullNamespace)
+        val nsDeclaration = PhelNamespaceUtils.environmentDeclaration(file) ?: return false
+        return PhelNamespaceUtils.isNamespaceRequired(nsDeclaration, fullNamespace)
     }
 
     override fun startInWriteAction(): Boolean = false
