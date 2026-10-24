@@ -102,16 +102,21 @@ internal object PhelNamespaceFiles {
 
     private fun snapshot(project: Project): Snapshot =
         CachedValuesManager.getManager(project).getCachedValue(project, SNAPSHOT_KEY, {
-            CachedValueProvider.Result.create(
-                buildSnapshot(project),
-                PsiModificationTracker.getInstance(project).forLanguage(PhelLanguage),
-                VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS,
-                ProjectRootModificationTracker.getInstance(project),
-                // The file name index answers from the VFS during indexing instead of throwing, so a
-                // snapshot built then may be partial; entering or leaving dumb mode rebuilds it.
-                DumbService.getInstance(project).modificationTracker,
-            )
+            CachedValueProvider.Result.create(buildSnapshot(project), *dependencies(project))
         }, false)
+
+    /**
+     * What a value read from the snapshot, or from another Phel file, must be dropped on: any Phel PSI
+     * change, a file created, deleted, moved or renamed, a root change, and entering or leaving dumb
+     * mode (the file name index answers from the VFS during indexing, so a snapshot built then may be
+     * partial).
+     */
+    fun dependencies(project: Project): Array<Any> = arrayOf(
+        PsiModificationTracker.getInstance(project).forLanguage(PhelLanguage),
+        VirtualFileManager.VFS_STRUCTURE_MODIFICATIONS,
+        ProjectRootModificationTracker.getInstance(project),
+        DumbService.getInstance(project).modificationTracker,
+    )
 
     private fun buildSnapshot(project: Project): Snapshot {
         val psiManager = PsiManager.getInstance(project)
@@ -124,7 +129,8 @@ internal object PhelNamespaceFiles {
 
             declaredNamespace(file)?.let { filesByNamespace.getOrPut(it) { mutableListOf() } += virtualFile }
 
-            PhelNamespaceUtils.extractImports(file)
+            // Its own requires: an `in-ns` file's environment is found through this very snapshot.
+            PhelNamespaceUtils.extractOwnImports(file)
                 .map { PhelNamespaceUtils.normalizeNamespace(it.fullNamespace) }
                 .distinct()
                 .forEach { importersByNamespace.getOrPut(it) { mutableListOf() } += virtualFile }

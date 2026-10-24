@@ -128,6 +128,8 @@ refreshed, since completion, hover and arity checking are all driven by it.
   and parameter hints knew nothing of them. Completion in one file of a namespace now offers the names its other
   files define, unqualified. A vendored standard library, which joins its files the same way, adds no `core/` copy of
   the registry's functions to completion, and a call into it keeps the registry's arity.
+- An `in-ns` file uses its namespace's requires, refers and `:use` classes: `s/join` there is no longer "Namespace 's'
+  does not exist", and a require used only from it is no longer reported unused (or removed by Optimize Imports).
 
 ## [1.5.0] - 2026-10-08
 

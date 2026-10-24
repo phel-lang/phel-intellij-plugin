@@ -67,7 +67,8 @@ internal object PhelUseClauseAnalyzer {
 
     /** The class-entry symbols across all `(:use ...)` clauses in [file]. */
     private fun classEntries(file: PhelFile): List<PhelSymbol> {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return emptyList()
+        // The namespace's, which for an `in-ns` file is in another file.
+        val nsDeclaration = PhelNamespaceUtils.environmentDeclaration(file) ?: return emptyList()
 
         return PhelNamespaceUtils.findUseForms(nsDeclaration)
             .flatMap { it.forms.drop(1) }
