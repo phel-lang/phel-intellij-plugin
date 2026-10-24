@@ -10,6 +10,8 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-24
+
 ### Added
 
 - **Removed `|(...)` short function** inspection, with a quick fix to `#(...)` (Phel 0.50 dropped `|(...)`).
