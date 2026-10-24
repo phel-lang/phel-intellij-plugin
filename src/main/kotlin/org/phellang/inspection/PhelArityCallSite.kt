@@ -1,11 +1,11 @@
 package org.phellang.inspection
 
-import com.intellij.psi.PsiElement
 import org.phellang.language.psi.PhelForm
 import org.phellang.language.psi.PhelInteropShorthands
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.PhelSymbol
+import org.phellang.language.psi.analysis.PhelFormWalker
 import org.phellang.language.psi.analysis.PhelLocalBindingScope
 import org.phellang.language.psi.utils.PhelPsiUtils
 
@@ -25,29 +25,11 @@ internal object PhelArityCallSite {
         // The dummy identifier the platform injects at the caret mid-completion.
         if (name.contains("IntelliJIdeaRulezzz")) return true
 
-        if (isInQuoteContext(list)) return true
+        if (PhelFormWalker.isInQuoteContext(list)) return true
+        if (PhelInteropShorthands.isPhpMethodCall(list)) return true
         if (isThreadedArgList(list)) return true
         if (PhelLocalBindingScope.resolvesToLocalBinding(head, name)) return true
 
-        return false
-    }
-
-    /**
-     * True when [list] is a data form — inside `quote`, `var`, or a `'` / `` ` `` reader macro — and
-     * therefore not a call site.
-     */
-    private fun isInQuoteContext(list: PhelList): Boolean {
-        var current: PsiElement? = list
-        while (current != null) {
-            if (current is PhelForm && current.readerMacros.any { it.text == "'" || it.text == "`" }) {
-                return true
-            }
-            if (current is PhelList && current !== list) {
-                val head = PhelPsiUtils.asSymbol(current.forms.firstOrNull())?.text
-                if (head == "quote" || head == "var") return true
-            }
-            current = current.parent
-        }
         return false
     }
 

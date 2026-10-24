@@ -16,6 +16,17 @@ internal object PhelSignatureBuilder {
     }
 
     /**
+     * Whether the definition writes out its parameters: a vector, or `([params] body)` clauses. A
+     * signature without them reads `(name)`, the same as a function of no arguments, which an
+     * unfinished `(defn f` is not.
+     */
+    fun declaresParameters(keyword: String, forms: List<PhelForm>): Boolean = when (keyword) {
+        "defn", "defmacro" -> findDirectParameterVector(forms) != null || arityClauseVectors(forms).isNotEmpty()
+        "defstruct" -> findDirectParameterVector(forms) != null
+        else -> false
+    }
+
+    /**
      * A `defn` is single-arity when it has a direct parameter vector and multi-arity only when the
      * body is made of `([params] body)` clauses with no top-level vector.
      *
@@ -38,12 +49,13 @@ internal object PhelSignatureBuilder {
     }
 
     /** Each arity is a list whose first form is a parameter vector. */
-    private fun multiAritySignatures(name: String, forms: List<PhelForm>): List<String> {
-        return forms.drop(2)
+    private fun multiAritySignatures(name: String, forms: List<PhelForm>): List<String> =
+        arityClauseVectors(forms).map { format(name, parameterNames(it)) }
+
+    private fun arityClauseVectors(forms: List<PhelForm>): List<PhelVec> =
+        forms.drop(2)
             .filterIsInstance<PhelList>()
             .mapNotNull { PhelPsiUtils.activeForms(it).firstOrNull() as? PhelVec }
-            .map { format(name, parameterNames(it)) }
-    }
 
     private fun findDirectParameterVector(forms: List<PhelForm>): PhelVec? =
         forms.drop(2).filterIsInstance<PhelVec>().firstOrNull()

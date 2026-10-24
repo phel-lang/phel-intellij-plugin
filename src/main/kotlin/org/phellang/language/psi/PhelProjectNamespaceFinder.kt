@@ -101,12 +101,14 @@ object PhelProjectNamespaceFinder {
     /**
      * The name the registry files [namespace]'s functions under, or null for a namespace that is no
      * stdlib one: its full name without `phel.`, so `string` for `phel.string` and `schema.coercer`
-     * for `phel.schema.coercer`, whose functions are `schema.coercer/coerce` and the like.
+     * for `phel.schema.coercer`, whose functions are `schema.coercer/coerce` and the like. The registry
+     * spells `-` as `_`: `phel.http-client`'s functions are `http_client/get`.
      */
     fun registryNamespaceOf(namespace: String): String? =
         PhelNamespaceUtils.normalizeNamespace(namespace)
             .takeIf { it in STANDARD_LIBRARY_NAMESPACES }
             ?.removePrefix(STANDARD_LIBRARY_PREFIX)
+            ?.replace('-', '_')
 
     fun getStandardLibraryFullNamespace(shortName: String): String? {
         return STANDARD_LIBRARY_SHORT_TO_FULL[shortName.lowercase()]

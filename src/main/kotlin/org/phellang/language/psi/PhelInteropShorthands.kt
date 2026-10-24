@@ -1,6 +1,8 @@
 package org.phellang.language.psi
 
+import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Recogniser for Phel's PHP interop shorthand surface forms. These are the terse
@@ -46,6 +48,21 @@ object PhelInteropShorthands {
     fun isInteropCall(name: String): Boolean = INTEROP_CALL_PREFIXES.any { name.startsWith(it) }
 
     private val INTEROP_CALL_PREFIXES = listOf(PHP_QUALIFIER, ".", "php-")
+
+    /**
+     * True when [list] names a method inside `(php/-> obj (method arg))` or `(php/:: Class (method arg))`.
+     * It reads like a Phel call, but `method` is PHP's, with PHP's parameters: `(php/-> m (put :k v))`
+     * was checked as core's three-argument `put`. Only the object or class after the head is Phel code.
+     */
+    fun isPhpMethodCall(list: PhelList): Boolean {
+        val parent = generateSequence(list.parent) { it.parent }.filterIsInstance<PhelList>().firstOrNull() ?: return false
+        val forms = PhelPsiUtils.activeForms(parent)
+        if (PhelPsiUtils.asSymbol(forms.firstOrNull())?.text !in PHP_METHOD_CALL_HEADS) return false
+
+        return forms.drop(2).any { it === list || PsiTreeUtil.isAncestor(it, list, false) }
+    }
+
+    private val PHP_METHOD_CALL_HEADS = setOf("php/->", "php/::")
 
     fun isInteropClassName(text: String): Boolean {
         if (text.isEmpty()) return false
