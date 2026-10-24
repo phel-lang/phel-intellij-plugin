@@ -27,6 +27,22 @@ class PhelArityTest {
         assertEquals(0, arity.fixedCount)
     }
 
+    /** `(defn f [^string s] ...)`: the tag is metadata on the parameter, not a parameter of its own. */
+    @Test
+    fun `a type tag is no parameter`() {
+        val arity = PhelArity.parseSignature("(foo ^string s ^{:tag int} n)")
+        assertEquals(listOf("s", "n"), arity!!.params)
+        assertEquals(2, arity.fixedCount)
+    }
+
+    @Test
+    fun `a tagged rest parameter stays variadic`() {
+        val arity = PhelArity.parseSignature("(foo a & ^vector more)")
+        assertEquals(listOf("a", "more"), arity!!.params)
+        assertTrue(arity.variadic)
+        assertEquals(1, arity.fixedCount)
+    }
+
     @Test
     fun `parses variadic signature`() {
         val arity = PhelArity.parseSignature("(foo a & rest)")

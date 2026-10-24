@@ -8,6 +8,7 @@ import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.PhelSymbol
 import org.phellang.language.psi.PhelTypes
 import org.phellang.language.psi.PhelVec
+import org.phellang.language.psi.utils.PhelPsiUtils
 
 /**
  * Walking the enclosing forms of a symbol, and reading a form's head.
@@ -39,6 +40,26 @@ internal object PhelFormWalker {
     fun vectorOf(element: PsiElement): PhelVec? = when (element) {
         is PhelVec -> element
         else -> PsiTreeUtil.findChildOfType(element, PhelVec::class.java)
+    }
+
+    /**
+     * True when [list] is data the compiler never evaluates: under a `'` or `` ` `` reader macro, or
+     * inside a `(quote ...)` or `(var ...)` form. Not a call there, and not a definition either: a
+     * `` `(defn ~name [] ...) `` template defines nothing until the macro is expanded.
+     */
+    fun isInQuoteContext(list: PhelList): Boolean {
+        var current: PsiElement? = list
+        while (current != null) {
+            if (current is PhelForm && current.readerMacros.any { it.text == "'" || it.text == "`" }) {
+                return true
+            }
+            if (current is PhelList && current !== list) {
+                val head = PhelPsiUtils.asSymbol(current.forms.firstOrNull())?.text
+                if (head == "quote" || head == "var") return true
+            }
+            current = current.parent
+        }
+        return false
     }
 
     /** True when [candidate] either IS [target] or is the form wrapper around it. */

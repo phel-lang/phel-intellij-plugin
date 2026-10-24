@@ -28,6 +28,8 @@ class PhelParameterHintsProvider : InlayHintsProvider {
 
         override fun collectFromElement(element: PsiElement, sink: InlayTreeSink) {
             if (element !is PhelList) return
+            // A method inside `php/->` is PHP's, whatever Phel function it is spelled like.
+            if (PhelInteropShorthands.isPhpMethodCall(element)) return
 
             val forms = PhelPsiUtils.activeForms(element)
             if (forms.size < 2) return

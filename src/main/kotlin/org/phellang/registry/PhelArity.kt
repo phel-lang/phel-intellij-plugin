@@ -19,7 +19,9 @@ data class PhelArity(
             val inner = trimmed.substring(1, trimmed.length - 1).trim()
             if (inner.isEmpty()) return null
 
-            val tokens = tokenize(inner)
+            // A `^string` or `^{:tag int}` before a parameter is its type tag, not one more parameter:
+            // `(defn f [^string s] ...)` takes one argument, and was flagged when called with one.
+            val tokens = tokenize(inner).filterNot { it.startsWith("^") }
             if (tokens.isEmpty()) return null
 
             val paramTokens = tokens.drop(1) // first token is the function name

@@ -98,6 +98,7 @@ class PhelParameterInfoHandler : ParameterInfoHandler<PhelList, PhelArity> {
 
     /** Null whenever the head is not a plain positional call, which is the same rule the hints use. */
     private fun aritiesOf(call: PhelList): List<PhelArity>? {
+        if (PhelInteropShorthands.isPhpMethodCall(call)) return null
         val forms = PhelPsiUtils.activeForms(call)
         val head = PhelPsiUtils.asSymbol(forms.firstOrNull()) ?: return null
         val name = head.text ?: return null

@@ -105,6 +105,23 @@ refreshed, since completion, hover and arity checking are all driven by it.
 - A standard-library call by full name, such as `(phel.string/upper-case s)`, is checked and documented like any other,
   and so is one through an alias of a stdlib subnamespace, such as `(c/coerce ...)` with
   `(:require phel.schema.coercer :as c)`. They were looked up under the wrong registry name and never checked.
+- The **Wrong number of args** inspection, parameter hints and parameter info check a bare call against the
+  definition the compiler would call: the namespace the name is `:refer`'d from, else the current namespace (every
+  file of it, private definitions included), else `phel.core`. They checked `phel.core` first, so a project `count`
+  was held to core's one argument, and then whichever same-named definition the project index listed first, from any
+  namespace, so two files defining their own `point` changed the warnings from one run to the next. A name defined
+  nowhere the compiler looks is no longer checked against another namespace's function. Only a definition the
+  compiler sees counts: not a draft kept in `(comment ...)` or behind `#_`, nor a macro template's
+  `` `(defn ~name ...) ``. A name `:refer`'d from a standard-library namespace is checked against that namespace's
+  function also where its registry name is not its last segment, as for `phel.http-client` and `phel.test.gen`, which
+  fell back to core's same-named function.
+- A type tag is no longer counted as a parameter: `(defn f [^string s] ...)` takes one argument, and
+  `(defstruct point [^{:tag int} x ^{:tag int} y])` two. Calls were flagged, and parameter hints labelled an argument
+  with the tag.
+- A function held by a `def`, as in `(def add (fn [a b] ...))`, is no longer checked as taking no arguments, and
+  neither is a `defn` still being typed, with no parameter vector yet.
+- A method named inside `php/->` or `php/::`, as in `(php/-> obj (count))` or `(php/-> m (put :k v))`, is PHP's, and
+  is no longer checked, hinted or shown in parameter info as the Phel function it is spelled like.
 
 ## [1.5.0] - 2026-10-08
 
