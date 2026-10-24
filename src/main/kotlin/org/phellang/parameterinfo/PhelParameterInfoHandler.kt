@@ -12,6 +12,7 @@ import org.phellang.language.psi.PhelSpecialForms
 import org.phellang.language.psi.analysis.PhelLocalBindingScope
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.registry.PhelArity
+import org.phellang.language.psi.analysis.PhelPipeShortFn
 
 /**
  * The Ctrl+P popup: every arity of the called function, with the current parameter in bold.
@@ -112,7 +113,7 @@ class PhelParameterInfoHandler : ParameterInfoHandler<PhelList, PhelArity> {
 
     /** Which argument the caret sits in: 0 for the first, counting the head as -1. */
     private fun argumentIndexAt(call: PhelList, offset: Int): Int {
-        val forms = PhelPsiUtils.activeForms(call)
+        val forms = PhelPipeShortFn.withoutMarkers(PhelPsiUtils.activeForms(call))
 
         return forms.drop(1).indexOfLast { it.textRange.startOffset <= offset }
     }

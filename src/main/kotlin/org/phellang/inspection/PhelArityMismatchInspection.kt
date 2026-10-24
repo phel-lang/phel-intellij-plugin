@@ -10,6 +10,7 @@ import org.phellang.registry.describe
 import org.phellang.language.psi.PhelList
 import org.phellang.language.psi.utils.PhelPsiUtils
 import org.phellang.language.psi.PhelVisitor
+import org.phellang.language.psi.analysis.PhelPipeShortFn
 
 /**
  * Warns when a call passes the wrong number of arguments to a known function.
@@ -33,7 +34,8 @@ class PhelArityMismatchInspection : LocalInspectionTool() {
                 val arities = PhelArityResolver.resolve(head, name) ?: return
                 if (arities.isEmpty()) return
 
-                val argCount = forms.size - 1
+                // A removed `|(...)` short function is one argument, not its `|` and its list.
+                val argCount = PhelPipeShortFn.withoutMarkers(forms).size - 1
                 if (!arities.accepts(argCount)) {
                     holder.registerProblem(
                         head,
