@@ -2,6 +2,8 @@ package org.phellang.language.psi
 
 import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.files.PhelFile
 import java.util.Optional
@@ -17,6 +19,10 @@ object PhelNamespaceUtils {
     private val USE_FORMS_KEY: Key<CachedValue<List<PhelList>>> = Key.create("phel.namespace.useForms")
     private val IMPORTS_KEY: Key<CachedValue<List<PhelRequireClauseAnalyzer.RequireImport>>> =
         Key.create("phel.namespace.imports")
+    private val OWN_IMPORTS_KEY: Key<CachedValue<List<PhelRequireClauseAnalyzer.RequireImport>>> =
+        Key.create("phel.namespace.ownImports")
+    private val ENVIRONMENT_DECLARATION_KEY: Key<CachedValue<Optional<PhelList>>> =
+        Key.create("phel.namespace.environmentDeclaration")
 
     fun findNamespaceDeclaration(file: PhelFile): PhelList? {
         // Resolved once per file: highlighting and reference resolution look up the (ns …)
@@ -25,6 +31,51 @@ object PhelNamespaceUtils {
             Optional.ofNullable(computeNamespaceDeclaration(file))
         }.orElse(null)
     }
+
+    /**
+     * The `(ns ...)` form whose requires, refers and `:use` classes are in force in [file]: its own,
+     * else, for a file that joins a namespace with `(in-ns ...)`, that namespace's `ns` form in another
+     * of its files. The compiler keeps them per namespace (`GlobalEnvironment::addRequireAlias`,
+     * `addRefers`), so an `in-ns` file calls `s/join` under the `ns` file's `phel.string :as s`.
+     *
+     * Only for reading. A require is still added to, and removed from, the file's own `ns` form.
+     */
+    fun environmentDeclaration(file: PhelFile): PhelList? {
+        findNamespaceDeclaration(file)?.let { return it }
+
+        return CachedValuesManager.getCachedValue(file, ENVIRONMENT_DECLARATION_KEY) {
+            CachedValueProvider.Result.create(
+                Optional.ofNullable(computeForeignDeclaration(file)),
+                file,
+                *PhelNamespaceFiles.dependencies(file.project),
+            )
+        }.orElse(null)
+    }
+
+    /** The `ns` form of another file of the namespace [file] joins with `in-ns`. */
+    private fun computeForeignDeclaration(file: PhelFile): PhelList? {
+        val namespace = PhelNamespaceFiles.declaredNamespace(file) ?: return null
+
+        return PhelNamespaceFiles.filesOf(file.project, namespace)
+            .asSequence()
+            .filter { it != file }
+            .mapNotNull(::findNamespaceDeclaration)
+            .firstOrNull { declaration -> extractNamespaceFromDeclaration(declaration)?.let(::normalizeNamespace) == namespace }
+    }
+
+    /**
+     * [cachedPerPsi] for a value read from [file]'s [environmentDeclaration]. A file with its own `ns`
+     * form reads only itself. An `in-ns` file reads another file's, so its value is dropped on any Phel
+     * edit or file move, as [PhelNamespaceFiles]'s snapshot is: such files are few.
+     */
+    private fun <T> cachedPerEnvironment(file: PhelFile, key: Key<CachedValue<T>>, compute: () -> T): T =
+        CachedValuesManager.getCachedValue(file, key) {
+            if (findNamespaceDeclaration(file) != null) {
+                CachedValueProvider.Result.create(compute(), file)
+            } else {
+                CachedValueProvider.Result.create(compute(), file, *PhelNamespaceFiles.dependencies(file.project))
+            }
+        }
 
     private fun computeNamespaceDeclaration(file: PhelFile): PhelList? {
         // (ns my-ns (:require ...) (:use ...))
@@ -89,7 +140,7 @@ object PhelNamespaceUtils {
     fun extractUsedClasses(file: PhelFile): Set<String> {
         // Highlighting probes this once per symbol; cache the per-file result and let
         // the PSI modification tracker invalidate it whenever the file is edited.
-        return cachedPerPsi(file, USED_CLASSES_KEY) { computeUsedClasses(file) }
+        return cachedPerEnvironment(file, USED_CLASSES_KEY) { computeUsedClasses(file) }
     }
 
     private fun computeUsedClasses(file: PhelFile): Set<String> = PhelUseClauseAnalyzer.computeUsedClasses(file)
@@ -105,7 +156,11 @@ object PhelNamespaceUtils {
      * project's namespace lookup reads it for every file whenever a Phel file changes.
      */
     internal fun extractImports(file: PhelFile): List<PhelRequireClauseAnalyzer.RequireImport> =
-        cachedPerPsi(file, IMPORTS_KEY) { PhelRequireClauseAnalyzer.imports(file) }
+        cachedPerEnvironment(file, IMPORTS_KEY) { PhelRequireClauseAnalyzer.imports(file) }
+
+    /** The requires in [file]'s own `(ns ...)` form, none for an `in-ns` file. Cached per file. */
+    internal fun extractOwnImports(file: PhelFile): List<PhelRequireClauseAnalyzer.RequireImport> =
+        cachedPerPsi(file, OWN_IMPORTS_KEY) { PhelRequireClauseAnalyzer.ownImports(file) }
 
     /**
      * The full namespace, as written, that [qualifier] names through [file]'s `(:require ...)` clauses.
@@ -126,7 +181,7 @@ object PhelNamespaceUtils {
     }
 
     fun extractAliasMap(file: PhelFile): Map<String, String> {
-        return cachedPerPsi(file, ALIAS_MAP_KEY) { PhelRequireClauseAnalyzer.computeAliasMap(file) }
+        return cachedPerEnvironment(file, ALIAS_MAP_KEY) { PhelRequireClauseAnalyzer.computeAliasMap(file) }
     }
 
     /**
@@ -218,7 +273,7 @@ object PhelNamespaceUtils {
             return true
         }
 
-        val nsDeclaration = findNamespaceDeclaration(file) ?: return false
+        val nsDeclaration = environmentDeclaration(file) ?: return false
         val phelNamespace = toPhelNamespace(shortNamespace)
 
         if (isNamespaceRequired(nsDeclaration, phelNamespace)) {
@@ -230,7 +285,7 @@ object PhelNamespaceUtils {
     }
 
     fun extractReferredSymbols(file: PhelFile): Set<String> {
-        return cachedPerPsi(file, REFERRED_SYMBOLS_KEY) { PhelRequireClauseAnalyzer.computeReferredSymbols(file) }
+        return cachedPerEnvironment(file, REFERRED_SYMBOLS_KEY) { PhelRequireClauseAnalyzer.computeReferredSymbols(file) }
     }
 
     fun isReferredSymbol(file: PhelFile, symbolName: String): Boolean =

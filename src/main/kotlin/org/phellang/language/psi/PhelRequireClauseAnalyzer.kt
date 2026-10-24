@@ -22,11 +22,19 @@ internal object PhelRequireClauseAnalyzer {
     /** One namespace spec of a require clause: the namespace as written, its alias, and its `:refer` vectors. */
     private class Spec(val namespace: String, val alias: String?, val referVectors: List<PhelForm>)
 
-    /** Every namespace imported by [file]'s `(:require ...)` clauses. */
-    fun imports(file: PhelFile): List<RequireImport> =
-        specsOf(file).map { spec ->
-            RequireImport(spec.namespace, PhelProjectNamespaceFinder.extractShortNamespace(spec.namespace), spec.alias)
-        }
+    /** Every namespace imported by the `(:require ...)` clauses in force in [file]. */
+    fun imports(file: PhelFile): List<RequireImport> = specsOf(file).map(::importOf)
+
+    /**
+     * The namespaces [file]'s own `(ns ...)` form requires, none for an `in-ns` file. Which files
+     * require a namespace is a question about the text of each, and the namespace snapshot that
+     * answers it is also what finds an `in-ns` file's `ns` form, so it must not ask for that.
+     */
+    fun ownImports(file: PhelFile): List<RequireImport> =
+        PhelNamespaceUtils.findNamespaceDeclaration(file)?.let(::specsOfDeclaration)?.map(::importOf).orEmpty()
+
+    private fun importOf(spec: Spec): RequireImport =
+        RequireImport(spec.namespace, PhelProjectNamespaceFinder.extractShortNamespace(spec.namespace), spec.alias)
 
     /** alias -> short namespace, e.g. `s -> string` for `(:require phel\string :as s)`. */
     fun computeAliasMap(file: PhelFile): Map<String, String> =
@@ -64,9 +72,13 @@ internal object PhelRequireClauseAnalyzer {
         specsIn(requireForm).firstOrNull { spec -> spec.referVectors.any { unwrapped(it) === vector } }?.namespace
 
     private fun specsOf(file: PhelFile): List<Spec> {
-        val nsDeclaration = PhelNamespaceUtils.findNamespaceDeclaration(file) ?: return emptyList()
-        return PhelNamespaceUtils.findRequireForms(nsDeclaration).flatMap(::specsIn)
+        // The namespace's, which for an `in-ns` file is in another file.
+        val nsDeclaration = PhelNamespaceUtils.environmentDeclaration(file) ?: return emptyList()
+        return specsOfDeclaration(nsDeclaration)
     }
+
+    private fun specsOfDeclaration(nsDeclaration: PhelList): List<Spec> =
+        PhelNamespaceUtils.findRequireForms(nsDeclaration).flatMap(::specsIn)
 
     /** The specs of one `(:require ...)` clause, flat and vector alike. */
     private fun specsIn(requireForm: PhelList): List<Spec> {

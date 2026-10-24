@@ -4,6 +4,7 @@ import com.intellij.openapi.util.Key
 import com.intellij.psi.util.CachedValue
 import com.intellij.psi.util.PsiTreeUtil
 import org.phellang.language.psi.PhelImportAnalysis
+import org.phellang.language.psi.PhelNamespaceFiles
 import org.phellang.language.psi.PhelNamespaceUtils
 import org.phellang.language.psi.PhelRequireClauseAnalyzer
 import org.phellang.language.psi.PhelSymbol
@@ -46,10 +47,24 @@ object PhelUnusedImportFinder {
         // require's short name, or the full name, the last require claiming a name winning. Matching
         // by short namespace credited `u/x` to every `*.util` and nothing to `app.util/x`.
         val namespace = PhelNamespaceUtils.normalizeNamespace(fullNamespace)
+        val qualifiers = usedNamespaceQualifiers(containingFile) +
+                filesSharingRequires(containingFile).flatMap(::usedNamespaceQualifiers)
 
-        return usedNamespaceQualifiers(containingFile).none { qualifier ->
+        return qualifiers.none { qualifier ->
             PhelNamespaceUtils.importedNamespaceFor(containingFile, qualifier)
                 ?.let(PhelNamespaceUtils::normalizeNamespace) == namespace
+        }
+    }
+
+    /**
+     * The files that call under [file]'s requires without one of their own: those joining its namespace
+     * with `(in-ns ...)`. A require only they use is used, and Optimize Imports deleted it.
+     */
+    private fun filesSharingRequires(file: PhelFile): List<PhelFile> {
+        val namespace = PhelNamespaceFiles.declaredNamespace(file) ?: return emptyList()
+
+        return PhelNamespaceFiles.filesOf(file.project, namespace).filter { other ->
+            other != file && PhelNamespaceUtils.environmentDeclaration(other)?.containingFile == file
         }
     }
 
