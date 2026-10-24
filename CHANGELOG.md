@@ -12,129 +12,46 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ### Added
 
-- **Removed `|(...)` short function** inspection: Phel 0.50 dropped `|(...)`; it is reported with a quick fix to
-  `#(...)`, and no longer reads as an unresolved `|` plus an extra argument.
+- **Removed `|(...)` short function** inspection, with a quick fix to `#(...)` (Phel 0.50 dropped `|(...)`).
 
 ### Changed
 
-- The build runs on Gradle **9.8.2**. The wrapper files match what Gradle 9.8.2's own `wrapper` task generates, and the
-  `Wrapper` task's `gradleVersion` moves with them, so `./gradlew wrapper` no longer downgrades the project
-  (#342, #355, #360).
-- **Go to definition** follows Phel's own name resolution. A bare name resolves to a local, then to the namespace it
-  is `:refer`'d from (its public definitions only), or else to the current namespace, and finally to `phel.core`. The
-  current namespace includes every file that declares it, also files that join it with `(in-ns ...)`. It no longer
-  jumps into a namespace the file does not refer from, which the compiler rejects too (PHEL001): `map` reaches
-  `phel.core/map` even when another namespace defines its own `map`, and another namespace's private definition is no
-  target. A name `:refer`'d from the standard library, such as `phel.string :refer [join]`, resolves to the standard
-  library file.
-- **Find Usages, Rename and Safe Delete** narrow the same way: a definition's uses are looked for in its own namespace
-  and in the namespaces that require it, so renaming `app.a/helper` no longer rewrites an unrelated `helper` in
-  another namespace.
-- The **Unresolved symbol** inspection now reports a bare use of another namespace's private definition, as the
-  compiler does.
+- The build runs on Gradle **9.8.2**; `./gradlew wrapper` no longer downgrades it (#342, #355, #360).
+- **Go to definition** follows Phel's resolution order: local, `:refer`'d namespace, current namespace (every file of
+  it), then `phel.core`. It no longer jumps to another namespace's namesake or private definition.
+- **Find Usages, Rename and Safe Delete** search only the definition's namespace and the namespaces that require it.
+- **Unresolved symbol** reports a bare use of another namespace's private definition, as the compiler does.
+- **Wrong number of args**, parameter hints and parameter info also cover private functions, the namespace's other
+  files and qualified stdlib calls such as `(s/join ...)`.
 
 ### Performance
 
-- The **Unresolved symbol** inspection no longer resolves a symbol that the standard library, a local binding, a
-  special form or the project index already accounts for. It asked the full reference resolve first, for every bare
-  symbol, and that resolve scans every project file and walks the whole of `phel.core`. With the Phel stdlib under
-  `vendor/`, one ~280-line file of ordinary code took ~11.6 s of CPU to highlight, and in our measurements again after
-  every edit; it now takes ~0.4 s. What the inspection reports is unchanged.
-- Resolving a Phel name, as go to definition does, no longer re-walks files it has already read. Each file's
-  definitions and parameters are looked up from a per-file cache, the location of the Phel stdlib under `vendor/` is
-  remembered, and a cached value now lasts until its own file changes instead of being dropped by an edit anywhere in
-  the project. Resolving every symbol of the same file went from ~32 s to ~0.8 s.
-- Resolving a bare name no longer searches every project file. It looks only in the files of the namespaces the name
-  can reach, through a cached map of which files make up each namespace; only an edit to a Phel file, or a file being
-  created, deleted, moved or renamed, rebuilds it. On the same file, the cross-file lookup went from ~735 ms to ~3 ms,
-  and resolving every symbol, definitions included, from ~0.8 s to ~0.2-0.4 s.
-- Resolving a definition no longer walks every symbol of its file. This is what Ctrl-click on a definition does, and
-  what Find Usages, Rename and Safe Delete do for each same-named definition they meet. Each file's symbols are now
-  grouped by name once per file version. Resolving every definition of the same file went from ~170 ms to ~15 ms.
+- **Unresolved symbol** resolves a name only when nothing cheaper accounts for it: one file from ~11.6 s to ~0.4 s.
+- Name resolution keeps per-file caches across edits to other files: resolving a whole file from ~32 s to ~0.8 s.
+- Cross-file lookups use a cached map of each namespace's files: from ~735 ms to ~3 ms.
+- Resolving a definition no longer walks its whole file: from ~170 ms to ~15 ms.
 
 ### Fixed
 
-- **Safe Delete** no longer deletes a function that is still called:
-  - a fully qualified call such as `(app.util/helper)` resolves now, with or without a require and next to an alias,
-    because a qualifier that is no alias names the namespace itself;
-  - a use in another file no longer counts as part of the deleted form just because its offsets fall inside the
-    form's range;
-  - a same-named symbol that resolves to nothing is reported as a possible usage, so a use the plugin cannot link
-    stops the deletion instead of passing silently.
-- **Hover** on a name brought in with `(:require ... :refer [...])` shows its documentation. The lookup of where a name
-  is referred from read the clause's `:require` head instead of the namespace that refers it, so it never matched and
-  a referred `join` showed nothing.
-- `(:require ...)` clauses are read the way the compiler reads them. A vector spec such as
-  `[app.util :as u :refer [helper]]` keeps its alias and its refers. `:as` and `:refer` combine in either order. A
-  `:refer [...]` vector is no longer mistaken for a namespace of its own. `#_`-discarded specs, names and clauses no
-  longer count.
-- Two namespaces whose names end alike, such as `app.util` and `lib.util`, are no longer mixed up. The project symbol
-  index filed both under `util`, and the features reading it shortened the full namespace before asking:
-  - `(:require lib.util :refer [x])` is reported when only `app.util` defines `x`, and completion inside the
-    `:refer [...]` offers `lib.util`'s names only;
-  - an aliased call such as `(l/x)` is checked against the namespace `l` stands for, and completion after `l/` offers
-    that namespace's names only. An alias a later require took over is not offered for the earlier namespace, since
-    the compiler keeps the last alias of a name;
-  - the **Wrong number of args** inspection, parameter hints and parameter info take an aliased, default-aliased or
-    fully qualified call's arities from the namespace it names, and from nowhere else. `(l/count 1 2)` was checked
-    against `phel.core`'s one-argument `count`, and `(l/helper 1 2 3)` against another namespace's `helper`. A
-    standard-library call such as `(s/join ...)` with `phel.string :as s` is now checked against `phel.string/join`
-    itself;
-  - hover shows the docstring of the namespace the name comes from;
-  - completion of a name from an unrequired namespace whose short name the file already uses for another namespace
-    requires it under an alias of its own, `(:require app.util :as app-util)`, and inserts `app-util/x`. A plain
-    require would take `util` over and re-point the file's existing `util/` calls. Editing `x.util` no longer hides
-    every other `*.util` namespace from completion.
-- A project namespace that shares its last segment with a standard-library one, such as `app.string`, is no longer read
-  as `phel.string`. Its `:refer [...]` names, aliased calls, completion after its alias and hover come from the project
-  namespace: `(:require app.string :refer [split])` passed because `phel.string` has a `split`, and
-  `(:require app.string :as s)` offered `s/split`.
-- A fully qualified call such as `(app.util/helper)` is no longer reported as `Namespace 'app.util' does not exist`.
-  With the namespace required it is accepted; without it, it is reported as not imported, with the quick fix to
-  require it.
-- A `:refer [...]` is read against the spec it belongs to. In `(:require app.util :as u lib.util :refer [count])` the
-  check, completion and hover used the clause's first namespace, `app.util`; and a vector spec such as
-  `[lib.util :refer [x]]` got none of the three.
-- The **Unused import** inspection and **Optimize Imports** credit a use to the require it belongs to, read as the
-  compiler reads a qualifier. An alias was looked up by short namespace, so with `app.util :as u` and a plain
-  `lib.util`, `u/x` counted as a use of `lib.util`, and with the alias on the other one `app.util` was reported
-  unused while `util/x` called it. A call by full name, `app.util/x`, now counts as a use; when two plain requires
-  share a short name, `util/x` counts for the last, the one it calls. A `:refer` spares only its own spec: in
-  `(:require app.util :as u lib.util :refer [x])` an unused `app.util` is reported.
-- Completion no longer offers a standard-library name under a qualifier a project namespace has taken. With
-  `(:require app.string)`, `string/` is `app.string`'s, yet `string/upper-case` was offered, and accepting it added
-  `(:require phel.string)`, which takes `string` over and re-points every existing `string/` call: the compiler keeps
-  the last alias of a name. It is now offered as `phel-string/upper-case`, required as
-  `(:require phel.string :as phel-string)`, or by its full name `phel.string/upper-case` when `phel.string` is already
-  required.
-- A standard-library call by full name, such as `(phel.string/upper-case s)`, is checked and documented like any other,
-  and so is one through an alias of a stdlib subnamespace, such as `(c/coerce ...)` with
-  `(:require phel.schema.coercer :as c)`. They were looked up under the wrong registry name and never checked.
-- The **Wrong number of args** inspection, parameter hints and parameter info check a bare call against the
-  definition the compiler would call: the namespace the name is `:refer`'d from, else the current namespace (every
-  file of it, private definitions included), else `phel.core`. They checked `phel.core` first, so a project `count`
-  was held to core's one argument, and then whichever same-named definition the project index listed first, from any
-  namespace, so two files defining their own `point` changed the warnings from one run to the next. A name defined
-  nowhere the compiler looks is no longer checked against another namespace's function. Only a definition the
-  compiler sees counts: not a draft kept in `(comment ...)` or behind `#_`, nor a macro template's
-  `` `(defn ~name ...) ``. A name `:refer`'d from a standard-library namespace is checked against that namespace's
-  function also where its registry name is not its last segment, as for `phel.http-client` and `phel.test.gen`, which
-  fell back to core's same-named function.
-- A type tag is no longer counted as a parameter: `(defn f [^string s] ...)` takes one argument, and
-  `(defstruct point [^{:tag int} x ^{:tag int} y])` two. Calls were flagged, and parameter hints labelled an argument
-  with the tag.
-- A function held by a `def`, as in `(def add (fn [a b] ...))`, is no longer checked as taking no arguments, and
-  neither is a `defn` still being typed, with no parameter vector yet.
-- A method named inside `php/->` or `php/::`, as in `(php/-> obj (count))` or `(php/-> m (put :k v))`, is PHP's, and
-  is no longer checked, hinted or shown in parameter info as the Phel function it is spelled like.
-- A file that joins a namespace with `(in-ns ...)`, the way `phel.core` spreads over the files under `core/`, is
-  part of that namespace everywhere the project symbol index is read. Its definitions were left out, so a call such
-  as `(c/bucket-fn)` was reported as `Cannot resolve function`, a `:refer` of one was rejected, and completion, hover
-  and parameter hints knew nothing of them. Completion in one file of a namespace now offers the names its other
-  files define, unqualified. A vendored standard library, which joins its files the same way, adds no `core/` copy of
-  the registry's functions to completion, and a call into it keeps the registry's arity.
-- An `in-ns` file uses its namespace's requires, refers and `:use` classes: `s/join` there is no longer "Namespace 's'
-  does not exist", and a require used only from it is no longer reported unused (or removed by Optimize Imports).
+- **Safe Delete** no longer deletes a function still called by full name, from another file, or in a way the plugin
+  cannot follow.
+- **Hover** shows the documentation of a `:refer`'d name.
+- `(:require ...)` clauses are read as the compiler reads them: vector specs, `:as` and `:refer` in any order, `#_`.
+- Namespaces that end alike, such as `app.util` and `lib.util`, are no longer mixed up by refers, aliased calls,
+  arity checks, hover or completion.
+- A project namespace such as `app.string` is no longer taken for `phel.string`.
+- A fully qualified call such as `(app.util/f)` is no longer reported as a namespace that does not exist.
+- A `:refer` is checked against its own spec, in a clause of several specs and in a vector spec.
+- **Unused import** and **Optimize Imports** credit each use to the require it belongs to, full-name calls included.
+- Completion no longer offers a stdlib name under a qualifier a project namespace has taken; it requires the stdlib
+  under its own alias, `phel-string/`, instead.
+- Stdlib calls by full name, or through the alias of a subnamespace such as `phel.schema.coercer`, are checked and
+  documented.
+- **Wrong number of args** checks a bare call against the function the compiler would call, not a namesake elsewhere.
+- A type tag in a parameter vector is no longer counted as a parameter.
+- A function held by a `def`, or a `defn` with no parameters written yet, is no longer checked as taking none.
+- A method inside `php/->` or `php/::` is no longer checked as the Phel function it is spelled like.
+- `in-ns` files are indexed, and use their namespace's requires, refers and `:use` classes.
 
 ## [1.5.0] - 2026-10-08
 
