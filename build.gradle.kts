@@ -85,13 +85,13 @@ dependencies {
     // dependency and never ships in the distribution. The generator source set and the tools tests
     // each get their own copy; the tests also read the generator's compiled output for the tools
     // classes, which the main source set deliberately excludes.
-    "generatorImplementation"("com.google.code.gson:gson:2.14.0")
+    "generatorImplementation"("com.google.code.gson:gson:2.15.0")
     // The main source set receives the Kotlin stdlib transitively from the IntelliJ Platform, but
     // the isolated generator source set does not depend on the platform. With the auto-added stdlib
     // now disabled (kotlin.stdlib.default.dependency=false, see gradle.properties) it must declare
     // its own — it is a plain JVM program, not plugin code that ships.
     "generatorImplementation"(kotlin("stdlib"))
-    testImplementation("com.google.code.gson:gson:2.14.0")
+    testImplementation("com.google.code.gson:gson:2.15.0")
     testImplementation(sourceSets["generator"].output)
 }
 
