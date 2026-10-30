@@ -1,0 +1,23 @@
+# >>> agnostic-ai (managed) >>>
+# Generated paths. Edit specs, not this block. Run `agnostic-ai sync` to refresh.
+# Copied into each Claude Code worktree: the gitignored paths sync writes, and the local layer it reads.
+/.agents/skills/
+/.agnostic-ai/local/
+/.agnostic-ai/packs/
+/.claude/agent-memory-local/
+/.claude/agents/
+/.claude/commands/
+/.claude/rules/
+/.claude/settings.json
+/.claude/settings.local.json
+/.claude/skills/
+/.codex/agents/
+/.codex/config.toml
+/AGENTS.md
+/CLAUDE.md
+/agnostic-ai.local.yaml
+/src/main/kotlin/org/phellang/completion/AGENTS.md
+/src/main/kotlin/org/phellang/registry/AGENTS.md
+/src/main/kotlin/org/phellang/tools/AGENTS.md
+/src/test/AGENTS.md
+# <<< agnostic-ai (managed) <<<
