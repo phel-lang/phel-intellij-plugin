@@ -4,7 +4,7 @@ import org.jetbrains.grammarkit.tasks.GenerateParserTask
 import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginProjectConfigurationTask
 
 group = "org.phellang"
-version = "1.6.0"
+version = "1.6.1"
 
 plugins {
     id("java")
@@ -205,7 +205,7 @@ val generatorCompileTasks = sourceSets["generator"].let {
     setOf(it.compileJavaTaskName, it.getCompileTaskName("kotlin"))
 }
 
-// Mute only the two informational items that reflect this plugin's deliberate, documented
+// Mute only the informational item that reflects this plugin's deliberate, documented
 // compatibility policy, so every *other* configuration issue still surfaces — the CI gate
 // (.github/workflows/build.yml) fails the build when any unmuted issue is reported. Keep this list
 // as narrow as possible; do not mute real problems.
@@ -213,13 +213,12 @@ val generatorCompileTasks = sourceSets["generator"].let {
 //  - since-build (243) is intentionally lower than the platform we build against (252): that is how
 //    the plugin declares support for older IDEs, and the IntelliJ Plugin Verifier exercises the
 //    whole range for real.
-//  - until-build (262.*) is a deliberate upper bound (compat 2024.3 — 2026.2.x). The verifier
-//    suggests dropping it for open-ended forward compatibility on 243+; whether to do so is a
-//    separate forward-compat policy decision, not part of this change.
+//
+// "until-build property should be removed" is deliberately NOT muted: patchPluginXml unsets
+// until-build, and this check fails CI if a bound ever creeps back in.
 tasks.named<VerifyPluginProjectConfigurationTask>("verifyPluginProjectConfiguration") {
     mutedMessages.addAll(
         "since-build is lower than target platform version",
-        "until-build property should be removed",
     )
 }
 
@@ -290,12 +289,19 @@ tasks {
                 create("IC", "2025.1")
                 create("IC", "2025.2")
                 create("IC", "2025.2.6")
+                // IC ends at 2025.3: from then on IntelliJ IDEA ships as one distribution, which
+                // "IU" resolves to. 263.7307.112 is the 2026.3 RC; swap it for "2026.3" once released.
+                create("IU", "2026.2.4")
+                create("IU", "263.7307.112")
             }
         }
 
         patchPluginXml {
             sinceBuild.set("243")
-            untilBuild.set("262.*")
+            // No upper bound: the plugin stays installable on new IDE releases without a re-upload.
+            // `provider { null }` removes until-build; a plain `null` would fall back to the
+            // platform's `MAJOR.*` default. The Plugin Verifier above guards real compatibility.
+            untilBuild.set(provider { null })
 
             // Render the CHANGELOG entry for the current version (falling back to Unreleased when
             // this version has no section yet) as the Marketplace <change-notes>. Capture the

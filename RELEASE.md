@@ -44,7 +44,8 @@ empty section ships empty notes.
 
 ### 4. Update IDE compatibility (if needed)
 
-Adjust `sinceBuild` / `untilBuild` in `build.gradle.kts` if targeting new IDE versions.
+`untilBuild` is unset, so new IDE releases need no re-upload. Raise `sinceBuild` in `build.gradle.kts` only when
+dropping old IDEs, and add new IDEs to `pluginVerification` so the verifier covers them.
 
 ### 5. Merge to `main`
 

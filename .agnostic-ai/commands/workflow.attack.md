@@ -23,7 +23,7 @@ Required workflow:
    - `Repro or scenario`
    - `Suggested fix`
    - `Status: open`
-5. Focus the attack on this plugin's real risk surface: lexer/parser ordering and malformed input, PSI/token contract changes, IDE-thread safety and cancellation, completion/inspection correctness, version-compat (2024.2–2026.1.x), generated-source drift, and `plugin.xml` registration gaps.
+5. Focus the attack on this plugin's real risk surface: lexer/parser ordering and malformed input, PSI/token contract changes, IDE-thread safety and cancellation, completion/inspection correctness, version-compat (2024.3+, no until-build), generated-source drift, and `plugin.xml` registration gaps.
 6. Separate real findings from weak suspicions. Do not pad with noise.
 7. End with a short reviewer summary: whether it's ready to test/ship, what must be fixed before commit/PR, and any residual risk for the PR summary.
 8. If no material issues are found, still record the reviewed scope, artifact paths, and test evidence consulted.

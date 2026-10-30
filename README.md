@@ -17,7 +17,7 @@ Phel is a functional programming language that compiles to PHP — a Lisp dialec
 2. Search for "**Phel**"
 3. Click **Install** and restart the IDE
 
-Compatible with IDE versions 2024.2 through 2026.2. Open any `.phel` file and the plugin activates automatically.
+Compatible with IDE versions 2024.3 and later. Open any `.phel` file and the plugin activates automatically.
 
 ## Features
 

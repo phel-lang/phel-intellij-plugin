@@ -10,6 +10,13 @@ refreshed, since completion, hover and arity checking are all driven by it.
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-10-30
+
+### Changed
+
+- The plugin no longer declares an upper IDE bound (`until-build`), so it installs on IntelliJ 2026.3 (263) and later
+  releases without a new upload. The Plugin Verifier now also checks 2026.2 and the 2026.3 RC.
+
 ### Fixed
 
 - Auto-import in an `in-ns` file, from completion or the **Import** quick fix, adds the require to the namespace's
