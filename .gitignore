@@ -52,20 +52,38 @@ bin/
 # Generated paths. Edit specs, not this block. Run `agnostic-ai sync` to refresh.
 # Not committed: a fresh clone or `git worktree` lacks these until `agnostic-ai sync` runs (e.g. a post-checkout hook).
 /.agents/skills/
+/.agnostic-ai/.command-lock
 /.agnostic-ai/.sync-state
+/.agnostic-ai/local/
 /.agnostic-ai/packs/
 /.claude/agent-memory-local/
 /.claude/agents/
 /.claude/commands/
 /.claude/rules/
+/.claude/scheduled_tasks.lock
+/.claude/scheduled_tasks.lock.bak
 /.claude/settings.json
+/.claude/settings.json.bak
 /.claude/settings.local.json
+/.claude/settings.local.json.bak
 /.claude/skills/
+/.claude/worktrees/
 /.codex/agents/
 /.codex/config.toml
+/.codex/config.toml.bak
 /AGENTS.md
+/AGENTS.md.bak
 /CLAUDE.md
+/CLAUDE.md.bak
 /agnostic-ai.local.yaml
+/src/main/kotlin/org/phellang/completion/AGENTS.md
+/src/main/kotlin/org/phellang/completion/AGENTS.md.bak
+/src/main/kotlin/org/phellang/registry/AGENTS.md
+/src/main/kotlin/org/phellang/registry/AGENTS.md.bak
+/src/main/kotlin/org/phellang/tools/AGENTS.md
+/src/main/kotlin/org/phellang/tools/AGENTS.md.bak
+/src/test/AGENTS.md
+/src/test/AGENTS.md.bak
 # <<< agnostic-ai (managed) <<<
 # Plugin signing artifacts — the certificate and private key live in CI secrets, never in git.
 *.pem
