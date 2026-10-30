@@ -65,7 +65,7 @@ jobs:
       # Enforce the plugin project configuration check. verifyPluginProjectConfiguration only logs a
       # warning and exits 0 (it reports to Gradle's Problems API at WARNING severity), so on its own
       # it can never fail CI — the whole point of this issue. Capture its output and fail when any
-      # unmuted issue is reported. Deliberate policy items (since-build, until-build) are muted in
+      # unmuted issue is reported. The deliberate since-build policy item is muted in
       # build.gradle.kts, so this trips only on new or real configuration problems.
       - name: Enforce plugin project configuration
         shell: bash

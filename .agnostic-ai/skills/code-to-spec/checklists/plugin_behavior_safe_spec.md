@@ -17,7 +17,7 @@
 
 ## Registration & compatibility
 - [ ] Extension points in `plugin.xml` identified
-- [ ] Version-compat range respected (2024.2 – 2026.1.x)
+- [ ] Version-compat range respected (2024.3+, no until-build)
 - [ ] Generated-source / registry regeneration impact noted
 
 ## Observability
