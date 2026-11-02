@@ -1,7 +1,7 @@
 ---
 description: Run a short discovery and design-alignment pass before implementation when scope or requirements are unclear.
 argument-hint: "<feature-or-problem-statement>"
-allowed-tools: Read, Grep, Glob, Bash, Edit, Write
+x-claude: {allowed-tools: "Read, Grep, Glob, Bash, Edit, Write"}
 disable-model-invocation: true
 ---
 

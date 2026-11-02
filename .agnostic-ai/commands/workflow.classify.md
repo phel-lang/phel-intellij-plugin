@@ -1,18 +1,18 @@
 ---
 description: Classify a request's complexity and decide whether the full SDD cycle (spec → plan → tasks) is warranted or a direct implementation is faster and sufficient.
 argument-hint: "<issue-number-or-freeform-request>"
-allowed-tools: Read, Grep, Glob, Bash
+x-claude: {allowed-tools: "Read, Grep, Glob, Bash"}
 disable-model-invocation: true
 ---
 
 Run before implementation to decide whether the request warrants the full SDD workflow or can be handled directly without spec/plan/tasks artifacts.
 
 Required behavior:
-1. Understand the request. `$ARGUMENTS` is the request text, GitHub issue number, or issue URL; use repo state (files, recent git diff, existing SDD artifacts under `docs/specs/`) as context.
-    - If `$ARGUMENTS` is an issue number/URL, fetch it via `gh issue view <n>` when available. Use the title, description, and acceptance criteria as the classification input.
-    - If `$ARGUMENTS` is freeform text, treat it directly as the request.
-    - If `$ARGUMENTS` is empty and resumable artifacts exist (`spec.md`, `plan.md`, `tasks.md` under `docs/specs/` or `.specify/`), classify the scope captured in those artifacts instead.
-    - If `$ARGUMENTS` is empty and no resumable artifacts exist, stop and ask: "What would you like to implement?"
+1. Understand the request. the argument is the request text, GitHub issue number, or issue URL; use repo state (files, recent git diff, existing SDD artifacts under `docs/specs/`) as context.
+    - If the argument is an issue number/URL, fetch it via `gh issue view <n>` when available. Use the title, description, and acceptance criteria as the classification input.
+    - If the argument is freeform text, treat it directly as the request.
+    - If the argument is empty and resumable artifacts exist (`spec.md`, `plan.md`, `tasks.md` under `docs/specs/` or `.specify/`), classify the scope captured in those artifacts instead.
+    - If the argument is empty and no resumable artifacts exist, stop and ask: "What would you like to implement?"
 
 2. Estimate blast radius via a quick scan (grep/glob/git diff) of how many files and packages the change touches — a fast proxy is enough, not deep analysis. Note specific files/packages when obvious (`completion/`, `annotator/`, `language/parser/`, `inspection/`, `plugin.xml`).
 

@@ -7,7 +7,7 @@ description: Runs the repo's full implementation cycle with approval gates, anal
 
 Use this skill for requests like `implement #42` or `implement hover docs for core macros`.
 
-Inputs: a GitHub issue number, issue URL, or freeform request in `$ARGUMENTS`; the repo's workflow commands; existing feature artifacts when resuming.
+Inputs: a GitHub issue number, issue URL, or freeform request in the argument; the repo's workflow commands; existing feature artifacts when resuming.
 
 ## Artifact location (graceful degradation)
 
@@ -30,7 +30,7 @@ Workflow:
 2. Classify the request:
    - Issue number/URL ⇒ ticket mode; otherwise ⇒ freeform mode.
    - If nothing meaningful is present and there are no resumable artifacts, stop and explain what is missing.
-   - If `/workflow.classify` is available, run `/workflow.classify $ARGUMENTS` and follow its output:
+   - If `/workflow.classify` is available, run `/workflow.classify the argument` and follow its output:
        - `direct` (TRIVIAL/SIMPLE): skip steps 3–11. State what will change in 1–2 sentences, make the edit, run `./gradlew test` (or `build`), summarize. Do not write spec/plan/tasks artifacts unless the user asks.
        - `sdd` (MODERATE): continue with the full workflow from step 3 onward.
        - `sdd+brainstorm` (COMPLEX): continue from step 3 but run `/workflow.brainstorm <scope>` before the spec phase.

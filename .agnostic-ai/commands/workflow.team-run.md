@@ -1,13 +1,13 @@
 ---
 description: Coordinate a parallel team-run stage for analysis, implementation, or attack work using the available multi-agent capabilities.
 argument-hint: "<analysis|implementation|attack> [scope-hint]"
-allowed-tools: Read, Grep, Glob, Bash, Agent
+x-claude: {allowed-tools: "Read, Grep, Glob, Bash, Agent"}
 disable-model-invocation: true
 ---
 
 Run when the workflow needs bounded parallel work rather than a single in-process pass.
 
-Inputs: the stage in `$ARGUMENTS` (`analysis`, `implementation`, or `attack`); an optional scope hint after the stage; the repo's SDD artifacts and workflow outputs.
+Inputs: the stage in the argument (`analysis`, `implementation`, or `attack`); an optional scope hint after the stage; the repo's SDD artifacts and workflow outputs.
 
 Required workflow:
 1. Validate input. First token is the stage, the rest is the scope hint. If the stage is missing or unsupported, stop and explain the accepted values.

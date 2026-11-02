@@ -7,7 +7,7 @@ description: Reverse-engineers existing behavior into a grounded spec.md. Use wh
 
 Use this skill for requests like `document existing completion ranking`, `reverse spec the regex-literal lexer state`, or `document current behavior of brace matching`.
 
-Inputs: a brownfield capability description in `$ARGUMENTS`; existing code, tests, generated sources, configs, docs; optional path/symbol/package hints.
+Inputs: a brownfield capability description in the argument; existing code, tests, generated sources, configs, docs; optional path/symbol/package hints.
 
 ## Artifact location (graceful degradation)
 

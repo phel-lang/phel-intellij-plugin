@@ -1,16 +1,16 @@
 ---
 description: Finalize the implementation cycle with tests, commit preparation, and PR summary.
 argument-hint: "[feature-path-or-scope]"
-allowed-tools: Read, Grep, Glob, Bash, Edit, Write
+x-claude: {allowed-tools: "Read, Grep, Glob, Bash, Edit, Write"}
 disable-model-invocation: true
 ---
 
 Run after implementation, adversarial review, and remediation are complete.
 
-Inputs: the active feature's spec/plan/task artifacts; the latest findings report if any; the current diff and available test commands/results; optional `$ARGUMENTS` for a specific feature directory or delivery scope.
+Inputs: the active feature's spec/plan/task artifacts; the latest findings report if any; the current diff and available test commands/results; optional the argument for a specific feature directory or delivery scope.
 
 Required workflow:
-1. Identify the delivery scope. Use `$ARGUMENTS` if present; otherwise infer the active feature from changed files, findings, and the most relevant SDD artifacts.
+1. Identify the delivery scope. Use the argument if present; otherwise infer the active feature from changed files, findings, and the most relevant SDD artifacts.
 2. Verification: run targeted tests first, then `./gradlew build` (regenerates lexer/parser and runs the full suite) when the plan or changed surface calls for it. If grammar changed, confirm `src/main/gen/` is regenerated and staged. Record what ran, passed, failed, and could not run.
 3. Delivery summary: shipped scope, key code changes, findings status, remaining risk. Call out version-compat, generated-source, registry-regeneration, or `plugin.xml` registration notes when the feature requires them.
 4. Commit preparation: draft the exact conventional commit title and body (`feat:`, `fix:`, `ref:`, …; never `refactor:`; never reference an AI assistant). If the user authorized commits, create it; otherwise present the exact command and message for approval.

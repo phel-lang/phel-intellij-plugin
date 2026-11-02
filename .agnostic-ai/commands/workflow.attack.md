@@ -1,16 +1,16 @@
 ---
 description: Run an adversarial AI review over the current implementation and ensure findings land in a repo-local markdown report.
 argument-hint: "[spec-path-or-scope]"
-allowed-tools: Read, Grep, Glob, Bash
+x-claude: {allowed-tools: "Read, Grep, Glob, Bash"}
 disable-model-invocation: true
 ---
 
 Run after implementation is complete and before commit finalization or PR creation.
 
-Inputs: the approved spec/plan/task artifacts; the current branch diff and changed files; available test output if any; optional `$ARGUMENTS` for a specific spec directory, feature path, or review scope.
+Inputs: the approved spec/plan/task artifacts; the current branch diff and changed files; available test output if any; optional the argument for a specific spec directory, feature path, or review scope.
 
 Required workflow:
-1. Identify the review scope. Use `$ARGUMENTS` if provided; otherwise infer the active feature from branch, changed files, and the most relevant SDD artifacts. Write the report next to the active feature artifacts; fall back to repo root only if no better home is obvious.
+1. Identify the review scope. Use the argument if provided; otherwise infer the active feature from branch, changed files, and the most relevant SDD artifacts. Write the report next to the active feature artifacts; fall back to repo root only if no better home is obvious.
 2. Route the attack stage through team-run when the surface is broad: run `/workflow.team-run attack <scope>` using the parallel agent capabilities in the current environment, not a separate external team binary.
 3. Produce or confirm a single `adversarial-findings.md`. Prefer `<active-feature-dir>/adversarial-findings.md`; if the feature dir is unclear, use repo root and say why.
 4. Use this finding format for every item:

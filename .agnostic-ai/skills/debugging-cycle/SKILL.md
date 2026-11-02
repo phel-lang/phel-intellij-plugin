@@ -7,7 +7,7 @@ description: Diagnoses bugs, regressions, flaky behavior, and failures before fi
 
 Use this skill for requests like `debug flaky completion test`, `investigate parser crash on unterminated regex`, `diagnose lexer ordering regression`, or `find root cause of duplicate annotations`.
 
-Inputs: a bug/failure/flaky behavior/regression/diagnostic scope in `$ARGUMENTS`; relevant code, tests, generated sources, logs; optional severity/issue/package/path hints.
+Inputs: a bug/failure/flaky behavior/regression/diagnostic scope in the argument; relevant code, tests, generated sources, logs; optional severity/issue/package/path hints.
 
 ## Artifact location (graceful degradation)
 

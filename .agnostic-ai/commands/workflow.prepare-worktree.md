@@ -1,7 +1,7 @@
 ---
 description: Prepare a dedicated branch and git worktree for non-trivial implementation work before coding starts.
 argument-hint: "[scope-hint]"
-allowed-tools: Read, Grep, Glob, Bash, Edit, Write
+x-claude: {allowed-tools: "Read, Grep, Glob, Bash, Edit, Write"}
 disable-model-invocation: true
 ---
 
