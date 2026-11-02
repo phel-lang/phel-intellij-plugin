@@ -1,7 +1,7 @@
 name: bash-safety-guard
 description: Blocks destructive shell commands (rm -rf on absolute/relative roots, git push --no-verify) before they run.
-event: PreToolUse
-matcher: Bash
+on: before-tool
+match: shell
 target: claude
 command: |
   CMD=$(jq -r '.tool_input.command // empty')

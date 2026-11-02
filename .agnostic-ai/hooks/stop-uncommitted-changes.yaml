@@ -1,6 +1,6 @@
 name: stop-uncommitted-changes
 description: On stop, warn if there are uncommitted changes so work isn't lost before ending the session.
-event: Stop
+on: stop
 target: claude
 command: |
   CHANGES=$(git status --porcelain 2>/dev/null)

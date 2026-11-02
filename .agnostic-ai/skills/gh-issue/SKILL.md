@@ -44,7 +44,7 @@ Read both the issue body **and every comment** as requirements input. Maintainer
 4. **Enter Plan Mode** to design the implementation:
    - Explore the codebase to understand affected areas
    - Identify files that need changes
-   - Consider the module rule from `.claude/rules/plugin-architecture.md`: a module's
+   - Consider the module rule from `.agnostic-ai/rules/plugin-architecture.md`: a module's
      entry points live at its root, its internals in subfolders. Registered classes go at
      the root of the module that owns them.
    - Plan the TDD approach (what tests to write first): unit tests under
@@ -92,7 +92,7 @@ Read both the issue body **and every comment** as requirements input. Maintainer
     - duplication introduced by the new code (extract or reuse)
     - dead branches, unused params, leftover debug
     - naming drift vs. surrounding module conventions
-    - violations of `.claude/rules/plugin-architecture.md` (module rule, package
+    - violations of `.agnostic-ai/rules/plugin-architecture.md` (module rule, package
       boundaries enforced by `ArchitectureBoundaryTest`), `lexer-parser.md`,
       `completion-registry.md`, `testing.md`
     - over-engineering: speculative abstractions, premature interfaces
@@ -106,7 +106,7 @@ Read both the issue body **and every comment** as requirements input. Maintainer
     If review surfaces zero changes, record that fact in the PR body instead of skipping silently.
 
 11. **Create PR**. Push with tracking, then open it with a summary and test plan.
-    Per `.claude/rules/git-workflow.md`: assign `JesusValeraDev`, add the label matching
+    Per `.agnostic-ai/rules/git-workflow.md`: assign `JesusValeraDev`, add the label matching
     the issue, and use `Closes #<issue-number>` so the issue auto-closes on merge.
     ```bash
     git push -u origin <branch-name>

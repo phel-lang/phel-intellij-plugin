@@ -1,6 +1,6 @@
 ---
 name: explorer
-model: haiku
+model: {claude: haiku}
 description: Fast read-only codebase exploration and search
 tools: Read, Grep, Glob, Bash
 ---
