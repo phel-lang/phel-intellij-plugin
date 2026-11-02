@@ -9,7 +9,7 @@ Input:
 Grade on:
 1. Structure completeness (required sections present, acceptance criteria present, unknowns present)
 2. Grounding (no invented PSI types/tokens/grammar rules/extension points/Phel functions; uncertain parts clearly labeled)
-3. Plugin behavior safety (lexer/parser ordering, malformed-input handling, PSI shape, threading/cancellation, version-compat — when relevant)
+3. Plugin behavior safety (lexer/parser ordering, malformed-input handling, PSI shape, threading/cancellation, version-compat: when relevant)
 4. Observability (logging and existing test coverage identified and grounded)
 
 Return JSON:

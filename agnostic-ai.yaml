@@ -19,5 +19,3 @@ on-unsupported: silent
 gitignore:
   enabled: true
 
-lint:
-  instructions-words: 4000

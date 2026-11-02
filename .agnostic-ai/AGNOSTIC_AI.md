@@ -1,49 +1,27 @@
 # Phel IntelliJ Plugin
 
-IntelliJ IDEA plugin for the [Phel programming language](https://phel-lang.org/) — a functional, Lisp-inspired language that compiles to PHP. Inspired by Clojure, Phel brings macros, persistent data structures, and expressive functional idioms to the PHP ecosystem.
+IntelliJ IDEA plugin for the [Phel language](https://phel-lang.org/) (Lisp-inspired, compiles to PHP; almost Clojure). Verify syntax against the official docs and https://phel-lang.org/api.json. Marketplace: https://plugins.jetbrains.com/plugin/28459-phel-lang. Repository: https://github.com/phel-lang/phel-intellij-plugin.
 
-- **Phel is (_almost_) Clojure** — always verify syntax against [official Phel docs](https://phel-lang.org/)
-- **API reference**: https://phel-lang.org/api.json
-- **Plugin SDK**: https://plugins.jetbrains.com/docs/intellij/welcome.html
-- **Marketplace**: https://plugins.jetbrains.com/plugin/28459-phel-lang
-- **Repository**: https://github.com/phel-lang/phel-intellij-plugin
-
-> Path-scoped deep dives live under `.agnostic-ai/rules/` (emitted to Claude via globs). This file is the durable policy every target shares — keep it in sync when a rule changes a project-wide convention.
-
-## Quick Commands
+## Commands
 
 ```bash
-./gradlew runIde                # Launch IDE sandbox with the plugin
-./gradlew test                  # Run unit + integration tests
-./gradlew build                 # Full build
-./gradlew generatePhelLexer     # Regenerate lexer from .flex
-./gradlew generatePhelParser    # Regenerate parser from .bnf
-./gradlew updatePhelRegistry    # Fetch api.json and regenerate function registry
+./gradlew runIde                # sandbox IDE with the plugin
+./gradlew test                  # unit + integration tests
+./gradlew build                 # full build
+./gradlew generatePhelLexer     # lexer from .flex
+./gradlew generatePhelParser    # parser from .bnf
+./gradlew updatePhelRegistry    # fetch api.json, regenerate function registry
 ```
 
-## Project Structure
+## Layout
 
-Plugin sources live under `src/main/kotlin/org/phellang/`:
-
-- `actions/` contextual menu actions · `annotator/` semantic highlighting & form-comment detection · `completion/` completion + docs · `core/` utilities · `registry/` the shared Phel function/symbol model (API at the root, generated `register*Functions.kt` under `data/`) — a leaf package consumed by completion, annotator, inspection, documentation and inlay alike · `indexing/` the project symbol index and `PhelArityResolver`, i.e. the PSI-aware layer sitting above `registry` and `language` · `documentation/` hover popups · `editor/` smart typing, brace matching, folding · `inlay/` parameter hints · `inspection/` code inspections · `language/` file type, icons, lexer (`.flex`) and `parser/` grammar (`.bnf`) · `refactoring/` rename support · `syntax/` highlighter & colors · `tools/` `ApiGenerator` for `updatePhelRegistry`.
-- `src/main/gen/` — **generated** lexer/parser. Never edit by hand; committed to the repo.
-- `src/test/kotlin/org/phellang/` — `unit/` (JUnit 5 + Mockito) and `integration/` (IntelliJ `BasePlatformTestCase` / light fixtures).
-
-## Build & Tooling
-
-- Gradle (Kotlin DSL), IntelliJ Platform Gradle Plugin, Grammar-Kit (JFlex + BNF), Java 21 toolchain, Kotlin 2.1.
-- Target IntelliJ IDEA 2025.2 (compat 2024.3+, no upper bound). `buildSearchableOptions` disabled.
-- Kotlin/Java compile tasks depend on lexer/parser generation automatically.
-- After editing `.flex`/`.bnf`, run `./gradlew generatePhelLexer generatePhelParser` (a PostToolUse hook does this for Claude).
+Sources are in `src/main/kotlin/org/phellang/` (layering in `.agnostic-ai/rules/plugin-architecture.md`). `src/main/gen/` is the generated lexer/parser, committed; never edit by hand. Tests: `src/test/kotlin/org/phellang/unit/` (JUnit 5 + Mockito) and `integration/` (`BasePlatformTestCase`, light fixtures). Stack: Gradle Kotlin DSL, Grammar-Kit, Java 21, Kotlin 2.1, IDEA 2025.2 (compat 2024.3+, no upper bound).
 
 ## Conventions
 
-- Every plugin feature must be registered in `src/main/resources/META-INF/plugin.xml`.
-- In completion logic match on `PhelTypes.SYM` (the lexer token at the caret), not `PhelTypes.SYMBOL` (the parser element type); use `PlainPrefixMatcher` for `namespace/function` matching.
-- Registry: `NamespaceConfig.kt` is the single source of truth — add one entry and run `./gradlew updatePhelRegistry`; generated files, the `Namespace` enum, and registry wiring are produced automatically. Hand-edit only the curated `ALIASES` map.
-- New unit tests go in `unit/`, integration tests in `integration/`. Test Phel features against the official docs.
-
-## Commits & PRs
-
-- Conventional commits; use `ref:` (not `refactor:`). Never reference an AI assistant in commit messages or trailers.
-- PRs: assign to `JesusValeraDev`, add a matching label, and use `Closes #X` to auto-close issues.
+- After editing `.flex`/`.bnf`, run `./gradlew generatePhelLexer generatePhelParser` (a hook does it for Claude).
+- Register every plugin feature in `src/main/resources/META-INF/plugin.xml`.
+- Completion matches `PhelTypes.SYM` (lexer token at the caret), not `PhelTypes.SYMBOL`; use `PlainPrefixMatcher` for `namespace/function`.
+- `NamespaceConfig.kt` is the registry's single source of truth: add one entry, run `./gradlew updatePhelRegistry`. Hand-edit only the curated `ALIASES` map.
+- Test Phel features against the official docs.
+- Commits and PRs follow `.agnostic-ai/rules/git-workflow.md`.

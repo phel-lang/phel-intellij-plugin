@@ -1,39 +1,12 @@
-Detect package-level circular and wrong-layer dependencies across the plugin's Kotlin source.
+---
+description: Use to check the plugin's Kotlin packages for circular and wrong-layer dependencies.
+---
 
-Steps:
-1. For each top-level package under `src/main/kotlin/org/phellang/` (`actions`, `annotator`, `completion`, `core`, `debug`, `documentation`, `editor`, `inspection`, `language`, `registry`, `syntax`, `tools`), grep `^import org\.phellang\.` and tally which other packages it imports from.
-2. Build an import matrix (rows = source package, cols = target package). Flag any bidirectional edge as a cycle.
-3. Apply the expected layering: `language/` is foundation; `core/` is shared utilities; `registry/` is the shared Phel function/symbol model (generated from `api.json`) and must stay the **bottom leaf** — it imports the platform and nothing else under `org.phellang`; `indexing/` holds the project symbol index and `PhelArityResolver`, i.e. the PSI-aware code that used to sit inside `registry`; feature packages (`annotator`, `completion`, `editor`, `inspection`, `documentation`, `actions`, `debug`) consume `language/`, `core/` and `registry/` but should not depend on each other except where explicitly justified (e.g. `editor/` references `annotator/TextAttributesKey` for color settings).
-4. Report:
-   - **HIGH**: confirmed cycles (bidirectional edges) with concrete `file:line: import ...` evidence. Any import of a feature package from `registry/` is HIGH — it re-creates the cycle the registry extraction removed.
-   - **MEDIUM**: wrong-layer imports (foundation reaching up into feature packages).
-   - **LOW**: cross-sibling imports between feature packages that may be justified.
-5. Known architectural debt to ignore unless worsened:
-   - Resolved (flag if it reappears): `language.psi ↔ registry` was broken by moving `registry/indexing/**` and `registry/PhelArityResolver.kt` into a top-level `indexing/`; `registry` now imports nothing under `org.phellang`, so `language → registry` is a legal one-way edge. Enforced by `ArchitectureBoundaryTest."registry imports nothing outside itself"`.
-   - Resolved (flag if it reappears): `core.psi ↔ language.psi` was broken by moving the PSI analysis from `core/psi` to `language/psi/analysis`; `core` now imports nothing from `org.phellang` at all. Enforced by `ArchitectureBoundaryTest."core and language do not import each other"`.
-   - Resolved (flag if it reappears): `completion.infrastructure ↔ completion.handlers` was broken by moving `FULL_NAMESPACE_KEY` into `NamespacedInsertHandler`; the edge is now one-way (infrastructure → handlers).
-6. Omit findings already present in `.omc/research/ai-slop/04-cycles.md` (if the file exists) unless the evidence has changed.
+Run the `cycle-detector` agent (`.agnostic-ai/agents/cycle-detector.md`) over `src/main/kotlin/org/phellang/` and report. Layers, baseline and method live there; do not restate them.
 
-Output format:
+Severity:
+- HIGH: confirmed cycle (bidirectional edge) with `file:line: import ...`. Any import of a feature package from `registry/` is HIGH.
+- MEDIUM: wrong-layer import (foundation reaching up into a feature package).
+- LOW: cross-sibling feature imports that may be justified.
 
-```
-# Package Dependency Audit
-
-## Import matrix
-<concise table of pkg→pkg edges>
-
-## Cycles (HIGH)
-- <A ↔ B>: file:line: import ...
-
-## Wrong-layer imports (MEDIUM)
-- ...
-
-## Cross-sibling imports (LOW / informational)
-- ...
-
-## Delta vs. last audit
-- New: ...
-- Resolved: ...
-```
-
-Keep the report under 200 lines. No implementation — this is a diagnostic only.
+Skip findings already in `.omc/research/ai-slop/04-cycles.md` (if present) unless the evidence changed. Report under 200 lines with sections: Import matrix, Cycles, Wrong-layer imports, Cross-sibling imports, Delta vs last audit. Diagnostic only; no edits.

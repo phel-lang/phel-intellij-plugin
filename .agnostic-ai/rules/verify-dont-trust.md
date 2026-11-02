@@ -1,29 +1,11 @@
 ---
 name: verify-dont-trust
-description: Read actual files before making claims about the codebase — never assume, infer, or trust stale docs
+description: Read actual files before making claims about the codebase.
 alwaysApply: true
 ---
 
-# Verify, Don't Trust
+# Verify, don't trust
 
-Factual claims about this codebase must be backed by a file read in *this conversation*. No inferring, guessing, or
-paraphrasing from memory, issues, PRs, ADRs, or comments.
+Back every claim about this codebase with a file read in this conversation, not memory, issues, PRs or comments. Trace the chain (action -> annotator/completion -> PSI/parser -> registry/api.json) and cite file and line. Say so when something cannot be verified locally (Platform internals, JFlex/Grammar-Kit runtime, third-party APIs). Check Phel semantics against https://phel-lang.org/ and `api.json`.
 
-Treat "is this really X?", "how does this work?", "is this issue valid?" as verify-first. Open files before opining.
-Trace call chains end-to-end (action → annotator/completion → PSI/parser → registry/api.json). Cite the file+line you
-actually read.
-
-If not locally verifiable (IntelliJ Platform internals, JFlex/Grammar-Kit runtime behavior, third-party APIs), say so —
-don't guess. For Phel language semantics, verify against the official docs (https://phel-lang.org/) and `api.json`, not
-memory.
-
-**The code is law. The code never lies.**
-
-## Anti-patterns
-
-- "Yes, valid issue" without opening cited files
-- "This token wins because longest-match" without checking the actual JFlex rule order
-- "All completions do X" without grepping `completion/`
-- Paraphrasing the SDK docs instead of checking the generated PSI in `src/main/gen/`
-- Answering "how does this work?" from path/class name alone
-- Asserting a function exists in Phel without checking `api.json` / `NamespaceConfig.kt`
+Do not: call an issue valid without opening the cited files; claim a token wins by longest-match without reading the JFlex rule order; say "all completions do X" without grepping `completion/`; assert a Phel function exists without checking `api.json` or `NamespaceConfig.kt`.

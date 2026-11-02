@@ -1,8 +1,8 @@
-Regenerate the lexer and parser from the grammar files after changes to `.flex` or `.bnf`.
+---
+description: Use after editing a `.flex` or `.bnf` file to regenerate the lexer and parser and verify.
+---
 
-Steps:
-1. Run `./gradlew generatePhelLexer generatePhelParser`
-2. Check git diff on `src/main/gen/` to review generated changes
-3. Run `./gradlew compileKotlin` to verify compilation succeeds
-4. Run `./gradlew test` to verify tests still pass
-5. Summarize what changed in the generated code
+1. `./gradlew generatePhelLexer generatePhelParser`
+2. Review `git diff` on `src/main/gen/`.
+3. `./gradlew compileKotlin`, then `./gradlew test`.
+4. Summarize what changed in the generated code.

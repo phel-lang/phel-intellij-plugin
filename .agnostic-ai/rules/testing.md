@@ -5,7 +5,7 @@ description: Testing conventions
 
 # Testing
 
-- Unit → `src/test/kotlin/org/phellang/unit/` (JUnit 5 + Mockito).
-- Integration → `.../integration/` using IntelliJ `BasePlatformTestCase` / light fixtures.
-- Run: `./gradlew test`. Manual: `./gradlew runIde`.
+- Unit tests: `src/test/kotlin/org/phellang/unit/` (JUnit 5 + Mockito).
+- Integration tests: `.../integration/` (IntelliJ `BasePlatformTestCase`, light fixtures).
+- Run `./gradlew test`; manual check with `./gradlew runIde`.
 - Verify Phel features against https://phel-lang.org/.

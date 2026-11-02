@@ -1,13 +1,8 @@
 ---
-description: Reverse-engineer an existing capability into a grounded spec artifact.
+description: Use to document or reverse-spec behavior that already exists in the codebase.
 argument-hint: "<existing-feature-or-flow-description>"
 x-claude: {allowed-tools: "Read, Grep, Glob, Bash, Edit, Write"}
 disable-model-invocation: true
 ---
 
-Run when the user wants to document or reverse-spec behavior that already exists in the codebase.
-
-Required behavior:
-1. Read the `code-to-spec` skill file (`.agnostic-ai/skills/code-to-spec/SKILL.md`) and execute it end-to-end for the current repo and the argument.
-2. Treat that skill as the canonical source of truth for reverse-spec behavior — do not duplicate or improvise the workflow here.
-3. The final artifact must be the standard `spec.md` in the active feature directory (under `.specify/` when the repo is Spec Kit-bootstrapped, otherwise `docs/specs/<slug>/spec.md`) — not a parallel custom template family or a sidecar `*-code-to-spec-*` document.
+Read `.agnostic-ai/skills/code-to-spec/SKILL.md` and run it end to end for the argument. It is the only source for the workflow. The result is the standard `spec.md` in the active feature directory (`.specify/` if Spec Kit is bootstrapped, else `docs/specs/<slug>/spec.md`), not a parallel template or a `*-code-to-spec-*` sidecar.

@@ -5,83 +5,37 @@ description: Plugin architecture and source layout
 
 # Architecture
 
-## The module rule
+## Module rule
 
-**A module's entry points live at its root; its internals live in subfolders.** For a feature package the entry point is
-whatever `plugin.xml` instantiates.
+A module's entry points live at its root; its internals live in subfolders. For a feature package the entry point is whatever `plugin.xml` instantiates.
 
-```
-actions/
-  CreatePhelFileAction.kt  <- the extension point: the module's public face
-  namespace/  template/    <- collaborators, not reachable from plugin.xml
-```
+Example: `actions/CreatePhelFileAction.kt` is the extension point; `actions/namespace/` and `actions/template/` are collaborators not reachable from `plugin.xml`.
 
-The rule is recursive: `inspection/deprecated/` is itself a module (two registered inspections at its root,
-collaborators beside them), as are `editor/paredit/` and `language/parser/`.
+| Shape           | Root contains                           | Examples                                                                                               |
+|-----------------|-----------------------------------------|--------------------------------------------------------------------------------------------------------|
+| Feature package | only classes registered in `plugin.xml` | `actions/` `annotator/` `completion/` `documentation/` `inlay/` `inspection/` `refactoring/` `syntax/` |
+| Namespace       | nothing (a category, not a module)      | `editor/` `language/` `core/`                                                                          |
+| Library / tool  | its public API, or its `main()`         | `registry/` `tools/`                                                                                   |
 
-Three shapes follow from it:
+`editor/` has no root class and never gets one: folding, typing, quoting, brace matching, formatting and the structure view are separate modules (`editor/folding/PhelFoldingBuilder.kt`). Add a module folder, not a root class.
 
-| Shape               | Root contains                              | Examples                                                                                               |
-|---------------------|--------------------------------------------|--------------------------------------------------------------------------------------------------------|
-| **Feature package** | only classes registered in `plugin.xml`    | `actions/` `annotator/` `completion/` `documentation/` `inlay/` `inspection/` `refactoring/` `syntax/` |
-| **Namespace**       | nothing — it is a *category*, not a module | `editor/` `language/` `core/`                                                                          |
-| **Library / tool**  | its public API, or its `main()`            | `registry/` `tools/`                                                                                   |
-
-`editor/` has no root class on purpose. There is no `PhelEditor` and there never will be — folding, typing, quoting,
-brace matching, formatting and the structure view are separate concerns, so each is its own module
-(`editor/folding/PhelFoldingBuilder.kt`, `editor/typing/PhelTypedHandler.kt`, …).
-Do not add a class to `editor/`'s root; add a module folder.
-
-**When adding an extension point**: put the class at the root of the module that owns it, and its helpers in that
-module's subfolders. If the concern is new, create a new module folder.
+New extension point: put the class at the root of the module that owns it and its helpers in subfolders. New concern: new module folder.
 
 ## Layout
 
-`actions/` menu actions · `annotator/` highlighting + form-comment detection · `completion/` · `core/` utils +
-`highlighting/` (the `TextAttributesKey` vocabulary shared by `syntax`, `annotator` and the colorsettings page — a leaf;
-the keys' external IDs persist in user color schemes, so they are contract, not internals) · `registry/` the shared Phel
-function/symbol model — API at the root, generated `register*Functions.kt` under `data/` (the **bottom leaf**: platform
-only, nothing else under `org.phellang`) · `indexing/` the project symbol index and `PhelArityResolver`, i.e. everything
-that needs PSI to answer a registry-shaped question; sits above `registry` and `language` · `documentation/` hover ·
-`editor/` a namespace of editor modules (folding, typing, quote, matching, commenting, colorsettings, enter,
-indentation, paredit, format, structure) · `inspection/` (+ `quickfixes/`, `deprecated/`) · `language/`
-filetype/icons/lexer + `parser/` grammar + `psi/` · `syntax/` highlighter+colors · `tools/` ApiGenerator.
-`src/main/gen/` = generated (never edit).
-
-Key classes: `PhelCompletionContributor` (completion), `PhelAnnotator` (highlight), `PhelFunctionRegistry`,
-`PhelDocumentationProvider` (hover), `PhelReference` (resolve/nav), `PhelFoldingBuilder`, `PhelTypedHandler`,
-`PhelBraceMatcher`, `PhelCommenter`.
-
+Packages under `src/main/kotlin/org/phellang/`: `actions` `annotator` `completion` `core` (+ `highlighting/`, the `TextAttributesKey` vocabulary shared by `syntax`, `annotator` and color settings; its external IDs persist in user color schemes, so they are contract) `registry` (function/symbol model, API at root, generated `register*Functions.kt` under `data/`) `indexing` (project symbol index, `PhelArityResolver`; PSI-aware, above `registry` and `language`) `documentation` `editor` `inlay` `inspection` (+ `quickfixes/`, `deprecated/`) `language` (`parser/`, `psi/`) `refactoring` `syntax` `tools`. 
 ## Enforced boundaries
 
-`ArchitectureBoundaryTest` (a plain source scan, no library) fails the build if a cross-package
-import breaks one of these — Kotlin's `internal` is whole-module and can't. To relax a rule, change
-the test deliberately, not by working around it.
+`ArchitectureBoundaryTest` (a source scan) fails the build on a cross-package import that breaks these. To relax one, change the test deliberately.
 
-- `registry/data/**` (generated) is imported only from within `registry`; everyone else goes through
-  `PhelFunctionRegistry` (stdlib catalogue) or `indexing.PhelArityResolver` (stdlib + project).
-- `registry` imports **nothing** under `org.phellang` but itself — not `language`, not `core`. It is the leaf everything
-  else stands on. It once imported `language/psi` for the project symbol index, which closed a
-  `language → registry → language` loop the moment `PhelSymbolAnalyzer` moved into `language`. PSI-aware code lives in
-  `indexing/` instead.
-- Dependency order: `registry` ← `language` ← `indexing` ← feature packages. `core` is separate and imports nothing
-  under `org.phellang`; `core` and `language` may not import each other.
-- `tools` (build-time generator) is imported by nothing at runtime, and imports no feature package.
-- A feature package reaches another only through a class at its **root**, never past it (`editor` →
-  `syntax.PhelSyntaxHighlighter` is fine; `editor` → `syntax.attributes.*` is not). Shared vocabulary goes down into a
-  leaf (`core`/`registry`/`language`) instead — this is why the highlighting attribute keys live in `core/highlighting`
-  and not under `syntax`/`annotator`.
+- `registry/data/**` (generated) is imported only inside `registry`; others use `PhelFunctionRegistry` (stdlib) or `indexing.PhelArityResolver` (stdlib + project).
+- `registry` imports nothing under `org.phellang` but itself (not `language`, not `core`). PSI-aware code lives in `indexing/`.
+- Dependency order: `registry` <- `language` <- `indexing` <- feature packages. `core` imports nothing under `org.phellang`; `core` and `language` may not import each other.
+- `tools` (build-time) is imported by nothing at runtime and imports no feature package.
+- A feature package reaches another only through a class at its root (`editor` -> `syntax.PhelSyntaxHighlighter` is fine, `syntax.attributes.*` is not). Shared vocabulary goes down into a leaf (`core`, `registry`, `language`).
 
 ## Rules
 
-- Every feature must be registered in `META-INF/plugin.xml`.
-- **Moving a registered class is a `plugin.xml` change too.** The compiler cannot see those string references — after
-  any move, grep `plugin.xml` and confirm every `implementationClass` / `implementation` still resolves.
-- `registry/data/**` is generated by `./gradlew updatePhelRegistry`; never hand-edit it. The generator's output package
-  is pinned in `tools/generator/KotlinCodeGenerator.kt` and `RegistryWiringGenerator.kt` — relocating the registry means
-  updating those too, or the next regeneration silently recreates the old layout.
-- Completion logic: the `psiElement(...)` pattern matches the **leaf at the caret**, which is the lexer token
-  `PhelTypes.SYM` — not `PhelTypes.SYMBOL`, the parser element type wrapping it. Use `PlainPrefixMatcher` for
-  `namespace/function` matching.
-- Form-comment detection is hybrid PSI + text-based.
-- Follow IntelliJ Platform SDK conventions.
+- Register every feature in `META-INF/plugin.xml`. Moving a registered class is a `plugin.xml` change too: after a move, grep `plugin.xml` and confirm every `implementationClass` / `implementation` resolves.
+- `registry/data/**` is generated; never hand-edit. Its output package is pinned in `tools/generator/KotlinCodeGenerator.kt` and `RegistryWiringGenerator.kt`; update both when relocating the registry.
+- Completion: the `psiElement(...)` pattern matches the leaf at the caret, the lexer token `PhelTypes.SYM`, not `PhelTypes.SYMBOL` (the parser element wrapping it). Use `PlainPrefixMatcher` for `namespace/function` matching.

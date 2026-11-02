@@ -1,8 +1,9 @@
-Run full verification of the project: generate, compile, test, and build.
+---
+description: Use to run the full project verification (generate, compile, test, package).
+---
 
-Steps:
-1. Run `./gradlew generatePhelLexer generatePhelParser` to ensure generated code is up to date
-2. Run `./gradlew compileKotlin compileJava` to verify compilation
-3. Run `./gradlew test` and report results
-4. Run `./gradlew buildPlugin` to verify the plugin packages correctly
-5. Report any failures with details
+1. `./gradlew generatePhelLexer generatePhelParser`
+2. `./gradlew compileKotlin compileJava`
+3. `./gradlew test`
+4. `./gradlew buildPlugin`
+5. Report failures with details.

@@ -1,7 +1,7 @@
 # Debug Report
 
 - Case: <YYYY-MM-DD-short-kebab-summary>
-- Scope: <component, package, or flow — e.g. completion/, language/parser>
+- Scope: <component, package, or flow: e.g. completion/, language/parser>
 - Related issue: <#n-or-none>
 - Related spec: <feature-dir-or-none>
 - Resolution class: <restore-fix|spec-required|investigation-only>

@@ -1,107 +1,20 @@
-# Git Workflow Rules
+---
+description: Commits, branches, PRs and the pre-push checklist.
+alwaysApply: true
+---
 
-## Commit Message Format
+# Git workflow
 
-Conventional commits.
+Conventional commits: `<type>(<scope>): <description>` (scope optional). Types: `feat`, `fix`, `ref`, `test`, `docs`, `chore`, `perf`, `ci`.
 
-```
-<type>: <description>
-<type>(<scope>): <description>
+- Use `ref:`, never `refactor:`.
+- Description: at least 3 characters, lowercase start, no trailing period.
+- Never reference an AI assistant in messages, bodies or trailers.
+- Merge and revert commits are always allowed.
+- Branches: `<type>/<slug>`, for example `feat/hover-docs`.
 
-[optional body]
-```
+Work test-first (happy, edge and sad paths).
 
-### Types
+PRs: read `git diff main...HEAD`; write a summary and test plan; assign `JesusValeraDev`, add a matching label, use `Closes #X`; push with `git push -u origin <branch>`.
 
-| Type    | Use For                                 |
-|---------|-----------------------------------------|
-| `feat`  | New features                            |
-| `fix`   | Bug fixes                               |
-| `ref`   | Code restructuring (no behavior change) |
-| `test`  | Adding/updating tests                   |
-| `docs`  | Documentation changes                   |
-| `chore` | Maintenance tasks                       |
-| `perf`  | Performance improvements                |
-| `ci`    | CI/CD changes                           |
-
-### Rules
-
-- Use `ref:` for refactors — **never** `refactor:`
-- Description must be at least 3 characters
-- Description starts lowercase
-- No period at the end
-- Scope is optional: `feat(completion): add namespace alias matching`
-- **Never** reference an AI assistant in commit messages, bodies, or trailers (no `Co-Authored-By`, no "generated
-  with…")
-- Merge and revert commits are always allowed
-
-### Examples
-
-```
-feat: add hover docs for core functions
-feat(lexer): support symbolic numbers (##Inf / ##NaN)
-fix: prevent crash on unterminated regex literal
-ref: extract namespace registry wiring into NamespaceConfig
-test: add integration tests for brace matching
-docs: document the completion registry regeneration flow
-```
-
-## Branch Naming
-
-```
-feat/hover-docs
-fix/unterminated-regex-crash
-ref/extract-namespace-config
-test/brace-matching
-```
-
-## Feature Development Cycle
-
-### 1. Planning
-
-- Understand requirements fully
-- Identify affected packages under `src/main/kotlin/org/phellang/`
-- Plan test strategy (unit vs integration)
-
-### 2. Test-Driven Development
-
-- Write a failing test first
-- Implement the minimum code to pass
-- Refactor while green
-- Every feature should include:
-    - **Happy path** tests (expected success)
-    - **Edge case** tests (boundaries, empty input, ordering)
-    - **Sad path** tests (malformed input, not-found, errors)
-
-### 3. Review
-
-- Self-review before PR
-- Verify the feature is registered in `src/main/resources/META-INF/plugin.xml`
-- Verify no debug code remains
-- If grammar (`.flex`/`.bnf`) changed, confirm `src/main/gen/` was regenerated and committed
-
-### 4. Integration
-
-- Write a descriptive conventional commit message
-- Create the PR with a summary and test plan
-- Address review feedback
-
-## Pull Request Process
-
-1. **Review all commits** — not just the latest
-2. **Run full diff**: `git diff main...HEAD`
-3. **Write a thorough PR summary** with context
-4. **Include a test plan** with verification steps
-5. **Assign to `JesusValeraDev`**, add a matching label, and use `Closes #X` to auto-close the issue
-6. **Push with tracking**: `git push -u origin branch-name`
-
-## Before Pushing
-
-Verify:
-
-- [ ] `./gradlew build` passes (includes lexer/parser generation + tests)
-- [ ] `./gradlew test` is green (unit + integration)
-- [ ] New plugin features are registered in `plugin.xml`
-- [ ] Generated lexer/parser under `src/main/gen/` is in sync with the `.flex`/`.bnf` sources
-- [ ] Commit messages follow the convention and contain no AI references
-- [ ] Branch is up to date with `main`
+Before pushing: `./gradlew build` green; new features registered in `src/main/resources/META-INF/plugin.xml`; `src/main/gen/` matches `.flex`/`.bnf`; no debug code; branch up to date with `main`.

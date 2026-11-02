@@ -1,34 +1,18 @@
 ---
-description: Run an adversarial AI review over the current implementation and ensure findings land in a repo-local markdown report.
+description: Use after implementation and before commit or PR to run an adversarial review into adversarial-findings.md.
 argument-hint: "[spec-path-or-scope]"
 x-claude: {allowed-tools: "Read, Grep, Glob, Bash"}
 disable-model-invocation: true
 ---
 
-Run after implementation is complete and before commit finalization or PR creation.
+Inputs: approved spec, plan and tasks; the branch diff; test output if any; optional scope argument.
 
-Inputs: the approved spec/plan/task artifacts; the current branch diff and changed files; available test output if any; optional the argument for a specific spec directory, feature path, or review scope.
+1. Scope: the argument, else the active feature inferred from branch, changed files and SDD artifacts.
+2. For a broad surface run `/workflow.team-run attack <scope>`.
+3. Write one `adversarial-findings.md` at `<active-feature-dir>/adversarial-findings.md` (repo root, with the reason, if the feature dir is unclear).
+4. Each finding has: `ID`, `Severity`, `Category`, `Files`, `Problem`, `Why it matters`, `Repro or scenario`, `Suggested fix`, `Status: open`.
+5. Attack the real risk surface: lexer/parser ordering and malformed input, PSI/token contract changes, IDE-thread safety and cancellation, completion and inspection correctness, version compat (2024.3+, no until-build), generated-source drift, `plugin.xml` registration gaps.
+6. Separate real findings from weak suspicions; no padding.
+7. End with a short summary: ready to test or ship, what must be fixed before commit or PR, residual risk.
 
-Required workflow:
-1. Identify the review scope. Use the argument if provided; otherwise infer the active feature from branch, changed files, and the most relevant SDD artifacts. Write the report next to the active feature artifacts; fall back to repo root only if no better home is obvious.
-2. Route the attack stage through team-run when the surface is broad: run `/workflow.team-run attack <scope>` using the parallel agent capabilities in the current environment, not a separate external team binary.
-3. Produce or confirm a single `adversarial-findings.md`. Prefer `<active-feature-dir>/adversarial-findings.md`; if the feature dir is unclear, use repo root and say why.
-4. Use this finding format for every item:
-   - `ID`
-   - `Severity`
-   - `Category`
-   - `Files`
-   - `Problem`
-   - `Why it matters`
-   - `Repro or scenario`
-   - `Suggested fix`
-   - `Status: open`
-5. Focus the attack on this plugin's real risk surface: lexer/parser ordering and malformed input, PSI/token contract changes, IDE-thread safety and cancellation, completion/inspection correctness, version-compat (2024.3+, no until-build), generated-source drift, and `plugin.xml` registration gaps.
-6. Separate real findings from weak suspicions. Do not pad with noise.
-7. End with a short reviewer summary: whether it's ready to test/ship, what must be fixed before commit/PR, and any residual risk for the PR summary.
-8. If no material issues are found, still record the reviewed scope, artifact paths, and test evidence consulted.
-
-Exit criteria:
-- A single `adversarial-findings.md` exists at the documented path
-- Every finding uses the required format
-- If no material issues are found, record `No confirmed findings` with the scope you reviewed
+With no material issue, write `No confirmed findings` with the scope reviewed, artifact paths and test evidence.

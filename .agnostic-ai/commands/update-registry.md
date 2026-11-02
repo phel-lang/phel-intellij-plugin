@@ -1,7 +1,8 @@
-Fetch the latest Phel API from https://phel-lang.org/api.json and regenerate the function registry.
+---
+description: Use to fetch the latest Phel API and regenerate the function registry.
+---
 
-Steps:
-1. Run `./gradlew updatePhelRegistry`
-2. Check git diff on `src/main/kotlin/org/phellang/registry/data/` to see what changed
-3. Run `./gradlew test` to verify nothing broke
-4. Summarize what functions were added, removed, or updated
+1. `./gradlew updatePhelRegistry` (fetches https://phel-lang.org/api.json).
+2. Review `git diff` on `src/main/kotlin/org/phellang/registry/data/`.
+3. `./gradlew test`.
+4. Summarize functions added, removed, updated.

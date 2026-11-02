@@ -5,7 +5,7 @@ This is the Phel IntelliJ plugin repository (Kotlin, IntelliJ Platform SDK). Tre
 
 Use .codex/ for Codex-native mechanics only. The detailed, path-scoped guidance under .agnostic-ai/rules/ is emitted to Claude only; the durable substance also lives in AGENTS.md, so rely on it here.
 
-Never edit files under src/main/gen/ by hand — they are regenerated from the .flex/.bnf grammars via `./gradlew generatePhelLexer generatePhelParser`.
+Never edit files under src/main/gen/ by hand: they are regenerated from the .flex/.bnf grammars via `./gradlew generatePhelLexer generatePhelParser`.
 """
 
 [features]

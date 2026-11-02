@@ -5,19 +5,4 @@ description: Build system and Gradle tasks
 
 # Build
 
-Gradle (Kotlin DSL) · IntelliJ Platform Gradle Plugin · Grammar-Kit (JFlex+BNF) · Java 21 · Kotlin 2.1.
-Target IDEA 2025.2 (compat 2024.3+, no upper bound). Gson powers the API generator.
-
-Tasks:
-
-- `runIde` — sandbox IDE (don't run `build` concurrently)
-- `test` — JUnit 5 unit + integration
-- `build` / `buildPlugin` — full build / distributable zip
-- `generatePhelLexer` / `generatePhelParser` — regen from `.flex` / `.bnf`
-- `updatePhelRegistry` — fetch api.json, regen `register*Functions.kt`
-
-Notes:
-
-- Compile auto-depends on lexer/parser generation. `buildSearchableOptions` disabled.
-- Verifier runs vs IC 2024.3, 2025.1, 2025.2, 2025.2.6 and IU 2026.2.4, 263 (2026.3 RC).
-- Publish env: `CERTIFICATE_CHAIN`, `PRIVATE_KEY`, `PRIVATE_KEY_PASSWORD`, `PUBLISH_TOKEN`.
+Do not run `build` while `runIde` is up. `buildPlugin` makes the distributable zip. The verifier runs against IC 2024.3, 2025.1, 2025.2, 2025.2.6 and IU 2026.2.4, 263 (2026.3 RC). Publish env: `CERTIFICATE_CHAIN`, `PRIVATE_KEY`, `PRIVATE_KEY_PASSWORD`, `PUBLISH_TOKEN`.
